@@ -4205,5 +4205,12 @@ see card.js for available functions
                 return true;
             }
         }
+
+        //Voice reading
+        ExperimentalTTS mTalker = new ExperimentalTTS (AbstractFlashcardViewer.this);
+        @JavascriptInterface
+        public void speak_experimental (String word) {
+            mTalker.speak (word, true);
+        }
     }
 }
