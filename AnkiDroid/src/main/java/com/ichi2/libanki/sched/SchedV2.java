@@ -865,7 +865,7 @@ public class SchedV2 extends AbstractSched {
                      * front of the queue contains distinct card.
                  */
                     // fill the queue with the current did
-                for (long cid : mCol.getDb().queryLongList("SELECT id FROM cards WHERE did = ? AND queue = " + Consts.QUEUE_TYPE_NEW + " AND " + idName + "!= ? ORDER BY due, ord LIMIT ?", did, id, lim)) {
+                for (long cid : mCol.getDb().queryLongList("SELECT id FROM cards WHERE did = ? AND queue = " + Consts.QUEUE_TYPE_NEW + " AND " + idName + "!= ? ORDER BY due - mod, ord LIMIT ?", did, id, lim)) {
                     mNewQueue.add(cid);
                 }
                 if (!mNewQueue.isEmpty()) {
@@ -1073,9 +1073,9 @@ public class SchedV2 extends AbstractSched {
         if (mHaveCounts && mLrnCount == 0) {
             return false;
         }
-        if (!mLrnQueue.isEmpty()) {
-            return true;
-        }
+        // if (!mLrnQueue.isEmpty()) {
+        //     return true;
+        // }
         long cutoff = getTime().intTime() + mCol.getConf().getLong("collapseTime");
         mLrnQueue.clear();
         /* Difference with upstream: Current card can't come in the queue.
@@ -1088,14 +1088,14 @@ public class SchedV2 extends AbstractSched {
         try (Cursor cur = mCol
                     .getDb()
                     .query(
-                            "SELECT due, id FROM cards WHERE did IN " + _deckLimit() + " AND queue IN (" + Consts.QUEUE_TYPE_LRN + ", " + Consts.QUEUE_TYPE_PREVIEW + ") AND due < ?"
-                            + " AND id != ? LIMIT ?", cutoff, currentCardId(), mReportLimit)) {
+                            "SELECT due, id, mod FROM cards WHERE did IN " + _deckLimit() + " AND queue IN (" + Consts.QUEUE_TYPE_LRN + ", " + Consts.QUEUE_TYPE_PREVIEW + ") AND due < ?"
+                            + " AND id != ? ORDER BY " +  String.valueOf(getTime().intTime()) + " < " + "due" + ", mod = (SELECT MAX(mod) FROM cards) "  + "  ,due - mod, due LIMIT ?", cutoff, currentCardId(), mReportLimit)) {
             mLrnQueue.setFilled();
             while (cur.moveToNext()) {
                 mLrnQueue.add(cur.getLong(0), cur.getLong(1));
             }
             // as it arrives sorted by did first, we need to sort it
-            mLrnQueue.sort();
+            // mLrnQueue.sort();
             return !mLrnQueue.isEmpty();
         }
     }
@@ -1110,7 +1110,8 @@ public class SchedV2 extends AbstractSched {
                 cutoff += mCol.getConf().getInt("collapseTime");
             }
             if (mLrnQueue.getFirstDue() < cutoff) {
-                return mLrnQueue.removeFirstCard();
+                Card removedCard = mLrnQueue.removeFirstCard();
+                return removedCard;
                 // mLrnCount -= 1; see decrementCounts()
             }
         }
@@ -1120,13 +1121,15 @@ public class SchedV2 extends AbstractSched {
 
     protected boolean _preloadLrnCard(boolean collapse) {
         _maybeResetLrn(collapse && mLrnCount == 0);
-        if (_fillLrn()) {
+        if (!mLrnQueue.isEmpty()) {
             long cutoff = getTime().intTime();
             if (collapse) {
                 cutoff += mCol.getConf().getInt("collapseTime");
             }
             // mLrnCount -= 1; see decrementCounts()
             return mLrnQueue.getFirstDue() < cutoff;
+        } else {
+            _fillLrn();
         }
         return false;
     }
@@ -1612,7 +1615,7 @@ public class SchedV2 extends AbstractSched {
                  */
                 // fill the queue with the current did
             try (Cursor cur = mCol.getDb().query("SELECT id FROM cards WHERE did in " + _deckLimit() + " AND queue = " + Consts.QUEUE_TYPE_REV + " AND due <= ? AND " + idName + " != ?"
-                               + " ORDER BY due, random()  LIMIT ?",
+                               + " ORDER BY due, random() LIMIT ?",
                                mToday, id, lim)) {
                 while (cur.moveToNext()) {
                     mRevQueue.add(cur.getLong(0));
