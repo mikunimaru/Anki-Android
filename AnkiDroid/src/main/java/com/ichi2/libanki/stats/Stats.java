@@ -1197,8 +1197,8 @@ public class Stats {
         mTitle = R.string.title_activity_template_editor;
         mBackwards = false;
         mAxisTitles = new int[] { R.string.stats_answer_type, R.string.stats_answers, R.string.stats_cumulative_correct_percentage };
-        mValueLabels = new int[] {R.string.statistics_mature, R.string.statistics_young, R.string.statistics_learn, R.string.statistics_relearn, R.string.statistics_unlearned, R.string.statistics_suspended, R.string.statistics_buried,};
-        mColors = new int[] { R.attr.stats_mature, R.attr.stats_young, R.attr.stats_learn, R.attr.stats_relearn, R.attr.stats_unseen, R.attr.stats_suspended, R.attr.stats_buried };
+        mValueLabels = new int[] {R.string.statistics_mature, R.string.statistics_young, R.string.statistics_learn, R.string.statistics_relearn, R.string.statistics_suspended, R.string.statistics_buried,R.string.statistics_unlearned};
+        mColors = new int[] { R.attr.stats_mature, R.attr.stats_young, R.attr.stats_learn, R.attr.stats_relearn, R.attr.stats_suspended, R.attr.stats_buried, R.attr.stats_unseen};
         mType = type;
         double[] pieData;
         String query = "select " +
@@ -1206,9 +1206,9 @@ public class Stats {
                 "sum(case when queue=" + Consts.QUEUE_TYPE_REV + " and ivl < 21 then 1 else 0 end), -- yng\n" +
                 "sum(case when queue=" + Consts.QUEUE_TYPE_DAY_LEARN_RELEARN + " then 1 else 0 end), -- lrn\n" +
                 "sum(case when queue=" + Consts.QUEUE_TYPE_LRN  + " then 1 else 0 end), -- relrn\n" +
-                "sum(case when queue=" + Consts.QUEUE_TYPE_NEW + " then 1 else 0 end), -- new\n" +
                 "sum(case when queue=" + Consts.QUEUE_TYPE_SUSPENDED + " then 1 else 0 end), -- susp\n" +
                 "sum(case when queue in (" + Consts.QUEUE_TYPE_MANUALLY_BURIED + "," + Consts.QUEUE_TYPE_SIBLING_BURIED + ") then 1 else 0 end) -- buried\n" +
+                "sum(case when queue=" + Consts.QUEUE_TYPE_NEW + " then 1 else 0 end), -- new\n" +
                 "from cards where did in " + _limit();
         Timber.d("CardsTypes query: %s", query);
 
