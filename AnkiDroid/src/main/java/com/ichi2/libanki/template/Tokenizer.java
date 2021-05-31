@@ -41,7 +41,7 @@ public class Tokenizer implements Iterator<Tokenizer.Token> {
     /**
      * Become true if lexing failed. That is, the string start with {{, but no }} is found.
      */
-    private @Nullable boolean mFailed;
+    private boolean mFailed = false;
 
     Tokenizer(@NonNull String template) {
         mTemplate = template;
@@ -96,8 +96,8 @@ public class Tokenizer implements Iterator<Tokenizer.Token> {
         private final String mText;
 
 
-        public Token(TokenKind king, String text) {
-            mKind = king;
+        public Token(TokenKind kind, String text) {
+            mKind = kind;
             mText = text;
         }
 
