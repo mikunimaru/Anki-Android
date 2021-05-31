@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Unga</string>
     <string name="statistics_mature">Mogna</string>
-    <string name="statistics_young_and_learn">Unga+Nya</string>
     <string name="statistics_unlearned">Osedda</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Jóvenes</string>
     <string name="statistics_mature">Maduras</string>
-    <string name="statistics_young_and_learn">Jovenes+Aprendiendo</string>
     <string name="statistics_unlearned">No vistas</string>
     <string name="statistics_suspended">Suspendidas</string>
     <string name="statistics_buried">Enterradas</string>

@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Jong</string>
     <string name="statistics_mature">Rijp</string>
-    <string name="statistics_young_and_learn">Jong+Leren</string>
     <string name="statistics_unlearned">Nieuw</string>
     <string name="statistics_suspended">Geschorst</string>
     <string name="statistics_buried">Verborgen</string>

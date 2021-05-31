@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Giovani</string>
     <string name="statistics_mature">Mature</string>
-    <string name="statistics_young_and_learn">Giovani+Impara</string>
     <string name="statistics_unlearned">Mai viste</string>
     <string name="statistics_suspended">Sospeso</string>
     <string name="statistics_buried">Sepolto</string>

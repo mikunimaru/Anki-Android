@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Novos</string>
     <string name="statistics_mature">Vellos</string>
-    <string name="statistics_young_and_learn">Novos+Aprendido</string>
     <string name="statistics_unlearned">Non vistas</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

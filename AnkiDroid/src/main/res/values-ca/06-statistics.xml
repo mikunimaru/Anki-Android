@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Joves</string>
     <string name="statistics_mature">Madures</string>
-    <string name="statistics_young_and_learn">Joves+Aprenent</string>
     <string name="statistics_unlearned">No vistes</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

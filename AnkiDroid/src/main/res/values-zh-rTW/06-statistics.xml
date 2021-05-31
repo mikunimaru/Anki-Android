@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">生疏卡片</string>
     <string name="statistics_mature">熟練卡片</string>
-    <string name="statistics_young_and_learn">生疏+新學習</string>
     <string name="statistics_unlearned">尚未看過</string>
     <string name="statistics_suspended">長久擱置</string>
     <string name="statistics_buried">已銷毀</string>

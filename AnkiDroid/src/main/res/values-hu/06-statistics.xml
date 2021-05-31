@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Legfrissebb</string>
     <string name="statistics_mature">Érett</string>
-    <string name="statistics_young_and_learn">Legfrissebb+Tanulás</string>
     <string name="statistics_unlearned">Eddig még nem látott</string>
     <string name="statistics_suspended">Felfüggesztve</string>
     <string name="statistics_buried">Buried</string>

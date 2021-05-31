@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Juggs</string>
     <string name="statistics_mature">Uswahsans</string>
-    <string name="statistics_young_and_learn">Young+Learn</string>
     <string name="statistics_unlearned">Unsaiƕan</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Récentes</string>
     <string name="statistics_mature">Anciennes</string>
-    <string name="statistics_young_and_learn">Récentes + À apprendre</string>
     <string name="statistics_unlearned">Non vues</string>
     <string name="statistics_suspended">Suspendues</string>
     <string name="statistics_buried">Enfouies</string>

@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Junge</string>
     <string name="statistics_mature">Alte</string>
-    <string name="statistics_young_and_learn">Jung+Lernen</string>
     <string name="statistics_unlearned">Neu</string>
     <string name="statistics_suspended">Ausgesetzt</string>
     <string name="statistics_buried">Zurückgestellt</string>

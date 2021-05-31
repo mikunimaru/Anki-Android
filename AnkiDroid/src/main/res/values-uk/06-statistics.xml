@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Свіжі</string>
     <string name="statistics_mature">Закріплені</string>
-    <string name="statistics_young_and_learn">Нові і нещодавні</string>
     <string name="statistics_unlearned">Не переглядані</string>
     <string name="statistics_suspended">Призупинено</string>
     <string name="statistics_buried">Відкладені</string>

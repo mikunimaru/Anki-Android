@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Muda</string>
     <string name="statistics_mature">Dewasa</string>
-    <string name="statistics_young_and_learn">Muda+Belajar</string>
     <string name="statistics_unlearned">Belum dilihat</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

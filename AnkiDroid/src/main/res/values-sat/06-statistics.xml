@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">ᱡᱚᱣᱟᱱ</string>
     <string name="statistics_mature">ᱫᱝᱜᱩᱟᱹ</string>
-    <string name="statistics_young_and_learn">ᱡᱚᱣᱟᱱ+ᱪᱮᱫᱚᱜ</string>
     <string name="statistics_unlearned">ᱵᱟᱭᱧᱚᱞᱠᱚᱜ</string>
     <string name="statistics_suspended">ᱵᱚᱫ ᱜᱤᱰᱤ</string>
     <string name="statistics_buried">ᱛᱚᱯᱟ ᱮᱱᱟ</string>

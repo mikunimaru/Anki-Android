@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Mladé</string>
     <string name="statistics_mature">Zrelé</string>
-    <string name="statistics_young_and_learn">Mladé+Novonaučené</string>
     <string name="statistics_unlearned">Neučené</string>
     <string name="statistics_suspended">Pozastavené</string>
     <string name="statistics_buried">Zahrabané</string>

@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Jovem</string>
     <string name="statistics_mature">Maduro</string>
-    <string name="statistics_young_and_learn">Jovem+Aprender</string>
     <string name="statistics_unlearned">Não visto</string>
     <string name="statistics_suspended">Suspenso</string>
     <string name="statistics_buried">Oculto</string>

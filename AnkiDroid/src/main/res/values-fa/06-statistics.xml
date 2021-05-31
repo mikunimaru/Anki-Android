@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">جوان</string>
     <string name="statistics_mature">سررسیده</string>
-    <string name="statistics_young_and_learn">موقت + آموزش</string>
     <string name="statistics_unlearned">دیده نشده</string>
     <string name="statistics_suspended">معلق شده</string>
     <string name="statistics_buried">دفن شده</string>

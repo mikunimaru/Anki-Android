@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">צעיר</string>
     <string name="statistics_mature">בוגר</string>
-    <string name="statistics_young_and_learn">צעיר + ללמוד</string>
     <string name="statistics_unlearned">תרם נראה</string>
     <string name="statistics_suspended">מושהה</string>
     <string name="statistics_buried">קבור</string>

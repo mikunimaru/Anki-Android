@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Naujos</string>
     <string name="statistics_mature">Senos</string>
-    <string name="statistics_young_and_learn">Naujos+tebesimokomos</string>
     <string name="statistics_unlearned">Nematytos</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

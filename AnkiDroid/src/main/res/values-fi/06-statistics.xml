@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Nuoret</string>
     <string name="statistics_mature">Kypsät</string>
-    <string name="statistics_young_and_learn">Young+Learn</string>
     <string name="statistics_unlearned">Näkemättömät</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

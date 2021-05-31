@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Unge</string>
     <string name="statistics_mature">Modne</string>
-    <string name="statistics_young_and_learn">Young+Learn</string>
     <string name="statistics_unlearned">Unseen</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

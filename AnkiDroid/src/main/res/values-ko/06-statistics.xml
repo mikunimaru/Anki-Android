@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">최근</string>
     <string name="statistics_mature">오래된</string>
-    <string name="statistics_young_and_learn">최근+학습</string>
     <string name="statistics_unlearned">본 적 없는</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

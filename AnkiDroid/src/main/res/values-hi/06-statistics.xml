@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">हाल के</string>
     <string name="statistics_mature">पुराना</string>
-    <string name="statistics_young_and_learn">हाल के + सीख</string>
     <string name="statistics_unlearned">नया</string>
     <string name="statistics_suspended">निलंबित</string>
     <string name="statistics_buried">स्थगित</string>

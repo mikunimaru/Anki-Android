@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">వయస్సులో ఉన్నప్పుడు</string>
     <string name="statistics_mature">పరిపక్వ</string>
-    <string name="statistics_young_and_learn">వయస్సులో ఉన్నప్పుడు+తెలుసుకోండి</string>
     <string name="statistics_unlearned">చూడబడని</string>
     <string name="statistics_suspended">Suspended</string>
     <string name="statistics_buried">Buried</string>

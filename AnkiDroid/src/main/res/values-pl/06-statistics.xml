@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Młode</string>
     <string name="statistics_mature">Dojrzałe</string>
-    <string name="statistics_young_and_learn">Młode+Uczone</string>
     <string name="statistics_unlearned">Niewidziane</string>
     <string name="statistics_suspended">Zawieszone</string>
     <string name="statistics_buried">Zakopane</string>

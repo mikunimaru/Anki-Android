@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Свежыя</string>
     <string name="statistics_mature">Замацаваныя</string>
-    <string name="statistics_young_and_learn">Свежыя і якія вучацца</string>
     <string name="statistics_unlearned">Не прагледжаныя</string>
     <string name="statistics_suspended">Прыпыненыя</string>
     <string name="statistics_buried">Адкладзеныя</string>

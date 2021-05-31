@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Tuổi trẻ</string>
     <string name="statistics_mature">Trưởng thành</string>
-    <string name="statistics_young_and_learn">Thiếu niên + Học</string>
     <string name="statistics_unlearned">Chưa xem</string>
     <string name="statistics_suspended">ngưng lại</string>
     <string name="statistics_buried">Tạm ẩn</string>

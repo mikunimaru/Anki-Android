@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">Junaj</string>
     <string name="statistics_mature">Maljunaj</string>
-    <string name="statistics_young_and_learn">Junaj kaj lernataj</string>
     <string name="statistics_unlearned">Novaj</string>
     <string name="statistics_suspended">Kaŝitaj (daŭre)</string>
     <string name="statistics_buried">Kaŝitaj (tago)</string>

@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">ଯୁବ</string>
     <string name="statistics_mature">ପରିପକ୍ୱ</string>
-    <string name="statistics_young_and_learn">ଯୁବ+ଶିଖୁଛନ୍ତି</string>
     <string name="statistics_unlearned">ଅଣଦେଖା</string>
     <string name="statistics_suspended">ନିଲମ୍ବିତ ଅଛି</string>
     <string name="statistics_buried">ସ୍ଥଗିତ ଅଛି</string>

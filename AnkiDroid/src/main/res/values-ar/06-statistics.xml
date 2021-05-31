@@ -40,7 +40,6 @@
 <resources>
     <string name="statistics_young">يافعة</string>
     <string name="statistics_mature">ناضجة</string>
-    <string name="statistics_young_and_learn">يافعة+تعلم</string>
     <string name="statistics_unlearned">لم ترى</string>
     <string name="statistics_suspended">معلقة</string>
     <string name="statistics_buried">مدفونة</string>
