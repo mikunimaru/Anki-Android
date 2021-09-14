@@ -32,8 +32,10 @@ import com.ichi2.utils.JSONException;
 import com.ichi2.utils.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import timber.log.Timber;
@@ -57,6 +59,9 @@ public class Storage {
     /** Helper method for when the collection can't be opened */
     public static int getDatabaseVersion(String path) throws UnknownDatabaseVersionException {
         try {
+            if (!new File(path).exists()) {
+                throw new UnknownDatabaseVersionException(new FileNotFoundException(path));
+            }
             DB db = new DB(path);
             int result = db.queryScalar("SELECT ver FROM col");
             db.close();
@@ -71,7 +76,7 @@ public class Storage {
         return Collection(context, path, server, log, new SystemTime());
     }
     public static Collection Collection(Context context, String path, boolean server, boolean log, @NonNull Time time) {
-        assert path.endsWith(".anki2");
+        assert (path.endsWith(".anki2") || path.endsWith(".anki21"));
         File dbFile = new File(path);
         boolean create = !dbFile.exists();
         DroidBackend backend = DroidBackendFactory.getInstance(useBackend());
@@ -97,7 +102,7 @@ public class Storage {
                 for (int i = StdModels.STD_MODELS.length-1; i>=0; i--) {
                     StdModels.STD_MODELS[i].add(col);
                 }
-                backend.useNewTimezoneCode(col);
+                col.onCreate();
                 col.save();
             }
             return col;
@@ -156,8 +161,8 @@ public class Storage {
             }
             if (ver < 4) {
                 col.modSchemaNoCheck();
-                ArrayList<Model> models = col.getModels().all();
-                ArrayList<Model> clozes = new ArrayList<>(models);
+                List<Model> models = col.getModels().all();
+                ArrayList<Model> clozes = new ArrayList<>(models.size());
                 for (Model m : models) {
                     if (!m.getJSONArray("tmpls").getJSONObject(0).getString("qfmt").contains("{{cloze:")) {
                         m.put("type", Consts.MODEL_STD);

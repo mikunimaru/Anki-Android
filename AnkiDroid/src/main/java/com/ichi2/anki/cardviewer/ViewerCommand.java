@@ -16,75 +16,221 @@
 
 package com.ichi2.anki.cardviewer;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import android.content.SharedPreferences;
+import android.view.KeyEvent;
 
-import androidx.annotation.IntDef;
+import com.ichi2.anki.R;
+import com.ichi2.anki.reviewer.Binding;
+import com.ichi2.anki.reviewer.Binding.ModifierKeys;
+import com.ichi2.anki.reviewer.CardSide;
+import com.ichi2.anki.reviewer.MappableBinding;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /** Abstraction: Discuss moving many of these to 'Reviewer' */
-public class ViewerCommand {
-    public static final int COMMAND_NOTHING = 0;
-    public static final int COMMAND_SHOW_ANSWER = 1;
-    public static final int COMMAND_FLIP_OR_ANSWER_EASE1 = 2;
-    public static final int COMMAND_FLIP_OR_ANSWER_EASE2 = 3;
-    public static final int COMMAND_FLIP_OR_ANSWER_EASE3 = 4;
-    public static final int COMMAND_FLIP_OR_ANSWER_EASE4 = 5;
-    public static final int COMMAND_FLIP_OR_ANSWER_RECOMMENDED = 6;
-    public static final int COMMAND_FLIP_OR_ANSWER_BETTER_THAN_RECOMMENDED = 7;
-    public static final int COMMAND_UNDO = 8;
-    public static final int COMMAND_EDIT = 9;
-    public static final int COMMAND_MARK = 10;
-    public static final int COMMAND_LOOKUP = 11;
-    public static final int COMMAND_BURY_CARD = 12;
-    public static final int COMMAND_SUSPEND_CARD = 13;
-    public static final int COMMAND_DELETE = 14;
-    public static final int COMMAND_PLAY_MEDIA = 16;
-    public static final int COMMAND_EXIT = 17;
-    public static final int COMMAND_BURY_NOTE = 18;
-    public static final int COMMAND_SUSPEND_NOTE = 19;
-    public static final int COMMAND_TOGGLE_FLAG_RED = 20;
-    public static final int COMMAND_TOGGLE_FLAG_ORANGE = 21;
-    public static final int COMMAND_TOGGLE_FLAG_GREEN = 22;
-    public static final int COMMAND_TOGGLE_FLAG_BLUE = 23;
-    public static final int COMMAND_UNSET_FLAG = 24;
-    public static final int COMMAND_ANSWER_FIRST_BUTTON = 25;
-    public static final int COMMAND_ANSWER_SECOND_BUTTON = 26;
-    public static final int COMMAND_ANSWER_THIRD_BUTTON = 27;
-    public static final int COMMAND_ANSWER_FOURTH_BUTTON = 28;
-    /** Answer "Good" */
-    public static final int COMMAND_ANSWER_RECOMMENDED = 29;
-    public static final int COMMAND_PAGE_UP = 30;
-    public static final int COMMAND_PAGE_DOWN = 31;
+public enum ViewerCommand {
 
-    public static final int COMMAND_TAG = 32;
-    public static final int COMMAND_CARD_INFO = 33;
-    public static final int COMMAND_ABORT_AND_SYNC = 34;
-    public static final int COMMAND_RECORD_VOICE = 35;
-    public static final int COMMAND_REPLAY_VOICE = 36;
+    COMMAND_NOTHING(R.string.nothing, 0),
+    COMMAND_SHOW_ANSWER(R.string.show_answer, 1),
+    COMMAND_FLIP_OR_ANSWER_EASE1(R.string.gesture_answer_1, 2),
+    COMMAND_FLIP_OR_ANSWER_EASE2(R.string.gesture_answer_2, 3),
+    COMMAND_FLIP_OR_ANSWER_EASE3(R.string.gesture_answer_3, 4),
+    COMMAND_FLIP_OR_ANSWER_EASE4(R.string.gesture_answer_4, 5),
+    COMMAND_FLIP_OR_ANSWER_RECOMMENDED(R.string.gesture_answer_green, 6),
+    COMMAND_FLIP_OR_ANSWER_BETTER_THAN_RECOMMENDED(R.string.gesture_answer_better_recommended, 7),
+    COMMAND_UNDO(R.string.undo, 8),
+    COMMAND_EDIT(R.string.cardeditor_title_edit_card, 9),
+    COMMAND_MARK(R.string.menu_mark_note, 10),
+    COMMAND_LOOKUP(R.string.lookup_button_content, 11),
+    COMMAND_BURY_CARD(R.string.menu_bury, 12),
+    COMMAND_SUSPEND_CARD(R.string.menu_suspend_card, 13),
+    COMMAND_DELETE(R.string.menu_delete_note, 14),
+    // 15 is unused.
+    COMMAND_PLAY_MEDIA(R.string.gesture_play,16),
+    COMMAND_EXIT(R.string.gesture_abort_learning, 17),
+    COMMAND_BURY_NOTE(R.string.menu_bury_note, 18),
+    COMMAND_SUSPEND_NOTE(R.string.menu_suspend_note, 19),
+    COMMAND_TOGGLE_FLAG_RED(R.string.gesture_flag_red, 20),
+    COMMAND_TOGGLE_FLAG_ORANGE(R.string.gesture_flag_orange, 21),
+    COMMAND_TOGGLE_FLAG_GREEN(R.string.gesture_flag_green, 22),
+    COMMAND_TOGGLE_FLAG_BLUE(R.string.gesture_flag_blue, 23),
+    COMMAND_TOGGLE_FLAG_PINK(R.string.gesture_flag_pink, 38),
+    COMMAND_TOGGLE_FLAG_TURQUOISE(R.string.gesture_flag_turquoise, 39),
+    COMMAND_TOGGLE_FLAG_PURPLE(R.string.gesture_flag_purple, 40),
+    COMMAND_UNSET_FLAG(R.string.gesture_flag_remove, 24),
+    COMMAND_PAGE_UP(R.string.gesture_page_up, 30),
+    COMMAND_PAGE_DOWN(R.string.gesture_page_down, 31),
+    COMMAND_TAG(R.string.add_tag, 32),
+    COMMAND_CARD_INFO(R.string.card_info_title, 33),
+    COMMAND_ABORT_AND_SYNC(R.string.gesture_abort_sync, 34),
+    COMMAND_RECORD_VOICE(R.string.record_voice, 35),
+    COMMAND_REPLAY_VOICE(R.string.replay_voice, 36),
+    COMMAND_TOGGLE_WHITEBOARD(R.string.gesture_toggle_whiteboard, 37);
 
-    public static final int COMMAND_TOGGLE_WHITEBOARD = 37;
+    private final int mResourceId;
+    private final int mPreferenceValue;
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({COMMAND_NOTHING, COMMAND_SHOW_ANSWER, COMMAND_FLIP_OR_ANSWER_EASE1, COMMAND_FLIP_OR_ANSWER_EASE2,
-            COMMAND_FLIP_OR_ANSWER_EASE3, COMMAND_FLIP_OR_ANSWER_EASE4, COMMAND_FLIP_OR_ANSWER_RECOMMENDED,
-            COMMAND_FLIP_OR_ANSWER_BETTER_THAN_RECOMMENDED, COMMAND_UNDO, COMMAND_EDIT, COMMAND_MARK, COMMAND_LOOKUP,
-            COMMAND_BURY_CARD, COMMAND_SUSPEND_CARD, COMMAND_DELETE, COMMAND_PLAY_MEDIA, COMMAND_EXIT,
-            COMMAND_BURY_NOTE, COMMAND_SUSPEND_NOTE, COMMAND_TOGGLE_FLAG_RED, COMMAND_TOGGLE_FLAG_ORANGE,
-            COMMAND_TOGGLE_FLAG_GREEN, COMMAND_TOGGLE_FLAG_BLUE, COMMAND_UNSET_FLAG, COMMAND_ANSWER_FIRST_BUTTON,
-            COMMAND_ANSWER_SECOND_BUTTON, COMMAND_ANSWER_THIRD_BUTTON, COMMAND_ANSWER_FOURTH_BUTTON, COMMAND_ANSWER_RECOMMENDED,
-            COMMAND_PAGE_UP, COMMAND_PAGE_DOWN, COMMAND_TAG, COMMAND_CARD_INFO, COMMAND_ABORT_AND_SYNC, COMMAND_RECORD_VOICE,
-            COMMAND_REPLAY_VOICE, COMMAND_TOGGLE_WHITEBOARD
-    })
-    public @interface ViewerCommandDef {}
+
+    ViewerCommand(int resourceId, int preferenceValue) {
+        this.mResourceId = resourceId;
+        this.mPreferenceValue = preferenceValue;
+    }
+
+    public int getResourceId() {
+        return mResourceId;
+    }
+
+    @Nullable
+    public static ViewerCommand fromString(String value) {
+        return fromInt(Integer.parseInt(value));
+    }
+
+    @Nullable
+    public static ViewerCommand fromInt(int valueAsInt) {
+        // PERF: this is slow, but won't be used for long
+        return Arrays.stream(ViewerCommand.values()).filter(x -> x.mPreferenceValue == valueAsInt).findFirst().orElse(null);
+    }
+
+
+    public String toPreferenceString() {
+        return Integer.toString(mPreferenceValue);
+    }
+
+
+    public String getPreferenceKey() {
+        return "binding_" + name().replaceFirst("COMMAND_", "");
+    }
+
+    public static List<MappableBinding> getAllDefaultBindings() {
+        return Arrays.stream(ViewerCommand.values())
+                .flatMap(x -> x.getDefaultValue().stream())
+                .collect(Collectors.toList());
+    }
+
+    public void addBinding(SharedPreferences preferences, MappableBinding binding) {
+        BiFunction<List<MappableBinding>, MappableBinding, Boolean> addAtStart = (collection, element) -> {
+            // reorder the elements, moving the added binding to the first position
+            collection.remove(element);
+            collection.add(0, element);
+            return true;
+        };
+        addBindingInternal(preferences, binding, addAtStart);
+    }
+
+    public void addBindingAtEnd(SharedPreferences preferences, MappableBinding binding) {
+        BiFunction<List<MappableBinding>, MappableBinding, Boolean> addAtEnd = (collection, element) -> {
+            // do not reorder the elements
+            if (collection.contains(element)) {
+                return false;
+            }
+            collection.add(element);
+            return true;
+        };
+        addBindingInternal(preferences, binding, addAtEnd);
+    }
+
+    private void addBindingInternal(SharedPreferences preferences, MappableBinding binding, BiFunction<List<MappableBinding>, MappableBinding, Boolean> performAdd) {
+        if (this == COMMAND_NOTHING) {
+            return;
+        }
+        List<MappableBinding> bindings = MappableBinding.fromPreference(preferences, this);
+        performAdd.apply(bindings, binding);
+        String newValue = MappableBinding.Companion.toPreferenceString(bindings);
+        preferences.edit().putString(this.getPreferenceKey(), newValue).apply();
+    }
+
+    @NonNull
+    public List<MappableBinding> getDefaultValue() {
+        // If we use the serialised format, then this adds additional coupling to the properties.
+        switch (this) {
+            case COMMAND_FLIP_OR_ANSWER_EASE1:
+                return from(keyCode(KeyEvent.KEYCODE_BUTTON_Y, CardSide.BOTH),
+                        keyCode(KeyEvent.KEYCODE_1, CardSide.ANSWER), keyCode(KeyEvent.KEYCODE_NUMPAD_1, CardSide.ANSWER));
+            case COMMAND_FLIP_OR_ANSWER_EASE2:
+                return from(keyCode(KeyEvent.KEYCODE_BUTTON_X, CardSide.BOTH),
+                        keyCode(KeyEvent.KEYCODE_2, CardSide.ANSWER), keyCode(KeyEvent.KEYCODE_NUMPAD_2, CardSide.ANSWER));
+            case COMMAND_FLIP_OR_ANSWER_EASE3:
+                return from(keyCode(KeyEvent.KEYCODE_BUTTON_B, CardSide.BOTH),
+                        keyCode(KeyEvent.KEYCODE_3, CardSide.ANSWER), keyCode(KeyEvent.KEYCODE_NUMPAD_3, CardSide.ANSWER));
+            case COMMAND_FLIP_OR_ANSWER_EASE4:
+                return from(keyCode(KeyEvent.KEYCODE_BUTTON_A, CardSide.BOTH),
+                        keyCode(KeyEvent.KEYCODE_4, CardSide.ANSWER), keyCode(KeyEvent.KEYCODE_NUMPAD_4, CardSide.ANSWER));
+            case COMMAND_FLIP_OR_ANSWER_RECOMMENDED:
+                return from(keyCode(KeyEvent.KEYCODE_DPAD_CENTER, CardSide.BOTH),
+                        keyCode(KeyEvent.KEYCODE_SPACE, CardSide.ANSWER),
+                        keyCode(KeyEvent.KEYCODE_ENTER, CardSide.ANSWER),
+                        keyCode(KeyEvent.KEYCODE_NUMPAD_ENTER, CardSide.ANSWER));
+            case COMMAND_EDIT:
+                return from(keyCode(KeyEvent.KEYCODE_E, CardSide.BOTH));
+            case COMMAND_MARK:
+                return from(unicode('*', CardSide.BOTH));
+            case COMMAND_BURY_CARD:
+                return from(unicode('-', CardSide.BOTH));
+            case COMMAND_BURY_NOTE:
+                return from(unicode('=', CardSide.BOTH));
+            case COMMAND_SUSPEND_CARD:
+                return from(unicode('@', CardSide.BOTH));
+            case COMMAND_SUSPEND_NOTE:
+                return from(unicode('!', CardSide.BOTH));
+            case COMMAND_PLAY_MEDIA:
+                return from(keyCode(KeyEvent.KEYCODE_R, CardSide.BOTH), keyCode(KeyEvent.KEYCODE_F5, CardSide.BOTH));
+            case COMMAND_REPLAY_VOICE:
+                return from(keyCode(KeyEvent.KEYCODE_V, CardSide.BOTH));
+            case COMMAND_RECORD_VOICE:
+                return from(keyCode(KeyEvent.KEYCODE_V, CardSide.BOTH, ModifierKeys.shift()));
+            case COMMAND_UNDO:
+                return from(keyCode(KeyEvent.KEYCODE_Z, CardSide.BOTH));
+            case COMMAND_TOGGLE_FLAG_RED:
+                return from(keyCode(KeyEvent.KEYCODE_1, CardSide.BOTH, ModifierKeys.ctrl()), keyCode(KeyEvent.KEYCODE_NUMPAD_1, CardSide.BOTH, ModifierKeys.ctrl()));
+            case COMMAND_TOGGLE_FLAG_ORANGE:
+                return from(keyCode(KeyEvent.KEYCODE_2, CardSide.BOTH, ModifierKeys.ctrl()), keyCode(KeyEvent.KEYCODE_NUMPAD_2, CardSide.BOTH, ModifierKeys.ctrl()));
+            case COMMAND_TOGGLE_FLAG_GREEN:
+                return from(keyCode(KeyEvent.KEYCODE_3, CardSide.BOTH, ModifierKeys.ctrl()), keyCode(KeyEvent.KEYCODE_NUMPAD_3, CardSide.BOTH, ModifierKeys.ctrl()));
+            case COMMAND_TOGGLE_FLAG_BLUE:
+                return from(keyCode(KeyEvent.KEYCODE_4, CardSide.BOTH, ModifierKeys.ctrl()), keyCode(KeyEvent.KEYCODE_NUMPAD_4, CardSide.BOTH, ModifierKeys.ctrl()));
+            case COMMAND_TOGGLE_FLAG_PINK:
+                return from(keyCode(KeyEvent.KEYCODE_5, CardSide.BOTH, ModifierKeys.ctrl()), keyCode(KeyEvent.KEYCODE_NUMPAD_5, CardSide.BOTH, ModifierKeys.ctrl()));
+            case COMMAND_TOGGLE_FLAG_TURQUOISE:
+                return from(keyCode(KeyEvent.KEYCODE_6, CardSide.BOTH, ModifierKeys.ctrl()), keyCode(KeyEvent.KEYCODE_NUMPAD_6, CardSide.BOTH, ModifierKeys.ctrl()));
+            case COMMAND_TOGGLE_FLAG_PURPLE:
+                return from(keyCode(KeyEvent.KEYCODE_7, CardSide.BOTH, ModifierKeys.ctrl()), keyCode(KeyEvent.KEYCODE_NUMPAD_7, CardSide.BOTH, ModifierKeys.ctrl()));
+            default: return new ArrayList<>();
+        }
+    }
+
+
+    private MappableBinding keyCode(int keycode, @SuppressWarnings("SameParameterValue") CardSide side, ModifierKeys keys) {
+        return new MappableBinding(Binding.keyCode(keys, keycode), new MappableBinding.Screen.Reviewer(side));
+    }
+
+
+    private MappableBinding unicode(char c, @SuppressWarnings("SameParameterValue") CardSide side) {
+        return new MappableBinding(Binding.unicode(c), new MappableBinding.Screen.Reviewer(side));
+    }
+
+
+    private List<MappableBinding> from(MappableBinding... bindings) {
+        return new ArrayList<>(Arrays.asList(bindings));
+    }
+
+
+    private MappableBinding keyCode(int keyCode, CardSide side) {
+        return new MappableBinding(Binding.keyCode(keyCode), new MappableBinding.Screen.Reviewer(side));
+    }
+
 
     public interface CommandProcessor {
         /**
-         *
-         * @param which The command (defined in {@code ViewerCommand}) to execute
-         * @return Whether the action was successfully processed.
-         * <p>example failure: answering an ease on the front of the card</p>
+          * <p>example failure: answering an ease on the front of the card</p>
          */
         @SuppressWarnings("UnusedReturnValue")
-        boolean executeCommand(@ViewerCommandDef int which);
+        boolean executeCommand(@NonNull ViewerCommand which);
     }
 }

@@ -58,7 +58,7 @@
     <string name="updated_version">更新到版本 %s</string>
     <!-- Reviewer.java -->
     <string name="save_whiteboard">儲存白板</string>
-    <string name="enable_whiteboard">開啓白板</string>
+    <string name="enable_whiteboard">開啟白板</string>
     <string name="disable_whiteboard">關閉白板</string>
     <string name="show_whiteboard">顯示白板</string>
     <string name="hide_whiteboard">隱藏白板</string>
@@ -110,7 +110,6 @@
     <string name="note_editor_no_cards_created">未建立卡片。請輸入更多欄位</string>
     <string name="note_editor_no_first_field">第一欄位為空</string>
     <string name="note_editor_no_cloze_delations">此筆記類型必須包含克漏字測驗</string>
-    <string name="note_editor_set_field_language">選擇欄位語言</string>
     <string name="note_editor_no_cards_created_all_fields">目前的筆記類型不會產生任何卡片。請選擇其他的筆記類型，或點擊「卡片」並新增取代欄位</string>
     <string name="note_editor_insert_cloze_no_cloze_note_type">克漏字測驗僅工作於克漏字筆記類型</string>
     <string name="saving_facts">儲存筆記中</string>
@@ -122,7 +121,7 @@
     <string name="reordering_cards">正在重新排列卡片...</string>
     <string name="field_remapping">%1$s (來自 \"%2$s\")</string>
     <string name="confirm_map_cards_to_nothing">空白卡片會被刪除，而筆記如果沒有在卡片上也會遺失。你確定要繼續嗎？</string>
-    <string name="timebox_reached_title">Timebox reached</string>
+    <string name="timebox_reached_title">達到計時器限制！</string>
     <plurals name="timebox_reached">
         <item quantity="other">使用 %2$s 學習共 %1$d 張卡片</item>
     </plurals>
@@ -152,7 +151,6 @@
     <string name="show_hint">顯示%s</string>
     <string name="info_rate">評價 AnkiDroid</string>
     <string name="import_title">正在匯入……</string>
-    <string name="import_select_title">選擇欲匯入的檔案</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">新增</string>
     <string name="import_message_replace_confirm">這將會刪除你現有的集合並以%s的內容取代，你確定嗎？</string>
     <string name="import_message_add_confirm">新增「%s」到集合嗎？這可能會花上好一段時間</string>
@@ -192,8 +190,6 @@
         使用任一 <a href="http://ankisrs.net/#download">Anki 用戶端</a>打開它，享受輕鬆高效的學習吧！
         ]]></string>
     <string name="export_unsuccessful">匯出 Apkg 檔案時出錯</string>
-    <string name="import_hint">若你要匯入卡片，請將 apkg 檔案放在「%s」目錄下，然後按OK</string>
-    <string name="upgrade_import_no_file_found">找不到可匯入的%1$s檔案</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">選項</string>
     <string name="menu__deck_options">牌組選項</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">學習選項</string>
@@ -269,7 +265,7 @@
     <string name="white_board_image_save_failed">儲存白板圖像失敗。%s</string>
     <string name="white_board_image_saved">白板圖像儲存至%s</string>
     <string name="title_whiteboard_pen_color">白板筆色彩</string>
-    <string name="title_whiteboard_editor">Whiteboard editor</string>
+    <string name="title_whiteboard_editor">白板編輯器</string>
     <!-- CSV/Note Import -->
     <string name="note_importer_empty_cards_found"><![CDATA[已找到空白卡片。請運作 工具 > 空白卡片。]]></string>
     <string name="note_importer_error_empty_first_field">第一欄位為空：%s</string>
@@ -302,7 +298,7 @@
     <!-- Card Viewer -->
     <string name="card_viewer_could_not_find_image">卡片內容錯誤：載入 ‘%s’ 失敗</string>
     <string name="card_viewer_media_relative_protocol">卡片內容錯誤：需要更新媒體</string>
-    <string name="cannot_load_http_resource">Loading http resources is no longer supported</string>
+    <string name="cannot_load_http_resource">已不再支援載入 http 資源</string>
     <!-- Deck Picker -->
     <string name="deck_picker_failed_deck_load">載入牌組 ‘%s’ 失敗</string>
     <string name="search_decks">搜尋牌組</string>
@@ -322,11 +318,11 @@
     <string name="before_text">選取內容前的 HTML</string>
     <string name="after_text">選取內容後的 HTML</string>
     <string name="add_toolbar_item">建立工具列項目</string>
-    <string name="toolbar_item_explain_remove">Enter HTML to be inserted before and after the selected text\n\nLong press a toolbar item to remove it</string>
+    <string name="toolbar_item_explain_remove">請輸入要在選定文字之前和之後插入的HTML\n\n按住工具列項目以刪除它</string>
     <string name="remove_toolbar_item">是否移除工具列項目？</string>
     <string name="note_editor_paste_too_large">此圖像太大，無法貼上，請手動插入</string>
     <string name="ankidroid_cannot_open_after_backup_try_again" comment="After an Android backup is restored, AnkiDroid opens and shows this message.         Opening AnkiDroid again will work correctly">        Android 備份進行中。請再試一次</string>
-    <string name="create_shortcut_error_vivo" comment="iManager is an app on Vivo phones">You may need to use iManager to allow AnkiDroid to add shortcuts</string>
+    <string name="create_shortcut_error_vivo" comment="iManager is an app on Vivo phones">你可能需要使用 iManager 以允許 Ankidroid 新增捷徑</string>
     <string name="create_shortcut_failed" comment="home screen == launcher">您的主畫面不允許 AnkiDroid 新增捷徑</string>
     <string name="create_shortcut_error">新增捷徑時發生錯誤：%s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled">大寫句子</string>
@@ -334,7 +330,26 @@
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
     <!-- Used for credential empty warning message -->
-    <string name="email_id_empty">Email address is required</string>
-    <string name="password_empty">Password is required</string>
-    <string name="back_pressed_once">Press back again to exit</string>
+    <string name="email_id_empty">電子郵件地址是必填項</string>
+    <string name="password_empty">密碼是必填項</string>
+    <string name="back_pressed_once">再按一次返回鍵以退出</string>
+    <string name="back_pressed_once_reviewer">Press back again to return</string>
+    <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
+    <string name="percentage">%s%%</string>
+    <string name="download_deck">Download deck</string>
+    <string name="try_again">Try Again</string>
+    <string name="cancel_download">Cancel download</string>
+    <string name="cancel_download_question_title">Cancel download?</string>
+    <string name="downloading_file">Downloading %s</string>
+    <string name="import_deck">Import Deck</string>
+    <string name="something_wrong">Something went wrong, please try again</string>
+    <string name="download_failed">Download failed</string>
+    <string name="deck_download_progress_message">You can use other apps while the download is running</string>
+    <string name="check_network">Please check your network connection</string>
+    <string name="search_using_deck_name">Search using deck name</string>
+    <string name="home">Home</string>
+    <!-- Importing -->
+    <string name="import_mapped_to_field">Mapped to %s</string>
+    <string name="import_mapped_to_tags">Mapped to Tags</string>
+    <string name="import_mapped_to_nothing">Ignored</string>
 </resources>

@@ -23,7 +23,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.PowerManager;
 import android.util.Pair;
@@ -34,6 +33,7 @@ import com.ichi2.anki.R;
 import com.ichi2.anki.exception.MediaSyncException;
 import com.ichi2.anki.exception.UnknownHttpResponseException;
 import com.ichi2.libanki.Collection;
+import com.ichi2.libanki.sync.CustomSyncServerUrlException;
 import com.ichi2.libanki.sync.FullSyncer;
 import com.ichi2.libanki.sync.HostNum;
 import com.ichi2.libanki.sync.HttpSyncer;
@@ -47,6 +47,7 @@ import com.ichi2.utils.JSONException;
 import com.ichi2.utils.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import okhttp3.Response;
@@ -90,6 +91,7 @@ public class Connection extends BaseAsyncTask<Connection.Payload, Object, Connec
                 AnkiDroidApp.getAppResources().getString(R.string.app_name) + ":Connection");
     }
 
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     private static Connection launchConnectionTask(TaskListener listener, Payload data) {
 
         if (!isOnline()) {
@@ -99,7 +101,7 @@ public class Connection extends BaseAsyncTask<Connection.Payload, Object, Connec
         }
 
         try {
-            if ((sInstance != null) && (sInstance.getStatus() != AsyncTask.Status.FINISHED)) {
+            if ((sInstance != null) && (sInstance.getStatus() != android.os.AsyncTask.Status.FINISHED)) {
                 sInstance.get();
             }
         } catch (Exception e) {
@@ -159,6 +161,7 @@ public class Connection extends BaseAsyncTask<Connection.Payload, Object, Connec
     /*
      * Runs on GUI thread
      */
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     @Override
     protected void onPostExecute(Payload data) {
         super.onPostExecute(data);
@@ -196,6 +199,7 @@ public class Connection extends BaseAsyncTask<Connection.Payload, Object, Connec
     }
 
 
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     @Override
     protected Payload doInBackground(Payload... params) {
         super.doInBackground(params);
@@ -232,7 +236,13 @@ public class Connection extends BaseAsyncTask<Connection.Payload, Object, Connec
             Timber.w(e);
             data.success = false;
             data.resultType = ERROR;
-            data.result = new Object[]{e.getResponseCode(), e.getMessage() };
+            data.result = new Object[] {e.getResponseCode(), e.getMessage()};
+            return data;
+        } catch (CustomSyncServerUrlException e2) {
+            Timber.w(e2);
+            data.success = false;
+            data.resultType = CUSTOM_SYNC_SERVER_URL;
+            data.result = new Object[] {e2};
             return data;
         } catch (Exception e2) {
             Timber.w(e2);
@@ -290,6 +300,9 @@ public class Connection extends BaseAsyncTask<Connection.Payload, Object, Connec
                 msg.contains("Failed to connect") ||
                 msg.contains("InterruptedIOException") ||
                 msg.contains("stream was reset") ||
+                msg.contains("Connection reset") ||
+                msg.contains("connection abort") ||
+                msg.contains("Broken pipe") ||
                 msg.contains("ConnectionShutdownException") ||
                 msg.contains("CLEARTEXT communication") ||
                 msg.contains("TimeoutException");
@@ -550,16 +563,19 @@ public class Connection extends BaseAsyncTask<Connection.Payload, Object, Connec
     }
 
 
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     public void publishProgress(int id) {
         super.publishProgress(id);
     }
 
 
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     public void publishProgress(String message) {
         super.publishProgress(message);
     }
 
 
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     public void publishProgress(int id, long up, long down) {
         super.publishProgress(id, up, down);
     }
@@ -628,8 +644,24 @@ public class Connection extends BaseAsyncTask<Connection.Payload, Object, Connec
             this.data = data;
             success = true;
         }
+
+
+        @Override
+        public String toString() {
+            return "Payload{" +
+                    "mTaskType=" + mTaskType +
+                    ", data=" + Arrays.toString(data) +
+                    ", resultType=" + resultType +
+                    ", result=" + Arrays.toString(result) +
+                    ", success=" + success +
+                    ", returnType=" + returnType +
+                    ", exception=" + exception +
+                    ", message='" + message + '\'' +
+                    '}';
+        }
     }
 
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     public synchronized static void cancel() {
         Timber.d("Cancelled Connection task");
         sInstance.cancel(true);

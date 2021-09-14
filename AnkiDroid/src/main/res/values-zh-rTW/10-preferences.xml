@@ -55,6 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">手勢</string>
     <string name="pref_cat_gestures_summ">使用點擊和滑動來取代按鈕</string>
     <string name="pref_cat_actions" maxLength="41">動作</string>
+    <string name="pref_cat_controls" maxLength="41">Controls</string>
+    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
     <string name="pref_cat_advanced" maxLength="41">進階設定</string>
     <string name="pref_cat_advanced_summ">細部設定和實驗性功能</string>
     <string name="pref_cat_performance" maxLength="41">效能</string>
@@ -88,17 +90,20 @@
         <item>頂部</item>
         <item>底部</item>
     </string-array>
-    <string name="gestures" maxLength="41">開啓手勢</string>
+    <string name="gestures" maxLength="41">開啟手勢</string>
     <string name="gestures_summ">替動作設定手勢，像是回答問題和編輯卡片。</string>
     <string name="gestures_allow_links" maxLength="41">忽略連結上的點擊手勢</string>
     <string name="gestures_allow_links_summary">如果一個連結/提示被點擊，手勢將不被處理</string>
     <string name="gestures_corner_touch" maxLength="41">九點邊角觸控</string>
-    <string name="gestures_corner_touch_summary">容許在屏幕角落觸控</string>
+    <string name="gestures_corner_touch_summary">允許在螢幕角落進行觸控</string>
+    <string name="gestures_full_screen_nav_drawer" maxLength="41">Full screen navigation drawer</string>
+    <string name="gestures_fullscreen_nav_drawer_summary">Open navigation drawer when swiped right from anywhere on the screen</string>
     <string name="gestures_swipe_up" maxLength="41">向上撥動</string>
     <string name="gestures_swipe_down" maxLength="41">向下撥動</string>
     <string name="gestures_swipe_left" maxLength="41">向左撥動</string>
     <string name="gestures_swipe_right" maxLength="41">向右撥動</string>
     <string name="gestures_double_tap" maxLength="41">點兩下</string>
+    <string name="gestures_long_tap" maxLength="41">Long touch</string>
     <string name="gestures_tap_top" maxLength="41">輕觸頂部</string>
     <string name="gestures_tap_left" maxLength="41">輕觸左邊</string>
     <string name="gestures_tap_right" maxLength="41">輕觸右邊</string>
@@ -127,9 +132,9 @@
     <string name="sync_fetch_missing_media_summ">同步時自動取得缺少的媒體檔案</string>
     <string name="sync_account" maxLength="41">AnkiWeb 帳號</string>
     <string name="sync_account_summ_logged_out">未登入</string>
-    <string name="sync_account_summ_logged_in">%s</string>
+    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">自動同步</string>
-    <string name="automatic_sync_choice_summ">如果距離上次同步超過 10 分鐘，則在開啓/關閉 app 時自動同步。</string>
+    <string name="automatic_sync_choice_summ">如果距離上次同步超過 10 分鐘，則在開啟/關閉程式時自動同步。</string>
     <string name="sync_status_badge" maxLength="41">顯示同步狀態</string>
     <string name="sync_status_badge_summ">可上傳變更時，變更同步圖標</string>
     <string name="day_theme" maxLength="41">白天主題</string>
@@ -151,8 +156,8 @@
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX 秒</string>
     <string name="timeout_question_seconds" maxLength="41">顯示下一題的時間</string>
     <string name="select_locale_title">選擇語言</string>
-    <string name="software_render" maxLength="41">Disable card hardware render</string>
-    <string name="software_render_summ">Hardware render is faster but may have problems, specifically on Android 8/8.1. If you cannot see parts of the card review user interface, try this setting.</string>
+    <string name="software_render" maxLength="41">禁用卡片硬體渲染</string>
+    <string name="software_render_summ">硬體渲染速度較快，但可能存在問題，特別是位於 Android 8/8.1 中。如果您看不到部分卡片復習使用者頁面，請嘗試此設定。</string>
     <string name="safe_display" maxLength="41">安全顯示模式</string>
     <string name="safe_display_summ">關閉所有動畫且使用較安全的方法來繪製卡片。電子墨水裝置可能會需要這個方法。</string>
     <string name="disable_extended_text_ui" maxLength="41">禁用單域編輯模式</string>
@@ -161,8 +166,12 @@
     <string name="vertical_centering" maxLength="41">置中</string>
     <string name="vertical_centering_summ">垂直置中卡片內容</string>
     <string name="pref_backup_max" maxLength="41">最大備份數量</string>
+    <string name="pref_double_tap_time_interval" maxLength="41">Double tap time interval (milliseconds)</string>
+    <string name="pref_double_tap_time_interval_summary">A second tap of the answer buttons will be ignored if this time has not elapsed. This prevents accidental double taps</string>
     <string name="show_estimates" maxLength="41">顯示按鈕的時間</string>
     <string name="show_estimates_summ">在答案按鈕上顯示下一次複習的時間</string>
+    <string name="show_large_answer_buttons" maxLength="41">Show large answer buttons</string>
+    <string name="show_large_answer_buttons_summ">Show answer button in 2 rows</string>
     <string name="show_top_bar" maxLength="41">顯示頂部列</string>
     <string name="show_top_bar_summ">顯示卡片計數，標記和頂部列標識</string>
     <string name="show_progress" maxLength="41">顯示剩餘數量</string>
@@ -174,21 +183,20 @@
     <string name="learn_cutoff" maxLength="41">提早學習上限</string>
     <string name="time_limit" maxLength="41">時間盒的時間上限</string>
     <string name="time_limit_summ">XXX分鐘</string>
-    <string name="new_timezone" maxLength="41">新的時區處理</string>
-    <string name="day_offset_with_description" maxLength="41">Start of next day</string>
+    <string name="new_timezone" maxLength="41">時區變更處理</string>
+    <string name="day_offset_with_description" maxLength="41">下一天開始的時間</string>
     <string name="day_offset_summ">午夜過後 XXX 小時</string>
-    <string name="xlabel_dayoffset_seekbar" maxLength="41">Midnight</string>
-    <string name="ylabel_dayoffset_seekbar" maxLength="41">11PM</string>
-    <string name="sched_v2" maxLength="41">V2 scheduler</string>
-    <string name="sched_v2_summ">Enable the new scheduler. Forces changes in one direction on next sync</string>
+    <string name="xlabel_dayoffset_seekbar" maxLength="41">午夜</string>
+    <string name="ylabel_dayoffset_seekbar" maxLength="41">晚上 11 点</string>
+    <string name="sched_v2" maxLength="41">V2調度器</string>
+    <string name="sched_v2_summ">啟用新版調度器。在下次同步時强制單向更變</string>
     <string name="sched_ver_toggle_title">確認</string>
-    <string name="sched_ver_2to1">這將重設學習中的所有卡片，清除已過濾牌組，並改變排程器版本。繼續嗎？</string>
     <string name="sched_ver_1to2">實驗性排程器可能造成不正確的排程。請確認您已預先閱讀文檔。繼續嗎？</string>
-    <string name="pref_keep_screen_on" maxLength="41">保持螢幕開啓</string>
+    <string name="pref_keep_screen_on" maxLength="41">保持螢幕開啟</string>
     <string name="pref_keep_screen_on_summ">關閉螢幕逾時</string>
     <string name="convert_fen_text" maxLength="41">支援國際象棋記譜法</string>
     <string name="convert_fen_text_summ">使用福斯夫－愛德華茲記號法來畫棋盤。記號必須用[fen][/fen]標籤括起來。</string>
-    <string name="enable_api_title" maxLength="41">開啓 AnkiDroid API</string>
+    <string name="enable_api_title" maxLength="41">開啟 AnkiDroid API</string>
     <string name="enable_api_summary">讓其他應用程式不需經過你同意，即可連結到 AnkiDroid 且讀寫檔案</string>
     <string name="custom_buttons" maxLength="41">頂欄按鈕</string>
     <string name="custom_buttons_summary">自訂頂部列按鈕</string>
@@ -200,6 +208,11 @@
     <string name="thirdparty_apps_summary">查看一系列使用 AnkiDroid API 的應用程式，如字典，實用工具。</string>
     <string name="html_javascript_debugging" maxLength="41">HTML / Javascript 偵錯</string>
     <string name="html_javascript_debugging_summ">啟用控制 WebView 連線，並儲存卡片 HTML 到 AnkiDroid 資料夾</string>
+    <!-- Paste clipboard image as png option -->
+    <string name="paste_as_png" maxLength="41">Paste clipboard images as PNG</string>
+    <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
+    <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
+    <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">高級統計</string>
     <string name="enable_advanced_statistics_title" maxLength="41">啟用高級統計</string>
@@ -215,6 +228,8 @@
     <string name="custom_sync_server_base_url_invalid">同步地址無效</string>
     <string name="custom_sync_server_media_url_title" maxLength="41">媒體檔案同步地址</string>
     <string name="custom_sync_server_media_url_invalid">媒體同步地址無效</string>
+    <!-- Key Bindings -->
+    <string name="controls_main_category" maxLength="41">Command mapping</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">改變牌組群組選項將影響多個牌組。如果你希望僅改變當前牌組，請先為群組新增選項</string>
     <string name="studyoptions_limit_select_tags">選擇標籤</string>
@@ -279,6 +294,7 @@
     <string name="deck_conf_cram_order" maxLength="41">依條件選擇卡片</string>
     <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">重新排程</string>
     <string name="deck_conf_cram_reschedule_summ">依據我在本牌組的回答狀況來重新排程卡片</string>
+    <string name="deck_conf_cram_filter_2_check">Enable second filter</string>
     <string name="deck_conf_cram_steps" maxLength="41">自訂步伐（以分鐘計）</string>
     <string name="deck_conf_cram_steps_summ" maxLength="41">設定自訂步數</string>
     <string name="deck_conf_reminders_enabled" maxLength="41">為此牌組群組的牌組啟用提醒通知</string>
@@ -287,12 +303,26 @@
     <string name="analytics_dialog_title">幫助 AnkiDroid 做得更好！</string>
     <string name="analytics_title" maxLength="41">分享功能使用方式</string>
     <string name="analytics_summ">你可以通過幫助開發團隊看看人們在用什麼功能，來為 AnkiDroid 做出貢獻</string>
-    <string name="note_editor_replace_newlines" maxLength="41">以HTML取代新行</string>
-    <string name="note_editor_replace_newlines_summ">In the Note Editor, convert any instances of &lt;br&gt; to newlines when editing a card.</string>
-    <string name="no_code_formatting" maxLength="41">Simple typed answer formatting</string>
-    <string name="no_code_formatting_summ">Fixes ‘􏿾’ appearing in typed answer results</string>
-    <string name="type_in_answer_focus" maxLength="41">Focus ‘type in answer’</string>
-    <string name="type_in_answer_focus_summ">Automatically focus the ‘type in answer’ field in the reviewer</string>
+    <string name="note_editor_replace_newlines" maxLength="41">以HTML取代新列</string>
+    <string name="note_editor_replace_newlines_summ">在筆記編輯器中，編輯卡片時將&lt;br&gt;的任何實例轉換至新一列。</string>
+    <string name="no_code_formatting" maxLength="41">簡單輸入的答案模式</string>
+    <string name="no_code_formatting_summ">修復在輸入的答按結果中出現的“􏿾”</string>
+    <string name="type_in_answer_focus" maxLength="41">聚焦“輸入答案”</string>
+    <string name="type_in_answer_focus_summ">自動聚焦在復習者的“輸入答案”字段</string>
     <!-- Open Changelog-->
-    <string name="open_changelog">Open Changelog</string>
+    <string name="open_changelog">打開更新日志</string>
+    <string name="binding_add_gesture">Add gesture</string>
+    <string name="binding_add_key">Add key</string>
+    <string name="key_picker_default_press_key">Press a key</string>
+    <!-- Select card side -->
+    <string name="card_side_selection_title">Select card side</string>
+    <string name="card_side_question">Question</string>
+    <string name="card_side_answer">Answer</string>
+    <string name="card_side_both">Question &amp; Answer</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
+    <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
+    <!-- Binding Preference -->
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
+    <string name="bindings_already_bound">Already bound to %s</string>
 </resources>

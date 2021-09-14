@@ -110,7 +110,6 @@
     <string name="note_editor_no_cards_created">Nevytvorili sa žiadne kartičky. Prosím vyplňte viac polí</string>
     <string name="note_editor_no_first_field">Prvé pole je prázdne</string>
     <string name="note_editor_no_cloze_delations">Tento typ poznámky musí obsahovať doplňovačku</string>
-    <string name="note_editor_set_field_language">Nastaviť jazyk poľa</string>
     <string name="note_editor_no_cards_created_all_fields">Aktuálny typ poznámky nevytvoril žiadne kartičky.\nProsím zvoľte iný typ poznámky, alebo kliknite ‘Kartičky’ a pridajte substitúciu poľa</string>
     <string name="note_editor_insert_cloze_no_cloze_note_type">Doplňovačka bude fungovať iba na poznámkach typu doplňovačka</string>
     <string name="saving_facts">Poznámka sa ukladá</string>
@@ -161,7 +160,6 @@
     <string name="show_hint">Zobraziť %s</string>
     <string name="info_rate">Ohodnotiť AnkiDroid</string>
     <string name="import_title">Importuje sa</string>
-    <string name="import_select_title">Zvoľte súbor pre import</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">Pridať</string>
     <string name="import_message_replace_confirm">Týmto vymažete vašu existujúcu zbierku a nahradíte ju dátami zo súboru %s. Ste si istý?</string>
     <string name="import_message_add_confirm">Pridať “%s” do zbierky? Môže to chvíľu trvať</string>
@@ -201,8 +199,6 @@
         Vyskúšajte ho otvoriť za pomocou jednej z nasledovných <a href="http://ankisrs.net/#download">Anki distribúcií</a> a vychutnajte si tak jednoduché a efektívne učenie!
         ]]></string>
     <string name="export_unsuccessful">Chyba pri exportovaní apkg súboru</string>
-    <string name="import_hint">Ak chcete importovať kartičky, umiestnite súbor apkg do adresára %s a stlačte ok</string>
-    <string name="upgrade_import_no_file_found">Žiaden importovateľný %1$s súbor nebol nájdený</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Možnosti</string>
     <string name="menu__deck_options">Deck options</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Study options</string>
@@ -376,4 +372,23 @@
     <string name="email_id_empty">Email address is required</string>
     <string name="password_empty">Password is required</string>
     <string name="back_pressed_once">Press back again to exit</string>
+    <string name="back_pressed_once_reviewer">Press back again to return</string>
+    <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
+    <string name="percentage">%s%%</string>
+    <string name="download_deck">Download deck</string>
+    <string name="try_again">Try Again</string>
+    <string name="cancel_download">Cancel download</string>
+    <string name="cancel_download_question_title">Cancel download?</string>
+    <string name="downloading_file">Downloading %s</string>
+    <string name="import_deck">Import Deck</string>
+    <string name="something_wrong">Something went wrong, please try again</string>
+    <string name="download_failed">Download failed</string>
+    <string name="deck_download_progress_message">You can use other apps while the download is running</string>
+    <string name="check_network">Please check your network connection</string>
+    <string name="search_using_deck_name">Search using deck name</string>
+    <string name="home">Home</string>
+    <!-- Importing -->
+    <string name="import_mapped_to_field">Mapped to %s</string>
+    <string name="import_mapped_to_tags">Mapped to Tags</string>
+    <string name="import_mapped_to_nothing">Ignored</string>
 </resources>

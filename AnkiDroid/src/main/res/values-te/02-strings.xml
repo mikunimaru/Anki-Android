@@ -110,7 +110,6 @@
     <string name="note_editor_no_cards_created">No cards created. Please fill in more fields</string>
     <string name="note_editor_no_first_field">The first field is empty</string>
     <string name="note_editor_no_cloze_delations">This note type must contain cloze deletions</string>
-    <string name="note_editor_set_field_language">Set field language</string>
     <string name="note_editor_no_cards_created_all_fields">The current note type did not produce any cards.\nPlease choose another note type, or click ‘Cards’ and add a field substitution</string>
     <string name="note_editor_insert_cloze_no_cloze_note_type">Cloze deletions will only work on a Cloze note type</string>
     <string name="saving_facts">గమనికను సేవ్ చేస్తోంది</string>
@@ -155,7 +154,6 @@
     <string name="show_hint">కనిపింపజేయు %s</string>
     <string name="info_rate">రేట్ AnkiDroid</string>
     <string name="import_title">దిగుమతి</string>
-    <string name="import_select_title">దిగుమతి చేయడానికి ఒక ఫైల్ను ఎంచుకోండి</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">చేర్చు</string>
     <string name="import_message_replace_confirm">ఇది మీ ప్రస్తుత సేకరణను తొలగిస్తుంది మరియు ఫైల్ యొక్క డేటాను భర్తీ చేస్తుంది %s</string>
     <string name="import_message_add_confirm">సేకరణకు \"%s\" ని జోడించాలా? ఇది చాలా కాలం పడుతుంది</string>
@@ -195,8 +193,6 @@
       అందుబాటులో ఉన్న వాటిని ఉపయోగించి తెరవడాన్ని ప్రయత్నించండి మరియు సులభమైన మరియు సమర్థవంతమైన అభ్యాసను ఆస్వాదించండి! <a href="http://ankisrs.net/#download">Anki distributions</a> 
         ]]></string>
     <string name="export_unsuccessful">Apkg ఫైల్ను ఎగుమతి చేయడంలో లోపం</string>
-    <string name="import_hint">డైరెక్టరీలో \"%s\" లో apkg ఫైల్ను ఉంచండి మరియు కార్డ్లను దిగుమతి చేయడానికి \"సరే\" ను తాకండి</string>
-    <string name="upgrade_import_no_file_found">దిగుమతి చెయ్యదగిన %1$s ఫైల్ కనుగొనబడలేదు</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Options</string>
     <string name="menu__deck_options">Deck options</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Study options</string>
@@ -350,4 +346,23 @@
     <string name="email_id_empty">Email address is required</string>
     <string name="password_empty">Password is required</string>
     <string name="back_pressed_once">Press back again to exit</string>
+    <string name="back_pressed_once_reviewer">Press back again to return</string>
+    <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
+    <string name="percentage">%s%%</string>
+    <string name="download_deck">Download deck</string>
+    <string name="try_again">Try Again</string>
+    <string name="cancel_download">Cancel download</string>
+    <string name="cancel_download_question_title">Cancel download?</string>
+    <string name="downloading_file">Downloading %s</string>
+    <string name="import_deck">Import Deck</string>
+    <string name="something_wrong">Something went wrong, please try again</string>
+    <string name="download_failed">Download failed</string>
+    <string name="deck_download_progress_message">You can use other apps while the download is running</string>
+    <string name="check_network">Please check your network connection</string>
+    <string name="search_using_deck_name">Search using deck name</string>
+    <string name="home">Home</string>
+    <!-- Importing -->
+    <string name="import_mapped_to_field">Mapped to %s</string>
+    <string name="import_mapped_to_tags">Mapped to Tags</string>
+    <string name="import_mapped_to_nothing">Ignored</string>
 </resources>

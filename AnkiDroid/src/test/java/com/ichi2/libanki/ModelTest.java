@@ -1,12 +1,10 @@
 package com.ichi2.libanki;
 
-import com.ichi2.anki.R;
 import com.ichi2.anki.RobolectricTest;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
 import com.ichi2.utils.JSONArray;
 import com.ichi2.utils.JSONObject;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
@@ -27,18 +25,56 @@ import static com.ichi2.libanki.Models.REQ_ANY;
 import static com.ichi2.libanki.Utils.stripHTML;
 import static com.ichi2.utils.ListUtil.assertListEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class ModelTest extends RobolectricTest {
+
+    @Test
+    public void test_frontSide_field() {
+        // #8951 - Anki Special-cases {{FrontSide}} on the front to return empty string
+        Collection col = getCol();
+        Model m = col.getModels().current();
+        m.getJSONArray("tmpls").getJSONObject(0).put("qfmt", "{{Front}}{{FrontSide}}");
+        col.getModels().save(m);
+        Note note = col.newNote();
+        note.setItem("Front", "helloworld");
+        col.addNote(note);
+        Card card = note.firstCard();
+        String q = card.q();
+        assertThat("field should be at the end of the template - empty string for front", q, endsWith("helloworld"));
+        assertThat("field should not have a problem", q, not(containsString("has a problem")));
+    }
+
+    @Test
+    public void test_field_named_frontSide() {
+        // #8951 - A field named "FrontSide" is ignored - this matches Anki 2.1.34 (8af8f565)
+        Collection col = getCol();
+        Model m = col.getModels().current();
+
+        // Add a field called FrontSide and FrontSide2 (to ensure that fields are added correctly)
+        col.getModels().addFieldModChanged(m, col.getModels().newField("FrontSide"));
+        col.getModels().addFieldModChanged(m, col.getModels().newField("FrontSide2"));
+        m.getJSONArray("tmpls").getJSONObject(0).put("qfmt", "{{Front}}{{FrontSide}}{{FrontSide2}}");
+        col.getModels().save(m);
+
+        Note note = col.newNote();
+        note.setItem("Front", "helloworld");
+        note.setItem("FrontSide", "1");
+        note.setItem("FrontSide2", "2");
+        col.addNote(note);
+        Card card = note.firstCard();
+        String q = card.q();
+        assertThat("FrontSide should be an empty string, even though it was set", q, endsWith("helloworld2"));
+    }
+
     /*****************
      ** Models       *
      *****************/
@@ -125,7 +161,7 @@ public class ModelTest extends RobolectricTest {
     public void test_templates() throws ConfirmModSchemaException {
         Collection col = getCol();
         Model m = col.getModels().current();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
         JSONObject t = Models.newTemplate("Reverse");
         t.put("qfmt", "{{Back}}");
         t.put("afmt", "{{Front}}");
@@ -171,7 +207,7 @@ public class ModelTest extends RobolectricTest {
         Collection col = getCol();
         col.getModels().setCurrent(col.getModels().byName("Cloze"));
         Model m = col.getModels().current();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
 
         // We replace the default Cloze template
         JSONObject t = Models.newTemplate("ChainedCloze");
@@ -197,7 +233,7 @@ public class ModelTest extends RobolectricTest {
     @Test
     public void test_cloze_empty() {
         Collection col = getCol();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
         Model cloze_model = mm.byName("Cloze");
         mm.setCurrent(cloze_model);
         assertListEquals(Arrays.asList(0, 1), Models.availOrds(cloze_model, new String[]{"{{c1::Empty}} and {{c2::}}", ""}));
@@ -341,7 +377,7 @@ public class ModelTest extends RobolectricTest {
         Collection col = getCol();
         col.getModels().setCurrent(col.getModels().byName("Cloze"));
         Model m = col.getModels().current();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
 
         // We replace the default Cloze template
         JSONObject t = Models.newTemplate("ChainedCloze");
@@ -375,7 +411,7 @@ public class ModelTest extends RobolectricTest {
         Model cloze = col.getModels().byName("Cloze");
         // enable second template and add a note
         Model basic = col.getModels().current();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
         JSONObject t = Models.newTemplate("Reverse");
         t.put("qfmt", "{{Back}}");
         t.put("afmt", "{{Front}}");
@@ -466,10 +502,52 @@ public class ModelTest extends RobolectricTest {
     }
 
     @Test
+    public void test_req() {
+
+        Collection col = getCol();
+        ModelManager mm = col.getModels();
+        Model basic = mm.byName("Basic");
+        assertTrue(basic.has("req"));
+        reqSize(basic);
+        JSONArray r = basic.getJSONArray("req").getJSONArray(0);
+        assertEquals(0, r.getInt(0));
+        assertTrue(Arrays.asList(new String[] {REQ_ANY, REQ_ALL}).contains(r.getString(1)));
+        assertEquals(1, r.getJSONArray(2).length());
+        assertEquals(0, r.getJSONArray(2).getInt(0));
+
+        Model opt = mm.byName("Basic (optional reversed card)");
+        reqSize(opt);
+
+        r = opt.getJSONArray("req").getJSONArray(0);
+        assertTrue(Arrays.asList(new String[] {REQ_ANY, REQ_ALL}).contains(r.getString(1)));
+        assertEquals(1, r.getJSONArray(2).length());
+        assertEquals(0, r.getJSONArray(2).getInt(0));
+
+
+        assertEquals(new JSONArray("[1,\"all\",[1,2]]"), opt.getJSONArray("req").getJSONArray(1));
+
+        // testing any
+        opt.getJSONArray("tmpls").getJSONObject(1).put("qfmt", "{{Back}}{{Add Reverse}}");
+        mm.save(opt, true);
+        assertEquals(new JSONArray("[1, \"any\", [1, 2]]"), opt.getJSONArray("req").getJSONArray(1));
+        // testing null
+        opt.getJSONArray("tmpls").getJSONObject(1).put("qfmt", "{{^Add Reverse}}{{/Add Reverse}}");
+        mm.save(opt, true);
+        assertEquals(new JSONArray("[1, \"none\", []]"), opt.getJSONArray("req").getJSONArray(1));
+
+        opt = mm.byName("Basic (type in the answer)");
+        reqSize(opt);
+        r = opt.getJSONArray("req").getJSONArray(0);
+        assertTrue(Arrays.asList(new String[] {REQ_ANY, REQ_ALL}).contains(r.getString(1)));
+        // TODO: Port anki@4e33775ed4346ef136ece6ef5efec5ba46057c6b
+        assertEquals(new JSONArray("[0]"), r.getJSONArray(2));
+    }
+
+    @Test
     @Config(qualifiers = "en")
     public void regression_test_pipe() {
         Collection col = getCol();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
         Model basic = mm.byName("Basic");
         JSONObject template = basic.getJSONArray("tmpls").getJSONObject(0);
         template.put("qfmt", "{{|Front}}{{Front}}{{/Front}}{{Front}}");
@@ -492,7 +570,7 @@ public class ModelTest extends RobolectricTest {
     @Test
     public void nonEmptyFieldTest() {
         Collection col = getCol();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
         Model basic = mm.byName("Basic");
         Set s = new HashSet<>();
         assertEquals(s, basic.nonEmptyFields(new String[] {"", ""}));
@@ -506,7 +584,7 @@ public class ModelTest extends RobolectricTest {
     @Test
     public void avail_standard_order_test() {
         Collection col = getCol();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
         Model basic = mm.byName("Basic");
         Model reverse = mm.byName("Basic (and reversed card)");
 
@@ -541,7 +619,7 @@ public class ModelTest extends RobolectricTest {
     @Test
     public void avail_ords_test() {
         Collection col = getCol();
-        Models mm = col.getModels();
+        ModelManager mm = col.getModels();
         Model basic = mm.byName("Basic");
         Model reverse = mm.byName("Basic (and reversed card)");
 

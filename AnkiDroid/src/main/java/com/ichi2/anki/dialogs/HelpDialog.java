@@ -46,6 +46,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
 import timber.log.Timber;
@@ -83,6 +84,11 @@ public class HelpDialog {
                         new LinkItem(R.string.help_item_discord, R.drawable.discord, UsageAnalytics.Actions.OPENED_DISCORD, R.string.link_discord),
                         new LinkItem(R.string.help_item_facebook, R.drawable.facebook, UsageAnalytics.Actions.OPENED_FACEBOOK, R.string.link_facebook),
                         new LinkItem(R.string.help_item_twitter, R.drawable.twitter, UsageAnalytics.Actions.OPENED_TWITTER, R.string.link_twitter)
+                ),
+                new ItemHeader(R.string.help_title_privacy, R.drawable.ic_baseline_privacy_tip_24, UsageAnalytics.Actions.OPENED_PRIVACY,
+                        new LinkItem(R.string.help_item_ankidroid_privacy_policy, R.drawable.ic_baseline_policy_24, UsageAnalytics.Actions.OPENED_ANKIDROID_PRIVACY_POLICY, R.string.link_ankidroid_privacy_policy),
+                        new LinkItem(R.string.help_item_ankiweb_privacy_policy, R.drawable.ic_baseline_policy_24, UsageAnalytics.Actions.OPENED_ANKIWEB_PRIVACY_POLICY, R.string.link_ankiweb_privacy_policy),
+                        new LinkItem(R.string.help_item_ankiweb_terms_and_conditions, R.drawable.ic_baseline_description_24, UsageAnalytics.Actions.OPENED_ANKIWEB_TERMS_AND_CONDITIONS, R.string.link_ankiweb_terms_and_conditions)
                 )
         };
 
@@ -242,7 +248,7 @@ public class HelpDialog {
 
         @FunctionalInterface
         public interface ActivityConsumer extends Serializable {
-            void consume(AnkiActivity activity);
+            void consume(@NonNull AnkiActivity activity);
         }
     }
 

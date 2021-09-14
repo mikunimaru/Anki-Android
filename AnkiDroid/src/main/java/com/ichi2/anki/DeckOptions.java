@@ -42,6 +42,7 @@ import com.ichi2.anki.services.ReminderService;
 import com.ichi2.async.CollectionTask;
 import com.ichi2.async.TaskListenerWithContext;
 import com.ichi2.async.TaskManager;
+import com.ichi2.compat.CompatHelper;
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.Consts;
 import com.ichi2.libanki.DeckConfig;
@@ -54,6 +55,7 @@ import com.ichi2.themes.StyledProgressDialog;
 import com.ichi2.themes.Themes;
 import com.ichi2.ui.AppCompatPreferenceActivity;
 
+import com.ichi2.utils.HashUtil;
 import com.ichi2.utils.JSONArray;
 import com.ichi2.utils.JSONException;
 import com.ichi2.utils.JSONObject;
@@ -90,7 +92,7 @@ public class DeckOptions extends AppCompatPreferenceActivity implements OnShared
 
     public class DeckPreferenceHack implements SharedPreferences {
 
-        private final Map<String, String> mValues = new HashMap<>(30); // At most as many as in cacheValues
+        private final Map<String, String> mValues = HashUtil.HashMapInit(30); // At most as many as in cacheValues
         private final Map<String, String> mSummaries = new HashMap<>();
         private MaterialDialog mProgressDialog;
         private final List<OnSharedPreferenceChangeListener> mListeners = new LinkedList<>();
@@ -380,7 +382,7 @@ public class DeckOptions extends AppCompatPreferenceActivity implements OnShared
                                 mOptions.put("reminder", reminder);
 
                                 final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                                final PendingIntent reminderIntent = PendingIntent.getBroadcast(
+                                final PendingIntent reminderIntent = CompatHelper.getCompat().getImmutableBroadcastIntent(
                                         getApplicationContext(),
                                         (int) mOptions.getLong("id"),
                                         new Intent(getApplicationContext(), ReminderService.class).putExtra
@@ -411,7 +413,7 @@ public class DeckOptions extends AppCompatPreferenceActivity implements OnShared
                                 mOptions.put("reminder", reminder);
 
                                 final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                                final PendingIntent reminderIntent = PendingIntent.getBroadcast(
+                                final PendingIntent reminderIntent = CompatHelper.getCompat().getImmutableBroadcastIntent(
                                         getApplicationContext(),
                                         (int) mOptions.getLong("id"),
                                         new Intent(getApplicationContext(), ReminderService.class).putExtra

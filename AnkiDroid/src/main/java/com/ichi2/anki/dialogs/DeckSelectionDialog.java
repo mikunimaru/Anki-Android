@@ -16,6 +16,7 @@
 
 package com.ichi2.anki.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -29,14 +30,17 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.ichi2.anki.AnkiActivity;
 import com.ichi2.anki.R;
 import com.ichi2.anki.UIUtils;
 import com.ichi2.anki.analytics.AnalyticsDialogFragment;
 import com.ichi2.anki.exception.FilteredAncestor;
 import com.ichi2.libanki.Collection;
+import com.ichi2.libanki.CollectionGetter;
 import com.ichi2.libanki.Deck;
+import com.ichi2.libanki.DeckManager;
+import com.ichi2.libanki.Decks;
 import com.ichi2.libanki.stats.Stats;
+import com.ichi2.utils.DeckNameComparator;
 import com.ichi2.utils.FunctionalInterfaces;
 import com.ichi2.utils.FilterResultsUtils;
 
@@ -50,6 +54,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -148,13 +153,13 @@ public class DeckSelectionDialog extends AnalyticsDialogFragment {
 
 
     private void adjustToolbar(View dialogView, DecksArrayAdapter adapter) {
-        Toolbar mToolbar = dialogView.findViewById(R.id.deck_picker_dialog_toolbar);
+        Toolbar toolbar = dialogView.findViewById(R.id.deck_picker_dialog_toolbar);
 
-        mToolbar.setTitle(getTitle());
+        toolbar.setTitle(getTitle());
 
-        mToolbar.inflateMenu(R.menu.deck_picker_dialog_menu);
+        toolbar.inflateMenu(R.menu.deck_picker_dialog_menu);
 
-        MenuItem searchItem = mToolbar.getMenu().findItem(R.id.deck_picker_dialog_action_filter);
+        MenuItem searchItem = toolbar.getMenu().findItem(R.id.deck_picker_dialog_action_filter);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setQueryHint(getString(R.string.deck_picker_dialog_filter_decks));
@@ -172,7 +177,7 @@ public class DeckSelectionDialog extends AnalyticsDialogFragment {
             }
         });
 
-        MenuItem addDecks = mToolbar.getMenu().findItem(R.id.deck_picker_dialog_action_add_deck);
+        MenuItem addDecks = toolbar.getMenu().findItem(R.id.deck_picker_dialog_action_add_deck);
         addDecks.setOnMenuItemClickListener(menuItem -> {
             // creating new deck without any parent deck
             showDeckDialog();
@@ -183,11 +188,11 @@ public class DeckSelectionDialog extends AnalyticsDialogFragment {
     private void showSubDeckDialog(String parentDeckPath) {
         try {
             // create subdeck
-            Long parentId = requireAnkiActivity().getCol().getDecks().id(parentDeckPath);
+            Long parentId = getDecks().id(parentDeckPath);
             CreateDeckDialog createDeckDialog = new CreateDeckDialog(requireActivity(), R.string.create_subdeck, CreateDeckDialog.DeckDialogType.SUB_DECK, parentId);
             createDeckDialog.setOnNewDeckCreated((id) -> {
                 // a sub deck was created
-                selectDeckWithDeckName(requireAnkiActivity().getCol().getDecks().name(id));
+                selectDeckWithDeckName(getDecks().name(id));
             });
             createDeckDialog.showDialog();
         } catch (FilteredAncestor filteredAncestor) {
@@ -199,19 +204,24 @@ public class DeckSelectionDialog extends AnalyticsDialogFragment {
         CreateDeckDialog createDeckDialog =  new CreateDeckDialog(requireActivity(), R.string.new_deck, CreateDeckDialog.DeckDialogType.DECK, null);
         createDeckDialog.setOnNewDeckCreated((id) -> {
             // a deck was created
-            selectDeckWithDeckName(requireAnkiActivity().getCol().getDecks().name(id));
+            selectDeckWithDeckName(getDecks().name(id));
         });
         createDeckDialog.showDialog();
     }
 
     @NonNull
-    protected AnkiActivity requireAnkiActivity() {
-        return (AnkiActivity) requireActivity();
+    protected CollectionGetter requireCollectionGetter() {
+        return (CollectionGetter) requireContext();
+    }
+
+    @NonNull
+    protected DeckManager getDecks() {
+        return requireCollectionGetter().getCol().getDecks();
     }
 
     private void selectDeckWithDeckName(@NonNull String deckName) {
         try {
-            Long id = requireAnkiActivity().getCol().getDecks().id(deckName);
+            long id = getDecks().id(deckName);
             SelectableDeck dec = new SelectableDeck(id, deckName);
             selectDeckAndClose(dec);
         } catch (FilteredAncestor filteredAncestor) {
@@ -221,8 +231,25 @@ public class DeckSelectionDialog extends AnalyticsDialogFragment {
 
 
     protected void onDeckSelected(@Nullable SelectableDeck deck) {
-        ((DeckSelectionListener) requireActivity()).onDeckSelected(deck);
+        getDeckSelectionListener().onDeckSelected(deck);
     }
+
+
+    @NonNull
+    private DeckSelectionListener getDeckSelectionListener() {
+        Activity activity = requireActivity();
+        if (activity instanceof DeckSelectionListener) {
+            return (DeckSelectionListener) activity;
+        }
+
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment instanceof DeckSelectionListener) {
+            return (DeckSelectionListener) parentFragment;
+        }
+
+        throw new IllegalStateException("Neither activity or parent fragment were a selection listener");
+    }
+
 
     protected void selectDeckAndClose(@NonNull SelectableDeck deck) {
         onDeckSelected(deck);
@@ -397,12 +424,19 @@ public class DeckSelectionDialog extends AnalyticsDialogFragment {
         }
 
 
+        /** All decks comes first. Then alphabetical order. */
         @Override
         public int compareTo(@NonNull SelectableDeck o) {
-            if (o.mDeckId == Stats.ALL_DECKS_ID || this.mDeckId == Stats.ALL_DECKS_ID){
+            if (this.mDeckId == Stats.ALL_DECKS_ID){
+                if (o.mDeckId == Stats.ALL_DECKS_ID) {
+                    return 0;
+                }
                 return -1;
             }
-            return this.mName.compareTo(o.mName);
+            if (o.mDeckId == Stats.ALL_DECKS_ID) {
+                return 1;
+            }
+            return DeckNameComparator.INSTANCE.compare(this.mName, o.mName);
         }
 
 

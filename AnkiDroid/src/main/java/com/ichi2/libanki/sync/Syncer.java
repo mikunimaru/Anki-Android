@@ -29,6 +29,7 @@ import com.ichi2.anki.exception.UnknownHttpResponseException;
 import com.ichi2.async.Connection;
 import com.ichi2.libanki.DB;
 import com.ichi2.libanki.Model;
+import com.ichi2.libanki.backend.model.TagUsnTuple;
 import com.ichi2.libanki.sched.AbstractSched;
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.Consts;
@@ -37,6 +38,7 @@ import com.ichi2.libanki.Utils;
 import com.ichi2.libanki.Deck;
 import com.ichi2.libanki.DeckConfig;
 import com.ichi2.libanki.sched.Counts;
+import com.ichi2.utils.HashUtil;
 import com.ichi2.utils.JSONArray;
 import com.ichi2.utils.JSONException;
 import com.ichi2.utils.JSONObject;
@@ -125,8 +127,8 @@ public class Syncer {
         private final String mMessage;
 
 
-        ConnectionResultType(String mMessage) {
-            this.mMessage = mMessage;
+        ConnectionResultType(String message) {
+            this.mMessage = message;
         }
 
 
@@ -182,7 +184,7 @@ public class Syncer {
                 long diff = Math.abs(rts - lts);
                 if (diff > 300) {
                     mCol.log("clock off");
-                    return new Pair<> (CLOCK_OFF, new Object[] {diff});
+                    return new Pair<> (CLOCK_OFF, diff);
                 }
                 if (lMod == rMod) {
                     Timber.i("Sync: no changes - returning");
@@ -817,16 +819,16 @@ public class Syncer {
     private JSONArray getTags() {
         JSONArray result = new JSONArray();
         if (mCol.getServer()) {
-            for (Map.Entry<String, Integer> t : mCol.getTags().allItems()) {
-                if (t.getValue() >= mMinUsn) {
-                    result.put(t.getKey());
+            for (TagUsnTuple t : mCol.getTags().allItems()) {
+                if (t.getUsn() >= mMinUsn) {
+                    result.put(t.getTag());
                 }
             }
         } else {
-            for (Map.Entry<String, Integer> t : mCol.getTags().allItems()) {
-                if (t.getValue() == -1) {
-                    String tag = t.getKey();
-                    mCol.getTags().add(t.getKey(), mMaxUsn);
+            for (TagUsnTuple t : mCol.getTags().allItems()) {
+                if (t.getUsn() == -1) {
+                    String tag = t.getTag();
+                    mCol.getTags().add(t.getTag(), mMaxUsn);
                     result.put(tag);
                 }
             }
@@ -864,7 +866,7 @@ public class Syncer {
             ids[i] = data.getJSONArray(i).getLong(0);
         }
         Pair<String, Object[]> limAndArg = usnLim();
-        Map<Long, Long> lmods = new HashMap<>(mCol
+        Map<Long, Long> lmods = HashUtil.HashMapInit(mCol
                     .getDb()
                     .queryScalar(
                             "SELECT count() FROM " + table + " WHERE id IN " + Utils.ids2str(ids) + " AND "

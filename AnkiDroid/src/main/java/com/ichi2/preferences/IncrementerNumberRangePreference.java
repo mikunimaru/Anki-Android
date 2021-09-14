@@ -28,13 +28,14 @@ import android.widget.LinearLayout;
 import com.ichi2.anki.R;
 
 
-@SuppressWarnings("deprecation") // TODO Tracked in https://github.com/ankidroid/Anki-Android/issues/5019
+@SuppressWarnings("deprecation") // TODO Tracked in https://github.com/ankidroid/Anki-Android/issues/5019 : use IncrementerNumberRangePreferenceCompat
 public class IncrementerNumberRangePreference extends NumberRangePreference {
 
     private final LinearLayout mLinearLayout = new LinearLayout(getContext());
     private final EditText mEditText = getEditText(); // Get default EditText from parent
     private final Button mIncrementButton = new Button(getContext());
     private final Button mDecrementButton = new Button(getContext());
+    private int mLastValidEntry;
 
 
     public IncrementerNumberRangePreference(Context context, AttributeSet attrs, int defStyle) {
@@ -101,6 +102,13 @@ public class IncrementerNumberRangePreference extends NumberRangePreference {
                 1.0f
         );
 
+        try {
+            mLastValidEntry = Integer.parseInt(mEditText.getText().toString());
+        } catch (NumberFormatException nfe) {
+            // This should not be possible but just in case, recover with a valid minimum from superclass
+            mLastValidEntry = mMin;
+        }
+
         mEditText.setLayoutParams(editTextParams);
         // Centre text inside mEditText
         mEditText.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -122,10 +130,16 @@ public class IncrementerNumberRangePreference extends NumberRangePreference {
      * @param isIncrement Indicator for whether to increase or decrease the value.
      */
     private void updateEditText(boolean isIncrement) {
-        int value = Integer.parseInt(mEditText.getText().toString());
+        int value;
+        try {
+            value = Integer.parseInt(mEditText.getText().toString());
+        } catch (NumberFormatException e) {
+            // If the user entered a non-number then incremented, restore to a good value
+            value = mLastValidEntry;
+        }
         value = isIncrement ? value + 1 : value - 1;
         // Make sure value is within range
-        value = super.getValidatedRangeFromInt(value);
-        mEditText.setText(String.valueOf(value));
+        mLastValidEntry = super.getValidatedRangeFromInt(value);
+        mEditText.setText(String.valueOf(mLastValidEntry));
     }
 }

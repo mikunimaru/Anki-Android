@@ -13,15 +13,13 @@
 
 package com.ichi2.ui;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 
 import com.ichi2.anki.R;
 
@@ -79,14 +77,15 @@ public class RtlCompliantActionProvider extends ActionProvider {
 
     @Override
     public View onCreateActionView(MenuItem forItem) {
-        final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        @SuppressLint("InflateParams") final ImageView actionView = (ImageView) layoutInflater.inflate(R.layout.rtl_menu_item, null);
+        ImageButton actionView = new ImageButton(mContext, null, R.attr.actionButtonStyle);
 
         TooltipCompat.setTooltipText(actionView, forItem.getTitle());
 
         final Drawable iconDrawable = forItem.getIcon();
         iconDrawable.setAutoMirrored(true);
         actionView.setImageDrawable(iconDrawable);
+
+        actionView.setId(R.id.action_undo);
 
         actionView.setOnClickListener(v -> {
             if (!forItem.isEnabled()) {

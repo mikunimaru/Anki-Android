@@ -15,13 +15,11 @@
  ****************************************************************************************/
 
 package com.ichi2.anki.dialogs;
-
-import com.ichi2.anki.AnkiActivity;
 import com.ichi2.anki.DeckPicker;
 import com.ichi2.anki.R;
 import com.ichi2.anki.RobolectricTest;
 import com.ichi2.anki.exception.FilteredAncestor;
-import com.ichi2.libanki.Decks;
+import com.ichi2.libanki.DeckManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,10 +28,8 @@ import org.robolectric.RobolectricTestRunner;
 import java.util.concurrent.atomic.AtomicReference;
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
-import static android.os.Looper.getMainLooper;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 public class CreateDeckDialogTest extends RobolectricTest {
@@ -60,7 +56,7 @@ public class CreateDeckDialogTest extends RobolectricTest {
                 // a deck was created
                 try {
                     isCreated.set(true);
-                    final Decks decks = activity.getCol().getDecks();
+                    final DeckManager decks = activity.getCol().getDecks();
                     assertThat(id, is(decks.id(deckName)));
                 } catch (FilteredAncestor filteredAncestor) {
                     throw new RuntimeException(filteredAncestor);
@@ -74,7 +70,7 @@ public class CreateDeckDialogTest extends RobolectricTest {
 
     @Test
     public void testCreateSubDeckFunction() throws FilteredAncestor {
-        Long deckParentId = new AnkiActivity().getCol().getDecks().id("Deck Name");
+        Long deckParentId = getCol().getDecks().id("Deck Name");
 
         mActivityScenario.onActivity(activity -> {
             CreateDeckDialog createDeckDialog = new CreateDeckDialog(activity, R.string.new_deck, CreateDeckDialog.DeckDialogType.SUB_DECK, deckParentId);
@@ -85,7 +81,7 @@ public class CreateDeckDialogTest extends RobolectricTest {
             createDeckDialog.setOnNewDeckCreated((id) -> {
                 try {
                     isCreated.set(true);
-                    final Decks decks = activity.getCol().getDecks();
+                    final DeckManager decks = activity.getCol().getDecks();
                     String deckNameWithParentName = decks.getSubdeckName(deckParentId, deckName);
                     assertThat(id, is(decks.id(deckNameWithParentName)));
                 } catch (FilteredAncestor filteredAncestor) {
@@ -109,7 +105,7 @@ public class CreateDeckDialogTest extends RobolectricTest {
             createDeckDialog.setOnNewDeckCreated((id) -> {
                 // a deck was created
                 isCreated.set(true);
-                final Decks decks = activity.getCol().getDecks();
+                final DeckManager decks = activity.getCol().getDecks();
                 assertThat(id, is(decks.byName(deckName).getLong("id")));
             });
 
@@ -132,7 +128,7 @@ public class CreateDeckDialogTest extends RobolectricTest {
             createDeckDialog.setOnNewDeckCreated((id) -> {
                 // a deck name was renamed
                 isCreated.set(true);
-                final Decks decks = activity.getCol().getDecks();
+                final DeckManager decks = activity.getCol().getDecks();
                 assertThat(deckNewName, is(decks.name(id)));
             });
 

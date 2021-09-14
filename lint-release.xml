@@ -29,6 +29,10 @@
     <issue id="UnusedResources" severity="fatal">
         <!-- Ignore as they'll be used for #7526 -->
         <ignore regexp="content_picture\.png|device_access_mic\.png" />
+        <!-- Remove once #6772 is complete -->
+        <ignore regexp="edit_text_color_enabled_selector\.xml" />
+        <ignore regexp="multiline_spinner_item\.xml" />
+        <!-- end: Remove once #6772 is complete -->
         <ignore path="res/values/12-dont-translate.xml" />
         <!-- Ignore all translations except values - CrowdIn will handle deletions -->
         <!-- We only need to handle -af and all others are implicitly ignored -->
@@ -40,6 +44,7 @@
     <issue id="ViewTag" severity="fatal" />
     <issue id="WrongConstant" severity="fatal" />
     <issue id="WrongViewCast" severity="fatal" />
+    <issue id="UnknownId" severity="fatal" />
 
     <!--           RTL Rules               -->
     <issue id="RtlCompat" severity="fatal" />
@@ -48,9 +53,19 @@
     <!-- RtlSymmetry is disabled because we already have RtlHardcoded rule enabled -->
     <issue id="RtlSymmetry" severity="ignore" />
 
+    <!-- Allows Timber issues defined for AnkiDroid without an api dependency on Timber -->
+    <issue id="UnknownIssueId" severity="ignore" />
     <!-- This come from Timber and we need to also ignore them  -->
+    <!-- Ignored due to https://github.com/JakeWharton/timber/issues/408 -->
     <issue id="BinaryOperationInTimber" severity="ignore" />
     <issue id="LogNotTimber" severity="ignore" />
+    <issue id="StringFormatInTimber" severity="ignore" />
+    <issue id="ThrowableNotAtBeginning" severity="ignore" />
+    <issue id="TimberArgCount" severity="ignore" />
+    <issue id="TimberArgTypes" severity="ignore" />
+    <issue id="TimberTagLength" severity="ignore" />
+    <issue id="TimberExceptionLogging" severity="ignore" />
+
     <issue id="UseCompatTextViewDrawableXml" severity="ignore" />
     <issue id="AcceptsUserCertificates" severity="ignore" />
     <issue id="RedundantNamespace" severity="ignore" />
@@ -226,13 +241,11 @@
     <issue id="InvalidPermission" severity="ignore" />
     <issue id="ManifestResource" severity="ignore" />
     <issue id="ManifestTypo" severity="ignore" />
-    <issue id="FloatMath" severity="ignore" />
     <issue id="MergeMarker" severity="ignore" />
     <issue id="MergeRootFrame" severity="ignore" />
     <issue id="IncompatibleMediaBrowserServiceCompatVersion" severity="ignore" />
     <issue id="InnerclassSeparator" severity="ignore" />
     <issue id="Instantiatable" severity="ignore" />
-    <issue id="MissingRegistered" severity="ignore" />
     <issue id="MissingId" severity="ignore" />
     <issue id="LibraryCustomView" severity="ignore" />
     <issue id="ResAuto" severity="ignore" />
@@ -347,9 +360,13 @@
     <issue id="WrongCase" severity="ignore" />
     <issue id="InvalidId" severity="ignore" />
     <issue id="NotSibling" severity="ignore" />
-    <issue id="UnknownId" severity="ignore" />
     <issue id="UnknownIdInLayout" severity="ignore" />
     <issue id="SuspiciousImport" severity="ignore" />
     <issue id="WrongFolder" severity="ignore" />
     <issue id="WrongThreadInterprocedural" severity="ignore" />
+
+
+    <issue id="CustomX509TrustManager" severity="ignore" />
+    <!-- PERF: Could improve by not using notifyDataSetChanged() -->
+    <issue id="NotifyDataSetChanged" severity="ignore" />
 </lint>

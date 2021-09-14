@@ -60,6 +60,10 @@ public class AnalyticsConstantsTest {
         listOfConstantFields.add("Opened Discord");
         listOfConstantFields.add("Opened Facebook");
         listOfConstantFields.add("Opened Twitter");
+        listOfConstantFields.add("Opened Privacy");
+        listOfConstantFields.add("Opened AnkiDroid Privacy Policy");
+        listOfConstantFields.add("Opened AnkiWeb Privacy Policy");
+        listOfConstantFields.add("Opened AnkiWeb Terms and Conditions");
         listOfConstantFields.add("Exception Report");
         listOfConstantFields.add("aedict");
         listOfConstantFields.add("leo");
@@ -67,6 +71,8 @@ public class AnalyticsConstantsTest {
         listOfConstantFields.add("fora");
         listOfConstantFields.add("nciku");
         listOfConstantFields.add("eijiro");
+        listOfConstantFields.add("Import APKG");
+        listOfConstantFields.add("Import COLPKG");
     }
 
     @NonNull

@@ -39,6 +39,7 @@ import com.ichi2.ui.FixedTextView;
 import java.io.File;
 import java.io.InputStream;
 
+import androidx.annotation.VisibleForTesting;
 import timber.log.Timber;
 
 public class BasicAudioClipFieldController extends FieldControllerBase implements IFieldController {
@@ -56,11 +57,13 @@ public class BasicAudioClipFieldController extends FieldControllerBase implement
         Collection col = CollectionHelper.getInstance().getCol(context);
         mStoringDirectory = new File(col.getMedia().dir());
 
-        Button mBtnLibrary = new Button(mActivity);
-        mBtnLibrary.setText(mActivity.getText(R.string.multimedia_editor_image_field_editing_library));
-        mBtnLibrary.setOnClickListener(v -> {
+        Button btnLibrary = new Button(mActivity);
+        btnLibrary.setText(mActivity.getText(R.string.multimedia_editor_image_field_editing_library));
+        btnLibrary.setOnClickListener(v -> {
             Intent i = new Intent();
             i.setType("audio/*");
+            String[] extraMimeTypes = { "audio/*", "application/ogg" }; // #9226 allows ogg on Android 8
+            i.putExtra(Intent.EXTRA_MIME_TYPES, extraMimeTypes);
             i.setAction(Intent.ACTION_GET_CONTENT);
             // Only get openable files, to avoid virtual files issues with Android 7+
             i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -68,7 +71,7 @@ public class BasicAudioClipFieldController extends FieldControllerBase implement
             mActivity.startActivityForResultWithoutAnimation(Intent.createChooser(i, chooserPrompt), ACTIVITY_SELECT_AUDIO_CLIP);
         });
 
-        layout.addView(mBtnLibrary, ViewGroup.LayoutParams.MATCH_PARENT);
+        layout.addView(btnLibrary, ViewGroup.LayoutParams.MATCH_PARENT);
 
         mTvAudioClip = new FixedTextView(mActivity);
         if (mField.getAudioPath() == null) {
@@ -111,6 +114,7 @@ public class BasicAudioClipFieldController extends FieldControllerBase implement
 
             cursor.moveToFirst();
             String audioClipFullName = cursor.getString(0);
+            audioClipFullName = checkFileName(audioClipFullName);
             audioClipFullNameParts = audioClipFullName.split("\\.");
             if (audioClipFullNameParts.length < 2) {
                 try {
@@ -161,6 +165,16 @@ public class BasicAudioClipFieldController extends FieldControllerBase implement
         }
     }
 
+    /**
+     * This method replaces any character that isn't a number, letter or underscore with underscore in file name.
+     * This method doesn't check that file name is valid or not it simply operates on all file name.
+     * @param audioClipFullName name of the file.
+     * @return file name which is valid.
+     */
+    @VisibleForTesting
+    static String checkFileName(String audioClipFullName) {
+        return audioClipFullName.replaceAll("[^\\w.]+", "_");
+    }
 
     @Override
     public void onDone() { /* nothing */ }
