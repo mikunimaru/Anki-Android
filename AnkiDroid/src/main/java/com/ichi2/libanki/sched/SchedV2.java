@@ -1616,8 +1616,8 @@ public class SchedV2 extends AbstractSched {
                  * contains distinct card.
                  */
                 // fill the queue with the current did
-            try (Cursor cur = mCol.getDb().query("SELECT id FROM cards WHERE did in " + _deckLimit() + " AND queue = " + Consts.QUEUE_TYPE_REV + " AND due <= ? AND " + idName + " != ?"
-                               + " ORDER BY due, random() LIMIT ?",
+            try (Cursor cur = mCol.getDb().query("SELECT id, due, mod FROM cards WHERE did in " + _deckLimit() + " AND queue = " + Consts.QUEUE_TYPE_REV + " AND due <= ? AND " + idName + " != ?"
+                               + " ORDER BY due - mod, due, random() LIMIT ?",
                                mToday, id, lim)) {
                 while (cur.moveToNext()) {
                     mRevQueue.add(cur.getLong(0));
