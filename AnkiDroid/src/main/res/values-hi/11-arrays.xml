@@ -103,15 +103,20 @@
     <string name="gesture_lookup">Lookup expression</string>
     <string name="gesture_play">मीडिया चलाएं</string>
     <string name="gesture_abort_learning">Abort learning</string>
-    <string name="gesture_flag_red">Toggle Red Flag</string>
-    <string name="gesture_flag_orange">Toggle Orange Flag</string>
-    <string name="gesture_flag_green">Toggle Green Flag</string>
-    <string name="gesture_flag_blue">Toggle Blue Flag</string>
-    <string name="gesture_flag_remove">झंडा हटाएं</string>
+    <string name="gesture_flag_red">लाल ध्वज टॉगल करें</string>
+    <string name="gesture_flag_orange">नारंगी ध्वज टॉगल करें</string>
+    <string name="gesture_flag_green">हरा ध्वज टॉगल करें</string>
+    <string name="gesture_flag_blue">नीला ध्वज टॉगल करें</string>
+    <string name="gesture_flag_pink">गुलाबी ध्वज टॉगल करें</string>
+    <string name="gesture_flag_turquoise">फ़ीरोज़ा ध्वज टॉगल करें</string>
+    <string name="gesture_flag_purple">बैंगनी ध्वज टॉगल करें</string>
+    <string name="gesture_flag_remove">ध्वज हटाएं</string>
     <string name="gesture_page_up">पन्ना ऊपर</string>
     <string name="gesture_page_down">पन्ना निचे</string>
     <string name="gesture_abort_sync">Abort Learning and Sync</string>
     <string name="gesture_toggle_whiteboard">श्वेतपट्ट टॉगल करें</string>
     <string name="record_voice">Record Voice</string>
     <string name="replay_voice">Replay Voice</string>
+    <string name="automatic_answer_option_2">Hard (Good if unavailable)</string>
+    <string name="automatic_answer_option_4">Easy (Good if unavailable)</string>
 </resources>

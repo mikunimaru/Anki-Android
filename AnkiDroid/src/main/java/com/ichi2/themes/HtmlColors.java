@@ -1,12 +1,15 @@
 //noinspection MissingCopyrightHeader #8659
 package com.ichi2.themes;
 
+import com.ichi2.utils.HashUtil;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
 import timber.log.Timber;
 
 public class HtmlColors {
@@ -20,7 +23,7 @@ public class HtmlColors {
 
     public static String nameToHex(String name) {
         if (sColorsMap == null) {
-            sColorsMap = new HashMap<>(fColorsRawList.length);
+            sColorsMap = HashUtil.HashMapInit(fColorsRawList.length);
             for (int i = 0; i < fColorsRawList.length; i+=2) {
                 sColorsMap.put(fColorsRawList[i].toLowerCase(Locale.US), fColorsRawList[i+1].toLowerCase(Locale.US));
             }
@@ -37,6 +40,7 @@ public class HtmlColors {
      * #777777 is the grey color</span> This is done with a state machine with 2 states: - 0: within content - 1: within
      * a tag
      */
+    @NonNull
     public static String invertColors(String text) {
         StringBuffer sb = new StringBuffer();
         Matcher m1 = fHtmlColorPattern.matcher(text);

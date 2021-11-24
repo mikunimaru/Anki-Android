@@ -31,6 +31,7 @@ import com.ichi2.anki.R;
 import com.ichi2.async.Connection;
 import com.ichi2.libanki.Collection;
 import com.ichi2.anki.analytics.UsageAnalytics;
+import com.ichi2.utils.HandlerUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -56,7 +57,6 @@ public class DialogHandler extends Handler {
     public static final int MSG_SHOW_COLLECTION_IMPORT_REPLACE_DIALOG = 1;
     public static final int MSG_SHOW_COLLECTION_IMPORT_ADD_DIALOG = 2;
     public static final int MSG_SHOW_SYNC_ERROR_DIALOG = 3;
-    public static final int MSG_SHOW_EXPORT_COMPLETE_DIALOG = 4;
     public static final int MSG_SHOW_MEDIA_CHECK_COMPLETE_DIALOG = 5;
     public static final int MSG_SHOW_DATABASE_ERROR_DIALOG = 6;
     public static final int MSG_SHOW_FORCE_FULL_SYNC_DIALOG = 7;
@@ -77,8 +77,9 @@ public class DialogHandler extends Handler {
 
     final WeakReference<AnkiActivity> mActivity;
     private static Message sStoredMessage;
-    
-    public DialogHandler(AnkiActivity activity) {
+
+    public DialogHandler(AnkiActivity activity)  {
+        super(HandlerUtils.getDefaultLooper());
         // Use weak reference to main activity to prevent leaking the activity when it's closed
         mActivity = new WeakReference<>(activity);
     }
@@ -102,11 +103,7 @@ public class DialogHandler extends Handler {
             int id = msgData.getInt("dialogType");
             String message = msgData.getString("dialogMessage");
             ((DeckPicker) mActivity.get()).showSyncErrorDialog(id, message);
-        } else if (msg.what == MSG_SHOW_EXPORT_COMPLETE_DIALOG) {
-            // Export complete
-            AsyncDialogFragment f = DeckPickerExportCompleteDialog.newInstance(msgData.getString("exportPath"));
-            mActivity.get().showAsyncDialogFragment(f);
-        } else if (msg.what == MSG_SHOW_MEDIA_CHECK_COMPLETE_DIALOG) {            
+        } else if (msg.what == MSG_SHOW_MEDIA_CHECK_COMPLETE_DIALOG) {
             // Media check results
             int id = msgData.getInt("dialogType");
             if (id!=MediaCheckDialog.DIALOG_CONFIRM_MEDIA_CHECK) {

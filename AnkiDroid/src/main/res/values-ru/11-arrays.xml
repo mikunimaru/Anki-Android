@@ -60,7 +60,7 @@
     </string-array>
     <string-array name="add_to_cur_labels">
         <item>Использовать текущую колоду</item>
-        <item>Решать по типу записи</item>
+        <item>Выбрать по типу записи</item>
     </string-array>
     <string-array name="new_spread_labels">
         <item>Перемешивать новые и повторяемые</item>
@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">Оранжевый флажок</string>
     <string name="gesture_flag_green">Зелёный флажок</string>
     <string name="gesture_flag_blue">Синий флажок</string>
+    <string name="gesture_flag_pink">Розовый флажок</string>
+    <string name="gesture_flag_turquoise">Бирюзовой флажок</string>
+    <string name="gesture_flag_purple">Фиолетовый флажок</string>
     <string name="gesture_flag_remove">Убрать флажок</string>
     <string name="gesture_page_up">На страницу вверх</string>
     <string name="gesture_page_down">На страницу вниз</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">Переключить доску</string>
     <string name="record_voice">Записать голос</string>
     <string name="replay_voice">Воспроизвести голос</string>
+    <string name="automatic_answer_option_2">Тяжело (хорошо, если недоступно)</string>
+    <string name="automatic_answer_option_4">Легко (хорошо, если недоступно)</string>
 </resources>

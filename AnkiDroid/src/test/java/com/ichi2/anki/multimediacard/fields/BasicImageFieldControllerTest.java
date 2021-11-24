@@ -1,9 +1,26 @@
+/*
+ *  Copyright (c) 2020 David Allison <davidallisongithub@gmail.com>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ichi2.anki.multimediacard.fields;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 
+import com.ichi2.anki.R;
 import com.ichi2.anki.multimediacard.activity.MultimediaEditFieldActivity;
 import com.ichi2.anki.multimediacard.activity.MultimediaEditFieldActivityTestBase;
 import com.ichi2.testutils.AnkiAssert;
@@ -13,12 +30,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowToast;
 
 import java.io.File;
 
 import androidx.annotation.CheckResult;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -72,6 +91,17 @@ public class BasicImageFieldControllerTest extends MultimediaEditFieldActivityTe
                 is(false));
     }
 
+    @Test
+    public void fileSelectedOnSVG() {
+        BasicImageFieldController controller = getValidControllerNoImage();
+
+        File f =  new File("test.svg");
+
+        controller.setImagePreview(f, 100);
+        assertThat("A SVG image file can't be previewed", ShadowToast.getTextOfLatestToast(),
+                equalTo(getResourceString(R.string.multimedia_editor_svg_preview)));
+        assertThat("A SVG image file can't be previewed", controller.isShowingPreview(), is(false));
+    }
 
     @Test
     public void invalidImageResultDoesNotCrashController() {

@@ -137,6 +137,7 @@
     <string name="card_editor_reset_card">Resetear progreso</string>
     <string name="card_editor_reschedule_card" comment="Action to reschedule a card">Reprogramar</string>
     <string name="card_editor_preview_card" comment="Button offering to preview some card(s)">Vista previa</string>
+    <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d of %2$d</string>
     <string name="error_insufficient_memory">La operación no puede llevarse a cabo debido a memoria insuficiente en su dispositivo</string>
     <string name="rename" comment="Confirm that the renaming action should be processed.">Renombrar</string>
     <string name="default_conf_delete_error">El grupo de opciones por defecto no puede ser eliminado</string>
@@ -154,7 +155,6 @@
     <string name="show_hint">Mostrar %s</string>
     <string name="info_rate">Puntúe AnkiDroid</string>
     <string name="import_title">Importando</string>
-    <string name="import_select_title">Escoja un archivo para importar</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">Añadir</string>
     <string name="import_message_replace_confirm">Esta operación eliminará la colección existente y la reemplazará con los datos del archivo %s. ¿Está seguro?</string>
     <string name="import_message_add_confirm">¿Añadir \"%s\" a la colección? Esto podría tomar mucho tiempo</string>
@@ -188,14 +188,12 @@
     <string name="export_save_apkg_unsuccessful">Error al guardar el paquete Anki</string>
     <string name="export_successful">El archivo \"%s\" fue exportado. ¿Desea enviarlo con otra aplicación?</string>
     <string name="export_email_subject">Tarjetas exportadas por AnkiDroid: %s</string>
-    <string name="export_email_text"><![CDATA[        ¡Hola!
+    <string name="export_email_text_new"><![CDATA[        ¡Hola!
         <br/><br/>
-        Este es un mazo de tarjetas de estudio de Anki enviado desde <a href="https://ankidroid.org/docs/manual.html">Ankidroid</a>.
-        ¡Intenta abrirlo usando una de las distribuciones disponibles de Anki <a href="http://ankisrs.net/#download"> y disfruta de un sencillo y eficiente aprendizaje!
+        Esto es un mazo de tarjetas Anki enviado desde <a href="%1$s">AnkiDroid</a>.
+        ¡Prueba usando una de las <a href="%2$s">distribuciones Anki</a> y disfruta un aprendizaje fácil y eficiente!
         ]]></string>
     <string name="export_unsuccessful">Error al exportar archivo apkg</string>
-    <string name="import_hint">Para importar tarjetas coloque el archivo apkg en el directorio %s y presione OK</string>
-    <string name="upgrade_import_no_file_found">No se ha hallado archivos %1$s para importar</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Opciones</string>
     <string name="menu__deck_options">Opciones de mazo</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Opciones de estudio</string>
@@ -342,6 +340,7 @@
     <string name="create_shortcut_failed" comment="home screen == launcher">Tu pantalla de inicio no permite que AnkiDroid añada accesos directos</string>
     <string name="create_shortcut_error">Error al añadir acceso directo: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled">Poner en mayúsculas las oraciones</string>
+    <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll">Scroll toolbar</string>
     <!-- Symbols used as Button text in IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -349,4 +348,31 @@
     <string name="email_id_empty">Se requiere dirección de correo electrónico</string>
     <string name="password_empty">La contraseña es requerida</string>
     <string name="back_pressed_once">Presione atrás de nuevo para salir</string>
+    <string name="back_pressed_once_reviewer">Press back again to return</string>
+    <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
+    <string name="percentage">%s%%</string>
+    <string name="download_deck">Descargar mazo</string>
+    <string name="try_again">Inténtalo de nuevo</string>
+    <string name="cancel_download">Cancelar descarga</string>
+    <string name="cancel_download_question_title">¿Cancelar descarga?</string>
+    <string name="downloading_file">Descargando %s</string>
+    <string name="import_deck">Importar mazo</string>
+    <string name="something_wrong">Ha ocurrido un error, por favor inténtalo de nuevo</string>
+    <string name="download_failed">Descarga fallida</string>
+    <string name="deck_download_progress_message">Puedes usar otras aplicaciones mientras se ejecuta la descarga</string>
+    <string name="check_network">Por favor revisa tu conexión de red</string>
+    <string name="search_using_deck_name">Buscar usando nombre de mazo</string>
+    <string name="home">Inicio</string>
+    <!-- Importing -->
+    <string name="import_mapped_to_field">Mapeado a %s</string>
+    <string name="import_mapped_to_tags">Mapeado a Tags</string>
+    <string name="import_mapped_to_nothing">Ignorado</string>
+    <!-- Reviewer actions -->
+    <string name="buried_card">Buried card</string>
+    <string name="buried_note">Buried note</string>
+    <string name="deleted_note">Deleted note</string>
+    <string name="suspended_card">Suspended card</string>
+    <string name="suspended_note">Suspended note</string>
+    <!--  Note Editor Toggle Sticky  -->
+    <string name="note_editor_toggle_sticky">Make field %s sticky</string>
 </resources>

@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">Baskuli oranĝkoloran flagon</string>
     <string name="gesture_flag_green">Baskuli verdan flagon</string>
     <string name="gesture_flag_blue">Baskuli bluan flagon</string>
+    <string name="gesture_flag_pink">Baskuli rozkoloran flagon</string>
+    <string name="gesture_flag_turquoise">Baskuli turkisan flagon</string>
+    <string name="gesture_flag_purple">Baskuli violkoloran flagon</string>
     <string name="gesture_flag_remove">Forigi flagon</string>
     <string name="gesture_page_up">Paĝo supren</string>
     <string name="gesture_page_down">Paĝo suben</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">Baskuli skribtabulon</string>
     <string name="record_voice">Registri voĉon</string>
     <string name="replay_voice">Ludi voĉon</string>
+    <string name="automatic_answer_option_2">malfacile (“facile” se nedisponebla)</string>
+    <string name="automatic_answer_option_4">facilege (“facile” se nedisponebla)</string>
 </resources>

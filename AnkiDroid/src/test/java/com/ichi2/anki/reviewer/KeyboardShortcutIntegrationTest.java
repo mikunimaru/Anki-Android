@@ -26,6 +26,7 @@ import com.ichi2.anki.RobolectricTest;
 import com.ichi2.anki.multimediacard.AudioPlayer;
 import com.ichi2.anki.multimediacard.AudioRecorder;
 import com.ichi2.anki.multimediacard.AudioView;
+import com.ichi2.testutils.KeyEventUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -50,7 +52,7 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class KeyboardShortcutIntegrationTest extends RobolectricTest {
 
-    private Reviewer reviewer;
+    private Reviewer mReviewer;
 
 
     @Before
@@ -59,7 +61,7 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
         super.setUp();
         addNoteUsingBasicModel("Hello", "World");
         Shadows.shadowOf((Application) ApplicationProvider.getApplicationContext()).grantPermissions(Manifest.permission.RECORD_AUDIO);
-        reviewer = super.startActivityNormallyOpenCollectionWithIntent(Reviewer.class, new Intent());
+        mReviewer = super.startActivityNormallyOpenCollectionWithIntent(Reviewer.class, new Intent());
         waitForAsyncTasksToComplete();
     }
 
@@ -77,9 +79,26 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
 
         pressShiftAndVThenRelease();
 
-        verify(recorder, times(1)).startRecording(anyString());
+        verify(recorder, times(1)).startRecording(any(), anyString());
         verifyNoMoreInteractions(recorder);
     }
+
+    /**
+     * Press V
+     * Hold V
+     *
+     * Expected: Recording is triggered and is not untriggered
+     */
+    @Test
+    public void holdIsNotASecondAction() throws IOException {
+        AudioRecorder recorder = setupRecorderMock();
+
+        pressAndHoldShiftV();
+
+        verify(recorder, times(1)).startRecording(any(), anyString());
+        verifyNoMoreInteractions(recorder);
+    }
+
 
     /**
      * Press "Shift + V"
@@ -95,7 +114,7 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
 
         pressShiftAndVThenRelease();
 
-        verify(recorder, times(1)).startRecording(anyString());
+        verify(recorder, times(1)).startRecording(any(), anyString());
         verifyNoMoreInteractions(recorder, player);
         assertStatus(AudioView.Status.RECORDING);
 
@@ -135,7 +154,7 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
         pressShiftAndVThenRelease();
 
         verify(player, times(1)).stop();
-        verify(recorder, times(1)).startRecording(anyString());
+        verify(recorder, times(1)).startRecording(any(), anyString());
         verifyNoMoreInteractions(recorder, player);
         assertStatus(AudioView.Status.RECORDING);
 
@@ -143,22 +162,22 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
 
 
     protected void assertStatus(AudioView.Status recording) {
-        assertThat(reviewer.getAudioView().getStatus(), is(recording));
+        assertThat(mReviewer.getAudioView().getStatus(), is(recording));
     }
 
 
     protected AudioPlayer setupPlayerMock() {
-        assertThat(reviewer.openMicToolbar(), is(true));
+        assertThat(mReviewer.openMicToolbar(), is(true));
         AudioPlayer player = mock(AudioPlayer.class);
-        reviewer.getAudioView().setPlayer(player);
+        mReviewer.getAudioView().setPlayer(player);
         return player;
     }
 
 
     protected AudioRecorder setupRecorderMock() {
-        assertThat(reviewer.openMicToolbar(), is(true));
+        assertThat(mReviewer.openMicToolbar(), is(true));
         AudioRecorder recorder = mock(AudioRecorder.class);
-        reviewer.getAudioView().setRecorder(recorder);
+        mReviewer.getAudioView().setRecorder(recorder);
         return recorder;
     }
 
@@ -166,6 +185,17 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
     private void pressVThenRelease() {
         depressVKey();
         releaseVKey();
+    }
+
+
+    private void pressAndHoldShiftV() {
+        depressShiftKey();
+
+        KeyEvent vKey = KeyEventUtils.getVKey();
+        when(vKey.isShiftPressed()).thenReturn(true);
+        mReviewer.onKeyDown(KeyEvent.KEYCODE_V, vKey);
+        when(vKey.getRepeatCount()).thenReturn(1);
+        mReviewer.onKeyDown(KeyEvent.KEYCODE_V, vKey);
     }
 
 
@@ -182,14 +212,14 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
         when(mock.getKeyCode()).thenReturn(KeyEvent.KEYCODE_V);
         when(mock.getUnicodeChar()).thenReturn((int) 'v');
         when(mock.getUnicodeChar(anyInt())).thenReturn((int) 'v');
-        reviewer.onKeyUp(KeyEvent.KEYCODE_V, mock);
+        mReviewer.onKeyUp(KeyEvent.KEYCODE_V, mock);
     }
 
 
     private void releaseShiftKey() {
         KeyEvent mock = mock(KeyEvent.class);
         when(mock.getKeyCode()).thenReturn(KeyEvent.KEYCODE_SHIFT_LEFT);
-        reviewer.onKeyUp(KeyEvent.KEYCODE_SHIFT_LEFT, mock);
+        mReviewer.onKeyUp(KeyEvent.KEYCODE_SHIFT_LEFT, mock);
     }
 
     private void depressVKey() {
@@ -197,14 +227,15 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
         when(mock.getKeyCode()).thenReturn(KeyEvent.KEYCODE_V);
         when(mock.getUnicodeChar()).thenReturn((int) 'v');
         when(mock.getUnicodeChar(anyInt())).thenReturn((int) 'v');
-        reviewer.onKeyDown(KeyEvent.KEYCODE_V, mock);
+        mReviewer.onKeyDown(KeyEvent.KEYCODE_V, mock);
     }
+
 
     private void depressVKeyWithShiftHeld() {
         KeyEvent mock = mock(KeyEvent.class);
         when(mock.isShiftPressed()).thenReturn(true);
         when(mock.getKeyCode()).thenReturn(KeyEvent.KEYCODE_V);
-        reviewer.onKeyDown(KeyEvent.KEYCODE_V, mock);
+        mReviewer.onKeyDown(KeyEvent.KEYCODE_V, mock);
     }
 
 
@@ -222,6 +253,6 @@ public class KeyboardShortcutIntegrationTest extends RobolectricTest {
         when(mock.getSource()).thenReturn(257);
         when(mock.getRepeatCount()).thenReturn(0);
 
-        reviewer.onKeyDown(KeyEvent.KEYCODE_SHIFT_LEFT, mock);
+        mReviewer.onKeyDown(KeyEvent.KEYCODE_SHIFT_LEFT, mock);
     }
 }

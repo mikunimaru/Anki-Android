@@ -59,7 +59,7 @@
         <item>التأخير النسبي</item>
     </string-array>
     <string-array name="add_to_cur_labels">
-        <item>استخدام شَدّة أوراق الحالية</item>
+        <item>استخدام الرزمة الحالية</item>
         <item>تقرير حسب نوع الملحوظة</item>
     </string-array>
     <string-array name="new_spread_labels">
@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">تفعيل المؤشر البرتقالي</string>
     <string name="gesture_flag_green">تفعيل المؤشر الأخضر</string>
     <string name="gesture_flag_blue">تفعيل المؤشر الأزرق</string>
+    <string name="gesture_flag_pink">تفعيل أو إيقاف المؤشر الزهري</string>
+    <string name="gesture_flag_turquoise">تفعيل أو إيقاف المؤشر الفيرزوي</string>
+    <string name="gesture_flag_purple">تفعيل أو إيقاف المؤشر البنفسجي</string>
     <string name="gesture_flag_remove">إزالة المؤشر</string>
     <string name="gesture_page_up">تمرير صفحة إلى الأعلى</string>
     <string name="gesture_page_down">تمرير صفحة إلى الأسفل</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">تمكين اللوحة البيضاء</string>
     <string name="record_voice">تسجيل الصوت</string>
     <string name="replay_voice">إعادة تشغيل الصوت</string>
+    <string name="automatic_answer_option_2">صعب (جيد إذا لم يكن متوفرًا)</string>
+    <string name="automatic_answer_option_4">سهل (جيد إذا لم يكن متوفرًا)</string>
 </resources>

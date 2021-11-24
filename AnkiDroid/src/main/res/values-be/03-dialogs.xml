@@ -43,7 +43,7 @@
     <string name="check_db_acknowledge">База даных праверана</string>
     <string name="check_db_acknowledge_shrunk">База даных праверана і аптымізавана.\nПамер зменшаны на %d МБ.</string>
     <string name="contextmenu_deckpicker_delete_deck">Выдаліць калоду</string>
-    <string name="delete_deck_default_deck">Нельга выдаліць асноўную калоду</string>
+    <string name="delete_deck_default_deck">Нельга выдаліць стандартную калоду</string>
     <string name="delete_deck_title">Выдаліць калоду?</string>
     <plurals name="delete_deck_message">
         <item quantity="one">Выдаліць усе карткі ў %1$s? Яна змяшчае %2$d картку.</item>
@@ -55,6 +55,7 @@
     <string name="no_tts_available_message">Сінтэз маўлення недаступны</string>
     <string name="initializing_tts">Ініцыялізацыя сінтэзу маўлення...</string>
     <string name="tts_no_tts">Не прамаўляць</string>
+    <string name="unused_strings">\n\nНявыкарыстаныя файлы:\n</string>
     <string-array name="about_content">
         <item><![CDATA[<h2>%1$s: <br/>Навучальныя карткі для Android</h2>AnkiDroid - гэта праграма навучальных картак, якая цалкам сумяшчальная з версіяй праграмы для настольных камп\'ютараў <a href=\"%2$s\"> Anki</a>. Стварайце, пампуйце і вучыце матэрыял на любой прыладзе, а потым з лёгкасцю сінхранізуйце іх з дапамогай AnkiWeb.]]></item>
         <item><![CDATA[Для таго, каб дапамагчы зрабіць нам праграму яшчэ лепш, калі ласка, адпраўляйце справаздачы пра памылкі <a href=\"%1$s\">ў цэнтр адсочвання праблем</a>; мы таксама вітаем прапановы новых магчымасцяў у праграме. Шукайце адказы ў <a href=\"%2$s\">Wikipedia</a> або пачніце абмеркаванне на <a href=\"%3$s\">форуме</a>.]]></item>
@@ -107,7 +108,7 @@
     <string name="answering_error_message">Адбылася памылка падчас запісу ў калекцыю. Прычынаю можа быць пашкоджаная база даных або недахоп свабоднага месца на дыску.\n\nПаспрабуйце праверыць базу даных або аднавіць калекцыю з рэзервовай копіі. Для гэтага націсніце \"Параметры\". \n\Таксама гэта памылка можа быць выклікана самой праграмай; калі ласка, паведаміце пра гэта распрацоўшчыкам.</string>
     <string name="answering_error_report">Паведаміць пра памылку</string>
     <string name="repair_deck_dialog">Аднавіць базу даных?\n\nПерад тым, як пачнецца аднаўленне, копія базы даных будзе змешчана ў створаную падпапку \'%s\'.</string>
-    <string name="intent_aedict_empty">Катэгорыя па змаўчанні нічога не змяшчае</string>
+    <string name="intent_aedict_empty">Катэгорыя “default” нічога не змяшчае</string>
     <string name="intent_aedict_category">Для таго, каб дадаць карткі ў AnkiDroid, выдаліце ўсе катэгорыі Notepad або дадайце катэгорыю з назвай \"default\"</string>
     <string name="custom_study_new_total_new">Новых картак у калодзе: %d</string>
     <string name="custom_study_rev_total_rev">Картак для паўтарэння: %d</string>
@@ -206,14 +207,14 @@
     <string name="incompatible_database_version_title">Несумяшчальная версія базы даных</string>
     <string name="incompatible_database_version_summary">База даных была створана ў больш новай версіі праграмы і ў дадзены час з ёй немагчыма працаваць. Паспрабуйце абнавіць AnkiDroid або панізіць версію базы даных, каб адкрыць яе\n\nВерсія, якая падтрымліваецца: %1$d\nВерсія базы даных:%2$d\n\nНаступныя  параметры аднаўлення перазапішуць вашу бягучую калекцыю, магчыма з сумяшчальнай версіяй базы даных.</string>
     <!-- Deck Picker Background-->
-    <string name="background_image_applied">Фонавы відарыс ужыты</string>
-    <string name="background_image_removed">Фонавы відарыс выдалены</string>
+    <string name="background_image_applied">Фонавая выява ўжыта</string>
+    <string name="background_image_removed">Фонавая выява выдалена</string>
     <string name="no_image_selected">Ніводная выява не выбрана</string>
-    <string name="error_selecting_image">Памылка выбару відарыса. Калі ласка, звярніцеся да даведніка. %s</string>
+    <string name="error_selecting_image">Памылка выбару выявы. Калі ласка, звярніцеся да даведніка. %s</string>
     <string name="error_deleting_image">Памылка выдалення выявы</string>
     <string name="failed_to_apply_background_image">Памылка дастасавання фонавай выявы %s</string>
-    <string name="background_image_too_large">Фонавы відарыс надта вялікі</string>
-    <string name="image_max_size_allowed">Максімальны памер відарысу можа складаць %d МБ</string>
+    <string name="background_image_too_large">Фонавая выява надта вялікая</string>
+    <string name="image_max_size_allowed">Максімальны памер выявы можа складаць %d МБ</string>
     <!-- Global Intent handler -->
     <!-- Also used by Card Browser, not renaming to save translators effort -->
     <string name="intent_handler_failed_no_storage_permission">Няма дазволу на доступ да сховішча. Дайце неабходныя дазволы, а потым паўтарыце дзеянне.</string>
@@ -264,4 +265,6 @@
     sched V2. For V1, it was counting the number of repetitions of cards in learning. This approximation is acceptable
     for the sake of simplicity and because V1 will leave.-->
     <string name="deck_picker_counts">Адкрыйце старонку папярэдняга прагляду калоды, якая змяшчае колькасць картак для прагляду на сёння.</string>
+    <string name="import_deck_package">Пакет калоды (.apkg)</string>
+    <string name="import_collection_package">Пакет калекцыі (.colpkg)</string>
 </resources>

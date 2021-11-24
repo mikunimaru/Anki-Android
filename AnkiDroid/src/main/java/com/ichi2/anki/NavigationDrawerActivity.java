@@ -30,6 +30,7 @@ import android.os.Handler;
 import com.drakeet.drawer.FullDraggableContainer;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -48,6 +49,7 @@ import android.view.View;
 
 import com.ichi2.anki.dialogs.HelpDialog;
 import com.ichi2.themes.Themes;
+import com.ichi2.utils.HandlerUtils;
 
 import java.util.Arrays;
 
@@ -85,11 +87,11 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
     private Runnable mPendingRunnable;
 
     @Override
-    public void setContentView(int layoutResID) {
+    public void setContentView(@LayoutRes int layoutResID) {
         SharedPreferences preferences = AnkiDroidApp.getSharedPrefs(getBaseContext());
 
         // Using ClosableDrawerLayout as a parent view.
-        ClosableDrawerLayout closableDrawerLayout = (ClosableDrawerLayout) LayoutInflater.from(this).inflate(R.layout.navigation_drawer_layout, null, false);
+        ClosableDrawerLayout closableDrawerLayout = (ClosableDrawerLayout) LayoutInflater.from(this).inflate(getNavigationDrawerLayout(), null, false);
         // Get CoordinatorLayout using resource ID
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) LayoutInflater.from(this).inflate(layoutResID, closableDrawerLayout, false);
         if (preferences.getBoolean(FULL_SCREEN_NAVIGATION_DRAWER, false)) {
@@ -104,6 +106,15 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
         }
 
         setContentView(closableDrawerLayout);
+    }
+
+    private @LayoutRes int getNavigationDrawerLayout() {
+        return fitsSystemWindows() ? R.layout.navigation_drawer_layout : R.layout.navigation_drawer_layout_fullscreen;
+    }
+
+    /** Whether android:fitsSystemWindows="true" should be applied to the navigation drawer */
+    protected boolean fitsSystemWindows() {
+        return true;
     }
 
     // Navigation drawer initialisation
@@ -144,13 +155,12 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
 
                 // If animations are disabled, this is executed before onNavigationItemSelected is called
                 // PERF: May be able to reduce this delay
-                new Handler().postDelayed(() -> {
+                HandlerUtils.postDelayedOnNewHandler(() -> {
                     if (mPendingRunnable != null) {
-                        new Handler().post(mPendingRunnable);
+                        HandlerUtils.postOnNewHandler(mPendingRunnable); // TODO: See if we can use the same handler here
                         mPendingRunnable = null;
                     }
                 }, 100);
-
             }
 
 

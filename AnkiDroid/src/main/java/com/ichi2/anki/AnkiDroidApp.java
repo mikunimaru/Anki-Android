@@ -151,6 +151,9 @@ import static timber.log.Timber.DebugTree;
 )
 public class AnkiDroidApp extends Application {
 
+    /** Running under instrumentation. a "/androidTest" folder will be created which contains a test collection */
+    public static boolean INSTRUMENTATION_TESTING = false;
+
     /**
      * Toggles Scoped Storage functionality introduced in later commits <p>
      * Can be set to true or false only by altering the declaration itself.
@@ -160,7 +163,17 @@ public class AnkiDroidApp extends Application {
      * Should be set to true for testing Scoped Storage <p>
      * TODO: Should be removed once app is fully functional under Scoped Storage
      */
-    public static final boolean TESTING_SCOPED_STORAGE = false;
+    public static boolean TESTING_SCOPED_STORAGE = false;
+
+    /**
+     * Toggles opening the collection using schema 16 via the Rust backend
+     * and using the V16 versions of the major 'col' classes: models, decks, dconf, conf, tags
+     *
+     * UNSTABLE: DO NOT USE THIS ON A COLLECTION YOU CARE ABOUT.
+     *
+     * Set this and {@link com.ichi2.libanki.Consts#SCHEMA_VERSION} to 16.
+     */
+    public static boolean TESTING_USE_V16_BACKEND = false;
 
     private static final String WEBVIEW_VER_NAME = "WEBVIEW_VER_NAME";
 
@@ -186,12 +199,6 @@ public class AnkiDroidApp extends Application {
      * all collections should have.
      */
     public static final int CHECK_DB_AT_VERSION = 21000172;
-
-    /**
-     * The latest package version number that included changes to the preferences that requires handling. All
-     * collections being upgraded to (or after) this version must update preferences.
-     */
-    public static final int CHECK_PREFERENCES_AT_VERSION = 20500225;
 
     /** Our ACRA configurations, initialized during onCreate() */
     private CoreConfigurationBuilder mAcraCoreConfigBuilder;
@@ -322,20 +329,17 @@ public class AnkiDroidApp extends Application {
             UIUtils.showThemedToast(this.getApplicationContext(), getString(R.string.user_is_a_robot), false);
         }
 
+        // make default HTML / JS debugging true for debug build
+        if (BuildConfig.DEBUG) {
+            preferences.edit().putBoolean("html_javascript_debugging", true).apply();
+        }
+        
         CardBrowserContextMenu.ensureConsistentStateWithSharedPreferences(this);
         AnkiCardContextMenu.ensureConsistentStateWithSharedPreferences(this);
         NotificationChannels.setup(getApplicationContext());
 
         // Configure WebView to allow file scheme pages to access cookies.
-        try {
-            CookieManager.setAcceptFileSchemeCookies(true);
-        } catch (Throwable e) {
-            // 5794: Errors occur if the WebView fails to load
-            // android.webkit.WebViewFactory.MissingWebViewPackageException.MissingWebViewPackageException
-            // Error may be excessive, but I expect a UnsatisfiedLinkError to be possible here.
-            this.mWebViewError = e;
-            sendExceptionReport(e, "setAcceptFileSchemeCookies");
-            Timber.e(e, "setAcceptFileSchemeCookies");
+        if (!acceptFileSchemeCookies()) {
             return;
         }
 
@@ -364,6 +368,22 @@ public class AnkiDroidApp extends Application {
         NotificationService ns = new NotificationService();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(ns, new IntentFilter(NotificationService.INTENT_ACTION));
+    }
+
+    @SuppressWarnings("deprecation") // 7109: setAcceptFileSchemeCookies
+    protected boolean acceptFileSchemeCookies() {
+        try {
+            CookieManager.setAcceptFileSchemeCookies(true);
+            return true;
+        } catch (Throwable e) {
+            // 5794: Errors occur if the WebView fails to load
+            // android.webkit.WebViewFactory.MissingWebViewPackageException.MissingWebViewPackageException
+            // Error may be excessive, but I expect a UnsatisfiedLinkError to be possible here.
+            this.mWebViewError = e;
+            sendExceptionReport(e, "setAcceptFileSchemeCookies");
+            Timber.e(e, "setAcceptFileSchemeCookies");
+            return false;
+        }
     }
 
 

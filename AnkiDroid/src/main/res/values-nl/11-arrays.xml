@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">Oranje vlag in-/uitschakelen</string>
     <string name="gesture_flag_green">Groene vlag in-/uitschakelen</string>
     <string name="gesture_flag_blue">Blauwe vlag in-/uitschakelen</string>
+    <string name="gesture_flag_pink">Toggle Pink Flag</string>
+    <string name="gesture_flag_turquoise">Toggle Turquoise Flag</string>
+    <string name="gesture_flag_purple">Toggle Purple Flag</string>
     <string name="gesture_flag_remove">Vlag verwijderen</string>
     <string name="gesture_page_up">Pagina omhoog</string>
     <string name="gesture_page_down">Pagina omlaag</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">Schrijfbord in-/uitschakelen</string>
     <string name="record_voice">Spraak opnemen</string>
     <string name="replay_voice">Opname afspelen</string>
+    <string name="automatic_answer_option_2">Hard (Good if unavailable)</string>
+    <string name="automatic_answer_option_4">Easy (Good if unavailable)</string>
 </resources>

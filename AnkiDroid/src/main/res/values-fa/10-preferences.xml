@@ -55,6 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">حرکات دست</string>
     <string name="pref_cat_gestures_summ">به جای دکمه ها از زدن و کشیدن استفاده کنید</string>
     <string name="pref_cat_actions" maxLength="41">اقدامات</string>
+    <string name="pref_cat_controls" maxLength="41">Controls</string>
+    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
     <string name="pref_cat_advanced" maxLength="41">پیشرفته</string>
     <string name="pref_cat_advanced_summ">بهینه سازی و قابلیت های آزمایشی</string>
     <string name="pref_cat_performance" maxLength="41">کارآیی</string>
@@ -101,7 +103,7 @@
     <string name="gestures_swipe_left" maxLength="41">ضربه سمت چپ</string>
     <string name="gestures_swipe_right" maxLength="41">ضربه به سمت راست</string>
     <string name="gestures_double_tap" maxLength="41">دو ضربه بزنید</string>
-    <string name="gestures_long_tap" maxLength="41">Long tap</string>
+    <string name="gestures_long_tap" maxLength="41">Long touch</string>
     <string name="gestures_tap_top" maxLength="41">به بالا ضربه بزنید</string>
     <string name="gestures_tap_left" maxLength="41">به چپ ضربه بزنیدضربه چپ</string>
     <string name="gestures_tap_right" maxLength="41">به راست ضربه بزنید</string>
@@ -130,7 +132,7 @@
     <string name="sync_fetch_missing_media_summ">هنگام همگام سازی، بطور خودکار رسانه گم شده را بیاور.</string>
     <string name="sync_account" maxLength="41">حساب کاربری آنکی وب</string>
     <string name="sync_account_summ_logged_out">هنوز وارد سایت نشده</string>
-    <string name="sync_account_summ_logged_in">%s</string>
+    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">همگام سازی خودکار</string>
     <string name="automatic_sync_choice_summ">همگام سازی خودکار موقع ورود و خروج از برنامه اگر از آخرین همگام سازی بیشتر از 10 دقیقه گذشته باشد.</string>
     <string name="sync_status_badge" maxLength="41">Display synchronization status</string>
@@ -149,6 +151,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">لرزش</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">چشمک زدن نور</string>
     <string name="timeout_answer_text" maxLength="41">نمایش پاسخ بصورت خودکار</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">نمایش خودکار پاسخ بدون درخواست کاربر. تأخیر شامل زمان پخش فایل صوتی نیز می‌شود.</string>
     <string name="timeout_answer_seconds" maxLength="41">زمان نمایش پاسخ</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX ثانیه</string>
@@ -189,7 +192,6 @@
     <string name="sched_v2" maxLength="41">V2 scheduler</string>
     <string name="sched_v2_summ">Enable the new scheduler. Forces changes in one direction on next sync</string>
     <string name="sched_ver_toggle_title">تایید</string>
-    <string name="sched_ver_2to1">این عمل همۀ کارت‌های موجود در مراحل یادگیری و یادگیری دوباره را به حالت تازه وارد کرده، همه دسته‌های فیلترشده را پاک و نسخۀ سیستم زمانبندی کارت‌ها را عوض خواهد کرد. آیا از انجام این عمل مطمئن هستید؟</string>
     <string name="sched_ver_1to2">سیستم زمانبندی آزمایشی ممکن است کارت‌ها را اشتباه زمانبندی کند. لطفاً قبل از اعمال تغییرات راهنما را بخوانید. اعمال تغییرات؟</string>
     <string name="pref_keep_screen_on" maxLength="41">روشن نگه‌داشتن صفحه</string>
     <string name="pref_keep_screen_on_summ">غیرفعال کردن زمان خاموش شدن صفحه نمایش</string>
@@ -210,6 +212,11 @@
     <!-- Paste clipboard image as png option -->
     <string name="paste_as_png" maxLength="41">Paste clipboard images as PNG</string>
     <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
+    <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
+    <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">آمار پیشرفته</string>
     <string name="enable_advanced_statistics_title" maxLength="41">فعال کردن آمار پیشرفته</string>
@@ -225,6 +232,8 @@
     <string name="custom_sync_server_base_url_invalid">لینک همگام‌سازی نامعتبر است</string>
     <string name="custom_sync_server_media_url_title" maxLength="41">لینک همگام سازی رسانه</string>
     <string name="custom_sync_server_media_url_invalid">لینک همگام‌سازی فایل‌های رسانه نامعتبر است</string>
+    <!-- Key Bindings -->
+    <string name="controls_main_category" maxLength="41">Command mapping</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">تغییر این گروه اختیارات این دسته چندین دسته را تحت تأثیر قرار خواهد داد. اگر قصد اعمال تغییرات فقط بر روی این دسته را دارید، لطفاً ابتدا یک گروه اختیارات جدید اضافه کنید</string>
     <string name="studyoptions_limit_select_tags">انتخاب برچسبها</string>
@@ -308,4 +317,18 @@
     <string name="type_in_answer_focus_summ">Automatically focus the ‘type in answer’ field in the reviewer</string>
     <!-- Open Changelog-->
     <string name="open_changelog">Open Changelog</string>
+    <string name="binding_add_gesture">Add gesture</string>
+    <string name="binding_add_key">Add key</string>
+    <string name="key_picker_default_press_key">Press a key</string>
+    <!-- Select card side -->
+    <string name="card_side_selection_title">Select card side</string>
+    <string name="card_side_question">Question</string>
+    <string name="card_side_answer">Answer</string>
+    <string name="card_side_both">Question &amp; Answer</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
+    <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
+    <!-- Binding Preference -->
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
+    <string name="bindings_already_bound">Already bound to %s</string>
 </resources>

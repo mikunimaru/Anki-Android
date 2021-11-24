@@ -53,7 +53,7 @@
         <item>Rastúce intervaly</item>
         <item>Klesajúce intervaly</item>
         <item>Najviac zabúdané</item>
-        <item>V poradí, v akom boli pridané</item>
+        <item>V poradí pridania</item>
         <item>Podľa poradia opakovania</item>
         <item>Od poslednej pridanej</item>
         <item>Relatívne oneskorenie</item>
@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">Označiť oranžovou vlajkou</string>
     <string name="gesture_flag_green">Označiť zelenou vlajkou</string>
     <string name="gesture_flag_blue">Označiť modrou vlajkou</string>
+    <string name="gesture_flag_pink">Označiť ružovou vlajkou</string>
+    <string name="gesture_flag_turquoise">Označiť tyrkysovou vlajkou</string>
+    <string name="gesture_flag_purple">Označiť purpurovou vlajkou</string>
     <string name="gesture_flag_remove">Odstrániť vlajku</string>
     <string name="gesture_page_up">Strana nahor</string>
     <string name="gesture_page_down">Strana nadol</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">Zapnúť/vypnúť tabuľu</string>
     <string name="record_voice">Nahrať hlas</string>
     <string name="replay_voice">Prehrať hlas</string>
+    <string name="automatic_answer_option_2">Ťažké (Dobré ak nie je na výber)</string>
+    <string name="automatic_answer_option_4">Ľahké (Dobré ak nie je na výber)</string>
 </resources>

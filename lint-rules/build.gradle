@@ -6,6 +6,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+ktlint {
+    disabledRules = ["no-wildcard-imports"]
+}
+
 repositories {
     google()
     mavenCentral()
@@ -19,6 +23,7 @@ dependencies {
 
     testImplementation "junit:junit:4.13.2"
     testImplementation "com.android.tools.lint:lint:$lint_version"
+    testImplementation "com.android.tools.lint:lint-api:$lint_version"
     testImplementation "com.android.tools.lint:lint-tests:$lint_version"
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
 }

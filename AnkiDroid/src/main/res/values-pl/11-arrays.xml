@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">Włącz/wyłącz pomarańczową flagę</string>
     <string name="gesture_flag_green">Włącz/wyłącz zieloną flagę</string>
     <string name="gesture_flag_blue">Włącz/wyłącz niebieską flagę</string>
+    <string name="gesture_flag_pink">Włącz/wyłącz różową flagę</string>
+    <string name="gesture_flag_turquoise">Włącz/wyłącz turkusową flagę</string>
+    <string name="gesture_flag_purple">Włącz/wyłącz fioletową flagę</string>
     <string name="gesture_flag_remove">Usuń flagę</string>
     <string name="gesture_page_up">Przewiń w górę</string>
     <string name="gesture_page_down">Przewiń w dół</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">Przełącz Tablicę</string>
     <string name="record_voice">Nagraj głos</string>
     <string name="replay_voice">Odtwórz głos</string>
+    <string name="automatic_answer_option_2">Trudne (Dobre, jeśli niedostępne)</string>
+    <string name="automatic_answer_option_4">Łatwe (Dobre, jeśli niedostępne)</string>
 </resources>

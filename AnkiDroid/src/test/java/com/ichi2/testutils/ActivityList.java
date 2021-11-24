@@ -28,6 +28,7 @@ import com.ichi2.anki.CardTemplateEditor;
 import com.ichi2.anki.CardTemplatePreviewer;
 import com.ichi2.anki.DeckOptions;
 import com.ichi2.anki.DeckPicker;
+import com.ichi2.anki.DrawingActivity;
 import com.ichi2.anki.FilteredDeckOptions;
 import com.ichi2.anki.Info;
 import com.ichi2.anki.IntentHandler;
@@ -38,6 +39,7 @@ import com.ichi2.anki.NoteEditor;
 import com.ichi2.anki.Preferences;
 import com.ichi2.anki.Previewer;
 import com.ichi2.anki.Reviewer;
+import com.ichi2.anki.SharedDecksActivity;
 import com.ichi2.anki.Statistics;
 import com.ichi2.anki.StudyOptionsActivity;
 import com.ichi2.anki.VideoPlayer;
@@ -45,13 +47,13 @@ import com.ichi2.anki.multimediacard.activity.LoadPronounciationActivity;
 import com.ichi2.anki.multimediacard.activity.MultimediaEditFieldActivity;
 import com.ichi2.anki.multimediacard.activity.TranslationActivity;
 import com.ichi2.anki.services.ReminderService;
-import com.ichi2.utils.FunctionalInterfaces.Function;
 
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import androidx.annotation.CheckResult;
 
@@ -80,6 +82,7 @@ public class ActivityList {
                 get(DeckOptions.class),
                 get(CropImageActivity.class),
                 get(FilteredDeckOptions.class),
+                get(DrawingActivity.class),
                 // Info has unhandled intents
                 get(Info.class),
                 // NoteEditor has unhandled intents
@@ -92,7 +95,8 @@ public class ActivityList {
                 get(LoadPronounciationActivity.class),
                 get(CardInfo.class),
                 get(CardTemplateEditor.class, ActivityList::intentForCardTemplateEditor),
-                get(CardTemplateBrowserAppearanceEditor.class, ActivityList::intentForCardTemplateBrowserAppearanceEditor)
+                get(CardTemplateBrowserAppearanceEditor.class, ActivityList::intentForCardTemplateBrowserAppearanceEditor),
+                get(SharedDecksActivity.class)
         );
     }
 

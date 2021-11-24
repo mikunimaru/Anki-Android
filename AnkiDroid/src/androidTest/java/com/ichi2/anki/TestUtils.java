@@ -24,6 +24,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 import androidx.test.espresso.UiController;
@@ -76,6 +77,7 @@ public class TestUtils {
     /**
      * Returns true if device is a tablet
      */
+    @SuppressWarnings("deprecation") // #9333: getDefaultDisplay & getMetrics
     public static boolean isScreenSw600dp() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivityInstance().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -106,5 +108,14 @@ public class TestUtils {
                 v.performClick();
             }
         };
+    }
+
+    /** @return if the instrumented tests were built on a CI machine */
+    public static boolean wasBuiltOnCI() {
+        // DO NOT COPY THIS INTO AN CODE WHICH IS RELEASED PUBLICLY
+
+        // We use BuildConfig as we couldn't detect an envvar after `adb root && adb shell setprop`. See: #9293
+        // TODO: See if we can fix this to use an envvar, and rename to isCi().
+        return BuildConfig.CI;
     }
 }

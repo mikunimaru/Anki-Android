@@ -55,6 +55,7 @@
     <string name="no_tts_available_message">Синтез речи недоступен</string>
     <string name="initializing_tts">Запускается синтез речи&#8230;</string>
     <string name="tts_no_tts">Не произносить</string>
+    <string name="unused_strings">\n\nНеиспользуемые файлы:\n</string>
     <string-array name="about_content">
         <item><![CDATA[<h2>%1$s:<br/>Учебные карточки для Android</h2>AnkiDroid — это приложение для повторения карточек, которое полностью совместимо с версией <a href=\"%2$s\"> Anki</a> для настольных компьютеров. Создавайте, загружайте и учите карточки в AnkiDroid или Anki и синхронизируйте их через AnkiWeb.]]></item>
         <item><![CDATA[Чтобы помочь нам сделать AnkiDroid лучше, пожалуйста, сообщайте об ошибках <a href=\"%1$s\">в баг-трекере</a>. Новые идеи также приветствуются. Ищите ответы в <a href=\"%2$s\">вики</a> или начните обсуждение на <a href=\"%3$s\">форуме</a>.]]></item>
@@ -111,8 +112,8 @@
     <string name="intent_aedict_category">Чтобы добавить карточки в AnkiDroid, удалите все категории Notepad или создайте категорию \"default\"</string>
     <string name="custom_study_new_total_new">Новых карточек в колоде: %d</string>
     <string name="custom_study_rev_total_rev">Карточек для повторения: %d</string>
-    <string name="custom_study_new_extend">Увеличить/уменьшить («-3») лимит новых на сегодня</string>
-    <string name="custom_study_rev_extend">Увеличить/уменьшить («-3») лимит повторяемых на сегодня</string>
+    <string name="custom_study_new_extend">Увеличить или уменьшить («-3») лимит новых на сегодня</string>
+    <string name="custom_study_rev_extend">Увеличить или уменьшить («-3») лимит повторяемых на сегодня</string>
     <string name="custom_study_forgotten">Забытые за сколько дней повторить:</string>
     <string name="custom_study_ahead">На сколько дней опередить повторение:</string>
     <string name="custom_study_random">Сколько случайных карточек отобрать:</string>
@@ -158,7 +159,8 @@
     <string name="check_media_no_unused_missing">Неиспользуемые и отсутствующие файлы не найдены.</string>
     <string name="check_media_db_updated">База данных медиафайлов перестроена</string>
     <string name="check_media_delete_unused">Удалить неиспользуемые</string>
-    <string name="delete_media_message">Удаляются медиафайлы&#8230;</string>
+    <string name="delete_media_message">Медиафайлы 
+удаляются&#8230;</string>
     <string name="delete_media_result_title">Результат удаления</string>
     <plurals name="delete_media_result_message">
         <item quantity="one">%d файл удалён</item>
@@ -173,7 +175,7 @@
     <!-- Empty cards -->
     <string name="emtpy_cards_finding">Поиск пустых карточек&#8230;</string>
     <string name="confirm_cancel">Уверены, что хотите отменить?</string>
-    <string name="empty_cards_none">Нет пустых карт</string>
+    <string name="empty_cards_none">Нет пустых карточек</string>
     <string name="empty_cards_count">Карточек к удалению: %d</string>
     <string name="empty_cards_deleted">Удалено карточек: %d</string>
     <!-- Multimedia - Edit Field Activity -->
@@ -244,10 +246,10 @@
     <string name="help_item_discord">Discord</string>
     <string name="help_item_facebook">Facebook</string>
     <string name="help_item_twitter">Twitter</string>
-    <string name="help_title_privacy">Privacy</string>
-    <string name="help_item_ankidroid_privacy_policy">AnkiDroid Privacy Policy</string>
-    <string name="help_item_ankiweb_privacy_policy">AnkiWeb Privacy Policy</string>
-    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb Terms and Conditions</string>
+    <string name="help_title_privacy">Конфиденциальность</string>
+    <string name="help_item_ankidroid_privacy_policy">Политика конфиденциальности AnkiDroid</string>
+    <string name="help_item_ankiweb_privacy_policy">Политика конфиденциальности AnkiWeb</string>
+    <string name="help_item_ankiweb_terms_and_conditions">Условия использования AnkiWeb</string>
     <string name="help_title_send_exception">Отправить отчёт о неполадках</string>
     <string name="help_dialog_exception_report_debounce">Отчёт уже отправлен</string>
     <!--Sync-->
@@ -264,4 +266,6 @@
     sched V2. For V1, it was counting the number of repetitions of cards in learning. This approximation is acceptable
     for the sake of simplicity and because V1 will leave.-->
     <string name="deck_picker_counts">Откройте страницу предварительного просмотра колоды, содержащую количество карточек для просмотра сегодня.</string>
+    <string name="import_deck_package">Пакет колоды (.apkg)</string>
+    <string name="import_collection_package">Пакет коллекции (.colpkg)</string>
 </resources>

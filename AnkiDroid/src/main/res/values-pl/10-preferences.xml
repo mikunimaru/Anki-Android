@@ -55,6 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">Gesty</string>
     <string name="pref_cat_gestures_summ">Użyj gestów zamiast przycisków</string>
     <string name="pref_cat_actions" maxLength="41">Czynności</string>
+    <string name="pref_cat_controls" maxLength="41">Sterowanie</string>
+    <string name="pref_cat_controls_summ">Skonfiguruj klawiatury i inne urządzenia</string>
     <string name="pref_cat_advanced" maxLength="41">Zaawansowane</string>
     <string name="pref_cat_advanced_summ">Optymalizacja i funkcje eksperymentalne</string>
     <string name="pref_cat_performance" maxLength="41">Wydajność</string>
@@ -94,14 +96,14 @@
     <string name="gestures_allow_links_summary">Gesty dotykowe nie będą przetwarzane jeśli naciśnięto odnośnik/wskazówkę.</string>
     <string name="gestures_corner_touch" maxLength="41">Dotyk 9-punktowy</string>
     <string name="gestures_corner_touch_summary">Zezwalaj na gesty dotykowe w rogach ekranu</string>
-    <string name="gestures_full_screen_nav_drawer" maxLength="41">Full screen navigation drawer</string>
-    <string name="gestures_fullscreen_nav_drawer_summary">Open navigation drawer when swiped right from anywhere on the screen</string>
+    <string name="gestures_full_screen_nav_drawer" maxLength="41">Panel nawigacyjny w pełnym ekranie</string>
+    <string name="gestures_fullscreen_nav_drawer_summary">Otwórz panel nawigacyjny po przesunięciu w prawo w dowolnym miejscu ekranu</string>
     <string name="gestures_swipe_up" maxLength="41">Przesuń w górę</string>
     <string name="gestures_swipe_down" maxLength="41">Przesuń w dół</string>
     <string name="gestures_swipe_left" maxLength="41">Przesuń w lewo</string>
     <string name="gestures_swipe_right" maxLength="41">Przesuń w prawo</string>
     <string name="gestures_double_tap" maxLength="41">Naciśnij dwukrotnie</string>
-    <string name="gestures_long_tap" maxLength="41">Long tap</string>
+    <string name="gestures_long_tap" maxLength="41">Długie dotknięcie</string>
     <string name="gestures_tap_top" maxLength="41">Dotknij u góry</string>
     <string name="gestures_tap_left" maxLength="41">Dotknij po lewej</string>
     <string name="gestures_tap_right" maxLength="41">Dotknij po prawej</string>
@@ -130,7 +132,7 @@
     <string name="sync_fetch_missing_media_summ">Automatycznie pobierz brakujące media podczas synchronizacji.</string>
     <string name="sync_account" maxLength="41">Konto AnkiWeb</string>
     <string name="sync_account_summ_logged_out">Nie zalogowany</string>
-    <string name="sync_account_summ_logged_in">%s</string>
+    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">Synchronizacja automatyczna</string>
     <string name="automatic_sync_choice_summ">Synchronizuj automatycznie podczas startu/zakończenia aplikacji jeżeli ostatnia synchronizacja była później niż 10 minut.</string>
     <string name="sync_status_badge" maxLength="41">Wyświetl status synchronizacji</string>
@@ -149,6 +151,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Wibracje</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Migotanie</string>
     <string name="timeout_answer_text" maxLength="41">Automatyczne wyświetlanie odpowiedzi</string>
+    <string name="timeout_answer" maxLength="41">Przekroczenie czasu na odpowiedź</string>
     <string name="timeout_answer_summ">Pokaż odpowiedź automatycznie bez interakcji z użytkownikiem. Opóźnienie czas automatycznego odtwarzania plików dźwiękowych.</string>
     <string name="timeout_answer_seconds" maxLength="41">Czas do pokazania odpowiedzi</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -164,12 +167,12 @@
     <string name="vertical_centering" maxLength="41">Wycentruj</string>
     <string name="vertical_centering_summ">Wycentruj w pionie zawartość kart</string>
     <string name="pref_backup_max" maxLength="41">Maksymalna liczba kopii zapasowych</string>
-    <string name="pref_double_tap_time_interval" maxLength="41">Double tap time interval (milliseconds)</string>
-    <string name="pref_double_tap_time_interval_summary">A second tap of the answer buttons will be ignored if this time has not elapsed. This prevents accidental double taps</string>
+    <string name="pref_double_tap_time_interval" maxLength="41">Interwał czasu podwójnego dotknięcia (ms)</string>
+    <string name="pref_double_tap_time_interval_summary">Drugie dotknięcie przycisków odpowiedzi zostanie zignorowane jeśli od poprzedniego nie upłynął ustawiony czas. Zapobiega to przypadkowym podwójnym dotknięciom</string>
     <string name="show_estimates" maxLength="41">Pokaż czas przy przyciskach</string>
     <string name="show_estimates_summ">Pokazuj czas kolejnej powtórki nad przyciskami odpowiedzi</string>
-    <string name="show_large_answer_buttons" maxLength="41">Show large answer buttons</string>
-    <string name="show_large_answer_buttons_summ">Show answer button in 2 rows</string>
+    <string name="show_large_answer_buttons" maxLength="41">Pokaż duże przyciski odpowiedzi</string>
+    <string name="show_large_answer_buttons_summ">Pokaż przycisk odpowiedzi w 2 wierszach</string>
     <string name="show_top_bar" maxLength="41">Pokaż górny pasek</string>
     <string name="show_top_bar_summ">Wyświetl licznik kart, zakreślenie i oznaczenie w górnym pasku</string>
     <string name="show_progress" maxLength="41">Pokaż pozostałe</string>
@@ -189,7 +192,6 @@
     <string name="sched_v2" maxLength="41">Planista V2</string>
     <string name="sched_v2_summ">Włącz nową wersję planisty. Wymusza synchronizację w jednym kierunku podczas następnej synchronizacji</string>
     <string name="sched_ver_toggle_title">Potwierdź</string>
-    <string name="sched_ver_2to1">To zresetuje wszystkie karty uczone, wyczyści filtrowane talie i zmieni wersję programu planującego. Kontynuować?</string>
     <string name="sched_ver_1to2">Eksperymentalny planista może powodować nieprawidłowe planowanie. Upewnij się, że przeczytałeś wcześniej dokumentację. Kontynuować?</string>
     <string name="pref_keep_screen_on" maxLength="41">Utrzymuj włączony ekran</string>
     <string name="pref_keep_screen_on_summ">Zablokuj wyłącznik czasowy ekranu</string>
@@ -208,8 +210,13 @@
     <string name="html_javascript_debugging" maxLength="41">Debugowanie HTML / Javascript</string>
     <string name="html_javascript_debugging_summ">Włącz zdalne połączenia WebView i zapisz kartę HTML do katalogu AnkiDroid</string>
     <!-- Paste clipboard image as png option -->
-    <string name="paste_as_png" maxLength="41">Paste clipboard images as PNG</string>
-    <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
+    <string name="paste_as_png" maxLength="41">Wklej zdjęcia ze schowka jako PNG</string>
+    <string name="paste_as_png_summary">Domyślnie by oszczędzać miejsce na dysku Anki wkleja obrazy ze schowka w formacie JPG. Możesz użyć tej opcji by zamiast tego używać formatu PNG</string>
+    <string name="exit_via_double_tap_back" maxLength="41">Kliknij dwa razy \"wstecz\" by wrócić/wyjść</string>
+    <string name="exit_via_double_tap_back_summ">Aby uniknąć przypadkowego opuszczenia aplikacji lub ekranu powtórek</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Zezwalaj na import wszystkich plików</string>
+    <string name="media_import_allow_all_files_summ">Jeśli Android nie rozpoznaje pliku multimedialnego</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Zaawansowane statystyki</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Włącz zaawansowane statystyki</string>
@@ -225,6 +232,8 @@
     <string name="custom_sync_server_base_url_invalid">Nieprawidłowy adres url synchronizacji</string>
     <string name="custom_sync_server_media_url_title" maxLength="41">Adres url synchronizacji mediów</string>
     <string name="custom_sync_server_media_url_invalid">Nieprawidłowy adres url synchronizacji mediów</string>
+    <!-- Key Bindings -->
+    <string name="controls_main_category" maxLength="41">Przypisywanie poleceń</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Zmiany opcji grup talii będzie mieć wpływ na wiele talii. Jeśli chcesz zmienić tylko obecną talię, najpierw dodaj nowe ustawienie talii</string>
     <string name="studyoptions_limit_select_tags">Wybierz etykiety</string>
@@ -295,7 +304,7 @@
     <string name="deck_conf_cram_order" maxLength="41">karty zaznaczone przez</string>
     <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Kolejkuj ponownie</string>
     <string name="deck_conf_cram_reschedule_summ">Kolejkuj karty ponownie bazując na moich odpowiedziach w tej talii</string>
-    <string name="deck_conf_cram_filter_2_check">Enable second filter</string>
+    <string name="deck_conf_cram_filter_2_check">Włącz drugi filtr</string>
     <string name="deck_conf_cram_steps" maxLength="41">Własne kroki (w minutach)</string>
     <string name="deck_conf_cram_steps_summ" maxLength="41">Zdefiniuj własne kroki</string>
     <string name="deck_conf_reminders_enabled" maxLength="41">Włącz powiadomienia dla talii w tej grupie talii</string>
@@ -312,4 +321,18 @@
     <string name="type_in_answer_focus_summ">Automatycznie zaznaczaj pole \"podaj odpowiedź\" w przeglądarce</string>
     <!-- Open Changelog-->
     <string name="open_changelog">Otwórz listę zmian w programie</string>
+    <string name="binding_add_gesture">Dodaj gest</string>
+    <string name="binding_add_key">Dodaj klawisz</string>
+    <string name="key_picker_default_press_key">Naciśnij klawisz</string>
+    <!-- Select card side -->
+    <string name="card_side_selection_title">Wybierz stronę karty</string>
+    <string name="card_side_question">Pytanie</string>
+    <string name="card_side_answer">Odpowiedź</string>
+    <string name="card_side_both">Pytanie &amp; Odpowiedź</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
+    <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
+    <!-- Binding Preference -->
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Usuń \'%s\'</string>
+    <string name="bindings_already_bound">Już przypisane do %s</string>
 </resources>

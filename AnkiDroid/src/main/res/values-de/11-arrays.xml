@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">Orange Flagge umschalten</string>
     <string name="gesture_flag_green">Grüne Flagge umschalten</string>
     <string name="gesture_flag_blue">Blaue Flagge umschalten</string>
+    <string name="gesture_flag_pink">Rosa Flagge umschalten</string>
+    <string name="gesture_flag_turquoise">Türkise Flagge umschalten</string>
+    <string name="gesture_flag_purple">Violette Flagge umschalten</string>
     <string name="gesture_flag_remove">Flagge entfernen</string>
     <string name="gesture_page_up">Seite hoch</string>
     <string name="gesture_page_down">Seite runter</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">Whiteboard ein-/ausschalten</string>
     <string name="record_voice">Sprache aufzeichnen</string>
     <string name="replay_voice">Sprache wiedergeben</string>
+    <string name="automatic_answer_option_2">Jgj</string>
+    <string name="automatic_answer_option_4">Easy (Good if unavailable)</string>
 </resources>

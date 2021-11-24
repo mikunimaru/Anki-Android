@@ -55,6 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">Gestes</string>
     <string name="pref_cat_gestures_summ">Utiliser les gestes et mouvements au lieu des boutons</string>
     <string name="pref_cat_actions" maxLength="41">Actions</string>
+    <string name="pref_cat_controls" maxLength="41">Contrôles</string>
+    <string name="pref_cat_controls_summ">Configurer les claviers et les autres appareils</string>
     <string name="pref_cat_advanced" maxLength="41">Avancé</string>
     <string name="pref_cat_advanced_summ">Optimisation et fonctionnalités expérimentales</string>
     <string name="pref_cat_performance" maxLength="41">Performance</string>
@@ -101,7 +103,7 @@
     <string name="gestures_swipe_left" maxLength="41">Faites glisser vers la gauche</string>
     <string name="gestures_swipe_right" maxLength="41">Faites glisser vers la droite</string>
     <string name="gestures_double_tap" maxLength="41">Double tap</string>
-    <string name="gestures_long_tap" maxLength="41">Long tap</string>
+    <string name="gestures_long_tap" maxLength="41">Appui long</string>
     <string name="gestures_tap_top" maxLength="41">Toucher le haut</string>
     <string name="gestures_tap_left" maxLength="41">Toucher la gauche</string>
     <string name="gestures_tap_right" maxLength="41">Toucher la droite</string>
@@ -130,7 +132,7 @@
     <string name="sync_fetch_missing_media_summ">Lors de la synchronisation, automatiquement télécharger les médias disparus.</string>
     <string name="sync_account" maxLength="41">Compte AnkiWeb</string>
     <string name="sync_account_summ_logged_out">Pas connecté</string>
-    <string name="sync_account_summ_logged_in">%s</string>
+    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">Synchronisation automatique</string>
     <string name="automatic_sync_choice_summ">Synchroniser automatiquement à la sortie de l\'application si la dernière synchronisation était il y a plus de 10 minutes.</string>
     <string name="sync_status_badge" maxLength="41">Afficher l\'état de la synchronisation</string>
@@ -149,6 +151,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Vibrer</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">LED de notification</string>
     <string name="timeout_answer_text" maxLength="41">Affichage automatique de la réponse</string>
+    <string name="timeout_answer" maxLength="41">Délai pour répondre</string>
     <string name="timeout_answer_summ">Voir la réponse automatiquement sans intervention de l’utilisateur. Ceci comprend le temps utilisé par les fichiers audio joués automatiquements.</string>
     <string name="timeout_answer_seconds" maxLength="41">Temps avant d’afficher la réponse</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -164,8 +167,8 @@
     <string name="vertical_centering" maxLength="41">Aligner au centre</string>
     <string name="vertical_centering_summ">Centrer verticalement le contenu des cartes</string>
     <string name="pref_backup_max" maxLength="41">Nombre de sauvegarde max</string>
-    <string name="pref_double_tap_time_interval" maxLength="41">Double tap time interval (milliseconds)</string>
-    <string name="pref_double_tap_time_interval_summary">A second tap of the answer buttons will be ignored if this time has not elapsed. This prevents accidental double taps</string>
+    <string name="pref_double_tap_time_interval" maxLength="41">Temps d\'intervalle de l\'appui double (ms)</string>
+    <string name="pref_double_tap_time_interval_summary">Un deusième appui sur le bouton de réponse va être ignoré si le temps est écoulé. Cela évite les appuis doubles involontaires.</string>
     <string name="show_estimates" maxLength="41">Afficher le temps</string>
     <string name="show_estimates_summ">Afficher le temps avant la prochaine révision sur les boutons de réponse</string>
     <string name="show_large_answer_buttons" maxLength="41">Afficher de gros boutons de réponse</string>
@@ -189,7 +192,6 @@
     <string name="sched_v2" maxLength="41">Planificateur V2</string>
     <string name="sched_v2_summ">Activer le nouveau planificateur. Force les changements dans une direction lors de la prochaine synchronisation</string>
     <string name="sched_ver_toggle_title">Confirmer</string>
-    <string name="sched_ver_2to1">Cela réinitialisera les cartes en apprentissage, effacera les paquets de cartes filtrés et modifiera la version du planificateur. Continuer ?</string>
     <string name="sched_ver_1to2">Le planificateur expérimental pourrait causer une planification incorrecte. Veuillez vous assurer d\'avoir lu la documentation au préalable. Continuer ?</string>
     <string name="pref_keep_screen_on" maxLength="41">Garder l’écran allumé</string>
     <string name="pref_keep_screen_on_summ">Désactiver l’extinction automatique de l’écran</string>
@@ -208,8 +210,13 @@
     <string name="html_javascript_debugging" maxLength="41">Débogage HTML / Javascript</string>
     <string name="html_javascript_debugging_summ">Activer les connexions WebView distantes et enregistrer la carte HTML dans le répertoire AnkiDroid</string>
     <!-- Paste clipboard image as png option -->
-    <string name="paste_as_png" maxLength="41">Paste clipboard images as PNG</string>
-    <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
+    <string name="paste_as_png" maxLength="41">Coller les images du pressepapiers en PNG</string>
+    <string name="paste_as_png_summary">Par default Anki colle les images dans le presse-papier au format JPG (format léger). Vous pouvez changer cette option pour coller les images au format PNG.</string>
+    <string name="exit_via_double_tap_back" maxLength="41">Appuis double sur retour pour quitter</string>
+    <string name="exit_via_double_tap_back_summ">Pour éviter de quitter involontairement l\'application</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Autoriser l\'importation de tous fichiers</string>
+    <string name="media_import_allow_all_files_summ">Si android ne reconnait pas un fichier comme média</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Statistiques avancées</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Activer les statistiques avancées</string>
@@ -225,6 +232,8 @@
     <string name="custom_sync_server_base_url_invalid">URL de synchronisation invalide</string>
     <string name="custom_sync_server_media_url_title" maxLength="41">Synchroniser l’URL pour les médias</string>
     <string name="custom_sync_server_media_url_invalid">URL de synchronisation des médias invalide</string>
+    <!-- Key Bindings -->
+    <string name="controls_main_category" maxLength="41">Mappage de commande</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Les modifications apportées aux options du groupe de paquets affecteront plusieurs paquets de cartes. Si vous souhaitez modifier uniquement le paquet actuel, veuillez d\'abord ajouter un nouveau groupe d\'options</string>
     <string name="studyoptions_limit_select_tags">Sélectionner les étiquettes</string>
@@ -291,7 +300,7 @@
     <string name="deck_conf_cram_order" maxLength="41">Cartes sélectionnées par</string>
     <string name="deck_conf_cram_reschedule" maxLength="41" comment="Title of the box labelled by deck_conf_cram_reschedule_summ">Replanifier</string>
     <string name="deck_conf_cram_reschedule_summ">Replanifier les cartes selon mes réponses dans ce paquet</string>
-    <string name="deck_conf_cram_filter_2_check">Enable second filter</string>
+    <string name="deck_conf_cram_filter_2_check">Activer le second filtrage</string>
     <string name="deck_conf_cram_steps" maxLength="41">Étapes personnalisées (en minute)</string>
     <string name="deck_conf_cram_steps_summ" maxLength="41">Définir le pas personnalisé</string>
     <string name="deck_conf_reminders_enabled" maxLength="41">Activer les notifications de rappel pour les paquets de cartes dans ce groupe de paquets</string>
@@ -308,4 +317,18 @@
     <string name="type_in_answer_focus_summ">Mettre automatiquement en évidence le champ « Saisir la réponse » dans le vérificateur</string>
     <!-- Open Changelog-->
     <string name="open_changelog">Ouvrir le journal des modifications</string>
+    <string name="binding_add_gesture">Ajouter un geste</string>
+    <string name="binding_add_key">Ajouter une touche</string>
+    <string name="key_picker_default_press_key">Appuyer sur une touche</string>
+    <!-- Select card side -->
+    <string name="card_side_selection_title">Sélectionner le côté de la carte</string>
+    <string name="card_side_question">Question</string>
+    <string name="card_side_answer">Réponse</string>
+    <string name="card_side_both">Question &amp; Réponse</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q : %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">R : %s</string>
+    <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
+    <!-- Binding Preference -->
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Retirer « %s »</string>
+    <string name="bindings_already_bound">Déjà lié à %s</string>
 </resources>

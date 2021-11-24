@@ -1,3 +1,18 @@
+/*
+ *  Copyright (c) 2021 Mike Hardy <github@mikehardy.net>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.ichi2.anki;
 
@@ -6,16 +21,15 @@ import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.ichi2.anki.AbstractFlashcardViewer.JavaScriptFunction;
 import com.ichi2.anki.cardviewer.ViewerCommand;
 import com.ichi2.anki.reviewer.ActionButtonStatus;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
 import com.ichi2.libanki.Card;
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.Consts;
-import com.ichi2.libanki.Decks;
+import com.ichi2.libanki.DeckManager;
 import com.ichi2.libanki.Model;
-import com.ichi2.libanki.Models;
+import com.ichi2.libanki.ModelManager;
 import com.ichi2.libanki.Note;
 import com.ichi2.testutils.MockTime;
 import com.ichi2.testutils.PreferenceUtils;
@@ -38,7 +52,6 @@ import androidx.annotation.NonNull;
 import androidx.test.core.app.ActivityScenario;
 import timber.log.Timber;
 
-import static com.ichi2.anki.AbstractFlashcardViewer.EASE_4;
 import static com.ichi2.anki.AbstractFlashcardViewer.RESULT_DEFAULT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -112,7 +125,7 @@ public class ReviewerTest extends RobolectricTest {
         addNoteUsingBasicModel("Hello", "World2");
 
         Reviewer reviewer = startReviewer();
-        JavaScriptFunction javaScriptFunction = reviewer.javaScriptFunction();
+        AnkiDroidJsAPI javaScriptFunction = reviewer.javaScriptFunction();
 
 
         // The answer needs to be displayed to be able to get the time.
@@ -123,7 +136,7 @@ public class ReviewerTest extends RobolectricTest {
         assertThat(nextTime, not(isEmptyString()));
 
         // Display the next answer
-        reviewer.answerCard(EASE_4);
+        reviewer.answerCard(Consts.BUTTON_FOUR);
 
         displayAnswer(reviewer);
 
@@ -234,9 +247,9 @@ public class ReviewerTest extends RobolectricTest {
     @Test
     public void baseDeckName() {
         Collection col = getCol();
-        Models models = col.getModels();
+        ModelManager models = col.getModels();
 
-        Decks decks = col.getDecks();
+        DeckManager decks = col.getDecks();
         Long didAb = addDeck("A::B");
         Model basic = models.byName(AnkiDroidApp.getAppResources().getString(R.string.basic_model_name));
         basic.put("did", didAb);
@@ -251,8 +264,8 @@ public class ReviewerTest extends RobolectricTest {
     @Test
     public void jsAnkiGetDeckName() {
         Collection col = getCol();
-        Models models = col.getModels();
-        Decks decks = col.getDecks();
+        ModelManager models = col.getModels();
+        DeckManager decks = col.getDecks();
 
         Long didAb = addDeck("A::B");
         Model basic = models.byName(AnkiDroidApp.getAppResources().getString(R.string.basic_model_name));
@@ -263,7 +276,7 @@ public class ReviewerTest extends RobolectricTest {
         decks.select(didA);
 
         Reviewer reviewer = startReviewer();
-        JavaScriptFunction javaScriptFunction = reviewer.javaScriptFunction();
+        AnkiDroidJsAPI javaScriptFunction = reviewer.javaScriptFunction();
 
         waitForAsyncTasksToComplete();
         assertThat(javaScriptFunction.ankiGetDeckName(), is("B"));
@@ -307,7 +320,7 @@ public class ReviewerTest extends RobolectricTest {
     private void assertCounts(Reviewer r, int newCount, int stepCount, int revCount) {
 
         List<String> countList = new ArrayList<>();
-        JavaScriptFunction jsApi = r.javaScriptFunction();
+        AnkiDroidJsAPI jsApi = r.javaScriptFunction();
         countList.add(jsApi.ankiGetNewCardCount());
         countList.add(jsApi.ankiGetLrnCardCount());
         countList.add(jsApi.ankiGetRevCardCount());
@@ -339,7 +352,7 @@ public class ReviewerTest extends RobolectricTest {
 
 
     private void addNoteWithThreeCards() throws ConfirmModSchemaException {
-        Models models = getCol().getModels();
+        ModelManager models = getCol().getModels();
         Model m = models.copy(models.current());
         m.put("name", "Three");
         models.add(m);
@@ -356,7 +369,7 @@ public class ReviewerTest extends RobolectricTest {
     }
 
 
-    private void cloneTemplate(Models models, Model m) throws ConfirmModSchemaException {
+    private void cloneTemplate(ModelManager models, Model m) throws ConfirmModSchemaException {
         JSONArray tmpls = m.getJSONArray("tmpls");
         JSONObject defaultTemplate = tmpls.getJSONObject(0);
 

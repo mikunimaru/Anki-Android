@@ -55,6 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">מחוות</string>
     <string name="pref_cat_gestures_summ">שימוש בהקשות ובהחלקת האצבע במקום בכפתורים</string>
     <string name="pref_cat_actions" maxLength="41">פעולות</string>
+    <string name="pref_cat_controls" maxLength="41">Controls</string>
+    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
     <string name="pref_cat_advanced" maxLength="41">מתקדם</string>
     <string name="pref_cat_advanced_summ">מיטוב ותכונות נסיוניות</string>
     <string name="pref_cat_performance" maxLength="41">ביצועים</string>
@@ -101,7 +103,7 @@
     <string name="gestures_swipe_left" maxLength="41">החלקת אצבע שמאלה</string>
     <string name="gestures_swipe_right" maxLength="41">החלקת אצבע ימינה</string>
     <string name="gestures_double_tap" maxLength="41">נגיעה כפולה</string>
-    <string name="gestures_long_tap" maxLength="41">Long tap</string>
+    <string name="gestures_long_tap" maxLength="41">Long touch</string>
     <string name="gestures_tap_top" maxLength="41">נגיעה בחלק העליון</string>
     <string name="gestures_tap_left" maxLength="41">נגיעה בצד שמאל</string>
     <string name="gestures_tap_right" maxLength="41">נגיעה בצד ימין</string>
@@ -130,7 +132,7 @@
     <string name="sync_fetch_missing_media_summ">הורדה אוטומטית של קבצי מדיה בזמן הסנכרון</string>
     <string name="sync_account" maxLength="41">חשבון AnkiWeb</string>
     <string name="sync_account_summ_logged_out">לא התחברת לחשבון</string>
-    <string name="sync_account_summ_logged_in">%s</string>
+    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">סנכרון אוטומטי</string>
     <string name="automatic_sync_choice_summ">Sync automatically on app start/exit if the last sync was more than 10
         minutes ago.</string>
@@ -150,6 +152,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">רטט</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Blink light</string>
     <string name="timeout_answer_text" maxLength="41">הצגת התשובה באופן אוטומטי</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">Show answer automatically without user input. Delay includes time for automatically played audio files.</string>
     <string name="timeout_answer_seconds" maxLength="41">זמן להצגת התשובה</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX שנ׳</string>
@@ -190,7 +193,6 @@
     <string name="sched_v2" maxLength="41">מתזמן. גירסא 2</string>
     <string name="sched_v2_summ">Enable the new scheduler. Forces changes in one direction on next sync</string>
     <string name="sched_ver_toggle_title">אשר</string>
-    <string name="sched_ver_2to1">זה יאפס את כל הכרטיסים שבלמידה, ינקה חפיסות מסוננות וישנה את גרסת המתזמן. להמשיך?</string>
     <string name="sched_ver_1to2">The experimental scheduler could cause incorrect scheduling. Please ensure you have read the documentation first. Proceed?</string>
     <string name="pref_keep_screen_on" maxLength="41">להשאיר את המסך דולק</string>
     <string name="pref_keep_screen_on_summ">Disable screen timeout</string>
@@ -211,6 +213,11 @@
     <!-- Paste clipboard image as png option -->
     <string name="paste_as_png" maxLength="41">Paste clipboard images as PNG</string>
     <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
+    <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
+    <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">סטטיסטיקות מתקדמות</string>
     <string name="enable_advanced_statistics_title" maxLength="41">אפשר סטטיסטיקות מתקדמות</string>
@@ -226,6 +233,8 @@
     <string name="custom_sync_server_base_url_invalid">Sync url invalid</string>
     <string name="custom_sync_server_media_url_title" maxLength="41">Media sync url</string>
     <string name="custom_sync_server_media_url_invalid">Media sync url invalid</string>
+    <!-- Key Bindings -->
+    <string name="controls_main_category" maxLength="41">Command mapping</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">שינויים ב\'קבוצת אפשרויות\' ישפיעו על מספר חפיסות. אם ברצונך לשנות רק את החפיסה הנוכחית, אנא הוסף תחילה \'קבוצת אפשרויות\' חדשה</string>
     <string name="studyoptions_limit_select_tags">בחר תגיות</string>
@@ -313,4 +322,18 @@
     <string name="type_in_answer_focus_summ">Automatically focus the ‘type in answer’ field in the reviewer</string>
     <!-- Open Changelog-->
     <string name="open_changelog">פתח את יומן רישום השינויים</string>
+    <string name="binding_add_gesture">Add gesture</string>
+    <string name="binding_add_key">Add key</string>
+    <string name="key_picker_default_press_key">Press a key</string>
+    <!-- Select card side -->
+    <string name="card_side_selection_title">Select card side</string>
+    <string name="card_side_question">Question</string>
+    <string name="card_side_answer">Answer</string>
+    <string name="card_side_both">Question &amp; Answer</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
+    <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
+    <!-- Binding Preference -->
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
+    <string name="bindings_already_bound">Already bound to %s</string>
 </resources>

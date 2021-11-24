@@ -1,5 +1,6 @@
 package com.ichi2.anki;
 import com.ichi2.libanki.Sound;
+import com.ichi2.themes.Themes;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -34,10 +35,12 @@ public class VideoPlayer extends Activity implements android.view.SurfaceHolder.
     Sound mSoundPlayer;
 
     /** Called when the activity is first created. */
+    @SuppressWarnings("deprecation") // #9332: UI Visibility -> Insets
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Timber.i("onCreate");
         super.onCreate(savedInstanceState);
+        Themes.disableXiaomiForceDarkMode(this);
         setContentView(R.layout.video_player);
         mPath = getIntent().getStringExtra("path");
         Timber.i("Video Player intent had path: %s", mPath);

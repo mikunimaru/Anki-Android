@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/bottom_area_layout"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,7 +10,7 @@
     <!-- "Type in the answer" bar -->
     <com.ichi2.ui.FixedEditText
         android:id="@+id/answer_field"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/type_answer_hint"
         android:imeOptions="actionDone"
@@ -19,6 +19,31 @@
          Looks like setting android:imeActionLabel confuses the
          original AOSP soft keyboard, so don't.
     -->
+
+    <LinearLayout
+        android:id="@+id/preview_progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:visibility="gone"
+        android:layout_marginEnd="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <SeekBar
+            android:id="@+id/preview_progress_seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="75"
+            />
+        <TextView
+            android:id="@+id/preview_progress_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:gravity="center"/>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/preview_buttons_layout"
@@ -63,13 +88,13 @@
 
     <FrameLayout
         android:id="@+id/answer_options_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/ease_buttons"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone"
             android:focusable="false"
             android:orientation="horizontal">
@@ -163,7 +188,7 @@
 
         <LinearLayout
             android:id="@+id/flashcard_layout_flip"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/touch_target"
             android:orientation="vertical"
             android:focusable="true"
@@ -174,8 +199,8 @@
                 android:duplicateParentState="true"
                 android:background="?attr/hardButtonRef"
                 android:id="@+id/flip_card"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:clickable="false"
                 android:text="@string/show_answer"
                 android:textColor="?attr/answerButtonTextColor" />

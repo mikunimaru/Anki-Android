@@ -16,7 +16,6 @@
 
 package com.ichi2.anki.stats;
 
-import android.os.AsyncTask;
 import android.util.Pair;
 import android.widget.TextView;
 
@@ -40,26 +39,27 @@ import static org.mockito.Mockito.*;
 public class AnkiStatsTaskHandlerTest extends RobolectricTest {
 
     @Mock
-    private Collection col;
+    private Collection mCol;
 
     @Mock
-    private TextView view;
+    private TextView mView;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(col.getDb()).thenReturn(null);
+        when(mCol.getDb()).thenReturn(null);
     }
 
     @Test
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     public void testCreateReviewSummaryStatistics() throws ExecutionException, InterruptedException {
-        Mockito.verify(col, atMost(0)).getDb();
-        AsyncTask<Pair<Collection, TextView>, Void, String> result = AnkiStatsTaskHandler
-                .createReviewSummaryStatistics(col, view);
+        Mockito.verify(mCol, atMost(0)).getDb();
+        android.os.AsyncTask<Pair<Collection, TextView>, Void, String> result = AnkiStatsTaskHandler
+                .createReviewSummaryStatistics(mCol, mView);
 
         result.get();
         advanceRobolectricLooper();
 
-        Mockito.verify(col, atLeast(1)).getDb();
+        Mockito.verify(mCol, atLeast(1)).getDb();
     }
 }

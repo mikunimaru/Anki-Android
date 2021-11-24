@@ -28,6 +28,10 @@ import com.ichi2.anki.multimediacard.fields.IField;
 import com.ichi2.libanki.Consts;
 import com.ichi2.libanki.Model;
 import com.ichi2.libanki.Note;
+import com.ichi2.libanki.backend.DroidBackendFactory;
+import com.ichi2.libanki.backend.RustDroidV16Backend;
+
+import net.ankiweb.rsdroid.BackendFactory;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,14 +43,19 @@ import org.robolectric.shadows.ShadowActivity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import static com.ichi2.compat.Compat.ACTION_PROCESS_TEXT;
 import static com.ichi2.compat.Compat.EXTRA_PROCESS_TEXT;
+import static com.ichi2.libanki.Decks.CURRENT_DECK;
 import static com.ichi2.testutils.AnkiAssert.assertDoesNotThrow;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.robolectric.Shadows.shadowOf;
@@ -218,12 +227,12 @@ public class NoteEditorTest extends RobolectricTest {
         // value returned if deck not found
         final int DECK_ID_NOT_FOUND = -404;
         long currentDid = addDeck("Basic::Test");
-        getCol().getConf().put("curDeck", currentDid);
+        getCol().set_config(CURRENT_DECK, currentDid);
         Note n = super.addNoteUsingBasicModel("Test", "Note");
         n.model().put("did", currentDid);
         NoteEditor editor = getNoteEditorEditingExistingBasicNote("Test", "Note", FromScreen.DECK_LIST);
 
-        getCol().getConf().put("curDeck", Consts.DEFAULT_DECK_ID); // Change DID if going through default path
+        getCol().set_config(CURRENT_DECK, Consts.DEFAULT_DECK_ID); // Change DID if going through default path
         Intent copyNoteIntent = getCopyNoteIntent(editor);
         NoteEditor newNoteEditor = super.startActivityNormallyOpenCollectionWithIntent(NoteEditor.class, copyNoteIntent);
 
@@ -265,7 +274,7 @@ public class NoteEditorTest extends RobolectricTest {
     @Test
     public void processTextIntentShouldCopyFirstField() {
         ensureCollectionLoadIsSynchronous();
-        Intent i = new Intent(Intent.ACTION_PROCESS_TEXT);
+        Intent i = new Intent(ACTION_PROCESS_TEXT);
         i.putExtra(EXTRA_PROCESS_TEXT, "hello\nworld");
         NoteEditor editor = startActivityNormallyOpenCollectionWithIntent(NoteEditor.class, i);
         List<String> actual = Arrays.asList(editor.getCurrentFieldStrings());
@@ -342,6 +351,21 @@ public class NoteEditorTest extends RobolectricTest {
         NoteEditor editor = getNoteEditorAddingNote(FromScreen.DECK_LIST, NoteEditor.class);
 
         assertThat("Fields should have their first word capitalized by default", editor.getFieldForTest(0).isCapitalized(), is(true));
+    }
+
+    @Test
+    @Config(qualifiers = "en")
+    public void addToCurrentWithNoDeckSelectsDefault_issue_9616() {
+        assumeThat(DroidBackendFactory.getInstance(true), not(instanceOf(RustDroidV16Backend.class)));
+        getCol().getConf().put("addToCur", false);
+        Model cloze = Objects.requireNonNull(getCol().getModels().byName("Cloze"));
+        cloze.remove("did");
+        getCol().getModels().save(cloze);
+        NoteEditor editor = getNoteEditorAddingNote(FromScreen.DECK_LIST, NoteEditor.class);
+
+        editor.setCurrentlySelectedModel(cloze.getLong("id"));
+
+        assertThat(editor.getDeckId(), is(Consts.DEFAULT_DECK_ID));
     }
 
     private Intent getCopyNoteIntent(NoteEditor editor) {

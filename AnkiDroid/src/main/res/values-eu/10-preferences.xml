@@ -55,6 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">Keinuak</string>
     <string name="pref_cat_gestures_summ">Use taps and swipes instead of buttons</string>
     <string name="pref_cat_actions" maxLength="41">Ekintzak</string>
+    <string name="pref_cat_controls" maxLength="41">Controls</string>
+    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
     <string name="pref_cat_advanced" maxLength="41">Aurreratua</string>
     <string name="pref_cat_advanced_summ">Optimization and experimental features</string>
     <string name="pref_cat_performance" maxLength="41">Errendimendua</string>
@@ -101,7 +103,7 @@
     <string name="gestures_swipe_left" maxLength="41">Pasatu hatza ezkerrera</string>
     <string name="gestures_swipe_right" maxLength="41">Pasatu hatza eskumara</string>
     <string name="gestures_double_tap" maxLength="41">Double touch</string>
-    <string name="gestures_long_tap" maxLength="41">Long tap</string>
+    <string name="gestures_long_tap" maxLength="41">Long touch</string>
     <string name="gestures_tap_top" maxLength="41">Touch top</string>
     <string name="gestures_tap_left" maxLength="41">Touch left</string>
     <string name="gestures_tap_right" maxLength="41">Touch right</string>
@@ -130,7 +132,7 @@
     <string name="sync_fetch_missing_media_summ">Automatically fetch missing media when syncing</string>
     <string name="sync_account" maxLength="41">AnkiWeb account</string>
     <string name="sync_account_summ_logged_out">Not logged in</string>
-    <string name="sync_account_summ_logged_in">%s</string>
+    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">Sinkronizazio automatikoa</string>
     <string name="automatic_sync_choice_summ">Sync automatically on app start/exit if the last sync was more than 10
         minutes ago.</string>
@@ -150,6 +152,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Bibratu</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Blink light</string>
     <string name="timeout_answer_text" maxLength="41">Automatic display answer</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">Show answer automatically without user input. Delay includes time for automatically played audio files.</string>
     <string name="timeout_answer_seconds" maxLength="41">Time to show answer</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -171,7 +174,7 @@
     <string name="show_estimates_summ">Show next review time on answer buttons</string>
     <string name="show_large_answer_buttons" maxLength="41">Show large answer buttons</string>
     <string name="show_large_answer_buttons_summ">Show answer button in 2 rows</string>
-    <string name="show_top_bar" maxLength="41">Show Top Bar</string>
+    <string name="show_top_bar" maxLength="41">Show top bar</string>
     <string name="show_top_bar_summ">Show card counts, flag and mark in top bar</string>
     <string name="show_progress" maxLength="41">Show remaining</string>
     <string name="show_progress_summ">Show remaining card count</string>
@@ -190,7 +193,6 @@
     <string name="sched_v2" maxLength="41">V2 scheduler</string>
     <string name="sched_v2_summ">Enable the new scheduler. Forces changes in one direction on next sync</string>
     <string name="sched_ver_toggle_title">Baieztatu</string>
-    <string name="sched_ver_2to1">This will reset any cards in learning, clear filtered decks, and change the scheduler version. Proceed?</string>
     <string name="sched_ver_1to2">The experimental scheduler could cause incorrect scheduling. Please ensure you have read the documentation first. Proceed?</string>
     <string name="pref_keep_screen_on" maxLength="41">Keep screen on</string>
     <string name="pref_keep_screen_on_summ">Disable screen timeout</string>
@@ -211,6 +213,11 @@
     <!-- Paste clipboard image as png option -->
     <string name="paste_as_png" maxLength="41">Paste clipboard images as PNG</string>
     <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
+    <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
+    <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Advanced statistics</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Enable advanced statistics</string>
@@ -226,6 +233,8 @@
     <string name="custom_sync_server_base_url_invalid">Sync url invalid</string>
     <string name="custom_sync_server_media_url_title" maxLength="41">Media sync url</string>
     <string name="custom_sync_server_media_url_invalid">Media sync url invalid</string>
+    <!-- Key Bindings -->
+    <string name="controls_main_category" maxLength="41">Command mapping</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Changes to deck group options will affect multiple decks. If you wish to change only the current deck, please add a new options group first</string>
     <string name="studyoptions_limit_select_tags">Select tags</string>
@@ -309,4 +318,18 @@
     <string name="type_in_answer_focus_summ">Automatically focus the ‘type in answer’ field in the reviewer</string>
     <!-- Open Changelog-->
     <string name="open_changelog">Open Changelog</string>
+    <string name="binding_add_gesture">Add gesture</string>
+    <string name="binding_add_key">Add key</string>
+    <string name="key_picker_default_press_key">Press a key</string>
+    <!-- Select card side -->
+    <string name="card_side_selection_title">Select card side</string>
+    <string name="card_side_question">Question</string>
+    <string name="card_side_answer">Answer</string>
+    <string name="card_side_both">Question &amp; Answer</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
+    <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
+    <!-- Binding Preference -->
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
+    <string name="bindings_already_bound">Already bound to %s</string>
 </resources>

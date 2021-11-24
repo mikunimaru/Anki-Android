@@ -53,9 +53,10 @@
     <string name="no_tts_available_message">Nenhum idioma de texto para fala disponível</string>
     <string name="initializing_tts">Inicializando TTS&#8230;</string>
     <string name="tts_no_tts">Não fale</string>
+    <string name="unused_strings">\n\nArquivos não utilizados:\n</string>
     <string-array name="about_content">
         <item><![CDATA[<h2>%1$s:<br/>Flashcards para Android</h2>AnkiDroid é uma app de cards de estudo totalmente compatível com o software de PC <a href=\"%2$s\">Anki</a>. Você pode criar, baixar e aprender conteúdos em ambos (AnkiDroid ou Anki Desktop) e sincronizá-los facilmente com AnkiWeb.]]></item>
-        <item><![CDATA[Para nos ajudar a melhorar a AnkiDroid, favor reportar bugs para <a href=\"%1$s\"> o rastreador de problemas</a>; novas ideias de recurso também são muito bem-vindas. Encontrar respostas na <a href=\"%2$s\"> wiki</a> ou iniciar uma discussão no <a href=\"%3$s\"> fórum</a>.]]></item>
+        <item><![CDATA[Para nos ajudar a melhorar o AnkiDroid, favor reporte bugs para <a href=\"%1$s\">o rastreador de problemas</a>; novas ideias de recurso também são muito bem-vindas. Encontre respostas na <a href=\"%2$s\">wiki</a> ou inicie uma discussão no <a href=\"%3$s\">fórum</a>.]]></item>
         <item><![CDATA[AnkiDroid é <a href=\"%1$s\"> um software de código aberto<a/>, então todo mundo é incentivado a <a href=\"%2$s\"> tornar-se um colaborador</a> :-)]]></item>
         <item><![CDATA[Não-desenvolvedores também podem ajudar. Por exemplo, você pode <a href=\"%1$s\"> ajudar a traduzir</a> AnkiDroid, atualizar o wiki, fornecer screenshots, ou blogar sobre AnkiDroid.]]></item>
         <item><![CDATA[O AnkiDroid é publicado sob a <a href=\"%1$s\">licença GNU-GPL v3</a> e o código-fonte está disponível <a href=\"%2$s\">no GitHub</a>.]]></item>
@@ -80,8 +81,8 @@
         <item quantity="other">Remarcar cards</item>
     </plurals>
     <plurals name="reschedule_card_dialog_interval">
-        <item quantity="one">Current interval: %d day</item>
-        <item quantity="other">Current interval: %d days</item>
+        <item quantity="one">Intervalo atual: %d dia</item>
+        <item quantity="other">Intervalo atual: %d dias</item>
     </plurals>
     <string name="reschedule_card_dialog_message">Remarcar para revisão em x dias:</string>
     <plurals name="reschedule_cards_dialog_acknowledge">
@@ -89,7 +90,7 @@
         <item quantity="other">%d cards reagendados</item>
     </plurals>
     <string name="reschedule_card_dialog_new_card_warning">Um novo card está sendo reagendado. O reagendamento também transforma os novos cards em cards de revisão. Usar a opção \'reposicionar o card\' para mudar a posição do novo card dentro da nova fila.</string>
-    <string name="reschedule_card_dialog_warning_ease_reset">O reagendamento também redefine como o agendador lida com o card no futuro (o espaçamento será configurado para %d%%)</string>
+    <string name="reschedule_card_dialog_warning_ease_reset">O reagendamento também redefine como o agendador lida com o card no futuro (a retenção será configurada para %d%%)</string>
     <string name="firefox_workaround_launched_reviewer_opening_deck">Selecione o baralho no seu gerenciador de arquivos ou visite a página about:downloads para importá-lo</string>
     <string name="answering_error_title">Erro de banco de dados</string>
     <string name="answering_error_message">Ocorreu um erro ao gravar na coleção. Isso pode estar relacionado a um banco de dados corrompido ou espaço insuficiente no disco.\n\nSe isso ocorrer frequentemente, tente verificar o banco de dados, reparar a coleção ou restaurá-la de um backup. Clique em \'Opções\' para isso.\n\nEm todo caso, isso pode ser um bug do AnkiDroid; relate o erro para que possamos verificar o problema.</string>
@@ -163,18 +164,18 @@
     <string name="empty_cards_count">Cards a deletar: %d</string>
     <string name="empty_cards_deleted">Cards deletados: %d</string>
     <!-- Multimedia - Edit Field Activity -->
-    <string name="multimedia_editor_audio_permission_refused">Could not obtain microphone permission.</string>
-    <string name="multimedia_editor_camera_permission_refused">Could not obtain camera permission. Functionality has been disabled.</string>
+    <string name="multimedia_editor_audio_permission_refused">Não foi possível obter permissão de microfone.</string>
+    <string name="multimedia_editor_camera_permission_refused">Não foi possível obter a permissão da câmera. Funcionalidade foi desativada.</string>
     <string name="multimedia_editor_failed">Falha ao abrir o Editor de Multimídia</string>
     <!-- Multimedia - Audio View -->
-    <string name="multimedia_editor_audio_permission_denied">Audio recording permission denied</string>
+    <string name="multimedia_editor_audio_permission_denied">Permissão de gravação de áudio negada</string>
     <!-- Initial collection load -->
-    <string name="collection_load_welcome_request_permissions_title">Welcome to AnkiDroid!</string>
+    <string name="collection_load_welcome_request_permissions_title">Bem-vindo ao AnkiDroid!</string>
     <string name="collection_load_welcome_request_permissions_details">AnkiDroid requer acesso ao armazenamento. Usamos exclusivamente para armazenar a sua coleção, mídia de cards e backups. Nosso código é open-source, escrito por voluntários e confiável por milhões.\n\nSe você tiver alguma dúvida, por favor, acesse nosso manual no app ou visite nossos fóruns de suporte.\n\nObrigado por experimentar o AnkiDroid!\n— Equipe de Desenvolvimento AnkiDroid</string>
     <string name="mutimedia_editor_assertion_failed">Ocorreu um erro desconhecido ao exibir o Editor Avançado</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid Atualizado</string>
-    <string name="integrity_check_startup_content">AnkiDroid has been upgraded. This upgrade includes fixes for possible database problems, and we advise you to run check database now.</string>
+    <string name="integrity_check_startup_content">AnkiDroid foi atualizado. Esta atualização inclui correções para possíveis problemas de banco de dados, e recomendamos que você execute a verificação de banco de dados agora.</string>
     <string name="integrity_check_continue_anyway">Continuar assim mesmo</string>
     <string name="integrity_check_insufficient_space">Verificar a Base de Dados usa uma grande quantidade de armazenamento temporário.\n\nÉ altamente recomendável que você tenha pelo menos %s espaço livre no seu dispositivo antes de continuar.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nVocê tem atualmente %s livre.</string>
@@ -230,10 +231,10 @@
     <string name="help_item_discord">Discord</string>
     <string name="help_item_facebook">Facebook</string>
     <string name="help_item_twitter">Twitter</string>
-    <string name="help_title_privacy">Privacy</string>
-    <string name="help_item_ankidroid_privacy_policy">AnkiDroid Privacy Policy</string>
-    <string name="help_item_ankiweb_privacy_policy">AnkiWeb Privacy Policy</string>
-    <string name="help_item_ankiweb_terms_and_conditions">AnkiWeb Terms and Conditions</string>
+    <string name="help_title_privacy">Privacidade</string>
+    <string name="help_item_ankidroid_privacy_policy">Política de Privacidade AnkiDroid</string>
+    <string name="help_item_ankiweb_privacy_policy">Política de Privacidade AnkiWeb</string>
+    <string name="help_item_ankiweb_terms_and_conditions">Termos e Condições AnkiWeb</string>
     <string name="help_title_send_exception">Envie um relatório para a solução de problemas</string>
     <string name="help_dialog_exception_report_debounce">Relatório já enviado</string>
     <!--Sync-->
@@ -248,4 +249,6 @@
     sched V2. For V1, it was counting the number of repetitions of cards in learning. This approximation is acceptable
     for the sake of simplicity and because V1 will leave.-->
     <string name="deck_picker_counts">Abra a página de visão geral do deck contendo o número de cartas a serem vistas hoje.</string>
+    <string name="import_deck_package">Baralho (.apkg)</string>
+    <string name="import_collection_package">Coleção (.colpkg)</string>
 </resources>

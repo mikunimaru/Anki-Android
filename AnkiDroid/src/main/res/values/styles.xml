@@ -46,7 +46,7 @@
     <style name="FooterButton" parent="FooterButtonBase"/>
 
     <style name="FooterButtonNextTime">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:ellipsize">marquee</item>
@@ -116,6 +116,7 @@
         <item name="android:drawSelectorOnTop">true</item>
         <item name="android:textColorPrimary">?attr/actionBarPopupTextColor</item>
         <item name="android:textColorSecondary">?attr/actionBarPopupTextColor</item>
+        <item name="android:colorBackground">?attr/popupBackgroundColor</item>
     </style>
 
     <style name="LargeButtonStyle">
@@ -133,9 +134,9 @@
 
     <!-- padding is hardcoded in Toolbar.java (32) to allow for fixing the scrollview -->
     <style name="note_editor_toolbar_button">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:padding">4dp</item>
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:padding">2dp</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:tint">@color/black</item>
     </style>
@@ -153,4 +154,11 @@
     </style>
 
 
+    <style name="binding_gesture_tap_button">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="layout_constraintWidth_percent">0.125</item>
+        <item name="layout_constraintHeight_percent">0.125</item>
+        <item name="android:background">@drawable/ic_gesture_tap</item>
+    </style>
 </resources>

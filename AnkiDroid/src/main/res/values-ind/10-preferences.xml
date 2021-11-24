@@ -55,6 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">Gestur</string>
     <string name="pref_cat_gestures_summ">Gunakan tekan dan usapan menggantikan tombol</string>
     <string name="pref_cat_actions" maxLength="41">Tindakan</string>
+    <string name="pref_cat_controls" maxLength="41">Controls</string>
+    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
     <string name="pref_cat_advanced" maxLength="41">Tingkat lanjut</string>
     <string name="pref_cat_advanced_summ">Optimisasi dan fitur percobaan</string>
     <string name="pref_cat_performance" maxLength="41">Performa</string>
@@ -130,7 +132,7 @@
     <string name="sync_fetch_missing_media_summ">Otomatis ambil media yang kurang ketika sinkronisasi.</string>
     <string name="sync_account" maxLength="41">Akun AnkiWeb</string>
     <string name="sync_account_summ_logged_out">Belum masuk</string>
-    <string name="sync_account_summ_logged_in">%s</string>
+    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">Sinkronisasi otomatis</string>
     <string name="automatic_sync_choice_summ">Sinkronkan secara otomatis saat masuk/keluar aplikasi jika sinkronisasi terakhir lebih dari 10
          menit yang lalu.</string>
@@ -150,6 +152,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Getar</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Berkedip</string>
     <string name="timeout_answer_text" maxLength="41">Otomatis tampilkan jawaban</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">Tampilkan jawaban secara otomatis tanpa masukan dari pengguna. Jeda termasuk waktu untuk memutar berkas audio secara otomatis.</string>
     <string name="timeout_answer_seconds" maxLength="41">Waktu menampilkan jawaban</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX dtk</string>
@@ -190,7 +193,6 @@
     <string name="sched_v2" maxLength="41">Penjadwal V2</string>
     <string name="sched_v2_summ">Perbolehkan penjadwal baru. Paksakan pengubahan satu arah pada sinkronisasi selanjutnya</string>
     <string name="sched_ver_toggle_title">Konfirmasi</string>
-    <string name="sched_ver_2to1">Ini akan mereset kartu yang dipelajari, dek terfilter, dan mengubah versi penjadwalan. Lanjut?</string>
     <string name="sched_ver_1to2">Penjadwalan eksperimental dapat mengakibatkan jadwal yang salah. Harap pastikan kamu telah membaca dokumentasi terlebih dulu. Lanjutkan?</string>
     <string name="pref_keep_screen_on" maxLength="41">Layar tetap menyala</string>
     <string name="pref_keep_screen_on_summ">Nonaktifkan batas waktu layar mati</string>
@@ -211,6 +213,11 @@
     <!-- Paste clipboard image as png option -->
     <string name="paste_as_png" maxLength="41">Tempel gambar di papan klip sebagai PNG</string>
     <string name="paste_as_png_summary">Anki menempel gambar papan klip berbentuk file JPG agar hemat penyimpanan. Gunakan opsi ini untuk menempel gambar sebagai file PNG.</string>
+    <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
+    <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Statistik lanjutan</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Aktifkan statistik lanjutan</string>
@@ -226,6 +233,8 @@
     <string name="custom_sync_server_base_url_invalid">Sinkronisasi url tidak valid</string>
     <string name="custom_sync_server_media_url_title" maxLength="41">Url sinkronisasi media</string>
     <string name="custom_sync_server_media_url_invalid">Sinkronisasi media tidak valid</string>
+    <!-- Key Bindings -->
+    <string name="controls_main_category" maxLength="41">Command mapping</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Perubahan ke opsi grup dek akan mempengaruhi banyak dek. Jika kamu hanya ingin mengubah dek saat ini, harap tambahkan grup opsi baru terlebih dahulu</string>
     <string name="studyoptions_limit_select_tags">Pilih tag</string>
@@ -307,4 +316,18 @@
     <string name="type_in_answer_focus_summ">Fokuskan bagian \'ketik di jawaban\' secara otomatis di reviewer</string>
     <!-- Open Changelog-->
     <string name="open_changelog">Buka Changelog</string>
+    <string name="binding_add_gesture">Add gesture</string>
+    <string name="binding_add_key">Add key</string>
+    <string name="key_picker_default_press_key">Press a key</string>
+    <!-- Select card side -->
+    <string name="card_side_selection_title">Select card side</string>
+    <string name="card_side_question">Question</string>
+    <string name="card_side_answer">Answer</string>
+    <string name="card_side_both">Question &amp; Answer</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
+    <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
+    <!-- Binding Preference -->
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
+    <string name="bindings_already_bound">Already bound to %s</string>
 </resources>

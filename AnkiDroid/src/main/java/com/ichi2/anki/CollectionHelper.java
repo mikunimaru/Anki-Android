@@ -234,6 +234,44 @@ public class CollectionHelper {
         }
     }
 
+    /**
+     * Checks if current directory being used by AnkiDroid to store user data is a Legacy Storage Directory.
+     * This directory is stored under the key "deckPath" in SharedPreferences
+     * @return <code>true</code> if AnkiDroid is storing user data in a Legacy Storage Directory.
+     */
+    public static boolean isLegacyStorage(Context context) {
+        String currentDirPath = CollectionHelper.getCurrentAnkiDroidDirectory(context);
+        String externalScopedDirPath = CollectionHelper.getAppSpecificExternalAnkiDroidDirectory(context);
+        String internalScopedDirPath = CollectionHelper.getAppSpecificInternalAnkiDroidDirectory(context);
+
+        File currentDir = new File(currentDirPath);
+        File[] externalScopedDirs = context.getExternalFilesDirs(null);
+        File internalScopedDir = new File(internalScopedDirPath);
+
+        Timber.i("isLegacyStorage(): current dir: %s\nscoped external dir: %s\nscoped internal dir: %s",
+                currentDirPath, externalScopedDirPath, internalScopedDirPath);
+
+        // Loop to check if the current AnkiDroid directory or any of its parents are the same as the root directories
+        // for app-specific external or internal storage - the only directories which will be accessible without
+        // permissions under scoped storage
+        File currentDirParent = currentDir;
+        while (currentDirParent != null) {
+            if (currentDirParent.compareTo(internalScopedDir) == 0) {
+                return false;
+            }
+            for (File externalScopedDir : externalScopedDirs) {
+                if (currentDirParent.compareTo(externalScopedDir) == 0) {
+                    return false;
+                }
+            }
+            currentDirParent = currentDirParent.getParentFile();
+        }
+
+        // If the current AnkiDroid directory isn't a sub directory of the app-specific external or internal storage
+        // directories, then it must be in a legacy storage directory
+        return true;
+    }
+
 
     /**
      * Get the absolute path to a directory that is suitable to be the default starting location
@@ -362,6 +400,11 @@ public class CollectionHelper {
      */
     public static String getCurrentAnkiDroidDirectory(Context context) {
         SharedPreferences preferences = AnkiDroidApp.getSharedPrefs(context);
+        if (AnkiDroidApp.INSTRUMENTATION_TESTING) {
+            // create an "androidTest" folder inside the current collection folder which contains the test data
+            // "/AnkiDroid/androidTest" would be a new collection path
+            return new File(getDefaultAnkiDroidDirectory(context), "androidTest").getAbsolutePath();
+        }
         return PreferenceExtensions.getOrSetString(
                 preferences,
                 "deckPath",

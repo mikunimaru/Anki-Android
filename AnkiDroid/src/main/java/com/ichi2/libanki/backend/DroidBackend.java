@@ -16,26 +16,38 @@
 
 package com.ichi2.libanki.backend;
 
+import android.content.Context;
+
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.DB;
 import com.ichi2.libanki.DeckConfig;
 import com.ichi2.libanki.Decks;
+import com.ichi2.libanki.TemplateManager;
 import com.ichi2.libanki.backend.exception.BackendNotSupportedException;
 import com.ichi2.libanki.backend.model.SchedTimingToday;
+import com.ichi2.libanki.utils.Time;
+import com.ichi2.utils.KotlinCleanup;
 
 import net.ankiweb.rsdroid.RustV1Cleanup;
 
+import BackendProto.Backend;
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 /**
  * Interface to the rust backend listing all currently supported functionality.
  */
+@KotlinCleanup("priority to convert to kotlin for named arguments")
 public interface DroidBackend {
+    /** Should only be called from "Storage.java" */
+    Collection createCollection(@NonNull Context context, @NonNull DB db, String path, boolean server, boolean log, @NonNull Time time);
+
     DB openCollectionDatabase(String path);
-    void closeCollection();
+    void closeCollection(DB db, boolean downgradeToSchema11);
 
     /** Whether a call to {@link DroidBackend#openCollectionDatabase(String)} will generate a schema and indices for the database */
     boolean databaseCreationCreatesSchema();
+    boolean databaseCreationInitializesData();
 
     boolean isUsingRustBackend();
 
@@ -67,8 +79,12 @@ public interface DroidBackend {
 
     @RustV1Cleanup("backend.newDeckConfigLegacy")
     default DeckConfig new_deck_config_legacy() {
-        return new DeckConfig(Decks.DEFAULT_CONF);
+        return new DeckConfig(Decks.DEFAULT_CONF, DeckConfig.Source.DECK_CONFIG);
     }
 
     void useNewTimezoneCode(Collection col);
+
+    @NonNull Backend.ExtractAVTagsOut extract_av_tags(@NonNull String text, boolean question_side) throws BackendNotSupportedException;
+
+    @NonNull Backend.RenderCardOut renderCardForTemplateManager(@NonNull TemplateManager.TemplateRenderContext templateRenderContext) throws BackendNotSupportedException;
 }

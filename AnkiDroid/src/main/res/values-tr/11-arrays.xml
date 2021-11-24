@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">Turuncu bayrağı etkinleştir</string>
     <string name="gesture_flag_green">Yeşil bayrağı etkinleştir</string>
     <string name="gesture_flag_blue">Mavi bayrağı etkinleştir</string>
+    <string name="gesture_flag_pink">Pembe Bayrağı Etkinleştir</string>
+    <string name="gesture_flag_turquoise">Turkuaz Bayrağı Etkinleştir</string>
+    <string name="gesture_flag_purple">Mor Bayrağı Etkinleştir</string>
     <string name="gesture_flag_remove">Bayrağı sil</string>
     <string name="gesture_page_up">Yukarı</string>
     <string name="gesture_page_down">Aşağı</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">Yazı tahtasını etkinleştir</string>
     <string name="record_voice">Ses kaydet</string>
     <string name="replay_voice">Sesi tekrar oynat</string>
+    <string name="automatic_answer_option_2">Zor (mevcut değilse iyi)</string>
+    <string name="automatic_answer_option_4">Kolay (Müsait değilse iyi)</string>
 </resources>

@@ -44,10 +44,11 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ichi2.anim.ActivityTransitionAnimation;
 import com.ichi2.anki.dialogs.customstudy.CustomStudyDialog;
+import com.ichi2.anki.servicelayer.SchedulerService.NextCard;
+import com.ichi2.anki.servicelayer.UndoService;
 import com.ichi2.async.CollectionTask;
 import com.ichi2.async.TaskListener;
 import com.ichi2.async.TaskManager;
-import com.ichi2.libanki.Card;
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.Consts;
 import com.ichi2.libanki.Decks;
@@ -58,6 +59,7 @@ import com.ichi2.utils.Computation;
 import com.ichi2.utils.FragmentFactoryUtils;
 import com.ichi2.utils.HtmlUtils;
 
+import kotlin.Unit;
 import timber.log.Timber;
 
 import static com.ichi2.anim.ActivityTransitionAnimation.Direction.*;
@@ -308,7 +310,7 @@ public class StudyOptionsFragment extends Fragment implements Toolbar.OnMenuItem
         parent.addView(newView);
     }
 
-    private final TaskListener<Card, Computation<?>> mUndoListener = new TaskListener<Card, Computation<?>>() {
+    private final TaskListener<Unit, Computation<? extends NextCard<?>>> mUndoListener = new TaskListener<Unit, Computation<? extends NextCard<?>>>() {
         @Override
         public void onPreExecute() {
 
@@ -316,7 +318,7 @@ public class StudyOptionsFragment extends Fragment implements Toolbar.OnMenuItem
 
 
         @Override
-        public void onPostExecute(Computation<?> v) {
+        public void onPostExecute(Computation<? extends NextCard<?>> v) {
             openReviewer();
         }
     };
@@ -326,7 +328,7 @@ public class StudyOptionsFragment extends Fragment implements Toolbar.OnMenuItem
         int itemId = item.getItemId();
         if (itemId == R.id.action_undo) {
             Timber.i("StudyOptionsFragment:: Undo button pressed");
-            TaskManager.launchCollectionTask(new CollectionTask.Undo(), mUndoListener);
+            new UndoService.Undo().runWithHandler(mUndoListener);
             return true;
         } else if (itemId == R.id.action_deck_or_study_options) {
             Timber.i("StudyOptionsFragment:: Deck or study options button pressed");
@@ -558,13 +560,13 @@ public class StudyOptionsFragment extends Fragment implements Toolbar.OnMenuItem
         public final int mEta;
 
 
-        public DeckStudyData(int mNewCardsToday, int mLrnCardsToday, int mRevCardsToday, int mNumberOfNewCardsInDeck, int mNumberOfCardsInDeck, int mEta) {
-            this.mNewCardsToday = mNewCardsToday;
-            this.mLrnCardsToday = mLrnCardsToday;
-            this.mRevCardsToday = mRevCardsToday;
-            this.mNumberOfNewCardsInDeck = mNumberOfNewCardsInDeck;
-            this.mNumberOfCardsInDeck = mNumberOfCardsInDeck;
-            this.mEta = mEta;
+        public DeckStudyData(int newCardsToday, int lrnCardsToday, int revCardsToday, int numberOfNewCardsInDeck, int numberOfCardsInDeck, int eta) {
+            this.mNewCardsToday = newCardsToday;
+            this.mLrnCardsToday = lrnCardsToday;
+            this.mRevCardsToday = revCardsToday;
+            this.mNumberOfNewCardsInDeck = numberOfNewCardsInDeck;
+            this.mNumberOfCardsInDeck = numberOfCardsInDeck;
+            this.mEta = eta;
         }
     }
 

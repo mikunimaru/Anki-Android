@@ -30,6 +30,7 @@ import com.ichi2.libanki.template.TemplateFilters;
 import com.ichi2.utils.Assert;
 
 import com.ichi2.utils.ExceptionUtil;
+import com.ichi2.utils.HashUtil;
 import com.ichi2.utils.JSONArray;
 import com.ichi2.utils.JSONObject;
 
@@ -385,7 +386,7 @@ public class Media {
     }
 
 
-    public String escapeImages(String string) {
+    public static String escapeImages(String string) {
         return escapeImages(string, false);
     }
 
@@ -395,7 +396,7 @@ public class Media {
      * @param string The string to search for image references and escape the filenames.
      * @return The string with the filenames of any local images percent-escaped as UTF-8.
      */
-    public String escapeImages(String string, boolean unescape) {
+    public static String escapeImages(String string, boolean unescape) {
         for (Pattern p : Arrays.asList(fImgRegExpQ, fImgRegExpU)) {
             Matcher m = p.matcher(string);
             // NOTE: python uses the named group 'fname'. Java doesn't have named groups, so we have to determine
@@ -698,7 +699,7 @@ public class Media {
 
 
     private Pair<List<String>, List<String>> _changes() {
-        Map<String, Object[]> cache = new HashMap<>(mDb.queryScalar("SELECT count() FROM media WHERE csum IS NOT NULL"));
+        Map<String, Object[]> cache = HashUtil.HashMapInit(mDb.queryScalar("SELECT count() FROM media WHERE csum IS NOT NULL"));
         try (Cursor cur = mDb.query("select fname, csum, mtime from media where csum is not null")) {
             while (cur.moveToNext()) {
                 String name = cur.getString(0);
@@ -957,7 +958,7 @@ public class Media {
                 media.add(new Object[] {name, csum, _mtime(destPath), 0});
                 cnt += 1;
             }
-            if (media.size() > 0) {
+            if (!media.isEmpty()) {
                 mDb.executeMany("insert or replace into media values (?,?,?,?)", media);
             }
             return cnt;

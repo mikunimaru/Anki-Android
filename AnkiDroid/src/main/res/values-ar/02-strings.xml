@@ -45,7 +45,7 @@
     <string tools:ignore="UnusedResources" name="drawer_open">فتح القائمة</string>
     <string tools:ignore="UnusedResources" name="drawer_close">إغلاق القائمة</string>
     <string name="CardEditorCardDeck">رزمة البطاقة:</string>
-    <string name="CardEditorNoteDeck">شَدّة أوراق:</string>
+    <string name="CardEditorNoteDeck">الرزمة:</string>
     <string name="CardEditorModel">النوع:</string>
     <string name="CardEditorTags">الوسوم: %1$s</string>
     <string name="CardEditorCards">البطاقات: %1$s</string>
@@ -83,7 +83,7 @@
     <string-array name="browser_column2_headings">
         <item>جواب</item>
         <item>بطاقة</item>
-        <item>شَدّة أوراق</item>
+        <item>رزمة</item>
         <item>ملحوظة</item>
         <item>سؤال</item>
         <item>وسوم</item>
@@ -145,6 +145,7 @@
     <string name="card_editor_reset_card">إعادة تعيين التقدم</string>
     <string name="card_editor_reschedule_card" comment="Action to reschedule a card">إعادة الجدولة</string>
     <string name="card_editor_preview_card" comment="Button offering to preview some card(s)">معاينة</string>
+    <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d من %2$d</string>
     <string name="error_insufficient_memory">العملية غير ممكنة نظرًا للذاكرة غير الكافية في جهازك</string>
     <string name="rename" comment="Confirm that the renaming action should be processed.">إعادة التسمية</string>
     <string name="default_conf_delete_error">لا يمكن إزالة مجموعة الخيارات الافتراضية</string>
@@ -166,7 +167,6 @@
     <string name="show_hint">إظهار %s</string>
     <string name="info_rate">قيم أنكيدرويد</string>
     <string name="import_title">استيراد</string>
-    <string name="import_select_title">اختر ملفًا لاستيراده</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">إضافة</string>
     <string name="import_message_replace_confirm">سيحذف هذا مجموعتك الحالية ويستبدلها ببيانات الملف %s</string>
     <string name="import_message_add_confirm">هل تريد إضافة “%s” إلى المجموعة؟ قد يستغرق هذا وقتًا طويلًا</string>
@@ -200,21 +200,19 @@
     <string name="export_save_apkg_unsuccessful">فشل حفظ حزمة أنكي</string>
     <string name="export_successful">تم تصدير الملف \"%s\". هل تريد إرساله بواسطة تطبيق آخر؟</string>
     <string name="export_email_subject">بطاقات مصدّرة من قبل أنكيدرويد: %s</string>
-    <string name="export_email_text"><![CDATA[        مرحبًا!
+    <string name="export_email_text_new"><![CDATA[        مرحبًا!
         <br/><br/>
-        هذه رزمة بطاقات أنكي مرسلة من قبل <a href="https://ankidroid.org/docs/manual.html">AnkiDroid</a>.
-        جرّب فتحها باستخدام توزيعة من <a href="http://ankisrs.net/#download">توزيعات أنكي</a> المتوفرة واستمتع بتعلم سهل وفعّال!
+        هذه رزمة بطاقات أنكي مرسلة من <a href="%1$s">أنكيدرويد</a>.
+        حاول فتحها باستخدام توزيعة من <a href="%2$s">توزيعات أنكي</a> المتوفرة واستمتع بتعلم سهل وفعال!
         ]]></string>
     <string name="export_unsuccessful">حدث خطأ عند تصدير ملف apkg</string>
-    <string name="import_hint">لاستيراد البطاقات، ضع ملف الـ apkg في المجلد “%s” وانقر «موافق»</string>
-    <string name="upgrade_import_no_file_found">تعذر العثور على ملف %1$s يمكن استيراده</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">الخيارات</string>
-    <string name="menu__deck_options">خيارات شَدّة الأوراق</string>
+    <string name="menu__deck_options">خيارات الرزمة</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">خيارات الدراسة</string>
     <string name="select_tts">تعيين لغة تحويل النص إلى كلام</string>
     <string name="custom_study">دراسة مخصصة</string>
     <string name="more_options">المزيد</string>
-    <string name="dyn_deck_desc">هذه قاعدة خاصة للدراسة خارج الجدول الزمني الاعتيادي. البطاقات سوف تعود الى شَداتها الأصلية تلقائياً بعد مراجعتها منك. حذف شَدّة الأوراق هذه من قائمة الشَّدّات سوف يعيد كل البطاقات المتبقية إلى حالة شَدّاتها الأصلية.</string>
+    <string name="dyn_deck_desc">هذه رزمة خاصة للدراسة خارج الجدول المعتاد. ستعود البطاقات إلى رزمها الأصلية تلقائيًا بعد مراجعتها. يؤدي حذف هذه الرزمة من قائمة الرزم إلى إعادة كل البطاقات المتبقية إلى رزمها الأصلية.</string>
     <string name="steps_error">يجب أن تكون الخطوات أعداد أكبر من 0</string>
     <string name="steps_min_error">يلزم خطوة واحدة على الأقل</string>
     <string name="sched_end">(النهاية)</string>
@@ -282,7 +280,7 @@
     <string name="less_than_time">&gt; %s</string>
     <string name="decks_rename_exists">هذه الرزمة موجودة بالفعل</string>
     <string name="decks_rename_filtered_nosubdecks">لا يمكن أن يكون لرزمة مفلترة رزم فرعية</string>
-    <string name="filtered_deck_name">شَدّة الأوراق مُفلترة</string>
+    <string name="filtered_deck_name">رزمة مفلترة</string>
     <string name="reminder_title">لا تنسَ أن تدرس اليوم!</string>
     <plurals name="reminder_text">
         <item quantity="zero">%2$d بطاقة بانتظار المراجعة في %1$s</item>
@@ -394,6 +392,7 @@
     <string name="create_shortcut_failed" comment="home screen == launcher">لا تسمح شاشتك الرئيسية لأنكيدرويد بإضافة اختصارات</string>
     <string name="create_shortcut_error">حدث خطأ عند إضافة الاختصار: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled">رسمَلة الجُمَل</string>
+    <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll">شريط تمرير لشريط الأدوات</string>
     <!-- Symbols used as Button text in IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -401,4 +400,31 @@
     <string name="email_id_empty">يلزم بريد إلكتروني</string>
     <string name="password_empty">تلزم كلمة مرور</string>
     <string name="back_pressed_once">اضغط رجوع مجدداً للخروج</string>
+    <string name="back_pressed_once_reviewer">اضغط رجوع مجددًا للعودة</string>
+    <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
+    <string name="percentage">%s%%</string>
+    <string name="download_deck">تنزيل الرزمة</string>
+    <string name="try_again">إعادة المحاولة</string>
+    <string name="cancel_download">إلغاء التنزيل</string>
+    <string name="cancel_download_question_title">هل تريد إلغاء التنزيل؟</string>
+    <string name="downloading_file">يجري تنزيل %s</string>
+    <string name="import_deck">استيراد رزمة</string>
+    <string name="something_wrong">حدث خطأ ما، حاول مجددًا</string>
+    <string name="download_failed">فشل التنزيل</string>
+    <string name="deck_download_progress_message">تستطيع استخدام التطبيقات الأخرى أثناء استمرار التنزيل</string>
+    <string name="check_network">تحقق من اتصالك بالشبكة</string>
+    <string name="search_using_deck_name">ابحث باستخدام اسم الرزمة</string>
+    <string name="home">الصفحة الرئيسية</string>
+    <!-- Importing -->
+    <string name="import_mapped_to_field">مُوزع إلى %s</string>
+    <string name="import_mapped_to_tags">موزع إلى الوسوم</string>
+    <string name="import_mapped_to_nothing">تم تجاهله</string>
+    <!-- Reviewer actions -->
+    <string name="buried_card">دفن البطاقة</string>
+    <string name="buried_note">ملحوظة مدفونة</string>
+    <string name="deleted_note">ملحوظة محذوفة</string>
+    <string name="suspended_card">بطاقة معلقة</string>
+    <string name="suspended_note">ملحوظة معلقة</string>
+    <!--  Note Editor Toggle Sticky  -->
+    <string name="note_editor_toggle_sticky">تفعيل ثبات النص لـ %s</string>
 </resources>

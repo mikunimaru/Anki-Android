@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
 
             <LinearLayout
                 android:id="@+id/MyAccountLayout"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="15dp"
@@ -85,7 +85,7 @@
 
                 <Button
                     android:id="@+id/login_button"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:theme="@style/LargeButtonStyle"
                     android:singleLine="true"
@@ -118,7 +118,7 @@
         </ScrollView>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="3dp"
             android:orientation="vertical"
@@ -153,6 +153,20 @@
                 android:layout_gravity="center"
                 android:singleLine="true"
                 android:text="@string/sign_up" />
+
+            <!-- Added new button for lost email -->
+            <Button
+                android:id="@+id/lost_mail_instructions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:textSize="@dimen/abc_text_size_button_material"
+                android:textColor="?attr/colorAccent"
+                android:padding="3dp"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:text="@string/lost_mail_instructions" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -97,6 +97,9 @@
     <attr name="flagOrange" format="color"/>
     <attr name="flagGreen" format="color"/>
     <attr name="flagBlue" format="color"/>
+    <attr name="flagPink" format="color"/>
+    <attr name="flagTurquoise" format="color"/>
+    <attr name="flagPurple" format="color"/>
     <!-- Note editor colors -->
     <attr name="duplicateColor" format="color"/>
     <attr name="editTextBackgroundColor" format="color"/>
@@ -108,6 +111,7 @@
     <!-- Images -->
     <attr name="navDrawerImage" format="integer"/>
     <attr name="attachFileImage" format="integer"/>
+    <attr name="toggleStickyImage" format="integer"/>
     <attr name="upDownImage" format="integer"/>
     <attr name="dialogErrorIcon" format="integer"/>
     <attr name="dialogSyncErrorIcon" format="integer"/>
@@ -119,4 +123,12 @@
     <attr name="fab_item_background" format="reference"/>
     <!--Custom Tabs colors-->
     <attr name="customTabNavBarColor" format="color"/>
+    <!-- Popup menus' background color -->
+    <attr name="popupBackgroundColor" format="reference"/>
+
+    <attr name="editTextDisabled" format="color"/>
+
+    <declare-styleable name="CheckBoxTriStates">
+        <attr name="cycle_back_to_indeterminate" format="boolean" />
+    </declare-styleable>
 </resources>

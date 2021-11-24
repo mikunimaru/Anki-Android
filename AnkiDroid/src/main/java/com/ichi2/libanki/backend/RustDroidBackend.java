@@ -16,17 +16,24 @@
 
 package com.ichi2.libanki.backend;
 
+import android.content.Context;
+
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.DB;
+import com.ichi2.libanki.TemplateManager;
 import com.ichi2.libanki.backend.exception.BackendNotSupportedException;
 import com.ichi2.libanki.backend.model.SchedTimingToday;
 import com.ichi2.libanki.backend.model.SchedTimingTodayProto;
+import com.ichi2.libanki.utils.Time;
 
 import net.ankiweb.rsdroid.BackendFactory;
+import net.ankiweb.rsdroid.database.RustV11SQLiteOpenHelperFactory;
 
 import BackendProto.AdBackend;
+import BackendProto.Backend;
+import androidx.annotation.NonNull;
 
-/** The Backend in Rust */
+/** The V11 Backend in Rust */
 public class RustDroidBackend implements DroidBackend {
     public static final int UNUSED_VALUE = 0;
 
@@ -34,20 +41,24 @@ public class RustDroidBackend implements DroidBackend {
     private final BackendFactory mBackend;
 
 
-    public RustDroidBackend(BackendFactory mBackend) {
-        this.mBackend = mBackend;
+    public RustDroidBackend(BackendFactory backend) {
+        this.mBackend = backend;
     }
 
+    @Override
+    public Collection createCollection(@NonNull Context context, @NonNull DB db, String path, boolean server, boolean log, @NonNull Time time) {
+        return new Collection(context, db, path, server, log, time, this);
+    }
 
     @Override
     public DB openCollectionDatabase(String path) {
-        return new DB(path, mBackend);
+        return new DB(path, () -> new RustV11SQLiteOpenHelperFactory(mBackend));
     }
 
 
     @Override
-    public void closeCollection() {
-        mBackend.closeCollection();
+    public void closeCollection(DB db, boolean downgradeToSchema11) {
+        db.close();
     }
 
 
@@ -56,6 +67,11 @@ public class RustDroidBackend implements DroidBackend {
         return true;
     }
 
+    /** Whether the 'Decks' , 'Deck Config', 'Note Types' etc.. are set by database creation */
+    @Override
+    public boolean databaseCreationInitializesData() {
+        return false; // only true in V16, not V11
+    }
 
     @Override
     public boolean isUsingRustBackend() {
@@ -93,5 +109,17 @@ public class RustDroidBackend implements DroidBackend {
         } catch (BackendNotSupportedException e) {
             throw e.alreadyUsingRustBackend();
         }
+    }
+
+
+    @Override
+    public @NonNull Backend.ExtractAVTagsOut extract_av_tags(@NonNull String text, boolean question_side) throws BackendNotSupportedException {
+        throw new BackendNotSupportedException();
+    }
+
+
+    @Override
+    public @NonNull Backend.RenderCardOut renderCardForTemplateManager(@NonNull TemplateManager.TemplateRenderContext templateRenderContext) throws BackendNotSupportedException {
+        throw new BackendNotSupportedException();
     }
 }

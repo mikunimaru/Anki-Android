@@ -33,6 +33,7 @@ import org.jetbrains.uast.UClass;
 import org.jetbrains.uast.UElement;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -54,8 +55,12 @@ public class CopyrightHeaderExists extends Detector implements SourceCodeScanner
             "Settings - Editor - Copyright - Copyright Profiles - Add Profile - AnkiDroid. " +
             "Or search in Settings for 'Copyright'" +
             "A GPLv3 template is available:\n" +
-            "https://github.com/ankidroid/Anki-Android/issues/8211#issuecomment-825269673";
-    private static final Implementation implementation = new Implementation(CopyrightHeaderExists.class, Scope.JAVA_FILE_SCOPE);
+            "https://github.com/ankidroid/Anki-Android/issues/8211#issuecomment-825269673 \n\n" +
+            "If the file is under a GPL-Compatible License (https://www.gnu.org/licenses/license-list.en.html#GPLCompatibleLicenses) " +
+            "then this warning may be suppressed either via adding a GPL header added alongside the license: " +
+            "https://softwarefreedom.org/resources/2007/gpl-non-gpl-collaboration.html#x1-40002.2 + or " +
+            "\"//noinspection MissingCopyrightHeader <reason>\" may be added as the first line of the file.";
+    private static final Implementation implementation = new Implementation(CopyrightHeaderExists.class, EnumSet.of(Scope.JAVA_FILE, Scope.TEST_SOURCES));
     public static final Issue ISSUE = Issue.create(
             ID,
             DESCRIPTION,

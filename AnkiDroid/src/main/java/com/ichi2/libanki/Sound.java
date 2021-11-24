@@ -20,33 +20,38 @@ package com.ichi2.libanki;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.provider.MediaStore;
 
-import android.view.Display;
-import android.view.WindowManager;
+import android.os.Build;
 import android.webkit.MimeTypeMap;
 import android.widget.VideoView;
 
 import com.ichi2.anki.AbstractFlashcardViewer;
 import com.ichi2.anki.AnkiDroidApp;
 import com.ichi2.anki.ReadText;
+import com.ichi2.compat.CompatHelper;
+import com.ichi2.utils.DisplayUtils;
 import com.ichi2.utils.StringUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import timber.log.Timber;
 
 
@@ -92,6 +97,15 @@ public class Sound {
      */
     private WeakReference<Activity> mCallingActivity;
 
+    @VisibleForTesting
+    public ArrayList<String> getSounds(@NonNull Sound.SoundSide side) {
+        if (side == SoundSide.QUESTION_AND_ANSWER) {
+            makeQuestionAnswerList();
+        }
+        return mSoundPaths.get(side);
+    }
+
+
     /**
      * Subset Flags: Flags that indicate the subset of sounds to involve
      */
@@ -127,6 +141,8 @@ public class Sound {
      */
     private static final AudioManager.OnAudioFocusChangeListener afChangeListener = focusChange -> {
     };
+    
+    private AudioFocusRequest mAudioFocusRequest;
 
 
     // Clears current sound paths; call before parseSounds() calls
@@ -136,30 +152,40 @@ public class Sound {
 
 
     /**
-     * The function addSounds() parses content for sound files, and stores entries to the filepaths for them,
-     * categorized as belonging to the front (question) or back (answer) of cards. Note that all sounds embedded in
-     * the content will be given the same base categorization of question or answer. Additionally, the result is to be
-     * sorted by the order of appearance on the card.
+     * Stores entries to the filepaths for sounds, categorized as belonging to the front (question) or back (answer) of cards.
+     * Note that all sounds embedded in the content will be given the same base categorization of question or answer.
+     * Additionally, the result is to be sorted by the order of appearance on the card.
      * @param soundDir -- base path to the media files
-     * @param content -- parsed for sound entries, the entries expected in display order
+     * @param tags -- the entries expected in display order
      * @param qa -- the base categorization of the sounds in the content, SoundSide.SOUNDS_QUESTION or SoundSide.SOUNDS_ANSWER
      */
-    public void addSounds(String soundDir, String content, SoundSide qa) {
-        Matcher matcher = SOUND_PATTERN.matcher(content);
-        // While there is matches of the pattern for sound markers
-        while (matcher.find()) {
+    public void addSounds(String soundDir, List<SoundOrVideoTag> tags, SoundSide qa) {
+        for (SoundOrVideoTag tag: tags) {
             // Create appropriate list if needed; list must not be empty so long as code does no check
             if (!mSoundPaths.containsKey(qa)) {
                 mSoundPaths.put(qa, new ArrayList<>(0));
             }
 
-            // Get the sound file name
-            String sound = matcher.group(1);
-
+            String soundPath = getSoundPath(soundDir, tag.getFilename());
             // Construct the sound path and store it
             Timber.d("Adding Sound to side: %s", qa);
-            mSoundPaths.get(qa).add(getSoundPath(soundDir, sound));
+            mSoundPaths.get(qa).add(soundPath);
         }
+    }
+
+
+    /** Extract SoundOrVideoTag instances from content where sound tags are in the form: [sound:filename.mp3] */
+    @CheckResult
+    public static List<SoundOrVideoTag> extractTagsFromLegacyContent(String content) {
+        Matcher matcher = SOUND_PATTERN.matcher(content);
+        // While there is matches of the pattern for sound markers
+        List<SoundOrVideoTag> ret = new ArrayList<>();
+        while (matcher.find()) {
+            // Get the sound file name
+            String sound = matcher.group(1);
+            ret.add(new SoundOrVideoTag(sound));
+        }
+        return ret;
     }
 
     /**
@@ -202,6 +228,7 @@ public class Sound {
      * @param content -- card content to be rendered that may contain embedded audio
      * @return -- the same content but in a format that will render working play buttons when audio was embedded
      */
+    @NonNull
     public static String expandSounds(String soundDir, String content) {
         StringBuilder stringBuilder = new StringBuilder();
         String contentLeft = content;
@@ -312,9 +339,11 @@ public class Sound {
         return mMediaPlayer == null;
     }
 
-    /** Plays a sound without ensuring that the playAllListener will release the audio */
-    @SuppressWarnings({"PMD.EmptyIfStmt","PMD.CollapsibleIfStatements","deprecation"}) // audio API deprecation tracked on github as #5022
-    private void playSoundInternal(String soundPath, OnCompletionListener playAllListener, VideoView videoView, OnErrorListener errorListener) {
+    /**
+     * Plays a sound without ensuring that the playAllListener will release the audio
+     */
+    @SuppressWarnings({"PMD.EmptyIfStmt","PMD.CollapsibleIfStatements"})
+    private void playSoundInternal(String soundPath, @NonNull OnCompletionListener playAllListener, VideoView videoView, OnErrorListener errorListener) {
         Timber.d("Playing %s has listener? %b", soundPath, playAllListener != null);
         Uri soundUri = Uri.parse(soundPath);
         mCurrentAudioUri = soundUri;
@@ -339,8 +368,7 @@ public class Sound {
                 isVideo = (guessedType != null) && guessedType.startsWith("video/");
             }
             // Also check that there is a video thumbnail, as some formats like mp4 can be audio only
-            isVideo = isVideo &&
-                ThumbnailUtils.createVideoThumbnail(soundUri.getPath(), MediaStore.Images.Thumbnails.MINI_KIND) != null;
+            isVideo = isVideo && hasVideoThumbnail(soundUri);
             // No thumbnail: no video after all. (Or maybe not a video we can handle on the specific device.)
             // If video file but no SurfaceHolder provided then ask AbstractFlashcardViewer to provide a VideoView
             // holder
@@ -371,24 +399,49 @@ public class Sound {
                 mMediaPlayer.setOnErrorListener((mp, which, extra) -> errorHandler.onError(mp, which, extra, soundPath));
                 // Setup the MediaPlayer
                 mMediaPlayer.setDataSource(AnkiDroidApp.getInstance().getApplicationContext(), soundUri);
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mMediaPlayer.setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
                 mMediaPlayer.setOnPreparedListener(mp -> {
                     Timber.d("Starting media player");
                     mMediaPlayer.start();
                 });
-                if (playAllListener != null) {
-                    mMediaPlayer.setOnCompletionListener(playAllListener);
-                }
+                mMediaPlayer.setOnCompletionListener(playAllListener);
                 mMediaPlayer.prepareAsync();
                 Timber.d("Requesting audio focus");
-                mAudioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,
-                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+
+                // Set mAudioFocusRequest for API 26 and above.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    mAudioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                            .setOnAudioFocusChangeListener(afChangeListener)
+                            .build();
+                }
+                CompatHelper.getCompat().requestAudioFocus(mAudioManager, afChangeListener, mAudioFocusRequest);
             } catch (Exception e) {
                 Timber.e(e, "playSounds - Error reproducing sound %s", soundPath);
-                releaseSound();
+                if (!errorHandler.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNSUPPORTED, 0, soundPath)) {
+                    Timber.d("Force playing next sound.");
+                    playAllListener.onCompletion(mMediaPlayer);
+                }
             }
         }
     }
+
+
+    private boolean hasVideoThumbnail(@Nullable Uri soundUri) {
+        if (soundUri == null) {
+            return false;
+        }
+        String path = soundUri.getPath();
+        if (path == null) {
+            return false;
+        }
+
+        return CompatHelper.getCompat().hasVideoThumbnail(path);
+    }
+
 
     public String getCurrentAudioUri() {
         if (mCurrentAudioUri == null) {
@@ -400,12 +453,9 @@ public class Sound {
     private static void configureVideo(VideoView videoView, int videoWidth, int videoHeight) {
         // get the display
         Context context = AnkiDroidApp.getInstance().getApplicationContext();
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
         // adjust the size of the video so it fits on the screen
         float videoProportion = (float) videoWidth / (float) videoHeight;
-        Point point = new Point();
-        display.getSize(point);
+        Point point = DisplayUtils.getDisplayDimensions(context);
         int screenWidth = point.x;
         int screenHeight = point.y;
         float screenProportion = (float) screenWidth / (float) screenHeight;
@@ -486,7 +536,6 @@ public class Sound {
     /**
      * Releases the sound.
      */
-    @SuppressWarnings("deprecation") // Tracked on github as #5022
     private void releaseSound() {
         Timber.d("Releasing sounds and abandoning audio focus");
         if (mMediaPlayer != null) {
@@ -497,7 +546,8 @@ public class Sound {
             mMediaPlayer = null;
         }
         if (mAudioManager != null) {
-            mAudioManager.abandonAudioFocus(afChangeListener);
+            // mAudioFocusRequest was initialised for API 26 and above in playSoundInternal().
+            CompatHelper.getCompat().abandonAudioFocus(mAudioManager, afChangeListener, mAudioFocusRequest);
             mAudioManager = null;
         }
     }

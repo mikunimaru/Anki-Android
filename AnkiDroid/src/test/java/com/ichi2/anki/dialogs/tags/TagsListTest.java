@@ -36,35 +36,56 @@ import static org.mockito.Mockito.never;
 public class TagsListTest {
 
 
-    final List<String> SORTED_TAGS = Arrays.asList(
+    static final List<String> SORTED_TAGS = Arrays.asList(
             "colors",
             "faces",
             "programming",
             "cars",
+            "electrical",
             "flags",
             "learn",
-            "names"
+            "meat",
+            "names",
+            "playground"
     );
 
-    final List<String> TAGS = Arrays.asList(
+    static final List<String> TAGS = Arrays.asList(
             "programming",
             "learn",
             "names",
             "faces",
             "cars",
             "colors",
-            "flags"
+            "flags",
+            "meat",
+            "playground",
+            "electrical"
     );
 
 
-    final List<String> CHECKED_TAGS = Arrays.asList(
+    static final List<String> CHECKED_TAGS = Arrays.asList(
             "programming",
             "faces",
             "colors"
     );
 
 
-    TagsList TAGS_LIST;
+    static final List<String> UNCHECKED_TAGS = Arrays.asList(
+            "electrical",
+            "meat",
+            "programming",
+            "faces"
+    );
+
+
+    static final List<String> INDETERMINATE_TAGS = Arrays.asList(
+            "programming",
+            "faces"
+    );
+
+
+    TagsList mTagsList;
+    TagsList mTagsListWithIndeterminate;
 
 
     private static <E> List<E> join(List<E> l1, List<E> l2) {
@@ -89,6 +110,15 @@ public class TagsListTest {
     }
 
 
+    private static <E> List<E> minus(List<E> l1, List<E> el) {
+        final List<E> res = new ArrayList<>(l1);
+        for (E e : el) {
+            res.remove(e);
+        }
+        return res;
+    }
+
+
     private static <E> void assertSameElementsIgnoreOrder(Collection<E> l1, Collection<E> l2) {
         assertSameElementsIgnoreOrder(null, l1, l2);
     }
@@ -102,15 +132,18 @@ public class TagsListTest {
 
     @Before
     public void setUp() throws Exception {
-        TAGS_LIST = new TagsList(TAGS, CHECKED_TAGS);
+        mTagsList = new TagsList(TAGS, CHECKED_TAGS);
+        mTagsListWithIndeterminate = new TagsList(TAGS, CHECKED_TAGS, UNCHECKED_TAGS);
     }
 
 
     @Test
     public void test_constructor_will_remove_dups() {
+        List<String> allTags = Arrays.asList("a", "b", "a");
+        List<String> checkedTags = Arrays.asList("b", "b", "b");
         TagsList list = new TagsList(
-                Arrays.asList("a", "b", "a"),
-                Arrays.asList("b", "b", "b")
+                allTags,
+                checkedTags
         );
 
         assertEquals("All tags list should not contain any duplicates",
@@ -121,10 +154,32 @@ public class TagsListTest {
 
 
     @Test
-    public void test_constructor_will_ignore_casing() {
+    public void test_constructor_will_remove_dups_unchecked() {
+        List<String> allTags = Arrays.asList("a", "b", "a", "c", "c", "d");
+        List<String> checkedTags = Arrays.asList("b", "b", "b");
+        List<String> uncheckedTags = Arrays.asList("c", "c", "d");
         TagsList list = new TagsList(
-                Arrays.asList("aA", "bb", "aa"),
-                Arrays.asList("bb", "Bb", "bB")
+                allTags,
+                checkedTags,
+                uncheckedTags
+        );
+
+        assertEquals("All tags list should not contain any duplicates",
+                Arrays.asList("a", "b", "c", "d"), list.copyOfAllTagList());
+        assertEquals("Checked tags list should not contain any duplicates",
+                Arrays.asList("b"), list.copyOfCheckedTagList());
+        assertEquals("indeterminate tags list should be empty",
+                Arrays.asList(), list.copyOfIndeterminateTagList());
+    }
+
+
+    @Test
+    public void test_constructor_will_ignore_casing() {
+        List<String> allTags = Arrays.asList("aA", "bb", "aa");
+        List<String> checkedTags = Arrays.asList("bb", "Bb", "bB");
+        TagsList list = new TagsList(
+                allTags,
+                checkedTags
         );
 
         assertEquals("All tags list should not contain any duplicates (case insensitive)",
@@ -134,10 +189,32 @@ public class TagsListTest {
     }
 
     @Test
-    public void test_constructor_will_add_checked_to_all() {
+    public void test_constructor_will_ignore_casing_unchecked() {
+        List<String> allTags = Arrays.asList("aA", "bb", "aa", "cc", "dd");
+        List<String> checkedTags = Arrays.asList("bb", "Bb", "bB", "dd", "ff");
+        List<String> uncheckedTags = Arrays.asList("BB", "cC", "cC", "dD", "CC");
         TagsList list = new TagsList(
-                Arrays.asList("aA", "bb", "aa"),
-                Arrays.asList("bb", "Bb", "bB", "cc")
+                allTags,
+                checkedTags,
+                uncheckedTags
+        );
+
+        assertEquals("All tags list should not contain any duplicates (case insensitive)",
+                Arrays.asList("aA", "bb", "cc", "dd", "ff"), list.copyOfAllTagList());
+        assertEquals("Checked tags list should not contain any duplicates  (case insensitive)",
+                Arrays.asList("ff"), list.copyOfCheckedTagList());
+        assertEquals("Checked tags list should not contain any duplicates  (case insensitive)\n" +
+                "and IndeterminateTagList is correct",
+                Arrays.asList("bb","dd"), list.copyOfIndeterminateTagList());
+    }
+
+    @Test
+    public void test_constructor_will_add_checked_to_all() {
+        List<String> allTags = Arrays.asList("aA", "bb", "aa");
+        List<String> checkedTags = Arrays.asList("bb", "Bb", "bB", "cc");
+        TagsList list = new TagsList(
+                allTags,
+                checkedTags
         );
 
         assertEquals("Extra tags in checked not found in all tags, must be added to all tags list",
@@ -148,117 +225,241 @@ public class TagsListTest {
 
 
     @Test
+    public void test_constructor_will_add_checked_and_unchecked_to_all() {
+        List<String> allTags = Arrays.asList("aA", "bb", "aa");
+        List<String> checkedTags = Arrays.asList("bb", "Bb", "bB", "Cc", "zz");
+        List<String> uncheckedTags = Arrays.asList("BB", "cC", "cC", "dD", "CC");
+        TagsList list = new TagsList(
+                allTags,
+                checkedTags,
+                uncheckedTags
+        );
+
+        assertEquals("Extra tags in checked not found in all tags, must be added to all tags list",
+                Arrays.asList("aA", "bb", "Cc", "zz", "dD"), list.copyOfAllTagList());
+        assertEquals("Extra tags in checked not found in all tags, must be found when retrieving checked tag list",
+                Arrays.asList("zz"), list.copyOfCheckedTagList());
+        assertEquals(Arrays.asList("bb", "Cc"), list.copyOfIndeterminateTagList());
+    }
+
+
+    @Test
     public void test_isChecked_index() {
-        assertTrue("Tag at index 0 should be checked", TAGS_LIST.isChecked(0));
-        assertTrue("Tag at index 3 should be checked", TAGS_LIST.isChecked(3));
-        assertFalse("Tag at index 1 should be unchecked", TAGS_LIST.isChecked(1));
-        assertFalse("Tag at index 6 should be unchecked", TAGS_LIST.isChecked(6));
+        assertTrue("Tag at index 0 should be checked", mTagsList.isChecked(0));
+        assertTrue("Tag at index 3 should be checked", mTagsList.isChecked(3));
+        assertFalse("Tag at index 1 should be unchecked", mTagsList.isChecked(1));
+        assertFalse("Tag at index 6 should be unchecked", mTagsList.isChecked(6));
+
+        // indeterminate tags
+        assertFalse("Tag at index 0 should be unchecked", mTagsListWithIndeterminate.isChecked(0));
+        assertFalse("Tag at index 3 should be unchecked", mTagsListWithIndeterminate.isChecked(3));
     }
 
 
     @Test
     public void test_isChecked_object() {
-        assertTrue("'programming' tag should be checked", TAGS_LIST.isChecked("programming"));
-        assertTrue("'faces' tag should be checked", TAGS_LIST.isChecked("faces"));
-        assertFalse("'cars' tag should be unchecked", TAGS_LIST.isChecked("cars"));
-        assertFalse("'flags' tag should be unchecked", TAGS_LIST.isChecked("flags"));
+        assertTrue("'programming' tag should be checked", mTagsList.isChecked("programming"));
+        assertTrue("'faces' tag should be checked", mTagsList.isChecked("faces"));
+        assertFalse("'cars' tag should be unchecked", mTagsList.isChecked("cars"));
+        assertFalse("'flags' tag should be unchecked", mTagsList.isChecked("flags"));
+
+        // indeterminate tags
+        assertFalse("Tag at index 'programming' should be unchecked", mTagsListWithIndeterminate.isChecked("programming"));
+        assertFalse("Tag at index 'faces' should be unchecked", mTagsListWithIndeterminate.isChecked("faces"));
+    }
+
+
+    @Test
+    public void test_isIndeterminate_index() {
+        assertFalse("Tag at index 0 should be checked (not indeterminate)", mTagsList.isIndeterminate(0));
+        assertFalse("Tag at index 3 should be checked (not indeterminate)", mTagsList.isIndeterminate(3));
+        assertFalse("Tag at index 1 should be unchecked (not indeterminate)", mTagsList.isIndeterminate(1));
+        assertFalse("Tag at index 6 should be unchecked (not indeterminate)", mTagsList.isIndeterminate(6));
+
+
+        assertTrue("Tag at index 0 should be indeterminate", mTagsListWithIndeterminate.isIndeterminate(0));
+        assertTrue("Tag at index 3 should be indeterminate", mTagsListWithIndeterminate.isIndeterminate(3));
+        assertFalse("Tag at index 1 should be unchecked (not indeterminate)", mTagsListWithIndeterminate.isIndeterminate(1));
+        assertFalse("Tag at index 6 should be unchecked (not indeterminate)", mTagsListWithIndeterminate.isIndeterminate(6));
+        assertFalse("Tag at index 6 should be unchecked (not indeterminate)", mTagsListWithIndeterminate.isIndeterminate(5));
+    }
+
+
+    @Test
+    public void test_isIndeterminate_object() {
+        assertFalse("'programming' tag should be checked (not indeterminate)", mTagsList.isIndeterminate("programming"));
+        assertFalse("'faces' tag should be checked (not indeterminate)", mTagsList.isIndeterminate("faces"));
+        assertFalse("'cars' tag should be unchecked (not indeterminate)", mTagsList.isIndeterminate("cars"));
+        assertFalse("'flags' tag should be unchecked (not indeterminate)", mTagsList.isIndeterminate("flags"));
+
+        assertTrue("Tag 'programming' should be indeterminate", mTagsListWithIndeterminate.isIndeterminate("programming"));
+        assertTrue("Tag 'faces' should be indeterminate", mTagsListWithIndeterminate.isIndeterminate("faces"));
+        assertFalse("Tag 'cars' should be unchecked (not indeterminate)", mTagsListWithIndeterminate.isIndeterminate("cars"));
+        assertFalse("Tag 'flags' should be unchecked (not indeterminate)", mTagsListWithIndeterminate.isIndeterminate("flags"));
     }
 
 
     @Test
     public void test_add() {
         assertTrue("Adding 'anki' tag should return true, as the 'anki' is a new tag",
-                TAGS_LIST.add("anki"));
+                mTagsList.add("anki"));
         assertFalse("Adding 'colors' tag should return false, as the 'colors' is a already existing tag",
-                TAGS_LIST.add("colors"));
+                mTagsList.add("colors"));
 
         assertEquals("The newly added 'anki' tag should be found when retrieving all tags list",
-                join(TAGS, "anki"), TAGS_LIST.copyOfAllTagList());
+                join(TAGS, "anki"), mTagsList.copyOfAllTagList());
         assertSameElementsIgnoreOrder("Adding operations should have nothing to do with the checked status of tags",
-                CHECKED_TAGS, TAGS_LIST.copyOfCheckedTagList());
+                CHECKED_TAGS, mTagsList.copyOfCheckedTagList());
     }
 
 
     @Test
     public void test_check() {
         assertFalse("Attempting to check tag 'anki' should return false, as 'anki' is not found in all tags list",
-                TAGS_LIST.check("anki")); //not in the list
+                mTagsList.check("anki")); //not in the list
         assertFalse("Attempting to check tag 'colors' should return false, as 'colors' is already checked",
-                TAGS_LIST.check("colors")); // already checked
+                mTagsList.check("colors")); // already checked
         assertTrue("Attempting to check tag 'flags' should return true, as 'flags' is found in all tags and is not already checked",
-                TAGS_LIST.check("flags"));
+                mTagsList.check("flags"));
 
 
         assertEquals("Changing the status of tags to be checked should have noting to do with all tag list",
-                TAGS, TAGS_LIST.copyOfAllTagList());//no change
+                TAGS, mTagsList.copyOfAllTagList());//no change
         assertSameElementsIgnoreOrder("The checked 'flags' tag should be found when retrieving list of checked tag",
-                join(CHECKED_TAGS, "flags"), TAGS_LIST.copyOfCheckedTagList());
+                join(CHECKED_TAGS, "flags"), mTagsList.copyOfCheckedTagList());
+    }
+
+
+    @Test
+    public void test_check_with_indeterminate_tags_list() {
+        assertTrue("Attempting to check tag 'faces' should return true, as 'faces' is found in all tags and it have indeterminate state",
+                mTagsListWithIndeterminate.check("faces"));
+
+        assertEquals("Changing the status of tags to be checked should have noting to do with all tag list",
+                TAGS, mTagsListWithIndeterminate.copyOfAllTagList());
+        assertTrue("The checked 'faces' tag should be found when retrieving list of checked tag",
+                mTagsListWithIndeterminate.copyOfCheckedTagList().contains("faces"));
+        assertFalse("The checked 'faces' tag should not be found when retrieving list of indeterminate tags",
+                mTagsListWithIndeterminate.copyOfIndeterminateTagList().contains("faces"));
     }
 
 
     @Test
     public void test_uncheck() {
         assertFalse("Attempting to uncheck tag 'anki' should return false, as 'anki' is not found in all tags list",
-                TAGS_LIST.uncheck("anki")); //not in the list
+                mTagsList.uncheck("anki")); //not in the list
         assertFalse("Attempting to uncheck tag 'flags' should return false, as 'flags' is already unchecked",
-                TAGS_LIST.uncheck("flags")); // already unchecked
+                mTagsList.uncheck("flags")); // already unchecked
         assertTrue("Attempting to uncheck tag 'colors' should return true, as 'colors' is found in all tags and is checked",
-                TAGS_LIST.uncheck("colors"));
+                mTagsList.uncheck("colors"));
 
 
         assertEquals("Changing the status of tags to be unchecked should have noting to do with all tag list",
-                TAGS, TAGS_LIST.copyOfAllTagList());//no change
+                TAGS, mTagsList.copyOfAllTagList());//no change
         assertSameElementsIgnoreOrder("The unchecked 'colors' tag should be not be found when retrieving list of checked tag",
-                minus(CHECKED_TAGS, "colors"), TAGS_LIST.copyOfCheckedTagList());
+                minus(CHECKED_TAGS, "colors"), mTagsList.copyOfCheckedTagList());
+    }
+
+
+    @Test
+    public void test_uncheck_indeterminate_tags_list() {
+        assertTrue("Attempting to uncheck tag 'programming' should return true, as 'programming' is found in all tags and it have indeterminate state",
+                mTagsListWithIndeterminate.uncheck("programming"));
+
+
+        assertEquals("Changing the status of tags to be checked should have noting to do with all tag list",
+                TAGS, mTagsListWithIndeterminate.copyOfAllTagList());
+        assertFalse("Changing from indeterminate to unchecked should not affect checked tags",
+                mTagsListWithIndeterminate.copyOfCheckedTagList().contains("programming"));
+        assertFalse("The checked 'programming' tag should not be found when retrieving list of indeterminate tags",
+                mTagsListWithIndeterminate.copyOfIndeterminateTagList().contains("programming"));
     }
 
 
     @Test
     public void test_toggleAllCheckedStatuses() {
-        assertEquals(TAGS, TAGS_LIST.copyOfAllTagList());
-        assertSameElementsIgnoreOrder(CHECKED_TAGS, TAGS_LIST.copyOfCheckedTagList());
+        assertEquals(TAGS, mTagsList.copyOfAllTagList());
+        assertSameElementsIgnoreOrder(CHECKED_TAGS, mTagsList.copyOfCheckedTagList());
 
-        assertTrue(TAGS_LIST.toggleAllCheckedStatuses());
+        assertTrue(mTagsList.toggleAllCheckedStatuses());
 
-        assertEquals(TAGS, TAGS_LIST.copyOfAllTagList());
-        assertSameElementsIgnoreOrder(TAGS, TAGS_LIST.copyOfCheckedTagList());
+        assertEquals(TAGS, mTagsList.copyOfAllTagList());
+        assertSameElementsIgnoreOrder(TAGS, mTagsList.copyOfCheckedTagList());
 
-        assertTrue(TAGS_LIST.toggleAllCheckedStatuses());
+        assertTrue(mTagsList.toggleAllCheckedStatuses());
 
-        assertEquals(TAGS, TAGS_LIST.copyOfAllTagList());
-        assertSameElementsIgnoreOrder(new ArrayList<>(), TAGS_LIST.copyOfCheckedTagList());
+        assertEquals(TAGS, mTagsList.copyOfAllTagList());
+        assertSameElementsIgnoreOrder(new ArrayList<>(), mTagsList.copyOfCheckedTagList());
+    }
+
+    @Test
+    public void test_toggleAllCheckedStatuses_indeterminate() {
+        assertEquals(TAGS, mTagsListWithIndeterminate.copyOfAllTagList());
+        assertSameElementsIgnoreOrder(
+                minus(CHECKED_TAGS, INDETERMINATE_TAGS),
+                mTagsListWithIndeterminate.copyOfCheckedTagList());
+
+        assertNotEquals(Collections.emptyList(), mTagsListWithIndeterminate.copyOfIndeterminateTagList());
+
+        assertTrue(mTagsListWithIndeterminate.toggleAllCheckedStatuses());
+
+        assertEquals(TAGS, mTagsListWithIndeterminate.copyOfAllTagList());
+        assertSameElementsIgnoreOrder(TAGS, mTagsListWithIndeterminate.copyOfCheckedTagList());
+        assertEquals(Collections.emptyList(), mTagsListWithIndeterminate.copyOfIndeterminateTagList());
+
+        assertTrue(mTagsListWithIndeterminate.toggleAllCheckedStatuses());
+
+        assertEquals(TAGS, mTagsListWithIndeterminate.copyOfAllTagList());
+        assertSameElementsIgnoreOrder(new ArrayList<>(), mTagsListWithIndeterminate.copyOfCheckedTagList());
+        assertEquals(Collections.emptyList(), mTagsListWithIndeterminate.copyOfIndeterminateTagList());
     }
 
 
     @Test
     public void test_size_if_checked_have_no_extra_items_not_found_in_allTags() {
-        assertEquals(TAGS.size(), TAGS_LIST.size());
+        assertEquals(TAGS.size(), mTagsList.size());
+        assertEquals(TAGS.size(), mTagsListWithIndeterminate.size());
     }
 
     @Test
     public void test_size_if_checked_have_extra_items_not_found_in_allTags() {
-        TAGS_LIST = new TagsList(TAGS, join(CHECKED_TAGS, "NEW"));
-        assertEquals(TAGS.size() + 1, TAGS_LIST.size());
+        mTagsList = new TagsList(TAGS, join(CHECKED_TAGS, "NEW"));
+        assertEquals(TAGS.size() + 1, mTagsList.size());
+    }
+
+
+    @Test
+    public void test_size_if_unchecked_and_checked_have_extra_items_not_found_in_allTags() {
+        mTagsList = new TagsList(TAGS, join(CHECKED_TAGS, "NEW"), join(UNCHECKED_TAGS, "ALSO_NEW"));
+        assertEquals(TAGS.size() + 2, mTagsList.size());
     }
 
 
     @Test
     public void test_sort() {
-        assertEquals(TAGS, TAGS_LIST.copyOfAllTagList());
-        TAGS_LIST.sort();
+        assertEquals(TAGS, mTagsList.copyOfAllTagList());
+        mTagsList.sort();
         assertEquals("Calling #sort on TagsList should result on sorting all tags",
-                SORTED_TAGS, TAGS_LIST.copyOfAllTagList());
+                SORTED_TAGS, mTagsList.copyOfAllTagList());
     }
 
+
+    @Test
+    public void test_sort_with_indeterminate_tags() {
+        assertEquals(TAGS, mTagsListWithIndeterminate.copyOfAllTagList());
+        mTagsListWithIndeterminate.sort();
+        assertEquals("Calling #sort on TagsList should result on sorting all tags",
+                SORTED_TAGS, mTagsListWithIndeterminate.copyOfAllTagList());
+    }
 
     @Test //#8807
     public void test_sort_will_not_call_collectionsSort() {
         try (MockedStatic<Collections> MockCollection = mockStatic(Collections.class)) {
 
-            assertEquals(TAGS, TAGS_LIST.copyOfAllTagList());
-            TAGS_LIST.sort();
+            assertEquals(TAGS, mTagsList.copyOfAllTagList());
+            mTagsList.sort();
             assertEquals("Calling #sort on TagsList should result on sorting all tags",
-                    SORTED_TAGS, TAGS_LIST.copyOfAllTagList());
+                    SORTED_TAGS, mTagsList.copyOfAllTagList());
 
             MockCollection.verify(() -> Collections.sort(any(), any()), never());
         }

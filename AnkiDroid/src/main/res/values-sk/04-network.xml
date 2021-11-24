@@ -60,6 +60,7 @@
     <string name="alert_logging_message">Prebieha prihlasovanie&#8230;</string>
     <string name="invalid_username_password">Neplatná e-mailová adresa alebo heslo</string>
     <string name="reset_password">Obnoviť heslo</string>
+    <string name="lost_mail_instructions">Forgot Email?</string>
     <!-- AndroidManifest.xml -->
     <string name="preferences_title">Preferencie</string>
     <string name="deckpreferences_title">Možnosti pre XXX</string>
@@ -121,5 +122,5 @@
     <!-- Deck Picker Sync Icon -->
     <string name="sync_menu_title_full_sync">Úplná synchronizácia</string>
     <string name="sync_menu_title_no_account">Synchronizácia (prihlásiť)</string>
-    <string name="sync_error_unknown_host_readable">Could not connect to AnkiWeb. Is your internet working?\n\n%s</string>
+    <string name="sync_error_unknown_host_readable">Nepodarilo sa pripojiť k AnkiWeb. Funguje vaše internetové pripojenie?\n\n%s</string>
 </resources>

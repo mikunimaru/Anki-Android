@@ -53,6 +53,7 @@
     <string name="no_tts_available_message">Geen tekst-naar-spraak taal beschikbaar</string>
     <string name="initializing_tts">TTS initialiseren&#8230;</string>
     <string name="tts_no_tts">Niet spreken</string>
+    <string name="unused_strings">\n\nUnused files:\n</string>
     <string-array name="about_content">
         <item><![CDATA[<h2>%1$s: <br/> Flashcards voor Android</h2>AnkiDroid is een flashcard-app die volledig compatibel met de desktopsoftware <a href=\"%2$s\"> Anki</a>. Zowel in AnkiDroid als in Anki voor desktop kunt u kaarten maken, downloaden en leren en deze gemakkelijk synchroniseren met AnkiWeb.]]></item>
         <item><![CDATA[Om AnkiDroid beter te helpen maken, gelieve de bugs te rapporteren in <a href=\"%1$s\"> de issue tracker</a>; nieuwe ideeën voor functionaliteiten zijn ook zeer welkom. U kunt ook antwoorden vinden op <a href=\"%2$s\"> de wiki</a> of een discussie starten op <a href=\"%3$s\"> het forum</a>.]]></item>
@@ -248,4 +249,6 @@
     sched V2. For V1, it was counting the number of repetitions of cards in learning. This approximation is acceptable
     for the sake of simplicity and because V1 will leave.-->
     <string name="deck_picker_counts">Open the deck overview page containing the number of cards to see today.</string>
+    <string name="import_deck_package">Deck package (.apkg)</string>
+    <string name="import_collection_package">Collection package (.colpkg)</string>
 </resources>

@@ -1,8 +1,23 @@
+/*
+ *  Copyright (c) 2020 Arthur Milchior <arthur@milchior.fr>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ichi2.libanki;
 
 import com.ichi2.anki.RobolectricTest;
-import com.ichi2.anki.exception.DeckRenameException;
-import com.ichi2.anki.exception.FilteredAncestor;
+import com.ichi2.libanki.backend.exception.DeckRenameException;
 import com.ichi2.utils.JSONObject;
 
 import org.apache.http.util.Asserts;
@@ -13,6 +28,8 @@ import java.util.List;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import static com.ichi2.libanki.Decks.CURRENT_DECK;
+import static com.ichi2.testutils.AnkiAssert.assertDoesNotThrow;
 import static com.ichi2.testutils.AnkiAssert.assertEqualsArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -23,8 +40,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.isNotNull;
-import static org.mockito.ArgumentMatchers.isNull;
 
 @RunWith(AndroidJUnit4.class)
 public class DecksTest extends RobolectricTest {
@@ -34,25 +49,13 @@ public class DecksTest extends RobolectricTest {
             "cmxieunwoogyxsctnjmv::abcdefgh::ZYXW",
             "cmxieunwoogyxsctnjmv::INSBGDS",
     };
-
-    @Test
-    public void duplicateName() {
-        Decks decks = getCol().getDecks();
-        decks.load("{\"2\": {\"name\": \"A\", \"id\":2}, \"3\": {\"name\": \"A\", \"id\":3}, \"4\": {\"name\": \"A::B\", \"id\":4}}", "{}");
-        decks.checkIntegrity();
-        JSONObject deckA = decks.byName("A");
-        Asserts.notNull(deckA, "A deck with name \"A\" should still exists");
-        assertThat("A deck with name \"A\" should have name \"A\"", deckA.getString("name"), is("A"));
-        JSONObject deckAPlus = decks.byName("A+");
-        Asserts.notNull(deckAPlus, "A deck with name \"A+\" should still exists");
-    }
     @Test
     public void ensureDeckList() {
-        Decks decks = getCol().getDecks();
+        DeckManager decks = getCol().getDecks();
         for (String deckName: TEST_DECKS) {
             addDeck(deckName);
         }
-        JSONObject brokenDeck = decks.byName("cmxieunwoogyxsctnjmv::INSBGDS");
+        Deck brokenDeck = decks.byName("cmxieunwoogyxsctnjmv::INSBGDS");
         Asserts.notNull(brokenDeck,"We should get deck with given name");
         // Changing the case. That could exists in an old collection or during sync.
         brokenDeck.put("name", "CMXIEUNWOOGYXSCTNJMV::INSBGDS");
@@ -80,9 +83,9 @@ public class DecksTest extends RobolectricTest {
      ******************/
 
     @Test
-    public void test_basic() throws FilteredAncestor {
+    public void test_basic() {
         Collection col = getCol();
-        Decks decks = col.getDecks();
+        DeckManager decks = col.getDecks();
         // we start with a standard col
         assertEquals(1, decks.allSortedNames().size());
         // it should have an id of 1
@@ -127,7 +130,7 @@ public class DecksTest extends RobolectricTest {
 
 
     @Test
-    public void test_remove() throws FilteredAncestor {
+    public void test_remove() {
         Collection col = getCol();
         // create a new col, and add a note/card to it
         long deck1 = addDeck("deck1");
@@ -146,12 +149,12 @@ public class DecksTest extends RobolectricTest {
 
 
     @Test
-    public void test_rename() throws DeckRenameException, FilteredAncestor {
+    public void test_rename() throws DeckRenameException {
         Collection col = getCol();
         long id = addDeck("hello::world");
         // should be able to rename into a completely different branch, creating
         // parents as necessary
-        Decks decks = col.getDecks();
+        DeckManager decks = col.getDecks();
         decks.rename(decks.get(id), "foo::bar");
         List<String> names = decks.allSortedNames();
         assertTrue(names.contains("foo"));
@@ -235,20 +238,20 @@ public class DecksTest extends RobolectricTest {
      */
 
     @Test
-    public void curDeckIsLong() throws FilteredAncestor {
+    public void curDeckIsLong() {
         // Regression for #8092
         Collection col = getCol();
-        Decks decks = col.getDecks();
+        DeckManager decks = col.getDecks();
         long id = addDeck("test");
         decks.select(id);
-        assertThat("curDeck should be saved as a long. A deck id.", col.getConf().get("curDeck") instanceof Long);
+        assertDoesNotThrow("curDeck should be saved as a long. A deck id.", () -> col.get_config_long(CURRENT_DECK));
     }
 
 
     @Test
     public void isDynStd() {
         Collection col = getCol();
-        Decks decks = col.getDecks();
+        DeckManager decks = col.getDecks();
         long filteredId = addDynamicDeck("filtered");
         Deck filtered = decks.get(filteredId);
         long deckId = addDeck("deck");
@@ -268,58 +271,9 @@ public class DecksTest extends RobolectricTest {
     }
 
     @Test
-    public void testEnsureParents() throws FilteredAncestor {
-        Collection col = getCol();
-        Decks decks = col.getDecks();
-        addDeck("test");
-        String subsubdeck_name = decks._ensureParents("  tESt :: sub :: subdeck");
-        assertEquals("test::sub:: subdeck", subsubdeck_name);// Only parents are renamed, not the last deck.
-        assertNotNull(decks.byName("test::sub"));
-        assertNull(decks.byName("test::sub:: subdeck"));
-        assertNull(decks.byName("  test :: sub :: subdeck"));
-        assertNull(decks.byName("  test :: sub "));
-
-        decks.newDyn("filtered");
-        assertThrows(FilteredAncestor.class, () -> decks._ensureParents("filtered:: sub :: subdeck"));
-    }
-
-    @Test
-    public void descendantOfFiltered() throws FilteredAncestor {
-        Collection col = getCol();
-        Decks decks = col.getDecks();
-        long filtered_id = decks.newDyn("filtered");
-        assertThrows(FilteredAncestor.class,  () -> decks.id("filtered::subdeck::subsubdeck"));
-
-        Long subdeck_id = decks.id_safe("filtered::subdeck::subsubdeck");
-        Deck subdeck = decks.get(subdeck_id);
-        assertEquals("filtered'::subdeck::subsubdeck", subdeck.getString("name"));
-    }
-
-    @Test
-    public void testEnsureParentsNotFiltered() throws FilteredAncestor {
-        Collection col = getCol();
-        Decks decks = col.getDecks();
-        addDeck("test");
-        String subsubdeck_name = decks._ensureParentsNotFiltered("  tESt :: sub :: subdeck");
-        assertEquals("test::sub:: subdeck", subsubdeck_name);// Only parents are renamed, not the last deck.
-        assertNotNull(decks.byName("test::sub"));
-        assertNull(decks.byName("test::sub:: subdeck"));
-        assertNull(decks.byName("  test :: sub :: subdeck"));
-        assertNull(decks.byName("  test :: sub "));
-
-        decks.newDyn("filtered");
-        String filtered_subdeck_name = decks._ensureParentsNotFiltered("filtered:: sub :: subdeck");
-        assertEquals("filtered'::sub:: subdeck", filtered_subdeck_name);// Only parents are renamed, not the last deck.
-        assertNotNull(decks.byName("filtered'::sub"));
-        assertNotNull(decks.byName("filtered'"));
-        assertNull(decks.byName("filtered::sub:: subdeck"));
-        assertNull(decks.byName("filtered::sub"));
-    }
-
-    @Test
     public void confForDidReturnsDefaultIfNotFound() {
         // https://github.com/ankitects/anki/commit/94d369db18c2a6ac3b0614498d8abcc7db538633
-        Decks decks = getCol().getDecks();
+        DeckManager decks = getCol().getDecks();
 
         Deck d = decks.all().get(0);
         d.put("conf", 12L);

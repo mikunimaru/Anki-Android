@@ -31,6 +31,7 @@ import com.ichi2.anki.dialogs.ConfirmationDialog;
 import com.ichi2.anki.dialogs.LocaleSelectionDialog;
 import com.ichi2.anki.dialogs.ModelEditorContextMenu;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
+import com.ichi2.anki.servicelayer.LanguageHintService;
 import com.ichi2.async.CollectionTask;
 import com.ichi2.async.TaskListenerWithContext;
 import com.ichi2.async.TaskManager;
@@ -143,8 +144,8 @@ public class ModelFieldEditor extends AnkiActivity implements LocaleSelectionDia
      * Containing clickable labels for the fields
      */
     private void createfieldLabels() {
-        ArrayAdapter<String> mFieldLabelAdapter = new ArrayAdapter<>(this, R.layout.model_field_editor_list_item, mFieldLabels);
-        mFieldLabelView.setAdapter(mFieldLabelAdapter);
+        ArrayAdapter<String> fieldLabelAdapter = new ArrayAdapter<>(this, R.layout.model_field_editor_list_item, mFieldLabels);
+        mFieldLabelView.setAdapter(fieldLabelAdapter);
         mFieldLabelView.setOnItemClickListener((parent, view, position, id) -> {
             mContextMenu = ModelEditorContextMenu.newInstance(mFieldLabels.get(position), mContextMenuListener);
             showDialogFragment(mContextMenu);
@@ -172,11 +173,11 @@ public class ModelFieldEditor extends AnkiActivity implements LocaleSelectionDia
 
     /**
      * Clean the input field or explain why it's rejected
-     * @param mFieldNameInput Editor to get the input
+     * @param fieldNameInput Editor to get the input
      * @return The value to use, or null in case of failure
      */
-    private @Nullable String _uniqueName(@NonNull EditText mFieldNameInput) {
-        String input = mFieldNameInput.getText().toString()
+    private @Nullable String _uniqueName(@NonNull EditText fieldNameInput) {
+        String input = fieldNameInput.getText().toString()
                 .replaceAll("[\\n\\r{}:\"]", "");
         // The number of #, ^, /, space, tab, starting the input
         int offset;
@@ -601,11 +602,7 @@ public class ModelFieldEditor extends AnkiActivity implements LocaleSelectionDia
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void addFieldLocaleHint(@NonNull Locale selectedLocale) {
-        String input = selectedLocale.toLanguageTag();
-        JSONObject field = (JSONObject) mNoteFields.get(mCurrentPos);
-        field.put("ad-hint-locale", input);
-        mCol.getModels().save();
-        Timber.i("Set field locale to %s", selectedLocale);
+        LanguageHintService.setLanguageHintForField(getCol().getModels(), mMod, mCurrentPos, selectedLocale);
         String format = getString(R.string.model_field_editor_language_hint_dialog_success_result, selectedLocale.getDisplayName());
         UIUtils.showSimpleSnackbar(this, format, true);
     }

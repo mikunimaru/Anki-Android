@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -40,6 +39,7 @@ import com.ichi2.anki.multimediacard.language.LanguageListerBeolingus;
 import com.ichi2.anki.runtimetools.TaskOperations;
 import com.ichi2.anki.web.HttpFetcher;
 import com.ichi2.async.Connection;
+import com.ichi2.themes.Themes;
 import com.ichi2.utils.AdaptionUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -91,6 +91,7 @@ public class LoadPronounciationActivity extends Activity implements OnCancelList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Themes.disableXiaomiForceDarkMode(this);
 
         if (AdaptionUtil.isUserATestClient()) {
             finishCancel();
@@ -126,9 +127,9 @@ public class LoadPronounciationActivity extends Activity implements OnCancelList
         buttonLoadPronunciation.setText(gtxt(R.string.multimedia_editor_pron_load));
         mMainLayout.addView(buttonLoadPronunciation);
         buttonLoadPronunciation.setOnClickListener(this::onLoadPronunciation);
-        Button mSaveButton = new Button(this);
-        mSaveButton.setText("Save");
-        mSaveButton.setOnClickListener(v -> { });
+        Button saveButton = new Button(this);
+        saveButton.setText("Save");
+        saveButton.setOnClickListener(v -> { });
         mActivity = this;
         mStopped = false;
     }
@@ -162,6 +163,7 @@ public class LoadPronounciationActivity extends Activity implements OnCancelList
     /**
      * @param v Start of the story.
      */
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     protected void onLoadPronunciation(View v) {
         if(!Connection.isOnline()) {
             showToast(gtxt(R.string.network_no_connection));
@@ -191,7 +193,8 @@ public class LoadPronounciationActivity extends Activity implements OnCancelList
      * @author zaur This class is used two times. First time from Beolingus it requests a page with the word
      *         translation. Second time it loads a page with the link to mp3 pronunciation file.
      */
-    private class BackgroundPost extends AsyncTask<Void, Void, String> {
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
+    private class BackgroundPost extends android.os.AsyncTask<Void, Void, String> {
 
         private String mAddress;
 
@@ -244,7 +247,8 @@ public class LoadPronounciationActivity extends Activity implements OnCancelList
     /**
      * @author zaur This is to load finally the MP3 file with pronunciation.
      */
-    private class DownloadFileTask extends AsyncTask<Void, Void, String> {
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
+    private class DownloadFileTask extends android.os.AsyncTask<Void, Void, String> {
 
         private String mAddress;
 
@@ -268,6 +272,7 @@ public class LoadPronounciationActivity extends Activity implements OnCancelList
     }
 
 
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     protected void processPostFinished(BackgroundPost post, String result) {
 
         if (mStopped) {
@@ -434,8 +439,9 @@ public class LoadPronounciationActivity extends Activity implements OnCancelList
         finish();
     }
 
+    @SuppressWarnings("deprecation") // #7108: AsyncTask
     private void stopAllTasks() {
-        AsyncTask<?, ?, ?> t = mPostTranslation;
+        android.os.AsyncTask<?, ?, ?> t = mPostTranslation;
         TaskOperations.stopTaskGracefully(t);
         t = mPostPronunciation;
         TaskOperations.stopTaskGracefully(t);

@@ -135,6 +135,7 @@
     <string name="card_editor_reset_card">Thiết lập lại quá trình học</string>
     <string name="card_editor_reschedule_card" comment="Action to reschedule a card">Lên lịch lại</string>
     <string name="card_editor_preview_card" comment="Button offering to preview some card(s)">Xem trước</string>
+    <string name="preview_progress_bar_text" comment="What card we are on out of how many in card previewer progress bar">%1$d of %2$d</string>
     <string name="error_insufficient_memory">Không thể tiến hành vì không đủ bộ nhớ trên thiết bị</string>
     <string name="rename" comment="Confirm that the renaming action should be processed.">Đổi tên</string>
     <string name="default_conf_delete_error">Không thể gỡ bỏ nhóm tuỳ chọn mặc định</string>
@@ -151,7 +152,6 @@
     <string name="show_hint">Hiện %s</string>
     <string name="info_rate">Đánh giá AnkiDroid</string>
     <string name="import_title">Đang nhập</string>
-    <string name="import_select_title">Chọn một tệp để nhập</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">Thêm</string>
     <string name="import_message_replace_confirm">Thao tác này sẽ xoá tất cả bộ sưu tập hiện hữu và thay nó bằng dữ liệu của tệp %s</string>
     <string name="import_message_add_confirm">Thêm \"%s\" vào bộ sưu tập? Có thể hơi lâu</string>
@@ -185,14 +185,12 @@
     <string name="export_save_apkg_unsuccessful">Lưu gói Anki thất bại</string>
     <string name="export_successful">Tệp tin \"%s\" đã được kết xuất. Bạn có muốn gửi nó đi với ứng dụng khác?</string>
     <string name="export_email_subject">AnkiDroid đã kết xuất các thẻ ghi nhớ: %s</string>
-    <string name="export_email_text"><![CDATA[        Xin chào!
+    <string name="export_email_text_new"><![CDATA[        Hi!
         <br/><br/>
-        Đây là bộ thẻ flashcards Anki được gửi từ <a href="https://ankidroid.org/docs/manual.html">AnkiDroid</a>.
-        Hãy thử mở nó bằng một trong những <a href="http://ankisrs.net/#download"> bản phát hành Anki</a> và tận hưởng việc học dễ dàng và hiệu quả!
+        This is an Anki flashcards deck sent from <a href="%1$s">AnkiDroid</a>.
+        Try to open it using one of the available <a href="%2$s">Anki distributions</a> and enjoy easy and efficient learning!
         ]]></string>
     <string name="export_unsuccessful">Lỗi kết xuất tệp tin apkg</string>
-    <string name="import_hint">Đưa tệp apkg vào thư mục \"%s\" và bấm \"OK\" để nhập thẻ</string>
-    <string name="upgrade_import_no_file_found">Không tìm thấy %1$s tệp có thể nhập</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Tuỳ chọn</string>
     <string name="menu__deck_options">Tùy chọn bộ thẻ</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Tùy chọn học tập</string>
@@ -268,7 +266,7 @@
     <string name="white_board_image_save_failed">Không thể lưu hình ảnh bảng trắng. %s</string>
     <string name="white_board_image_saved">Hình ảnh bảng trắng được lưu vào %s</string>
     <string name="title_whiteboard_pen_color">Bảng màu bút</string>
-    <string name="title_whiteboard_editor">Whiteboard editor</string>
+    <string name="title_whiteboard_editor">Trình chỉnh sửa bảng trắng</string>
     <!-- CSV/Note Import -->
     <string name="note_importer_empty_cards_found"><![CDATA[Đã tìm thấy thẻ trống. Vui lòng chạy Công cụ > Thẻ trống.]]></string>
     <string name="note_importer_error_empty_first_field">Trường đầu tiên trống: %s</string>
@@ -329,6 +327,7 @@
     <string name="create_shortcut_failed" comment="home screen == launcher">Màn hình chính của bạn không cho phép AnkiDroid thêm phím tắt</string>
     <string name="create_shortcut_error">Không thể thêm shortcut: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled">Viết hoa các câu</string>
+    <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll">Scroll toolbar</string>
     <!-- Symbols used as Button text in IncrementNumberRangePreference -->
     <string name="plus_sign" comment="Label for increment button in IncrementerNumberRangePreference">+</string>
     <string name="minus_sign" comment="Label for decrement button in IncrementerNumberRangePreference">-</string>
@@ -336,4 +335,31 @@
     <string name="email_id_empty">Bắt buộc có địa chỉ email</string>
     <string name="password_empty">Bắt buộc có mật khẩu</string>
     <string name="back_pressed_once">Nhấn trở lại lần nữa để thoát ứng dụng</string>
+    <string name="back_pressed_once_reviewer">Nhấn lại lần nữa để quay lại</string>
+    <!-- %% is required to display % symbol. Reference: https://stackoverflow.com/a/16834358 -->
+    <string name="percentage">%s%%</string>
+    <string name="download_deck">Tải bộ thẻ xuống</string>
+    <string name="try_again">Thử lại</string>
+    <string name="cancel_download">Hủy tải xuống</string>
+    <string name="cancel_download_question_title">Hủy tải xuống?</string>
+    <string name="downloading_file">Đang tải xuống %s</string>
+    <string name="import_deck">Nhập bộ thẻ</string>
+    <string name="something_wrong">Something went wrong, please try again</string>
+    <string name="download_failed">Download failed</string>
+    <string name="deck_download_progress_message">Bạn được phép sử dụng những ứng dụng khác khi đang tải.</string>
+    <string name="check_network">Please check your network connection</string>
+    <string name="search_using_deck_name">Search using deck name</string>
+    <string name="home">Home</string>
+    <!-- Importing -->
+    <string name="import_mapped_to_field">Mapped to %s</string>
+    <string name="import_mapped_to_tags">Mapped to Tags</string>
+    <string name="import_mapped_to_nothing">Ignored</string>
+    <!-- Reviewer actions -->
+    <string name="buried_card">Buried card</string>
+    <string name="buried_note">Buried note</string>
+    <string name="deleted_note">Deleted note</string>
+    <string name="suspended_card">Suspended card</string>
+    <string name="suspended_note">Suspended note</string>
+    <!--  Note Editor Toggle Sticky  -->
+    <string name="note_editor_toggle_sticky">Make field %s sticky</string>
 </resources>

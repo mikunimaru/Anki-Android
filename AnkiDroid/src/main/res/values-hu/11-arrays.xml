@@ -107,6 +107,9 @@
     <string name="gesture_flag_orange">Narancs Jelölő Bekapcsolása</string>
     <string name="gesture_flag_green">Zöld Jelölő Bekapcsolása</string>
     <string name="gesture_flag_blue">Kék Jelölő Bekapcsolása</string>
+    <string name="gesture_flag_pink">Toggle Pink Flag</string>
+    <string name="gesture_flag_turquoise">Toggle Turquoise Flag</string>
+    <string name="gesture_flag_purple">Toggle Purple Flag</string>
     <string name="gesture_flag_remove">Jelölő Törlése</string>
     <string name="gesture_page_up">Felfele</string>
     <string name="gesture_page_down">Lefele</string>
@@ -114,4 +117,6 @@
     <string name="gesture_toggle_whiteboard">Toggle Whiteboard</string>
     <string name="record_voice">Felvétel</string>
     <string name="replay_voice">Visszajátszás</string>
+    <string name="automatic_answer_option_2">Hard (Good if unavailable)</string>
+    <string name="automatic_answer_option_4">Easy (Good if unavailable)</string>
 </resources>

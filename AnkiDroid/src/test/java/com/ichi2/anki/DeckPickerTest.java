@@ -1,3 +1,5 @@
+//noinspection MissingCopyrightHeader #8659
+
 package com.ichi2.anki;
 
 import android.content.Context;
@@ -21,6 +23,9 @@ import com.ichi2.utils.ResourceLoader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.robolectric.ParameterizedRobolectricTestRunner;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameter;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
@@ -41,10 +46,12 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -70,20 +77,20 @@ public class DeckPickerTest extends RobolectricTest {
     @Test
     public void verifyCodeMessages() {
 
-        Map<Integer, String> mCodeResponsePairs = new HashMap<>();
+        Map<Integer, String> codeResponsePairs = new HashMap<>();
         final Context context = getTargetContext();
-        mCodeResponsePairs.put(407, context.getString(R.string.sync_error_407_proxy_required));
-        mCodeResponsePairs.put(409, context.getString(R.string.sync_error_409));
-        mCodeResponsePairs.put(413, context.getString(R.string.sync_error_413_collection_size));
-        mCodeResponsePairs.put(500, context.getString(R.string.sync_error_500_unknown));
-        mCodeResponsePairs.put(501, context.getString(R.string.sync_error_501_upgrade_required));
-        mCodeResponsePairs.put(502, context.getString(R.string.sync_error_502_maintenance));
-        mCodeResponsePairs.put(503, context.getString(R.string.sync_too_busy));
-        mCodeResponsePairs.put(504, context.getString(R.string.sync_error_504_gateway_timeout));
+        codeResponsePairs.put(407, context.getString(R.string.sync_error_407_proxy_required));
+        codeResponsePairs.put(409, context.getString(R.string.sync_error_409));
+        codeResponsePairs.put(413, context.getString(R.string.sync_error_413_collection_size));
+        codeResponsePairs.put(500, context.getString(R.string.sync_error_500_unknown));
+        codeResponsePairs.put(501, context.getString(R.string.sync_error_501_upgrade_required));
+        codeResponsePairs.put(502, context.getString(R.string.sync_error_502_maintenance));
+        codeResponsePairs.put(503, context.getString(R.string.sync_too_busy));
+        codeResponsePairs.put(504, context.getString(R.string.sync_error_504_gateway_timeout));
 
         try (ActivityScenario<DeckPicker> scenario = ActivityScenario.launch(DeckPicker.class)) {
             scenario.onActivity(deckPicker -> {
-                for (Map.Entry<Integer, String> entry : mCodeResponsePairs.entrySet()) {
+                for (Map.Entry<Integer, String> entry : codeResponsePairs.entrySet()) {
                     assertEquals(deckPicker.rewriteError(entry.getKey()), entry.getValue());
                 }
             });
@@ -200,7 +207,9 @@ public class DeckPickerTest extends RobolectricTest {
         AbstractSched sched = col.getSched();
 
         DeckConfig dconf = col.getDecks().getConf(1);
+        assertNotNull(dconf);
         dconf.getJSONObject("new").put("perDay", 10);
+        col.getDecks().save(dconf);
         for (int i = 0; i < 11; i++) {
             addNoteUsingBasicModel("Which card is this ?", Integer.toString(i));
         }
@@ -243,7 +252,7 @@ public class DeckPickerTest extends RobolectricTest {
         AnkiDroidApp.sSentExceptionReportHack = false;
         try {
             BackendEmulatingOpenConflict.enable();
-            InitialActivityTest.setupForDatabaseConflict();
+            InitialActivityWithConflictTest.setupForDatabaseConflict();
 
             DeckPickerEx d = super.startActivityNormallyOpenCollectionWithIntent(DeckPickerEx.class, new Intent());
 
@@ -252,7 +261,7 @@ public class DeckPickerTest extends RobolectricTest {
             assertThat("No exception reports should be thrown", AnkiDroidApp.sSentExceptionReportHack, is(false));
         } finally {
             BackendEmulatingOpenConflict.disable();
-            InitialActivityTest.setupForDefault();
+            InitialActivityWithConflictTest.setupForDefault();
         }
     }
 
@@ -261,20 +270,20 @@ public class DeckPickerTest extends RobolectricTest {
     public void databaseLockedNoPermissionIntegrationTest() {
         // no permissions -> grant permissions -> db locked
         try {
-            InitialActivityTest.setupForDefault();
+            InitialActivityWithConflictTest.setupForDefault();
             BackendEmulatingOpenConflict.enable();
 
             DeckPickerEx d = super.startActivityNormallyOpenCollectionWithIntent(DeckPickerEx.class, new Intent());
 
             // grant permissions
-            InitialActivityTest.setupForDatabaseConflict();
+            InitialActivityWithConflictTest.setupForDatabaseConflict();
 
             d.onStoragePermissionGranted();
 
             assertThat("A specific dialog for a conflict should be shown", d.mDatabaseErrorDialog, is(DatabaseErrorDialog.DIALOG_DB_LOCKED));
         } finally {
             BackendEmulatingOpenConflict.disable();
-            InitialActivityTest.setupForDefault();
+            InitialActivityWithConflictTest.setupForDefault();
         }
     }
 
@@ -282,7 +291,7 @@ public class DeckPickerTest extends RobolectricTest {
     public void deckPickerOpensWithHelpMakeAnkiDroidBetterDialog() {
         // Refactor: It would be much better to use a spy - see if we can get this into Robolecteic
         try {
-            InitialActivityTest.grantWritePermissions();
+            InitialActivityWithConflictTest.grantWritePermissions();
             BackupManagerTestUtilities.setupSpaceForBackup(getTargetContext());
             // We don't show it if the user is new.
             AnkiDroidApp.getSharedPrefs(getTargetContext()).edit().putString("lastVersion", "0.1").apply();
@@ -292,7 +301,7 @@ public class DeckPickerTest extends RobolectricTest {
             assertThat("Analytics opt-in should be displayed", d.mDisplayedAnalyticsOptIn, is(true));
 
         } finally {
-            InitialActivityTest.revokeWritePermissions();
+            InitialActivityWithConflictTest.revokeWritePermissions();
             BackupManagerTestUtilities.reset();
         }
     }
@@ -313,11 +322,11 @@ public class DeckPickerTest extends RobolectricTest {
     @Test
     public void showOptionsMenuWhenCollectionAccessible() {
         try {
-            InitialActivityTest.grantWritePermissions();
+            InitialActivityWithConflictTest.grantWritePermissions();
             DeckPickerEx d = super.startActivityNormallyOpenCollectionWithIntent(DeckPickerEx.class, new Intent());
             assertThat("Options menu is displayed when collection is accessible", d.mPrepareOptionsMenu, is(true));
         } finally {
-            InitialActivityTest.revokeWritePermissions();
+            InitialActivityWithConflictTest.revokeWritePermissions();
         }
     }
 
@@ -336,11 +345,11 @@ public class DeckPickerTest extends RobolectricTest {
     @Test
     public void showSyncBadgeWhenCollectionAccessible() {
         try {
-            InitialActivityTest.grantWritePermissions();
+            InitialActivityWithConflictTest.grantWritePermissions();
             DeckPickerEx d = super.startActivityNormallyOpenCollectionWithIntent(DeckPickerEx.class, new Intent());
             assertThat("Sync badge is displayed when collection is accessible", d.mDisplaySyncBadge, is(true));
         } finally {
-            InitialActivityTest.revokeWritePermissions();
+            InitialActivityWithConflictTest.revokeWritePermissions();
         }
     }
 
@@ -348,7 +357,7 @@ public class DeckPickerTest extends RobolectricTest {
     @RunInBackground
     public void onResumeLoadCollectionFailureWithInaccessibleCollection() {
         try {
-            InitialActivityTest.revokeWritePermissions();
+            InitialActivityWithConflictTest.revokeWritePermissions();
             enableNullCollection();
             DeckPickerEx d = super.startActivityNormallyOpenCollectionWithIntent(DeckPickerEx.class, new Intent());
 
@@ -362,21 +371,22 @@ public class DeckPickerTest extends RobolectricTest {
     @Test
     public void onResumeLoadCollectionSuccessWithAccessibleCollection() {
         try {
-            InitialActivityTest.grantWritePermissions();
+            InitialActivityWithConflictTest.grantWritePermissions();
             DeckPickerEx d = super.startActivityNormallyOpenCollectionWithIntent(DeckPickerEx.class, new Intent());
             assertThat("Collection initialization ensured by CollectionTask.LoadCollectionComplete", d.getCol(), is(notNullValue()));
             assertThat("Collection Models Loaded", d.getCol().getModels(), is(notNullValue()));
         } finally {
-            InitialActivityTest.revokeWritePermissions();
+            InitialActivityWithConflictTest.revokeWritePermissions();
         }
     }
 
     @Test
+    @RunInBackground
     public void version16CollectionOpens() {
         try {
             setupColV16();
 
-            InitialActivityTest.setupForValid(getTargetContext());
+            InitialActivityWithConflictTest.setupForValid(getTargetContext());
 
             DeckPicker deckPicker = super.startActivityNormallyOpenCollectionWithIntent(DeckPickerEx.class, new Intent());
             waitForAsyncTasksToComplete();
@@ -387,7 +397,7 @@ public class DeckPickerTest extends RobolectricTest {
 
             assertThat("Decks should be visible", deckPicker.getDeckCount(), is(1));
         } finally {
-            InitialActivityTest.setupForDefault();
+            InitialActivityWithConflictTest.setupForDefault();
         }
     }
 
@@ -397,9 +407,9 @@ public class DeckPickerTest extends RobolectricTest {
             setupColV16();
 
             // corrupt col
-            DbUtils.performQuery(getTargetContext(), "drop table deck_config");
+            DbUtils.performQuery(getTargetContext(), "drop table decks");
 
-            InitialActivityTest.setupForValid(getTargetContext());
+            InitialActivityWithConflictTest.setupForValid(getTargetContext());
 
             DeckPickerEx deckPicker = super.startActivityNormallyOpenCollectionWithIntent(DeckPickerEx.class, new Intent());
             waitForAsyncTasksToComplete();
@@ -407,25 +417,25 @@ public class DeckPickerTest extends RobolectricTest {
             assertThat("Collection should not be open", !CollectionHelper.getInstance().colIsOpen());
             assertThat("An error dialog should be displayed", deckPicker.mDatabaseErrorDialog, is(DatabaseErrorDialog.DIALOG_LOAD_FAILED));
         } finally {
-            InitialActivityTest.setupForDefault();
+            InitialActivityWithConflictTest.setupForDefault();
         }
     }
 
     @Test
-    public void notEnoughSpaceToBackupShowsError() {
+    public void notEnoughSpaceToBackupBeforeDowngradeShowsError() {
         Class<DeckPickerNoSpaceForBackup> clazz = DeckPickerNoSpaceForBackup.class;
-        try {
-            setupColV16();
+        try (MockedStatic<InitialActivity> initialActivityMock = mockStatic(InitialActivity.class, Mockito.CALLS_REAL_METHODS)) {
+            initialActivityMock
+                .when(() -> InitialActivity.getStartupFailureType(any()))
+                .thenAnswer((Answer<InitialActivity.StartupFailure>) invocation -> InitialActivity.StartupFailure.DATABASE_DOWNGRADE_REQUIRED);
 
-            InitialActivityTest.setupForValid(getTargetContext());
+            InitialActivityWithConflictTest.setupForValid(getTargetContext());
 
             DeckPickerNoSpaceForBackup deckPicker = super.startActivityNormallyOpenCollectionWithIntent(clazz, new Intent());
-            waitForAsyncTasksToComplete();
 
-            assertThat("Collection should not be open", !CollectionHelper.getInstance().colIsOpen());
             assertThat("A downgrade failed dialog should be shown", deckPicker.mDisplayedDowngradeFailed, is(true));
         } finally {
-            InitialActivityTest.setupForDefault();
+            InitialActivityWithConflictTest.setupForDefault();
         }
     }
 
@@ -436,6 +446,24 @@ public class DeckPickerTest extends RobolectricTest {
 
         StudyOptionsFragment studyOptionsFragment = (StudyOptionsFragment) deckPickerEx.getSupportFragmentManager().findFragmentById(R.id.studyoptions_fragment);
         assertThat("Study options should show on start on tablet", studyOptionsFragment, notNullValue());
+    }
+    
+    @Test
+    public void checkIfReturnsTrueWhenAtLeastOneDeckIsDisplayed() {
+        addDeck("Hello World");
+        // Reason for using 2 as the number of decks -> This deck + Default deck
+        assertThat("Deck added", getCol().getDecks().count(), is(2));
+        DeckPicker deckPicker = startActivityNormallyOpenCollectionWithIntent(DeckPicker.class, new Intent());
+        assertThat("Deck is being displayed", deckPicker.hasAtLeastOneDeckBeingDisplayed(), is(true));
+    }
+
+    @Test
+    public void checkIfReturnsFalseWhenNoDeckIsDisplayed() {
+        // Only default deck would be there in the count, hence using the value as 1.
+        // Default deck does not get displayed in the DeckPicker if the default deck is empty.
+        assertThat("Contains only default deck", getCol().getDecks().count(), is(1));
+        DeckPicker deckPicker = startActivityNormallyOpenCollectionWithIntent(DeckPicker.class, new Intent());
+        assertThat("No deck is being displayed", deckPicker.hasAtLeastOneDeckBeingDisplayed(), is(false));
     }
 
 

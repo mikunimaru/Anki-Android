@@ -18,15 +18,14 @@ package com.ichi2.libanki;
 
 
 import android.text.TextUtils;
-import android.util.Pair;
 
 import com.ichi2.libanki.template.ParsedNode;
 import com.ichi2.libanki.template.TemplateError;
+import com.ichi2.utils.HashUtil;
 import com.ichi2.utils.JSONArray;
 import com.ichi2.utils.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,14 +39,28 @@ import timber.log.Timber;
  * If a change affect card generation, (i.e. any change on the list of field, or the question side of a card type), `Models.save(this, true)` should be called. However, you should do the change in batch and change only when aall are done, because recomputing the list of card is an expensive operation.
  */
 public class Model extends JSONObject {
+    /**
+     * Creates a new empty model object
+     */
     public Model() {
         super();
     }
 
+    /**
+     * Creates a copy from {@link JSONObject} and use it as a string
+     *
+     * This function will perform deepCopy on the passed object
+     *
+     * @see Model#from(JSONObject) if you want to create a
+     *                             Model without deepCopy
+     */
     public Model(JSONObject json) {
         super(json);
     }
 
+    /**
+     * Creates a model object form json string
+     */
     public Model(String json) {
         super(json);
     }
@@ -61,6 +74,10 @@ public class Model extends JSONObject {
 
     public List<String> getFieldsNames() {
         return getJSONArray("flds").toStringList("name");
+    }
+
+    public JSONObject getField(int pos) {
+        return getJSONArray("flds").getJSONObject(pos);
     }
 
     public List<String> getTemplatesNames() {
@@ -81,7 +98,7 @@ public class Model extends JSONObject {
      */
     public Set<String> nonEmptyFields(String[] sfld) {
         List<String> fieldNames = getFieldsNames();
-        Set<String> nonemptyFields = new HashSet<>(sfld.length);
+        Set<String> nonemptyFields = HashUtil.HashSetInit(sfld.length);
         for (int i = 0; i < sfld.length; i++) {
             if (!TextUtils.isEmpty(sfld[i].trim())) {
                 nonemptyFields.add(fieldNames.get(i));

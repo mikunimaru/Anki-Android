@@ -19,15 +19,31 @@
 package com.ichi2.anki
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.ichi2.anki.OnboardingUtils.isVisited
-import com.ichi2.anki.OnboardingUtils.setVisited
+import com.ichi2.anki.OnboardingUtils.Companion.SHOW_ONBOARDING
+import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class OnboardingFlagTest : RobolectricTest() {
+
+    companion object {
+        const val FIRST_ENUM = "FirstEnum"
+        const val SECOND_ENUM = "SecondEnum"
+    }
+
+    @Before
+    fun setShowOnboardingPreference() {
+        AnkiDroidApp.getSharedPrefs(targetContext).edit().putBoolean(SHOW_ONBOARDING, true).apply()
+    }
+
+    @After
+    fun after() {
+        Onboarding.resetOnboardingForTesting() // #9597 - global needs resetting
+    }
 
     @Test
     fun verifyThatEnumsAreNotSet() {
@@ -69,29 +85,47 @@ class OnboardingFlagTest : RobolectricTest() {
         assertFalse(isVisited(SecondEnum.LAST))
     }
 
-    private enum class FirstEnum(var mValue: Int) : OnboardingFlag {
+    @Test
+    fun verifyReset() {
+        OnboardingUtils.addFeature(FIRST_ENUM)
+        setVisited(FirstEnum.FIRST)
+        setVisited(SecondEnum.LAST)
+        OnboardingUtils.reset(targetContext)
+        assertFalse(isVisited(FirstEnum.FIRST))
+        assertTrue(isVisited(SecondEnum.LAST))
+    }
+
+    private enum class FirstEnum(var valueFirst: Int) : OnboardingFlag {
         FIRST(0),
         MIDDLE(1);
 
         override fun getOnboardingEnumValue(): Int {
-            return mValue
+            return valueFirst
+        }
+
+        override fun getFeatureConstant(): String {
+            return FIRST_ENUM
         }
     }
 
-    private enum class SecondEnum(var mValue: Int) : OnboardingFlag {
+    private enum class SecondEnum(var valueSecond: Int) : OnboardingFlag {
         MIDDLE(0),
         LAST(1);
 
         override fun getOnboardingEnumValue(): Int {
-            return mValue
+            return valueSecond
+        }
+
+        override fun getFeatureConstant(): String {
+            return SECOND_ENUM
         }
     }
 
-    private fun <T> isVisited(enum: T): Boolean where T : Enum<T>, T : OnboardingFlag {
-        return isVisited(enum, targetContext)
+    private fun isVisited(featureIdentifier: OnboardingFlag): Boolean {
+        return OnboardingUtils.isVisited(featureIdentifier, targetContext)
     }
 
-    private fun <T> setVisited(enum: T) where T : Enum<T>, T : OnboardingFlag {
-        setVisited(enum, targetContext)
+    private fun setVisited(featureIdentifier: OnboardingFlag) {
+        OnboardingUtils.setVisited(featureIdentifier, targetContext)
     }
 }

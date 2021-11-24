@@ -34,7 +34,9 @@ public class DeckPickerFloatingActionMenu {
     private final LinearLayout mAddDeckLayout;
     private final LinearLayout mAddNoteLayout;
     private final View mFabBGLayout;
+    private final View mStudyoptionsFrame;
     private boolean mIsFABOpen = false;
+    private boolean mFragmented = false;
 
     private final DeckPicker mDeckPicker;
     private final LinearLayout mLinearLayout;
@@ -49,7 +51,11 @@ public class DeckPickerFloatingActionMenu {
         FloatingActionButton addSharedButton = (FloatingActionButton) view.findViewById(R.id.add_shared_action);
         FloatingActionButton addDeckButton = (FloatingActionButton) view.findViewById(R.id.add_deck_action);
         mFabBGLayout = view.findViewById(R.id.fabBGLayout);
-        mLinearLayout = view.findViewById(R.id.deckpicker_view);
+        mLinearLayout = view.findViewById(R.id.deckpicker_view);  // Layout deck_picker.xml is attached here
+
+        // Check to see if the view was correctly located
+        mStudyoptionsFrame = view.findViewById(R.id.studyoptions_fragment);
+        mFragmented = mStudyoptionsFrame != null ? true : false;
 
         TextView addNoteLabel = view.findViewById(R.id.add_note_label);
         TextView addSharedLabel = view.findViewById(R.id.add_shared_label);
@@ -79,7 +85,7 @@ public class DeckPickerFloatingActionMenu {
         View.OnClickListener addSharedListener = addSharedButtonView -> {
             Timber.d("configureFloatingActionsMenu::addSharedButton::onClickListener - Adding Shared Deck");
             closeFloatingActionMenu();
-            deckPicker.addSharedDeck();
+            deckPicker.openAnkiWebSharedDecks();
         };
         addSharedButton.setOnClickListener(addSharedListener);
         addSharedLabel.setOnClickListener(addSharedListener);
@@ -104,13 +110,16 @@ public class DeckPickerFloatingActionMenu {
     }
 
 
-    public void setIsFABOpen(boolean mIsFABOpen) {
-        this.mIsFABOpen = mIsFABOpen;
+    public void setIsFABOpen(boolean isFABOpen) {
+        this.mIsFABOpen = isFABOpen;
     }
 
 
     private void showFloatingActionMenu() {
         mLinearLayout.setAlpha(0.5f);
+        if (mFragmented) {
+            mStudyoptionsFrame.setAlpha(0.5f);
+        }
         mIsFABOpen = true;
         if (animationEnabled()) {
             // Show with animation
@@ -118,7 +127,7 @@ public class DeckPickerFloatingActionMenu {
             mAddSharedLayout.setVisibility(View.VISIBLE);
             mAddDeckLayout.setVisibility(View.VISIBLE);
             mFabBGLayout.setVisibility(View.VISIBLE);
-            mFabMain.animate().rotationBy(140);
+            mFabMain.animate().rotationBy(135); // 135 = 90 + 45
             mAddNoteLayout.animate().translationY(0).setDuration(30);
             mAddSharedLayout.animate().translationY(0).setDuration(50);
             mAddDeckLayout.animate().translationY(0).setDuration(100);
@@ -131,11 +140,20 @@ public class DeckPickerFloatingActionMenu {
             mAddSharedLayout.setVisibility(View.VISIBLE);
             mAddDeckLayout.setVisibility(View.VISIBLE);
             mFabBGLayout.setVisibility(View.VISIBLE);
+            mAddNoteLayout.setAlpha(1f);
+            mAddSharedLayout.setAlpha(1f);
+            mAddDeckLayout.setAlpha(1f);
+            mAddNoteLayout.setTranslationY(0);
+            mAddSharedLayout.setTranslationY(0);
+            mAddDeckLayout.setTranslationY(0);
         }
     }
 
     protected void closeFloatingActionMenu() {
         mLinearLayout.setAlpha(1f);
+        if (mFragmented) {
+            mStudyoptionsFrame.setAlpha(1f);
+        }
         mIsFABOpen = false;
         mFabBGLayout.setVisibility(View.GONE);
         if (animationEnabled()) {

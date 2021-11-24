@@ -55,6 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">Cử Chỉ/ Điều Hướng</string>
     <string name="pref_cat_gestures_summ">Sử dụng taps và swipes thay vì các nút bấm</string>
     <string name="pref_cat_actions" maxLength="41">Tác vụ</string>
+    <string name="pref_cat_controls" maxLength="41">Controls</string>
+    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
     <string name="pref_cat_advanced" maxLength="41">Tuỳ chọn nâng cao</string>
     <string name="pref_cat_advanced_summ">Tối ưu hóa và tính năng thử nghiệm</string>
     <string name="pref_cat_performance" maxLength="41">Hiệu năng</string>
@@ -101,7 +103,7 @@
     <string name="gestures_swipe_left" maxLength="41">Kéo trái</string>
     <string name="gestures_swipe_right" maxLength="41">Vuốt sang phải</string>
     <string name="gestures_double_tap" maxLength="41">Chạm hai lần</string>
-    <string name="gestures_long_tap" maxLength="41">Long tap</string>
+    <string name="gestures_long_tap" maxLength="41">Long touch</string>
     <string name="gestures_tap_top" maxLength="41">Chạm vào phần đầu</string>
     <string name="gestures_tap_left" maxLength="41">Chạm bên trái</string>
     <string name="gestures_tap_right" maxLength="41">Chạm bên phải</string>
@@ -130,7 +132,7 @@
     <string name="sync_fetch_missing_media_summ">Tự động lấy truyền thông bị thiếu khi đồng bộ hoá.</string>
     <string name="sync_account" maxLength="41">tài khoản AnkiWeb </string>
     <string name="sync_account_summ_logged_out">Chưa đăng nhập</string>
-    <string name="sync_account_summ_logged_in">%s</string>
+    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">Đồng bộ hóa tự động</string>
     <string name="automatic_sync_choice_summ">Đồng bộ hóa tự động khi khởi động / thoát ứng dụng nếu lần đồng bộ hóa cuối cùng nhiều hơn 10         phút trước.</string>
     <string name="sync_status_badge" maxLength="41">Hiển thị trạng thái đồng bộ hóa</string>
@@ -149,6 +151,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Báo rung</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Nhấp nháy ánh sáng</string>
     <string name="timeout_answer_text" maxLength="41">Tự động hiển thị trả lời</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">Hiển thị câu trả lời tự động mà không cần người dùng nhập. Độ trễ bao gồm thời gian cho các tệp âm thanh được phát tự động.</string>
     <string name="timeout_answer_seconds" maxLength="41">Thời gian để hiển thị câu trả lời</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -189,7 +192,6 @@
     <string name="sched_v2" maxLength="41">V2 scheduler</string>
     <string name="sched_v2_summ">Enable the new scheduler. Forces changes in one direction on next sync</string>
     <string name="sched_ver_toggle_title">Xác nhận</string>
-    <string name="sched_ver_2to1">Điều này sẽ đặt lại bất kỳ thẻ nào trong học tập, xóa các bộ thẻ được lọc và thay đổi phiên bản của bộ lập lịch. Tiếp tục?</string>
     <string name="sched_ver_1to2">Trình lập lịch thử nghiệm có thể gây ra lập lịch không chính xác. Hãy đảm bảo rằng bạn đã đọc tài liệu trước. Tiếp tục?</string>
     <string name="pref_keep_screen_on" maxLength="41">Luôn bật màn hình</string>
     <string name="pref_keep_screen_on_summ">Tắt thời gian chờ của màn hình</string>
@@ -210,6 +212,11 @@
     <!-- Paste clipboard image as png option -->
     <string name="paste_as_png" maxLength="41">Paste clipboard images as PNG</string>
     <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
+    <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
+    <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Thống kê nâng cao</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Bật thống kê nâng cao</string>
@@ -225,6 +232,8 @@
     <string name="custom_sync_server_base_url_invalid">Đồng bộ hóa url không hợp lệ</string>
     <string name="custom_sync_server_media_url_title" maxLength="41">Url đồng bộ hóa phương tiện</string>
     <string name="custom_sync_server_media_url_invalid">Url đồng bộ hóa phương tiện không hợp lệ</string>
+    <!-- Key Bindings -->
+    <string name="controls_main_category" maxLength="41">Command mapping</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Các thay đổi đối với tùy chọn nhóm bộ thẻ sẽ ảnh hưởng đến nhiều bộ thẻ. Nếu bạn chỉ muốn thay đổi bộ thẻ hiện tại, trước tiên hãy thêm một nhóm tùy chọn mới</string>
     <string name="studyoptions_limit_select_tags">Chọn thẻ</string>
@@ -306,4 +315,18 @@
     <string name="type_in_answer_focus_summ">Tự động tập trung vào trường \"nhập câu trả lời\" trong trình đánh giá</string>
     <!-- Open Changelog-->
     <string name="open_changelog">Mở Changelog</string>
+    <string name="binding_add_gesture">Add gesture</string>
+    <string name="binding_add_key">Add key</string>
+    <string name="key_picker_default_press_key">Press a key</string>
+    <!-- Select card side -->
+    <string name="card_side_selection_title">Select card side</string>
+    <string name="card_side_question">Question</string>
+    <string name="card_side_answer">Answer</string>
+    <string name="card_side_both">Question &amp; Answer</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
+    <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
+    <!-- Binding Preference -->
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
+    <string name="bindings_already_bound">Already bound to %s</string>
 </resources>
