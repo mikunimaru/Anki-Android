@@ -689,7 +689,7 @@ public class SchedV2 extends AbstractSched {
             }
         }
         // Day learning first and card due?
-        boolean dayLearnFirst = mCol.get_config("dayLearnFirst", false);
+        boolean dayLearnFirst = mCol.get_config("dayLearnFirst", true);
         if (dayLearnFirst) {
             c = _getLrnDayCard();
             if (c != null) {
