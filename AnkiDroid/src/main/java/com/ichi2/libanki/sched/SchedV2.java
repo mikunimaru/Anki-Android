@@ -1482,11 +1482,11 @@ public class SchedV2 extends AbstractSched {
                             + " AND queue = " + Consts.QUEUE_TYPE_LRN + " AND due < ?"
                             + " LIMIT ?)",
                     did, (getTime().intTime() + mCol.get_config_int("collapseTime")), mReportLimit);
-            return cnt + mCol.getDb().queryScalar(
+            return mCol.getDb().queryScalar(
                     "SELECT count() FROM (SELECT null FROM cards WHERE did = ?"
                             + " AND queue = " + Consts.QUEUE_TYPE_DAY_LEARN_RELEARN + " AND due <= ?"
                             + " LIMIT ?)",
-                    did, mToday, mReportLimit);
+                    did, mToday, mReportLimit) + cnt;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
