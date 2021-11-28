@@ -732,7 +732,7 @@ public class SchedV2 extends AbstractSched {
             }
         }
         // Day learning first and card due?
-        boolean dayLearnFirst = mCol.get_config("dayLearnFirst", false);
+        boolean dayLearnFirst = true; // mCol.get_config("dayLearnFirst", false);
         if (dayLearnFirst) {
             if (_fillLrnDay()) {
                 return new CardQueue<?>[]{mLrnQueue, mLrnDayQueue};
@@ -1091,7 +1091,7 @@ public class SchedV2 extends AbstractSched {
                     .getDb()
                     .query(
                             "SELECT due, id, mod FROM cards WHERE did IN " + _deckLimit() + " AND queue IN (" + Consts.QUEUE_TYPE_LRN + ", " + Consts.QUEUE_TYPE_PREVIEW + ") AND due < ?"
-                            + " AND id != ? ORDER BY " +  String.valueOf(getTime().intTime()) + " < " + "due" + ", mod = (SELECT MAX(mod) FROM cards) "  + "  ,due - mod, due LIMIT ?", cutoff, currentCardId(), mReportLimit)) {
+                            + " AND id != ? ORDER BY " + "mod = (SELECT MAX(mod) FROM cards), " +  String.valueOf(getTime().intTime()) + " < " + "due"  + "  ,due - mod, due LIMIT ?", cutoff, currentCardId(), mReportLimit)) {
             mLrnQueue.setFilled();
             while (cur.moveToNext()) {
                 mLrnQueue.add(cur.getLong(0), cur.getLong(1));
@@ -1112,8 +1112,7 @@ public class SchedV2 extends AbstractSched {
                 cutoff += mCol.get_config_int("collapseTime");
             }
             if (mLrnQueue.getFirstDue() < cutoff) {
-                Card removedCard = mLrnQueue.removeFirstCard();
-                return removedCard;
+                return mLrnQueue.removeFirstCard();
                 // mLrnCount -= 1; see decrementCounts()
             }
         }
@@ -1123,15 +1122,13 @@ public class SchedV2 extends AbstractSched {
 
     protected boolean _preloadLrnCard(boolean collapse) {
         _maybeResetLrn(collapse && mLrnCount == 0);
-        if (!mLrnQueue.isEmpty()) {
+        if (_fillLrn()) {
             long cutoff = getTime().intTime();
             if (collapse) {
                 cutoff += mCol.get_config_int("collapseTime");
             }
             // mLrnCount -= 1; see decrementCounts()
             return mLrnQueue.getFirstDue() < cutoff;
-        } else {
-            _fillLrn();
         }
         return false;
     }
