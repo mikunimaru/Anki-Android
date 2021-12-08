@@ -1105,7 +1105,7 @@ public class SchedV2 extends AbstractSched {
 
     // Overidden: no _maybeResetLrn in V1
     protected @Nullable Card _getLrnCard(boolean collapse) {
-        _maybeResetLrn(collapse && mLrnCount == 0);
+        _maybeResetLrn(mLrnCount == 0);
         if (_fillLrn()) {
             long cutoff = getTime().intTime();
             if (collapse) {
@@ -1121,7 +1121,7 @@ public class SchedV2 extends AbstractSched {
 
 
     protected boolean _preloadLrnCard(boolean collapse) {
-        _maybeResetLrn(collapse && mLrnCount == 0);
+        _maybeResetLrn(mLrnCount == 0);
         if (_fillLrn()) {
             long cutoff = getTime().intTime();
             if (collapse) {
