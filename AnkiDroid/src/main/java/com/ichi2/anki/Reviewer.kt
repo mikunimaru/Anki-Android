@@ -902,6 +902,10 @@ open class Reviewer : AbstractFlashcardViewer() {
         mEaseButton1.setVisibility(View.VISIBLE)
         mEaseButton1.setColor(background[0])
         mEaseButton4.setColor(background[3])
+
+        val alwaysShowOnlyTwoAnswerButtons = AnkiDroidApp.getSharedPrefs(this.baseContext)
+            .getBoolean("alwaysShowOnlyTwoAnswerButtons", false)
+
         when (buttonCount) {
             2 -> {
                 // Ease 2 is "good"
@@ -912,16 +916,20 @@ open class Reviewer : AbstractFlashcardViewer() {
                 // Ease 2 is good
                 mEaseButton2.setup(background[2], textColor[2], R.string.ease_button_good)
                 // Ease 3 is easy
-                mEaseButton3.setup(background[3], textColor[3], R.string.ease_button_easy)
-                mEaseButton2.requestFocus()
+                if (!alwaysShowOnlyTwoAnswerButtons) {
+                    mEaseButton3.setup(background[3], textColor[3], R.string.ease_button_easy)
+                    mEaseButton2.requestFocus()
+                }
             }
             else -> {
-                // Ease 2 is "hard"
-                mEaseButton2.setup(background[1], textColor[1], R.string.ease_button_hard)
-                mEaseButton2.requestFocus()
+                if (!alwaysShowOnlyTwoAnswerButtons) {
+                    // Ease 2 is "hard"
+                    mEaseButton2.setup(background[1], textColor[1], R.string.ease_button_hard)
+                    mEaseButton2.requestFocus()
+                    mEaseButton4.setVisibility(View.VISIBLE)
+                }
                 // Ease 3 is good
                 mEaseButton3.setup(background[2], textColor[2], R.string.ease_button_good)
-                mEaseButton4.setVisibility(View.VISIBLE)
                 mEaseButton3.requestFocus()
             }
         }
