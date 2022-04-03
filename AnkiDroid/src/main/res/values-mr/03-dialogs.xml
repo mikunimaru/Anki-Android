@@ -76,9 +76,9 @@
         <item quantity="other">%d कार्डे रीसेट केली</item>
     </plurals>
     <!-- Reschedule Card Dialog -->
-    <plurals name="reschedule_cards_dialog_title">
-        <item quantity="one">Reschedule card</item>
-        <item quantity="other">रीशेड्यूल कार्ड</item>
+    <plurals name="reschedule_cards_dialog_title_new">
+        <item quantity="one">Reschedule %d card</item>
+        <item quantity="other">Reschedule %d cards</item>
     </plurals>
     <plurals name="reschedule_card_dialog_interval">
         <item quantity="one">Current interval: %d day</item>
@@ -119,6 +119,7 @@
     <string name="no_space_to_downgrade_content">AnkiDroid needs %s free storage space to continue. Please clear some space</string>
     <string name="restore_backup_title">बॅकअप पुनर्संचयित?</string>
     <string name="restore_backup">आपला संग्रह जुन्या प्रतीसह पुनर्स्थित केला जाईल. कोणतीही जतन न केलेली प्रगती गमावली जाईल.</string>
+    <string name="restore_backup_choose_another">Choose another</string>
     <string name="dialog_cancel">रद्द करा</string>
     <string name="dialog_ok">ठीक आहे</string>
     <string name="dialog_no">नाही</string>
@@ -133,7 +134,6 @@
     <string name="dialog_positive_replace">पुनर्स्थित करा</string>
     <string name="dialog_positive_restore">पुनर्संचयित करा</string>
     <string name="dialog_positive_set">सेट</string>
-    <string name="lookup_button_content">वर बघ</string>
     <string name="dialog_collection_path_not_dir">निर्दिष्ट पथ वैध निर्देशिका नाही</string>
     <!-- Media checking -->
     <string name="check_media_title">मीडिया तपासा?</string>
@@ -185,6 +185,7 @@
     <string name="card_browser_deck_change_error">डेक बदलणे शक्य झाले नाही</string>
     <!-- AbstractFlashCardViewer -->
     <string name="card_viewer_url_decode_error">कार्ड वरून डेटा डिकोड करताना त्रुटी</string>
+    <string name="undo_succeeded">Undone \"%s\"</string>
     <!-- Deck Options -->
     <string name="deck_options_corrupt">डेक पर्यायांवर प्रक्रिया करण्यात अयशस्वी:%s</string>
     <!-- Database Errors-->

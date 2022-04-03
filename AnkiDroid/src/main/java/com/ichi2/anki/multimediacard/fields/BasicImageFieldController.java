@@ -64,7 +64,6 @@ import com.ichi2.anki.UIUtils;
 import com.ichi2.compat.CompatHelper;
 import com.ichi2.ui.FixedEditText;
 import com.ichi2.utils.BitmapUtil;
-import com.ichi2.utils.ContentResolverUtil;
 import com.ichi2.utils.ExifUtil;
 import com.ichi2.utils.FileUtil;
 import com.ichi2.utils.Permissions;
@@ -75,8 +74,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 import timber.log.Timber;
 
@@ -297,6 +297,12 @@ public class BasicImageFieldController extends FieldControllerBase implements IF
         return File.createTempFile("img", "." + extension, storageDir);
     }
 
+    private File createCachedFile(@NonNull String filename) throws IOException {
+        File file = new File(mAnkiCacheDirectory, filename);
+        file.deleteOnExit();
+        return file;
+    }
+
 
     private void drawUIComponents(Context context) {
         DisplayMetrics metrics = getDisplayMetrics();
@@ -428,6 +434,10 @@ public class BasicImageFieldController extends FieldControllerBase implements IF
         UIUtils.showThemedToast(mActivity, mActivity.getResources().getString(R.string.multimedia_editor_something_wrong), false);
     }
 
+    private void showSVGPreviewToast() {
+        UIUtils.showThemedToast(mActivity, mActivity.getResources().getString(R.string.multimedia_editor_svg_preview), false);
+    }
+
     private void handleSelectImageIntent(Intent data) {
         if (data == null) {
             Timber.e("handleSelectImageIntent() no intent provided");
@@ -490,11 +500,10 @@ public class BasicImageFieldController extends FieldControllerBase implements IF
             showSomethingWentWrong();
             return null;
         }
-        String uriFileExtension = uriFileName.substring(uriFileName.lastIndexOf('.') + 1);
         try {
-            internalFile = createNewCacheImageFile(uriFileExtension);
+            internalFile = createCachedFile(uriFileName);
         } catch (IOException e) {
-            Timber.w(e, "internalizeUri() failed to create new file with extension %s", uriFileExtension);
+            Timber.w(e, "internalizeUri() failed to create new file with name %s", uriFileName);
             showSomethingWentWrong();
             return null;
         }
@@ -583,14 +592,20 @@ public class BasicImageFieldController extends FieldControllerBase implements IF
 
     @VisibleForTesting
     void setImagePreview(File f, int maxsize) {
-        Bitmap b = BitmapUtil.decodeFile(f, maxsize);
-        if (b == null) {
-            Timber.i("setImagePreview() could not process image %s", f.getPath());
-            return;
+        String imgPath = f.toString();
+        if (imgPath.endsWith(".svg")) {
+            showSVGPreviewToast();
+            hideImagePreview();
+        } else {
+            Bitmap b = BitmapUtil.decodeFile(f, maxsize);
+            if (b == null) {
+                Timber.i("setImagePreview() could not process image %s", f.getPath());
+                return;
+            }
+            Timber.d("setPreviewImage path %s has size %d", f.getAbsolutePath(), f.length());
+            b = ExifUtil.rotateFromCamera(f, b);
+            onValidImage(b, Formatter.formatFileSize(mActivity, f.length()));
         }
-        Timber.d("setPreviewImage path %s has size %d", f.getAbsolutePath(), f.length());
-        b = ExifUtil.rotateFromCamera(f, b);
-        onValidImage(b, Formatter.formatFileSize(mActivity, f.length()));
     }
 
 
@@ -601,12 +616,17 @@ public class BasicImageFieldController extends FieldControllerBase implements IF
         mCropButton.setVisibility(View.VISIBLE);
     }
 
-
-    @Override
-    public void onDestroy() {
+    // ensure the previous preview is not visible
+    public void hideImagePreview() {
         ImageView imageView = mImagePreview;
         BitmapUtil.freeImageView(imageView);
         mCropButton.setVisibility(View.INVISIBLE);
+        mImageFileSize.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onDestroy() {
+        hideImagePreview();
     }
 
 

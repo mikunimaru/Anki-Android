@@ -16,7 +16,7 @@ package com.ichi2.libanki;
 import android.text.TextUtils;
 
 import com.ichi2.anki.RobolectricTest;
-import com.ichi2.anki.exception.FilteredAncestor;
+import com.ichi2.libanki.backend.exception.DeckRenameException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,18 +24,16 @@ import org.junit.runner.RunWith;
 import org.robolectric.ParameterizedRobolectricTestRunner;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import timber.log.Timber;
+
+import static com.ichi2.utils.FileOperation.getFileContents;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(ParameterizedRobolectricTestRunner.class)
@@ -64,10 +62,10 @@ public class TextNoteExporterTest extends RobolectricTest {
     private List<Note> mNoteList;
 
 
-    public TextNoteExporterTest(boolean mIncludeId, boolean mIncludeTags, boolean mIncludeHTML) {
-        this.mIncludeId = mIncludeId;
-        this.mIncludeTags = mIncludeTags;
-        this.mIncludeHTML = mIncludeHTML;
+    public TextNoteExporterTest(boolean includeId, boolean includeTags, boolean includeHTML) {
+        this.mIncludeId = includeId;
+        this.mIncludeTags = includeTags;
+        this.mIncludeHTML = includeHTML;
     }
 
 
@@ -89,8 +87,8 @@ public class TextNoteExporterTest extends RobolectricTest {
 
         try {
             n2.model().put("did", mCollection.getDecks().id("new col"));
-        } catch (FilteredAncestor filteredAncestor) {
-            filteredAncestor.printStackTrace();
+        } catch (DeckRenameException filteredAncestor) {
+            Timber.e(filteredAncestor);
         }
         mCollection.addNote(n2);
 
@@ -100,15 +98,11 @@ public class TextNoteExporterTest extends RobolectricTest {
 
     @Test
     public void will_export_id_tags_html() throws IOException {
-        Path tempExportDir = Files.createTempDirectory("AnkiDroid-test_export_textnote");
-        File exportedFile = new File(tempExportDir.toFile(), "export.txt");
+        File exportedFile = File.createTempFile("export", ".txt");
 
         mExporter.doExport(exportedFile.getAbsolutePath());
 
-        String[] lines;
-        try (BufferedReader reader = new BufferedReader(new FileReader(exportedFile))) {
-            lines = reader.lines().collect(Collectors.joining("\n")).split("\\n");
-        }
+        String lines[] = getFileContents(exportedFile).split("\n");
 
         assertEquals(mNoteList.size(), lines.length);
 

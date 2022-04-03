@@ -1,5 +1,6 @@
 /***************************************************************************************
  * Copyright (c) 2018 Mike Hardy <github@mikehardy.net>                                 *
+ * Copyright (c) 2022 Arthur Milchior <arthur@milchior.fr>                              *
  *                                                                                      *
  * This program is free software; you can redistribute it and/or modify it under        *
  * the terms of the GNU General Public License as published by the Free Software        *
@@ -25,26 +26,24 @@ import android.media.AudioManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
-import com.ichi2.async.ProgressSenderAndCancelListener;
-import com.ichi2.utils.FileUtil;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.FileVisitResult;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Iterator;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.app.NotificationCompat;
 import timber.log.Timber;
 
 /** Implementation of {@link Compat} for SDK level 26 and higher. Check  {@link Compat}'s for more detail. */
@@ -73,6 +72,7 @@ public class CompatV26 extends CompatV23 implements Compat {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void vibrate(Context context, long durationMillis) {
         Vibrator vibratorManager = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibratorManager != null) {
@@ -96,51 +96,20 @@ public class CompatV26 extends CompatV23 implements Compat {
         return Files.copy(source, Paths.get(target), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    // Explores the source directory tree recursively and copies each directory and each file inside each directory
     @Override
-    public void copyDirectory(@NonNull File srcDir, @NonNull File destDir, @NonNull ProgressSenderAndCancelListener<Integer> ioTask, boolean deleteAfterCopy) throws IOException {
-        // If destDir exists, it must be a directory. If not, create it
-        FileUtil.ensureFileIsDirectory(destDir);
-
-        Path sourceDirPath = srcDir.toPath();
-        Path destinationDirPath = destDir.toPath();
-
-        Files.walkFileTree(sourceDirPath, new SimpleFileVisitor<Path>() {
-
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                Files.createDirectories(destinationDirPath.resolve(sourceDirPath.relativize(dir)));
-                return FileVisitResult.CONTINUE;
-            }
-
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                File destFile = destinationDirPath.resolve(sourceDirPath.relativize(file)).toFile();
-
-                // Copy if source file and destination file aren't of the same length
-                // i.e., copy if destination file wasn't copied completely
-                if (file.toFile().length() != destFile.length()) {
-                    OutputStream outputStream = new FileOutputStream(destFile, false);
-                    long bytesCopied = copyFile(file.toString(), outputStream);
-                    ioTask.doProgress((int) bytesCopied / 1024);
-                    outputStream.close();
-                }
-                if (deleteAfterCopy) {
-                    Files.delete(file);
-                }
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (deleteAfterCopy) {
-                    Files.delete(dir);
-                }
-                return FileVisitResult.CONTINUE;
-            }
-        });
+    public void deleteFile(@NonNull File file) throws IOException {
+        try {
+            Files.delete(file.toPath());
+        } catch (NoSuchFileException ex) {
+            throw new FileNotFoundException(file.getCanonicalPath());
+        }
     }
+
+    @Override
+    public void createDirectories(@NonNull File directory) throws IOException {
+        Files.createDirectories(directory.toPath());
+    }
+
 
     @Override
     public void requestAudioFocus(AudioManager audioManager, AudioManager.OnAudioFocusChangeListener audioFocusChangeListener,
@@ -158,5 +127,57 @@ public class CompatV26 extends CompatV23 implements Compat {
         if (audioFocusRequest != null) {
             audioManager.abandonAudioFocusRequest(audioFocusRequest);
         }
+    }
+
+    @VisibleForTesting
+    @NonNull DirectoryStream<Path> newDirectoryStream(Path dir) throws IOException {
+        return Files.newDirectoryStream(dir);
+    }
+
+    /*
+     * This method uses [Files.newDirectoryStream].
+     * Hence this method, hasNext and next should be constant in time and space.
+     */
+    @Override
+    public @NonNull FileStream contentOfDirectory(File directory) throws IOException {
+        final DirectoryStream<Path> paths_stream;
+        try {
+            paths_stream = newDirectoryStream(directory.toPath());
+        } catch (IOException e) {
+            if (e instanceof NoSuchFileException) {
+                NoSuchFileException nsfe = (NoSuchFileException) e;
+                throw new FileNotFoundException(nsfe.getFile() + "\n" + nsfe.getCause() + "\n" + nsfe.getStackTrace());
+            }
+            throw e;
+        }
+        Iterator<Path> paths = paths_stream.iterator();
+        return new FileStream() {
+            @Override
+            public void close() throws IOException {
+                paths_stream.close();
+            }
+
+
+            @Override
+            public boolean hasNext() throws IOException {
+                try {
+                    return paths.hasNext();
+                } catch (DirectoryIteratorException e) {
+                    // According to the documentation, it's the only exception it can throws.
+                    throw e.getCause();
+                }
+            }
+
+
+            @Override
+            public File next() throws IOException {
+                // According to the documentation, if [hasNext] returned true, [next] is guaranteed to succeed.
+                try {
+                    return paths.next().toFile();
+                } catch (DirectoryIteratorException e) {
+                    throw e.getCause();
+                }
+            }
+        };
     }
 }

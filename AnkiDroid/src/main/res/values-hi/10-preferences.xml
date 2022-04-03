@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">अंकन की चौड़ाई</string>
     <string name="use_input_tag" maxLength="41">पत्ता में उत्तर दर्ज करें</string>
     <string name="use_input_tag_summ">जवाब में टाइप करने के लिए कार्ड के अंदर एक पाठ इनपुट बॉक्स का उपयोग करें</string>
-    <string name="dictionary" maxLength="41">शब्दकोष खोजें</string>
     <string name="reset_languages" maxLength="41">भाषाएँ रीसेट करें</string>
     <string name="reset_languages_summ">सभी डेक के लिए भाषा असाइनमेंट (पाठ के लिए वाक् और शब्दकोशों के लिए) रीसेट करें</string>
     <string name="reset_languages_question">सभी भाषा असाइनमेंट रीसेट करें?</string>
@@ -77,7 +76,7 @@
     <string name="image_zoom" maxLength="41">छवि ज़ूम</string>
     <string name="button_size" maxLength="41">उत्तर बटन आकार</string>
     <string name="card_browser_font_size" maxLength="41">कार्ड ब्राउज़र फ़ॉन्ट स्केलिंग</string>
-    <string name="card_browser_hide_media" maxLength="41">Display filenames in card browser</string>
+    <string name="card_browser_hide_media" maxLength="41">फाइलों के नाम कार्ड ब्राउज़र में दिखाएं</string>
     <string name="card_browser_hide_media_summary">Display media filenames in the card browser question/answer fields</string>
     <string name="col_path" maxLength="41">AnkiDroid निर्देशिका</string>
     <string name="fullscreen_review" maxLength="41">फुल स्क्रीन मोड</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>सर्वोच्च</item>
         <item>तल</item>
+        <item>None</item>
     </string-array>
     <string name="gestures" maxLength="41">जेस्चर सक्षम करें</string>
     <string name="gestures_summ">ऐसे जवाब और संपादन कार्ड के रूप में कार्रवाई करने के लिए इशारों निरुपित ।</string>
-    <string name="gestures_allow_links" maxLength="41">Ignore touch gestures on links</string>
-    <string name="gestures_allow_links_summary">Touch gestures will not be processed if a link/hint is pressed.</string>
     <string name="gestures_corner_touch" maxLength="41">९-बिंदु स्पर्श</string>
     <string name="gestures_corner_touch_summary">स्क्रीन कोनों में स्पर्श इशारों की अनुमति दें</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">फुल स्क्रीन नेविगेशन दराज</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Touch bottom left</string>
     <string name="gestures_corner_tap_bottom_center">Touch bottom center</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Touch bottom right</string>
-    <string name="gestures_volume_up" maxLength="41">Volume up</string>
-    <string name="gestures_volume_down" maxLength="41">Volume down</string>
     <string name="more_scrolling_buttons" maxLength="41">ई-रीडर</string>
     <string name="more_scrolling_buttons_summ">साथ ही स्क्रॉलिंग के लिए कांजी/कतकान, इमोजी/काओ-मोजी बटन का उपयोग करें</string>
     <string name="card_browser_enable_external_context_menu">‘%s’ मेन्यू</string>
@@ -137,6 +133,7 @@
     <string name="automatic_sync_choice_summ">यदि अंतिम सिंक्रनाइज़ेशन 10 मिनट पहले से अधिक था, तो अनुप्रयोग प्रारंभ/निकास पर स्वचालित रूप से सिंक्रनाइज़ करें ।</string>
     <string name="sync_status_badge" maxLength="41">Display synchronization status</string>
     <string name="sync_status_badge_summ">Change the sync icon when changes can be uploaded</string>
+    <string name="app_theme" maxLength="41">Theme</string>
     <string name="day_theme" maxLength="41">दिवस थीम</string>
     <string name="night_theme" maxLength="41">रात विषय</string>
     <string name="default_font" maxLength="41">डिफ़ॉल्ट फ़ॉंट</string>
@@ -151,6 +148,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">वाइब्रेट</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">पलक लाइट</string>
     <string name="timeout_answer_text" maxLength="41">स्वचालित उत्तर प्रदर्शन</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">उपयोगकर्ता इनपुट के बिना स्वचालित रूप से उत्तर दिखाएं । देरी स्वचालित रूप से खेला ऑडियो फ़ाइलों के लिए समय शामिल है ।</string>
     <string name="timeout_answer_seconds" maxLength="41">जवाब दिखाने के लिए समय</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -172,7 +170,7 @@
     <string name="show_estimates_summ">उत्तर बटंस पर अगली समीक्षा समय दिखाएं</string>
     <string name="show_large_answer_buttons" maxLength="41">बड़े उत्तर बटन दिखाएं</string>
     <string name="show_large_answer_buttons_summ">२ पंक्तियों में उत्तर बटन दिखाएं</string>
-    <string name="show_top_bar" maxLength="41">Show Top Bar</string>
+    <string name="show_top_bar" maxLength="41">ऊपरी बार दिखाएं</string>
     <string name="show_top_bar_summ">शीर्ष बार में कार्ड की संख्या, ध्वज और चिह्न दिखाएं</string>
     <string name="show_progress" maxLength="41">शेष दिखाएं</string>
     <string name="show_progress_summ">शेष कार्ड गणना दिखाएं</string>
@@ -213,6 +211,13 @@
     <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
     <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
     <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Default deck when opening statistics</string>
+    <string name="stats_default_deck_current">Show stats for most recent deck</string>
+    <string name="stats_default_deck_all">Show stats for all decks</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">उंनत सांख्यिकी</string>
     <string name="enable_advanced_statistics_title" maxLength="41">उंनत आंकड़े सक्षम करें</string>

@@ -43,7 +43,9 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:singleLine">true</item>
     </style>
-    <style name="FooterButton" parent="FooterButtonBase"/>
+    <style name="FooterButton" parent="FooterButtonBase">
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+    </style>
 
     <style name="FooterButtonNextTime">
         <item name="android:layout_width">match_parent</item>
@@ -60,7 +62,9 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:typeface">sans</item>
     </style>
-    <style name="FooterButtonEaseText" parent="FooterButtonEaseTextBase" />
+    <style name="FooterButtonEaseText" parent="FooterButtonEaseTextBase" >
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+    </style>
 
     <!-- Styles for each of the 4 answer buttons -->
     <!-- Ease text -->
@@ -134,9 +138,9 @@
 
     <!-- padding is hardcoded in Toolbar.java (32) to allow for fixing the scrollview -->
     <style name="note_editor_toolbar_button">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:padding">4dp</item>
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:padding">2dp</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:tint">@color/black</item>
     </style>
@@ -160,5 +164,10 @@
         <item name="layout_constraintWidth_percent">0.125</item>
         <item name="layout_constraintHeight_percent">0.125</item>
         <item name="android:background">@drawable/ic_gesture_tap</item>
+    </style>
+
+    <style name="custom_material_dialog_content">
+        <!--<item name="android:textColor">?attr/md_content_color</item>-->
+        <item name="android:textSize">@dimen/md_content_textsize</item>
     </style>
 </resources>

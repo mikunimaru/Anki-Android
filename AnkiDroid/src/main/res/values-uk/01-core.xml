@@ -45,7 +45,7 @@
     <string name="statistics">Статистика</string>
     <string name="settings">Налаштування</string>
     <string name="help">Допомога</string>
-    <string name="drawing">Drawing</string>
+    <string name="drawing">Креслення</string>
     <string name="send_feedback">Надіслати відгук</string>
     <string name="studyoptions_due_today">На сьогодні:</string>
     <string name="studyoptions_new_total">Всього нових карток:</string>
@@ -69,16 +69,16 @@
         <item quantity="other">Залишилося %d хвилини</item>
     </plurals>
     <plurals name="reviewer_window_title_hours">
-        <item quantity="one">%d година %d залишилася</item>
+        <item quantity="one">залишилася %d година %d</item>
         <item quantity="few">залишилося %d години %d </item>
         <item quantity="many">залишилося %d годин %d </item>
-        <item quantity="other">Залишилася %d годин %d</item>
+        <item quantity="other">залишилося %d годин %d</item>
     </plurals>
     <plurals name="reviewer_window_title_days">
-        <item quantity="one">залишилась %d доба, %d </item>
-        <item quantity="few">залишилося %d доби %d</item>
-        <item quantity="many">залишилося %d діб %d</item>
-        <item quantity="other">залишилося %d доби %d</item>
+        <item quantity="one">залишився %d день, %d </item>
+        <item quantity="few">залишилося %d дні %d</item>
+        <item quantity="many">залишилося %d днів %d</item>
+        <item quantity="other">залишилося %d днів %d</item>
     </plurals>
     <string name="no_cards_placeholder_title">Колекція порожня</string>
     <string name="no_cards_placeholder_description">Почніть додавати картки\nвикористовуючи значок +.</string>
@@ -100,11 +100,11 @@
     <string name="studyoptions_congrats_undo">Скасувати %s</string>
     <string name="menu_import">Імпортувати</string>
     <string name="undo">Скасувати</string>
-    <string name="undo_action_review">Останній перегляд</string>
+    <string name="undo_action_review">останнє повторення</string>
     <string name="undo_action_change_deck_multi">Змінити колоди</string>
     <string name="move_all_to_deck">Перемістити все до колоди</string>
     <string name="unbury">Повернути</string>
-    <string name="rename_deck">Переназвати колоду</string>
+    <string name="rename_deck">Перейменувати колоду</string>
     <string name="create_shortcut">Створити значок</string>
     <string name="browse_cards">Переглянути картки</string>
     <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Додати</string>
@@ -113,7 +113,7 @@
     <string name="menu_dismiss_note">Сховати / видалити</string>
     <string name="menu_bury_card">Відкласти картку</string>
     <string name="menu_bury_note">Відкласти запис</string>
-    <string name="menu_suspend_card">Відкласти картку</string>
+    <string name="menu_suspend_card">Виключити картку</string>
     <string name="menu_suspend_note">Призупинити запис</string>
     <string name="menu_bury">Відкласти</string>
     <string name="menu_suspend">Призупинити</string>
@@ -125,20 +125,17 @@
     <string name="menu_flag_card_two">Помаранчевий прапорець</string>
     <string name="menu_flag_card_three">Зелений прапорець</string>
     <string name="menu_flag_card_four">Синій прапорець</string>
-    <string name="menu_flag_card_five">Pink flag</string>
-    <string name="menu_flag_card_six">Turquoise flag</string>
-    <string name="menu_flag_card_seven">Purple flag</string>
+    <string name="menu_flag_card_five">Рожевий прапорець</string>
+    <string name="menu_flag_card_six">Бірюзовий прапорець</string>
+    <string name="menu_flag_card_seven">Фіолетовий прапорець</string>
     <string name="menu_edit_tags">Редагувати примітки</string>
     <string name="delete_note_message">Дійсно видалити цей запис разом з усіма його картками?\n%s</string>
-    <string name="menu_select">Виділити текст</string>
-    <string name="menu_lookup">Шукати текст</string>
     <string name="menu_search">Пошук у %1$s</string>
     <string name="menu_mark_note">Позначити запис</string>
     <string name="menu_unmark_note">Зняти позначку запису</string>
     <string name="menu_toggle_mic_tool_bar">Перевірити вимову</string>
     <string name="new_deck">Створити колоду</string>
     <string name="new_dynamic_deck">Створити фільтровану колоду</string>
-    <string name="night_mode">Нічний режим</string>
     <string name="directory_inaccessible">AnkiDroid каталог не доступний</string>
     <!--This is shown when AnkiDroid starts up with no storage permissions.
     The user is taken to the "App Info" screen, and needs to click "Permissions" and
@@ -169,15 +166,16 @@
     <string name="custom_study_deck_name">Додаткове навчання</string>
     <string name="custom_study_deck_exists">Спочатку перейменуйте колоду додаткового навчання</string>
     <string name="empty_deck">Ця колода порожня</string>
-    <string name="search_deck">Пошук колоди</string>
+    <string name="search_deck" comment="Deck search for selecting it">Пошук колоди</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Пошук колоди</string>
     <string name="empty_deck_add_note">Додати картку</string>
     <string name="invalid_deck_name">Некоректна назва колоди</string>
     <string name="studyoptions_empty">Ця колода порожня. Натисніть на кнопку +, щоб додати новий вміст.</string>
     <string name="studyoptions_limit_reached">Досягнуто денної межі навчання</string>
     <string name="studyoptions_empty_schedule">Немає запланованих карток</string>
     <string name="studyoptions_congrats_finished">Вітаємо! На разі це все.</string>
-    <string name="studyoptions_congrats_more_rev">Досягнуто добового ліміту, але ще залишилися картки на перегляд. Ви можете збільшити щоденний ліміт у налаштуваннях.</string>
-    <string name="studyoptions_congrats_more_new">Досягнуто добового ліміту карток. Ви можете збільшити ліміт в налаштуваннях, але це короткочасно збільшить навантаження.</string>
+    <string name="studyoptions_congrats_more_rev">Досягнуто добового ліміту, але ще залишилися картки для повторення. Ви можете збільшити щоденний ліміт у налаштуваннях.</string>
+    <string name="studyoptions_congrats_more_new">Досягнуто добового ліміту карток, але ще залишилися нові карточки. Ви можете збільшити ліміт в налаштуваннях, але тоді збільшиться кількість повторень в майбутньому.</string>
     <string name="studyoptions_congrats_custom">Для додаткового навчання натисніть кнопку «Додаткове навчання»</string>
     <string name="studyoptions_no_cards_due">Не залишилось карток на перегляд</string>
     <string name="sd_card_not_mounted">Пристрій зберігання не підключено</string>
@@ -202,10 +200,10 @@
     <string name="card_template_editor_select_field">Виберіть поле</string>
     <string name="card_template_editor_cant_delete">Необхідно хоча б один тип карток</string>
     <plurals name="card_template_editor_confirm_add">
-        <item quantity="one">Це створить %1$d картку. Продовжити?</item>
-        <item quantity="few">Це створить %1$d картки. Продовжити?</item>
-        <item quantity="many">Це створить %1$d карток. Продовжити?</item>
-        <item quantity="other">This will create %1$d cards. Proceed?</item>
+        <item quantity="one">Буде створено %1$d картку. Продовжити?</item>
+        <item quantity="few">Буде створено %1$d картки. Продовжити?</item>
+        <item quantity="many">Буде створено %1$d карток. Продовжити?</item>
+        <item quantity="other">Буде створено %1$d карток. Продовжити?</item>
     </plurals>
     <plurals name="card_template_editor_confirm_delete">
         <item quantity="one">Видалити тип картки «%2$s» та його %1$d картку?</item>
@@ -250,5 +248,5 @@
         <item quantity="many">%1$d карток (0 для перегляду)</item>
         <item quantity="other">%1$d карток (0 для перегляду)</item>
     </plurals>
-    <string name="copy_note_type_name" comment="The new name of a copied note type">%s copy</string>
+    <string name="copy_note_type_name" comment="The new name of a copied note type">Копія %s</string>
 </resources>

@@ -25,6 +25,7 @@ import net.ankiweb.rsdroid.BackendFactory;
 import net.ankiweb.rsdroid.RustBackendFailedException;
 
 import BackendProto.Backend;
+import androidx.annotation.NonNull;
 
 import static org.mockito.Mockito.mock;
 
@@ -33,8 +34,8 @@ import static org.mockito.Mockito.mock;
  */
 public class BackendEmulatingOpenConflict extends RustDroidBackend {
 
-    public BackendEmulatingOpenConflict(BackendFactory mBackend) {
-        super(mBackend);
+    public BackendEmulatingOpenConflict(BackendFactory backend) {
+        super(backend);
     }
 
 
@@ -53,7 +54,7 @@ public class BackendEmulatingOpenConflict extends RustDroidBackend {
 
 
     @Override
-    public DB openCollectionDatabase(String path) {
+    public DB openCollectionDatabase(@NonNull String path) {
         Backend.BackendError error = mock(Backend.BackendError.class);
         throw new BackendException.BackendDbException.BackendDbLockedException(error);
     }

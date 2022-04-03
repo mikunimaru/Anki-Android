@@ -23,7 +23,6 @@ import com.ichi2.anki.CardBrowser;
 import com.ichi2.anki.RobolectricTest;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
 import com.ichi2.libanki.sched.SchedV2;
-import com.ichi2.libanki.utils.Time;
 import com.ichi2.utils.JSONObject;
 
 import org.junit.Test;
@@ -72,7 +71,7 @@ public class FinderTest extends RobolectricTest {
         Card manuallyBuriedCard = buryManually(sched, toAnswer.getId());
 
         //perform the search
-        List<Long> buriedCards = new Finder(getCol()).findCards(searchQuery, false);
+        List<Long> buriedCards = new Finder(getCol()).findCards(searchQuery, new SortOrder.NoOrdering());
 
         //assert
         assertThat("A manually buried card should be returned", buriedCards, hasItem(manuallyBuriedCard.getId()));
@@ -82,13 +81,15 @@ public class FinderTest extends RobolectricTest {
 
 
     private void enableBurySiblings() {
-        getCol().getDecks().allConf().get(0).getJSONObject("new").put("bury", true);
+        DeckConfig config = getCol().getDecks().allConf().get(0);
+        config.getJSONObject("new").put("bury", true);
+        getCol().getDecks().save(config);
     }
 
 
     @NonNull
     private Card burySiblings(SchedV2 sched, Card toManuallyBury) {
-        sched.answerCard(toManuallyBury, 1);
+        sched.answerCard(toManuallyBury, Consts.BUTTON_ONE);
         Card siblingBuried = new Note(getCol(), toManuallyBury.getNid()).cards().get(1);
         assertThat(siblingBuried.getQueue(), is(Consts.QUEUE_TYPE_SIBLING_BURIED));
         return siblingBuried;
@@ -215,20 +216,20 @@ public class FinderTest extends RobolectricTest {
         // ordering
         col.set_config("sortType", "noteCrt");
         col.flush();
-        assertTrue(latestCardIds.contains(getLastListElement(col.findCards("front:*", true))));
-        assertTrue(latestCardIds.contains(getLastListElement(col.findCards("", true))));
+        assertTrue(latestCardIds.contains(getLastListElement(col.findCards("front:*", new SortOrder.UseCollectionOrdering()))));
+        assertTrue(latestCardIds.contains(getLastListElement(col.findCards("", new SortOrder.UseCollectionOrdering()))));
 
         col.set_config("sortType", "noteFld");
         col.flush();
-        assertEquals(catCard.getId(), (long) col.findCards("", true).get(0));
-        assertTrue(latestCardIds.contains(getLastListElement(col.findCards("", true))));
+        assertEquals(catCard.getId(), (long) col.findCards("", new SortOrder.UseCollectionOrdering()).get(0));
+        assertTrue(latestCardIds.contains(getLastListElement(col.findCards("", new SortOrder.UseCollectionOrdering()))));
         col.set_config("sortType", "cardMod");
         col.flush();
-        assertTrue(latestCardIds.contains(getLastListElement(col.findCards("", true))));
-        assertEquals(firstCardId, (long) col.findCards("", true).get(0));
+        assertTrue(latestCardIds.contains(getLastListElement(col.findCards("", new SortOrder.UseCollectionOrdering()))));
+        assertEquals(firstCardId, (long) col.findCards("", new SortOrder.UseCollectionOrdering()).get(0));
         col.set_config("sortBackwards", true);
         col.flush();
-        assertTrue(latestCardIds.contains(col.findCards("", true).get(0)));
+        assertTrue(latestCardIds.contains(col.findCards("", new SortOrder.UseCollectionOrdering()).get(0)));
         /* TODO: Port BuiltinSortKind
            assertEquals(firstCardId,
            col.findCards("", BuiltinSortKind.CARD_DUE, reverse=false).get(0)
@@ -301,11 +302,11 @@ public class FinderTest extends RobolectricTest {
             assertEquals(0, col.findCards("rated:1:1").size());
             assertEquals(0, col.findCards("rated:1:2").size());
             c = getCard();
-            col.getSched().answerCard(c, 2);
+            col.getSched().answerCard(c, Consts.BUTTON_TWO);
             assertEquals(0, col.findCards("rated:1:1").size());
             assertEquals(1, col.findCards("rated:1:2").size());
             c = getCard();
-            col.getSched().answerCard(c, 1);
+            col.getSched().answerCard(c, Consts.BUTTON_ONE);
             assertEquals(1, col.findCards("rated:1:1").size());
             assertEquals(1, col.findCards("rated:1:2").size());
             assertEquals(2, col.findCards("rated:1").size());
@@ -351,8 +352,7 @@ public class FinderTest extends RobolectricTest {
         long did = note.firstCard().getDid();
         assertEquals(currentDid, did);
         CardBrowser cb = super.startActivityNormallyOpenCollectionWithIntent(CardBrowser.class, new Intent());
-        int pos = cb.getChangeDeckPositionFromId(currentDid);
-        cb.mDeckSpinnerSelection.selectDropDownItem(pos + 1);    //Adjusting for All Decks option at position 0
+        cb.mDeckSpinnerSelection.updateDeckPosition(currentDid);
         advanceRobolectricLooperWithSleep();
         assertEquals(1L, cb.getCardCount());
     }

@@ -1,3 +1,19 @@
+/*
+ *  Copyright (c) 2020 Arthur Milchior <arthur@milchior.fr>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ichi2.libanki;
 
 import com.ichi2.anki.RobolectricTest;
@@ -9,24 +25,24 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 @RunWith(AndroidJUnit4.class)
 public class ExportingTest extends RobolectricTest {
-    private Collection col;
+    private Collection mCol;
 
     /*****************
      ** Exporting    *
      *****************/
     private void setup() {
-        col = getCol();
-        Note note = col.newNote();
+        mCol = getCol();
+        Note note = mCol.newNote();
         note.setItem("Front", "foo");
         note.setItem("Back", "bar<br>");
         note.setTagsFromStr("tag, tag2");
-        col.addNote(note);
+        mCol.addNote(note);
         // with a different col
-        note = col.newNote();
+        note = mCol.newNote();
         note.setItem("Front", "baz");
         note.setItem("Back", "qux");
         note.model().put("did", addDeck("new col"));
-        col.addNote(note);
+        mCol.addNote(note);
     }
 
 
@@ -82,7 +98,7 @@ public class ExportingTest extends RobolectricTest {
 
        @Test
        public void test_export_ankipkg(){
-       // add a test file to the media folder
+       // add a test file to the media directory
        with open(os.path.join(col.getMedia().dir(), "今日.mp3"), "w") as note:
        note.write("test");
        Note n = col.newNote();

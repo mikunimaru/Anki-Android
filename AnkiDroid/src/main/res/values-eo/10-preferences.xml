@@ -55,8 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">Gestoj</string>
     <string name="pref_cat_gestures_summ">Stiri per frapeti kaj ŝovumi anstataŭ per butonoj</string>
     <string name="pref_cat_actions" maxLength="41">Agoj</string>
-    <string name="pref_cat_controls" maxLength="41">Controls</string>
-    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
+    <string name="pref_cat_controls" maxLength="41">Stiriloj</string>
+    <string name="pref_cat_controls_summ">Agordi klavarojn kaj aliajn stirilojn</string>
     <string name="pref_cat_advanced" maxLength="41">Altnivelaj</string>
     <string name="pref_cat_advanced_summ">Plejbonigado kaj spertulaj eblaĵoj</string>
     <string name="pref_cat_performance" maxLength="41">Rendimento</string>
@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">Larĝo de streko</string>
     <string name="use_input_tag" maxLength="41">Enigi respondon al karto</string>
     <string name="use_input_tag_summ">Uzi tekstan enigan kampon en la karto por enigi respondon</string>
-    <string name="dictionary" maxLength="41">Vortaro</string>
     <string name="reset_languages" maxLength="41">Restarigi lingvojn</string>
     <string name="reset_languages_summ">Restarigi lingvajn alĝustigojn (por parolsinteziloj kaj vortaroj) por ĉiuj kartaroj</string>
     <string name="reset_languages_question">Ĉu forviŝi ĉiujn lingvajn alĝustigojn?</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>Supre</item>
         <item>Sube</item>
+        <item>Neniu</item>
     </string-array>
     <string name="gestures" maxLength="41">Enŝalti gestojn</string>
     <string name="gestures_summ">Asigni gestojn al agoj, kiel respondi aŭ redakti karton.</string>
-    <string name="gestures_allow_links" maxLength="41">Ignori gestojn sur ligiloj</string>
-    <string name="gestures_allow_links_summary">Tuŝaj gestoj ne funkcios kiam ligilo ĉeestos.</string>
     <string name="gestures_corner_touch" maxLength="41">9-punkta frapeto</string>
     <string name="gestures_corner_touch_summary">Ebligi gestojn en anguloj de la ekrano</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">Naviga tirmenuo sur plenekrano</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Frapeti suban maldekstron</string>
     <string name="gestures_corner_tap_bottom_center">Frapeti suban mezon</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Frapeti suban dekstron</string>
-    <string name="gestures_volume_up" maxLength="41">Pliigi sonfortecon</string>
-    <string name="gestures_volume_down" maxLength="41">Malpliigi sonfortecon</string>
     <string name="more_scrolling_buttons" maxLength="41">Elektronika legilo</string>
     <string name="more_scrolling_buttons_summ">Ankaŭ uzi butonojn de kanji/katakana aŭ emoĝioj por rulumi</string>
     <string name="card_browser_enable_external_context_menu">Menuo “%s”</string>
@@ -137,12 +133,13 @@
     <string name="automatic_sync_choice_summ">Aŭtomate sinkronigi je aplikaĵa starto/ĉeso nur se la antaŭa samtempigo okazis antaŭ pli ol 10 minutoj.</string>
     <string name="sync_status_badge" maxLength="41">Montri staton de samtempigo</string>
     <string name="sync_status_badge_summ">Ŝanĝi la emblemon de samtempigo kiam povas alŝuti ŝanĝojn</string>
+    <string name="app_theme" maxLength="41">Temo</string>
     <string name="day_theme" maxLength="41">Taga etoso</string>
     <string name="night_theme" maxLength="41">Nokta etoso</string>
     <string name="default_font" maxLength="41">Implicita tiparo</string>
     <string name="override_font" maxLength="41">Uzi implicitan tiparon</string>
     <string name="language" maxLength="41">Lingvo</string>
-    <string name="language_system">Sistema</string>
+    <string name="language_system">Laŭ operaciumo</string>
     <string name="notification_pref" maxLength="41">Sciigoj</string>
     <string name="notification_pref_title" maxLength="41">Averti nur</string>
     <string name="never_notify">Neniam sciigi</string>
@@ -151,6 +148,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Vibri</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Lumpulsi</string>
     <string name="timeout_answer_text" maxLength="41">Aŭtomate montri respondon</string>
+    <string name="timeout_answer" maxLength="41">Respondo post elĉerpi tempon</string>
     <string name="timeout_answer_summ">Aŭtomate montri respondon sen enigo de uzanto. Prokrasto enhavas tempon por aŭtomate ludi sonaĵon.</string>
     <string name="timeout_answer_seconds" maxLength="41">Montri respondon post</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -207,12 +205,19 @@
     <string name="thirdparty_apps_title" maxLength="41">Eksteraj aplikaĵoj uzantaj API</string>
     <string name="thirdparty_apps_summary">Vidigi listojn de aplikaĵoj, kiuj uzas AnkiDroid API kiel vortaroj kaj iloj.</string>
     <string name="html_javascript_debugging" maxLength="41">Senerarigado de HTML / JavaScript</string>
-    <string name="html_javascript_debugging_summ">Aktivigu forajn konektojn por WebView kaj konservu HTML de kartoj al la dosierujo “AnkiDroid”</string>
+    <string name="html_javascript_debugging_summ">Aktivigi forajn konektojn por WebView kaj konservi HTML de kartoj al la dosierujo “AnkiDroid”</string>
     <!-- Paste clipboard image as png option -->
     <string name="paste_as_png" maxLength="41">Alglui bildojn kiel PNG</string>
     <string name="paste_as_png_summary">Implicite la aplikaĵo Anki algluas bildojn el la tondujo kiel dosierojn JPG por konservi spacon. Vi povas uzi tiun ĉi agordon por alglui ilin kiel PNG.</string>
     <string name="exit_via_double_tap_back" maxLength="41">Duoble premi por reiri/eliri</string>
     <string name="exit_via_double_tap_back_summ">Por eviti neatenditan eliron el la aplikaĵo</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Ĉiuj dosieroj dum enporti aŭdvidaĵojn</string>
+    <string name="media_import_allow_all_files_summ">Se Android ne povas rekoni dosierojn de aŭdvidaĵojn</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Implicite montri statistikojn por</string>
+    <string name="stats_default_deck_current">la antaŭe malfermita kartaro</string>
+    <string name="stats_default_deck_all">ĉiuj kartaroj</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Detala statistiko</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Vidigi detalan statistikon</string>
@@ -229,7 +234,7 @@
     <string name="custom_sync_server_media_url_title" maxLength="41">Ligilo de aŭdvidaĵa samtempigado</string>
     <string name="custom_sync_server_media_url_invalid">Malĝusta ligilo de samtempigo de aŭdvidaĵoj</string>
     <!-- Key Bindings -->
-    <string name="controls_main_category" maxLength="41">Command mapping</string>
+    <string name="controls_main_category" maxLength="41">Asigni al ordonoj</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Ŝanĝoj al grupaj agordoj de kartaroj aplikos al pluraj kartaroj. Se vi volas ŝanĝi nur la nunan kartaron, bonvolu unue aldoni novan grupon de agordoj</string>
     <string name="studyoptions_limit_select_tags">Elekti etikedojn</string>
@@ -325,6 +330,6 @@
     <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">R: %s</string>
     <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
     <!-- Binding Preference -->
-    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
-    <string name="bindings_already_bound">Already bound to %s</string>
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Forigi: “%s”</string>
+    <string name="bindings_already_bound">Jam asignita al %s</string>
 </resources>

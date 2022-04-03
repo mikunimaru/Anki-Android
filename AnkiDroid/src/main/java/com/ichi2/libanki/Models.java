@@ -83,30 +83,28 @@ public class Models extends ModelManager {
             + "\\\\begin{document}\\n"
             + "\", "
             + "\"latexPost\": \"\\\\end{document}\", "
+            + "\"latexsvg\": false,"
             + "\"mod\": 0, "
             + "\"usn\": 0, "
-            + "\"vers\": [], " // FIXME: remove when other clients have caught up
             + "\"type\": "
             + Consts.MODEL_STD
             + ", "
             + "\"css\": \".card {\\n"
-            + " font-family: arial;\\n"
-            + " font-size: 20px;\\n"
-            + " text-align: center;\\n"
-            + " color: black;\\n"
-            + " background-color: white;\\n"
-            + "}\""
+            + "  font-family: arial;\\n"
+            + "  font-size: 20px;\\n"
+            + "  text-align: center;\\n"
+            + "  color: black;\\n"
+            + "  background-color: white;\\n"
+            + "}\n\""
             + "}";
 
     private static final String defaultField = "{\"name\": \"\", " + "\"ord\": null, " + "\"sticky\": false, " +
     // the following alter editing, and are used as defaults for the template wizard
-            "\"rtl\": false, " + "\"font\": \"Arial\", " + "\"size\": 20, " +
-            // reserved for future use
-            "\"media\": [] }";
+            "\"rtl\": false, " + "\"font\": \"Arial\", " + "\"size\": 20 }";
 
     private static final String defaultTemplate = "{\"name\": \"\", " + "\"ord\": null, " + "\"qfmt\": \"\", "
-            + "\"afmt\": \"\", " + "\"did\": null, " + "\"bqfmt\": \"\"," + "\"bafmt\": \"\"," + "\"bfont\": \"Arial\"," +
-            "\"bsize\": 12 }";
+            + "\"afmt\": \"\", " + "\"did\": null, " + "\"bqfmt\": \"\"," + "\"bafmt\": \"\"," + "\"bfont\": \"\"," +
+            "\"bsize\": 0 }";
 
     // /** Regex pattern used in removing tags from text before diff */
     // private static final Pattern sFactPattern = Pattern.compile("%\\([tT]ags\\)s");
@@ -297,7 +295,6 @@ public class Models extends ModelManager {
         m.put("mod", mCol.getTime().intTime());
         m.put("flds", new JSONArray());
         m.put("tmpls", new JSONArray());
-        m.put("tags", new JSONArray());
         m.put("id", 0);
         return m;
     }
@@ -450,12 +447,12 @@ public class Models extends ModelManager {
     protected void _addField(Model m, JSONObject field) {
         // do the actual work of addField. Do not check whether model
         // is not new.
-		JSONArray flds = m.getJSONArray("flds");
-		flds.put(field);
-		m.put("flds", flds);
-		_updateFieldOrds(m);
-		save(m);
-		_transformFields(m, new TransformFieldAdd());
+        JSONArray flds = m.getJSONArray("flds");
+        flds.put(field);
+        m.put("flds", flds);
+        _updateFieldOrds(m);
+        save(m);
+        _transformFields(m, new TransformFieldAdd());
     }
 
     @Override
@@ -779,7 +776,7 @@ public class Models extends ModelManager {
 
     /** {@inheritDoc} */
     @Override
-    public void change(Model m, long nid, Model newModel, Map<Integer, Integer> fmap, Map<Integer, Integer> cmap) throws ConfirmModSchemaException {
+    public void change(Model m, long nid, Model newModel, @Nullable Map<Integer, Integer> fmap, @Nullable Map<Integer, Integer> cmap) throws ConfirmModSchemaException {
         mCol.modSchema();
         assert (newModel.getLong("id") == m.getLong("id")) || (fmap != null && cmap != null);
         if (fmap != null) {

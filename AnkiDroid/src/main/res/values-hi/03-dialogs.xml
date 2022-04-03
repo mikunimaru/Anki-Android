@@ -76,9 +76,9 @@
         <item quantity="other">%d कार्ड रीसेट हुआ</item>
     </plurals>
     <!-- Reschedule Card Dialog -->
-    <plurals name="reschedule_cards_dialog_title">
-        <item quantity="one">कार्ड पुनर्निर्धारित करें</item>
-        <item quantity="other">कार्ड पुनर्निर्धारित करें</item>
+    <plurals name="reschedule_cards_dialog_title_new">
+        <item quantity="one">Reschedule %d card</item>
+        <item quantity="other">Reschedule %d cards</item>
     </plurals>
     <plurals name="reschedule_card_dialog_interval">
         <item quantity="one">वर्तमान अंतराल: %d दिन</item>
@@ -119,6 +119,7 @@
     <string name="no_space_to_downgrade_content">AnkiDroid को जारी रखने के लिए %s मुफ्त संग्रहण स्थान की आवश्यकता है। कृपया कुछ जगह खाली करें</string>
     <string name="restore_backup_title">बैकअप रिस्टोर करें</string>
     <string name="restore_backup">आपका संग्रह किसी पुरानी प्रतिलिपि से बदल दिया जाएगा । कोई भी न सहेजा गया प्रगति खो जाएगी ।</string>
+    <string name="restore_backup_choose_another">Choose another</string>
     <string name="dialog_cancel">रद्द करें</string>
     <string name="dialog_ok">ठीक है</string>
     <string name="dialog_no">नहीं</string>
@@ -133,7 +134,6 @@
     <string name="dialog_positive_replace">की जगह</string>
     <string name="dialog_positive_restore">पुनर्स्थापित करें</string>
     <string name="dialog_positive_set">सेट करें</string>
-    <string name="lookup_button_content">लुक अप</string>
     <string name="dialog_collection_path_not_dir">निर्दिष्ट पथ कोई मांय निर्देशिका नहीं है</string>
     <!-- Media checking -->
     <string name="check_media_title">मीडिया की जांच करें?</string>
@@ -185,6 +185,7 @@
     <string name="card_browser_deck_change_error">डेक नहीं बदल सका</string>
     <!-- AbstractFlashCardViewer -->
     <string name="card_viewer_url_decode_error">कार्ड से डेटा डिकोड करने में त्रुटि</string>
+    <string name="undo_succeeded">Undone \"%s\"</string>
     <!-- Deck Options -->
     <string name="deck_options_corrupt">डेक विकल्पों को संसाधित करने में विफल: %s</string>
     <!-- Database Errors-->

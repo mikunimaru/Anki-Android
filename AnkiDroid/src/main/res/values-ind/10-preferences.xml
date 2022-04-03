@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">Tebal garis</string>
     <string name="use_input_tag" maxLength="41">Ketik jawaban ke dalam kartu</string>
     <string name="use_input_tag_summ">Gunakan kotak input teks di dalam kartu untuk mengetik jawaban</string>
-    <string name="dictionary" maxLength="41">Kamus pencarian</string>
     <string name="reset_languages" maxLength="41">Reset bahasa</string>
     <string name="reset_languages_summ">Reset penempatan bahasa (untuk teks-suara dan kamus) untuk semua dek</string>
     <string name="reset_languages_question">Reset semua penempatan bahasa?</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>Atas</item>
         <item>Bawah</item>
+        <item>None</item>
     </string-array>
     <string name="gestures" maxLength="41">Aktifkan gestur</string>
     <string name="gestures_summ">Menerapkan gestur sebagai tindakan untuk menjawab dan mengedit kartu.</string>
-    <string name="gestures_allow_links" maxLength="41">Abaikan gestur sentuhan di tautan</string>
-    <string name="gestures_allow_links_summary">Sentuhan gestur tidak akan diproses jika ada tautan ditekan.</string>
     <string name="gestures_corner_touch" maxLength="41">Mode sentuhan 9-poin</string>
     <string name="gestures_corner_touch_summary">Perbolehkan gestur sentuhan di bagian pojok layar</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">Navigasi laci layar penuh</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Sentuh bagian bawah kiri</string>
     <string name="gestures_corner_tap_bottom_center">Sentuh bagian bawah tengah</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Sentuh bagian bawah kanan</string>
-    <string name="gestures_volume_up" maxLength="41">Volume naik</string>
-    <string name="gestures_volume_down" maxLength="41">Volume turun</string>
     <string name="more_scrolling_buttons" maxLength="41">Pembaca elektronik</string>
     <string name="more_scrolling_buttons_summ">Gunakan kanji/katakana juga, tombol emoji/kao-moji untuk menggulir</string>
     <string name="card_browser_enable_external_context_menu">Menu ‘%s’</string>
@@ -138,6 +134,7 @@
          menit yang lalu.</string>
     <string name="sync_status_badge" maxLength="41">Tampilkan status sinkronisasi</string>
     <string name="sync_status_badge_summ">Ubah ikon sinkronisasi saat perubahan dapat diunggah</string>
+    <string name="app_theme" maxLength="41">Theme</string>
     <string name="day_theme" maxLength="41">Tema siang</string>
     <string name="night_theme" maxLength="41">Tema malam</string>
     <string name="default_font" maxLength="41">Fon dasar</string>
@@ -152,6 +149,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Getar</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Berkedip</string>
     <string name="timeout_answer_text" maxLength="41">Otomatis tampilkan jawaban</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">Tampilkan jawaban secara otomatis tanpa masukan dari pengguna. Jeda termasuk waktu untuk memutar berkas audio secara otomatis.</string>
     <string name="timeout_answer_seconds" maxLength="41">Waktu menampilkan jawaban</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX dtk</string>
@@ -214,6 +212,13 @@
     <string name="paste_as_png_summary">Anki menempel gambar papan klip berbentuk file JPG agar hemat penyimpanan. Gunakan opsi ini untuk menempel gambar sebagai file PNG.</string>
     <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
     <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Default deck when opening statistics</string>
+    <string name="stats_default_deck_current">Show stats for most recent deck</string>
+    <string name="stats_default_deck_all">Show stats for all decks</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Statistik lanjutan</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Aktifkan statistik lanjutan</string>
@@ -320,8 +325,8 @@
     <string name="card_side_question">Question</string>
     <string name="card_side_answer">Answer</string>
     <string name="card_side_both">Question &amp; Answer</string>
-    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
-    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
+    <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">T: %s</string>
+    <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">J: %s</string>
     <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
     <!-- Binding Preference -->
     <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>

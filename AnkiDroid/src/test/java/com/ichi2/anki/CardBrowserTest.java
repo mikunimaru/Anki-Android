@@ -1,3 +1,19 @@
+/*
+ *  Copyright (c) 2020 David Allison <davidallisongithub@gmail.com>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ichi2.anki;
 
 import android.Manifest;
@@ -17,10 +33,10 @@ import com.ichi2.libanki.Card;
 import com.ichi2.libanki.Consts;
 import com.ichi2.libanki.Deck;
 import com.ichi2.libanki.Note;
+import com.ichi2.libanki.SortOrder;
 import com.ichi2.testutils.AnkiAssert;
 import com.ichi2.testutils.IntentAssert;
 
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -788,7 +804,7 @@ public class CardBrowserTest extends RobolectricTest {
 
         CardBrowser cardBrowser = getBrowserWithNotes(2, CardBrowserSizeOne.class);
 
-        CollectionTask.SearchCards task = new CollectionTask.SearchCards("", false, cardsToRender, 0, 0);
+        CollectionTask.SearchCards task = new CollectionTask.SearchCards("", new SortOrder.NoOrdering(), cardsToRender, 0, 0);
 
         TaskManager.launchCollectionTask(task, cardBrowser.new SearchCardsHandler(cardBrowser));
         CardBrowser.CardCollection<CardBrowser.CardCache> cards = cardBrowser.getCards();

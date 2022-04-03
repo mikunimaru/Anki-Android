@@ -30,15 +30,18 @@ import com.ichi2.anki.exception.ConfirmModSchemaException
 import com.ichi2.libanki.Consts.MODEL_CLOZE
 import com.ichi2.libanki.Utils.*
 import com.ichi2.libanki.backend.ModelsBackend
+import com.ichi2.libanki.backend.ModelsBackendImpl
 import com.ichi2.libanki.backend.NoteTypeNameID
 import com.ichi2.libanki.backend.NoteTypeNameIDUseCount
 import com.ichi2.libanki.utils.*
 import com.ichi2.utils.JSONArray
 import com.ichi2.utils.JSONObject
+import net.ankiweb.rsdroid.BackendV1
 import net.ankiweb.rsdroid.RustCleanup
 import net.ankiweb.rsdroid.exceptions.BackendNotFoundException
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.HashMap
 
 private typealias int = Long
 // # types
@@ -99,14 +102,14 @@ var NoteType.type: Int
         put("type", value)
     }
 
-class ModelsV16(col: Collection) : ModelManager(col) {
+class ModelsV16(col: Collection, backend: BackendV1) : ModelManager(col) {
     /*
     # Saving/loading registry
     #############################################################
      */
 
     private var _cache: Dict<int, NoteType> = Dict()
-    private val modelsBackend: ModelsBackend = null!!
+    private val modelsBackend: ModelsBackend = ModelsBackendImpl(backend)
 
     init {
         _cache = Dict()
@@ -196,8 +199,8 @@ class ModelsV16(col: Collection) : ModelManager(col) {
     /** Get current model.*/
     @RustCleanup("Check the -1 fallback - copied from the Java")
     override fun current(forDeck: bool): NoteType {
-        var m = get(col.decks.current().getLong("mid"))
-        if (!forDeck || m != null) {
+        var m = get(col.decks.current().getLongOrNull("mid"))
+        if (!forDeck || m == null) {
             m = get(col.get_config("curModel", -1L)!!)
         }
         if (m != null) {
@@ -225,6 +228,14 @@ class ModelsV16(col: Collection) : ModelManager(col) {
 
     /** "Get model with ID, or None." */
     override fun get(id: int): NoteType? {
+        return get(id as int?)
+    }
+
+    /** Externally, we do not want to pass in a null id */
+    private fun get(id: int?): NoteType? {
+        if (id == null) {
+            return null
+        }
         var nt = _get_cached(id)
         if (!nt.isPresent) {
             try {
@@ -360,7 +371,7 @@ class ModelsV16(col: Collection) : ModelManager(col) {
     /** Mapping of field name : (ord, field). */
     fun fieldMap(m: NoteType): Map<str, Tuple<int, Field>> {
         return m.flds.jsonObjectIterable().map {
-            f ->
+                f ->
             Pair(f.getString("name"), Pair(f.getLong("ord"), f))
         }.toMap()
     }
@@ -523,8 +534,8 @@ class ModelsV16(col: Collection) : ModelManager(col) {
         save(m)
     }
 
-    override fun change(m: NoteType, nid: Long, newModel: NoteType, fmap: Map<Int, Int>, cmap: Map<Int, Int>) {
-        change(m, listOf(nid), newModel, Optional.of(fmap), Optional.of(cmap))
+    override fun change(m: NoteType, nid: Long, newModel: NoteType, fmap: Map<Int, Int>?, cmap: Map<Int, Int>?) {
+        change(m, listOf(nid), newModel, Optional.ofNullable(fmap), Optional.ofNullable(cmap))
     }
 
     fun template_use_count(ntid: int, ord: int): int {
@@ -573,7 +584,8 @@ and notes.mid = ? and cards.ord = ?""",
                 val fldsString = cursor.getString(1)
 
                 var flds = splitFields(fldsString)
-                val newflds = mutableListOf<str>()
+                // Kotlin: we can't expand a list via index, so use a HashMap
+                val newflds = HashMap<Int, str>()
                 for ((old, new) in list(map.entries)) {
                     if (new == null) {
                         continue
@@ -581,8 +593,8 @@ and notes.mid = ? and cards.ord = ?""",
                     newflds[new] = flds[old]
                 }
                 flds = Array(flds.size) { "" }
-                newflds.forEachIndexed {
-                    i, fld ->
+                newflds.forEach {
+                        (i, fld) ->
                     flds[i] = fld
                 }
                 val fldsAsString = joinFields(flds)
@@ -681,5 +693,22 @@ and notes.mid = ? and cards.ord = ?""",
 
     override fun _addField(m: Model, field: JSONObject) {
         addField(m, field)
+    }
+}
+
+/**
+ * @return null if the key doesn't exist, or the value is not a long. The long value of the key
+ * otherwise
+ *
+ * This better approximates `JSON.get` in the Python
+ */
+private fun Deck.getLongOrNull(key: String): int? {
+    if (!has(key)) {
+        return null
+    }
+    try {
+        return getLong(key)
+    } catch (ex: Exception) {
+        return null
     }
 }

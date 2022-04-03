@@ -45,17 +45,17 @@ public class AudioPlayerTest extends RobolectricTest {
     private File mFile;
 
     @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
+    public TemporaryFolder tempDirectory = new TemporaryFolder();
 
     @Before
     public void before() throws IOException {
         mAudioPlayer = new AudioPlayer();
-        mFile = tempFolder.newFile("testaudio.wav");
+        mFile = tempDirectory.newFile("testaudio.wav");
 
         ShadowMediaPlayer testPlayer = new ShadowMediaPlayer();
-        DataSource mFileSource = DataSource.toDataSource(mFile.getAbsolutePath());
-        ShadowMediaPlayer.MediaInfo mFileInfo = new ShadowMediaPlayer.MediaInfo();
-        testPlayer.addMediaInfo(mFileSource, mFileInfo);
+        DataSource fileSource = DataSource.toDataSource(mFile.getAbsolutePath());
+        ShadowMediaPlayer.MediaInfo fileInfo = new ShadowMediaPlayer.MediaInfo();
+        testPlayer.addMediaInfo(fileSource, fileInfo);
     }
 
     @Test

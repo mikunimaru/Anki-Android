@@ -94,7 +94,7 @@ class Exporter {
         if (mDid == null) {
             cids = Utils.list2ObjectArray(mCol.getDb().queryLongList("select id from cards"));
         } else {
-            cids = mCol.getDecks().cids(mDid, true);
+            cids = Utils.list2ObjectArray(mCol.getDecks().cids(mDid, true));
         }
         mCount = cids.length;
         return cids;
@@ -205,7 +205,7 @@ class AnkiExporter extends Exporter {
      * @throws IOException
      */
 
-    public void exportInto(String path, Context context) throws JSONException, IOException, ImportExportException {
+    public void exportInto(@NonNull String path, Context context) throws JSONException, IOException, ImportExportException {
         // create a new collection at the target
         new File(path).delete();
         Collection dst = Storage.Collection(context, path);
@@ -512,7 +512,7 @@ public final class AnkiPackageExporter extends AnkiExporter {
         z.write(colfile, CollectionHelper.COLLECTION_FILENAME);
         // and media
         prepareMedia();
-    	JSONObject media = _exportMedia(z, mMediaFiles, mCol.getMedia().dir());
+        JSONObject media = _exportMedia(z, mMediaFiles, mCol.getMedia().dir());
         // tidy up intermediate files
         SQLiteDatabase.deleteDatabase(new File(colfile));
         SQLiteDatabase.deleteDatabase(new File(path.replace(".apkg", ".media.ad.db2")));

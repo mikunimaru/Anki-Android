@@ -26,11 +26,9 @@ import android.text.TextUtils;
 
 import com.ichi2.anki.AnkiDroidApp;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
-import com.ichi2.anki.exception.DeckRenameException;
-import com.ichi2.anki.exception.FilteredAncestor;
+import com.ichi2.libanki.backend.exception.DeckRenameException;
 
 import com.ichi2.utils.DeckComparator;
-import com.ichi2.utils.DeckNameComparator;
 import com.ichi2.utils.HashUtil;
 import com.ichi2.utils.JSONArray;
 import com.ichi2.utils.JSONObject;
@@ -73,7 +71,7 @@ public class Decks extends DeckManager {
     public static final String CURRENT_DECK = "curDeck";
     /** Configuration saving the set of active decks (i.e. current decks and its descendants) */
     public static final String ACTIVE_DECKS = "activeDecks";
-    
+
 
     //not in libAnki
     @SuppressWarnings("WeakerAccess")
@@ -90,9 +88,10 @@ public class Decks extends DeckManager {
                 + "\"desc\": \"\","
                 + "\"dyn\": 0," // anki uses int/bool interchangably here
                 + "\"collapsed\": false,"
+                + "\"browserCollapsed\": false,"
                 // added in beta11
-                + "\"extendNew\": 10,"
-                + "\"extendRev\": 50"
+                + "\"extendNew\": 0,"
+                + "\"extendRev\": 0"
             + "}";
 
     private static final String defaultDynamicDeck = ""
@@ -110,17 +109,18 @@ public class Decks extends DeckManager {
                 // list of (search, limit, order); we only use first element for now
                 + "\"terms\": [[\"\", 100, 0]],"
                 + "\"resched\": true,"
-                + "\"return\": true" // currently unused
+                + "\"previewDelay\": 10,"
+                + "\"browserCollapsed\": false"
             + "}";
 
     public static final String DEFAULT_CONF = ""
             + "{"
                 + "\"name\": \"Default\","
+                + "\"dyn\": false," // previously optional. Default was false
                 + "\"new\": {"
                     + "\"delays\": [1, 10],"
                     + "\"ints\": [1, 4, 7]," // 7 is not currently used
                     + "\"initialFactor\": "+Consts.STARTING_FACTOR+","
-                    + "\"separate\": true,"
                     + "\"order\": " + Consts.NEW_CARDS_DUE + ","
                     + "\"perDay\": 20,"
                     // may not be set on old decks
@@ -132,13 +132,12 @@ public class Decks extends DeckManager {
                     + "\"minInt\": 1,"
                     + "\"leechFails\": 8,"
                     // type 0=suspend, 1=tagonly
-                    + "\"leechAction\": " + Consts.LEECH_SUSPEND
+                    + "\"leechAction\": " + Consts.LEECH_TAGONLY
                 + "},"
                 + "\"rev\": {"
-                    + "\"perDay\": 100,"
+                    + "\"perDay\": 200,"
                     + "\"ease4\": 1.3,"
-                    + "\"fuzz\": 0.05,"
-                    + "\"minSpace\": 1," // not currently used
+                    + "\"hardFactor\": 1.2,"
                     + "\"ivlFct\": 1,"
                     + "\"maxIvl\": 36500,"
                     // may not be set on old decks
@@ -275,15 +274,32 @@ public class Decks extends DeckManager {
         mDconf = HashUtil.HashMapInit(confarray.length());
         if (ids != null) {
             for (String id : ids.stringIterable()) {
-                mDconf.put(Long.parseLong(id), new DeckConfig(confarray.getJSONObject(id)));
+                mDconf.put(Long.parseLong(id), new DeckConfig(confarray.getJSONObject(id), DeckConfig.Source.DECK_CONFIG));
             }
         }
         mChanged = false;
     }
 
+
     /** {@inheritDoc} */
     @Override
-    public void save(JSONObject g) {
+    public void save() {
+        save((JSONObject) null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void save(@NonNull Deck g) {
+        save((JSONObject) g);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void save(@NonNull DeckConfig g) {
+        save((JSONObject) g);
+    }
+
+    private void save(JSONObject g) {
         if (g != null) {
             g.put("mod", mCol.getTime().intTime());
             g.put("usn", mCol.usn());
@@ -329,7 +345,7 @@ public class Decks extends DeckManager {
     }
 
     @Override
-    public long id(@NonNull String name) throws FilteredAncestor {
+    public long id(@NonNull String name) throws DeckRenameException {
         return id(name, DEFAULT_DECK);
     }
 
@@ -343,7 +359,7 @@ public class Decks extends DeckManager {
     /**
      * Add a deck with NAME. Reuse deck if already exists. Return id as int.
      */
-    public long id(@NonNull String name, @NonNull String type) throws FilteredAncestor {
+    public long id(@NonNull String name, @NonNull String type) throws DeckRenameException {
         name = usable_name(name);
         Long id = id_for_name(name);
         if (id != null) {
@@ -475,25 +491,6 @@ public class Decks extends DeckManager {
     }
 
 
-    /** {@inheritDoc} */
-    @NonNull
-    @Override
-    public List<Deck> allSorted() {
-        List<Deck> decks = all();
-        Collections.sort(decks, DeckComparator.INSTANCE);
-        return decks;
-    }
-
-    @NonNull
-    @Override
-    @VisibleForTesting
-    public List<String> allSortedNames() {
-        List<String> names = allNames();
-        Collections.sort(names, DeckNameComparator.INSTANCE);
-        return names;
-    }
-
-
     @NonNull
     @Override
     public Set<Long> allIds() {
@@ -578,11 +575,8 @@ public class Decks extends DeckManager {
              * the code in order do this change. */
         }
         // ensure we have parents and none is a filtered deck
-        try {
-            newName = _ensureParents(newName);
-        } catch (FilteredAncestor filteredSubdeck) {
-            throw new DeckRenameException(DeckRenameException.FILTERED_NOSUBDECKS);
-        }
+        newName = _ensureParents(newName);
+
         // rename children
         String oldName = g.getString("name");
         for (Deck grp : all()) {
@@ -685,11 +679,15 @@ public class Decks extends DeckManager {
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     *
+     * @param name The name whose parents should exists
+     * @return The name, with potentially change in capitalization and unicode normalization, so that the parent's name corresponds to an existing deck.
+     * @throws DeckRenameException if a parent is filtered
+     */
     @NonNull
-    @Override
     @VisibleForTesting
-    protected String _ensureParents(@NonNull String name) throws FilteredAncestor {
+    protected String _ensureParents(@NonNull String name) throws DeckRenameException {
         String s = "";
         String[] path = path(name);
         if (path.length < 2) {
@@ -708,7 +706,7 @@ public class Decks extends DeckManager {
             s = name(did);
             Deck deck = get(did);
             if (deck.isDyn()) {
-                throw new FilteredAncestor(s);
+                throw DeckRenameException.filteredAncestor(name, s);
             }
         }
         name = s + "::" + path[path.length - 1];
@@ -717,9 +715,9 @@ public class Decks extends DeckManager {
 
 
     /** {@inheritDoc} */
-    @Override
+    @NonNull
     @VisibleForTesting
-    protected  String _ensureParentsNotFiltered(String name) {
+    protected String _ensureParentsNotFiltered(String name) {
         String s = "";
         String[] path = path(name);
         if (path.length < 2) {
@@ -759,7 +757,7 @@ public class Decks extends DeckManager {
     /** {@inheritDoc} */
     @NonNull
     @Override
-    public ArrayList<DeckConfig> allConf() {
+    public List<DeckConfig> allConf() {
         return new ArrayList<>(mDconf.values());
     }
 
@@ -779,7 +777,7 @@ public class Decks extends DeckManager {
             return conf;
         }
         // dynamic decks have embedded conf
-        return new DeckConfig(deck);
+        return new DeckConfig(deck, DeckConfig.Source.DECK_EMBEDDED);
     }
 
 
@@ -799,7 +797,7 @@ public class Decks extends DeckManager {
     @Override
     public long confId(@NonNull String name, @NonNull String cloneFrom) {
         long id;
-        DeckConfig c = new DeckConfig(cloneFrom);
+        DeckConfig c = new DeckConfig(cloneFrom, DeckConfig.Source.DECK_CONFIG);
         do {
             id = mCol.getTime().intTimeMS();
         } while (mDconf.containsKey(id));
@@ -870,14 +868,7 @@ public class Decks extends DeckManager {
      * ***********************************************************
      */
 
-
     @NonNull
-    @Override
-    public String name(long did) {
-        return name(did, false);
-    }
-
-
     public String name(long did, boolean _default) {
         Deck deck = get(did, _default);
         if (deck != null) {
@@ -911,15 +902,15 @@ public class Decks extends DeckManager {
 
     @NonNull
     @Override
-    public Long[] cids(long did, boolean children) {
+    public List<Long> cids(long did, boolean children) {
         if (!children) {
-            return Utils.list2ObjectArray(mCol.getDb().queryLongList("select id from cards where did=?", did));
+            return mCol.getDb().queryLongList("select id from cards where did=?", did);
         }
         java.util.Collection<Long> values = children(did).values();
         List<Long> dids = new ArrayList<>(values.size() + 1);
         dids.add(did);
         dids.addAll(values);
-        return Utils.list2ObjectArray(mCol.getDb().queryLongList("select id from cards where did in " + Utils.ids2str(dids)));
+        return mCol.getDb().queryLongList("select id from cards where did in " + Utils.ids2str(dids));
     }
 
 
@@ -941,10 +932,10 @@ public class Decks extends DeckManager {
     }
 
     private void _checkDeckTree() {
-        List<Deck> decks = allSorted();
-        Map<String, Deck> names = HashUtil.HashMapInit(decks.size());
+        List<Deck> sortedDecks = allSorted();
+        Map<String, Deck> names = HashUtil.HashMapInit(sortedDecks.size());
 
-        for (Deck deck: decks) {
+        for (Deck deck: sortedDecks) {
             String deckName = deck.getString("name");
 
             /* With 2.1.28, anki started strips whitespace of deck name.  This method paragraph is here for
@@ -1186,7 +1177,7 @@ public class Decks extends DeckManager {
 
     /** {@inheritDoc} */
     @Override
-    public long newDyn(String name) throws FilteredAncestor {
+    public long newDyn(String name) throws DeckRenameException {
         long did = id(name, defaultDynamicDeck);
         select(did);
         return did;
@@ -1196,6 +1187,12 @@ public class Decks extends DeckManager {
     @Override
     public boolean isDyn(long did) {
         return get(did).isDyn();
+    }
+
+
+    @Override
+    public void update_active() {
+        // intentionally blank
     }
 
     /*
@@ -1242,12 +1239,6 @@ public class Decks extends DeckManager {
         return sParentCache.get(deckName);
     }
 
-    @NonNull
-    @Override
-    public String getActualDescription() {
-        return current().optString("desc","");
-    }
-
     @VisibleForTesting
     @RustCleanup("This exists in Rust as DecksDictProxy, but its usage is warned against")
     public HashMap<Long, Deck> getDecks() {
@@ -1260,23 +1251,5 @@ public class Decks extends DeckManager {
 
     public static boolean isDynamic(Deck deck) {
         return deck.isDyn();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nullable
-    public String getSubdeckName(long did, @Nullable String subdeckName) {
-        if (TextUtils.isEmpty(subdeckName)) {
-            return null;
-        }
-        String newName = subdeckName.replaceAll("\"", "");
-        if (TextUtils.isEmpty(newName)) {
-            return null;
-        }
-        Deck deck = get(did, false);
-        if (deck == null) {
-            return null;
-        }
-        return deck.getString("name") + DECK_SEPARATOR + subdeckName;
     }
 }

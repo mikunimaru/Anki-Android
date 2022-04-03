@@ -1,9 +1,19 @@
+//noinspection MissingCopyrightHeader #8659
+
 package com.ichi2.anki;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
+import android.os.LocaleList;
+import android.webkit.RenderProcessGoneDetail;
 
 import com.ichi2.anki.cardviewer.ViewerCommand;
+import com.ichi2.anki.reviewer.AutomaticAnswer;
+import com.ichi2.anki.reviewer.AutomaticAnswerAction;
+import com.ichi2.anki.reviewer.AutomaticAnswerSettings;
+import com.ichi2.anki.servicelayer.LanguageHintService;
+import com.ichi2.libanki.Model;
 import com.ichi2.libanki.Note;
 import com.ichi2.testutils.AnkiAssert;
 
@@ -12,7 +22,11 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 
+import java.util.Locale;
+
+import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static com.ichi2.anki.AbstractFlashcardViewer.WebViewSignalParserUtils.ANSWER_ORDINAL_1;
@@ -24,19 +38,24 @@ import static com.ichi2.anki.AbstractFlashcardViewer.WebViewSignalParserUtils.SH
 import static com.ichi2.anki.AbstractFlashcardViewer.WebViewSignalParserUtils.SIGNAL_NOOP;
 import static com.ichi2.anki.AbstractFlashcardViewer.WebViewSignalParserUtils.TYPE_FOCUS;
 import static com.ichi2.anki.AbstractFlashcardViewer.WebViewSignalParserUtils.getSignalFromUrl;
+import static com.ichi2.libanki.StdModels.BASIC_TYPING_MODEL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
+@RequiresApi(api = Build.VERSION_CODES.O) //getImeHintLocales, toLanguageTags, onRenderProcessGone, RenderProcessGoneDetail
 @RunWith(AndroidJUnit4.class)
 public class AbstractFlashcardViewerTest extends RobolectricTest {
 
     public static class NonAbstractFlashcardViewer extends AbstractFlashcardViewer {
         public Integer mAnswered;
-        private int lastTime = 0;
+        private int mLastTime = 0;
 
         @Override
         protected void setTitle() {
@@ -58,217 +77,26 @@ public class AbstractFlashcardViewerTest extends RobolectricTest {
 
         @Override
         protected long getElapsedRealTime() {
-            lastTime += AnkiDroidApp.getSharedPrefs(getBaseContext()).getInt(DOUBLE_TAP_TIME_INTERVAL, DEFAULT_DOUBLE_TAP_TIME_INTERVAL);
-            return lastTime;
+            mLastTime += AnkiDroidApp.getSharedPrefs(getBaseContext()).getInt(DOUBLE_TAP_TIME_INTERVAL, DEFAULT_DOUBLE_TAP_TIME_INTERVAL);
+            return mLastTime;
         }
 
 
         public String getTypedInput() {
             return super.getTypedInputText();
         }
-    }
 
-    public String typeAnsAnswerFilter(String buf, String userAnswer, String correctAnswer) {
-        NonAbstractFlashcardViewer nafv = new NonAbstractFlashcardViewer();
-        return nafv.typeAnsAnswerFilter(buf, userAnswer, correctAnswer);
-    }
+        public String getHintLocale() {
+            LocaleList imeHintLocales = this.mAnswerField.getImeHintLocales();
+            if (imeHintLocales == null) {
+                return null;
+            }
+            return imeHintLocales.toLanguageTags();
+        }
 
-    @Test
-    public void testTypeAnsAnswerFilterNormalCorrect() {
-        String buf = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in hello\n" +
-                "[[type:Back]]\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "$!";
-
-        String expectedOutput = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in hello\n" +
-                "<div><code id=\"typeans\"><span class=\"typeGood\">hello</span><span id=\"typecheckmark\">✔</span></code></div>\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "$!";
-
-        assertEquals(expectedOutput, typeAnsAnswerFilter(buf, "hello", "hello"));
-    }
-
-    @Test
-    public void testTypeAnsAnswerFilterNormalIncorrect()  {
-        String buf = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in hello\n" +
-                "[[type:Back]]\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "hello";
-
-        String expectedOutput = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in hello\n" +
-                "<div><code id=\"typeans\"><span class=\"typeBad\">hello</span><br><span id=\"typearrow\">&darr;</span><br><span class=\"typeMissed\">xyzzy$$$22</span></code></div>\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "hello";
-        // Make sure $! as typed shows up as $!
-        assertEquals(expectedOutput, typeAnsAnswerFilter(buf, "hello", "xyzzy$$$22"));
-    }
-
-    @Test
-    public void testTypeAnsAnswerFilterNormalEmpty() {
-        String buf = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in hello\n" +
-                "[[type:Back]]\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "hello";
-
-        String expectedOutput = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in hello\n" +
-                "<div><code id=\"typeans\"><span class=\"typeMissed\">hello</span></code></div>\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "hello";
-        // Make sure $! as typed shows up as $!
-        assertEquals(expectedOutput, typeAnsAnswerFilter(buf, "", "hello"));
-    }
-
-    @Test
-    public void testTypeAnsAnswerFilterDollarSignsCorrect() {
-        String buf = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in $!\n" +
-                "[[type:Back]]\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "$!";
-
-        String expectedOutput = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in $!\n" +
-                "<div><code id=\"typeans\"><span class=\"typeGood\">$!</span><span id=\"typecheckmark\">✔</span></code></div>\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "$!";
-        // Make sure $! as typed shows up as $!
-        assertEquals(expectedOutput, typeAnsAnswerFilter(buf, "$!", "$!"));
-    }
-
-    @Test
-    public void testTypeAnsAnswerFilterDollarSignsIncorrect() {
-        String buf = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in $!\n" +
-                "[[type:Back]]\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "$!";
-
-        String expectedOutput = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in $!\n" +
-                "<div><code id=\"typeans\"><span class=\"typeBad\">$!</span><br><span id=\"typearrow\">&darr;</span><br><span class=\"typeMissed\">hello</span></code></div>\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "$!";
-        // Make sure $! as typed shows up as $!
-        assertEquals(expectedOutput, typeAnsAnswerFilter(buf, "$!", "hello"));
-    }
-
-    @Test
-    public void testTypeAnsAnswerFilterDollarSignsEmpty() {
-        String buf = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in $!\n" +
-                "[[type:Back]]\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "$!";
-
-        String expectedOutput = "<style>.card {\n" +
-                " font-family: arial;\n" +
-                " font-size: 20px;\n" +
-                " text-align: center;\n" +
-                " color: black;\n" +
-                " background-color: white;\n" +
-                "}\n" +
-                "</style>Type in $!\n" +
-                "<div><code id=\"typeans\"><span class=\"typeMissed\">$!</span></code></div>\n" +
-                "\n" +
-                "<hr id=answer>\n" +
-                "\n" +
-                "$!";
-        // Make sure $! as typed shows up as $!
-        assertEquals(expectedOutput, typeAnsAnswerFilter(buf, "", "$!"));
+        public boolean hasAutomaticAnswerQueued() {
+            return mAutomaticAnswer.getTimeoutHandler().hasMessages(0);
+        }
     }
 
     @Test
@@ -390,19 +218,6 @@ public class AbstractFlashcardViewerTest extends RobolectricTest {
         assertThat(nafv.getCardContent(), containsString("David"));
     }
 
-
-    @Test
-    public void testClozeWithRepeatedWords() {
-        // 8229
-        NonAbstractFlashcardViewer nafv = getViewer();
-
-        String cloze1 = "This is {{c1::test}} which is containing {{c1::test}} word twice";
-        assertEquals("test", nafv.contentForCloze(cloze1, 1));
-
-        String cloze2 = "This is {{c1::test}} which is containing {{c1::test}} word twice {{c1::test2}}";
-        assertEquals("test, test, test2", nafv.contentForCloze(cloze2, 1));
-    }
-
     @Test
     public void testCommandPerformsAnswerCard() {
         // Regression for #8527/#8572
@@ -419,10 +234,81 @@ public class AbstractFlashcardViewerTest extends RobolectricTest {
         assertThat(viewer.mAnswered, notNullValue());
     }
 
+    @Test
+    public void defaultLanguageIsNull() {
+        NonAbstractFlashcardViewer viewer = getViewer();
+        assertThat(viewer.getHintLocale(), nullValue());
+    }
+
+    @Test
+    public void typedLanguageIsSet() {
+        Model withLanguage = BASIC_TYPING_MODEL.add(getCol(), "a");
+        Model normal = BASIC_TYPING_MODEL.add(getCol(), "b");
+        int typedField = 1; // BACK
+
+        LanguageHintService.setLanguageHintForField(getCol().getModels(), withLanguage, typedField, new Locale("ja"));
+
+        addNoteUsingModelName(withLanguage.getString("name"), "ichi", "ni");
+        addNoteUsingModelName(normal.getString("name"), "one", "two");
+
+        NonAbstractFlashcardViewer viewer = getViewer(false);
+
+        assertThat("A model with a language hint (japanese) should use it", viewer.getHintLocale(), equalTo("ja"));
+
+        showNextCard(viewer);
+
+        assertThat("A default model should have no preference", viewer.getHintLocale(), nullValue());
+    }
+
+    @Test
+    public void automaticAnswerDisabledProperty() {
+        ActivityController<NonAbstractFlashcardViewer> controller = getViewerController(true);
+        NonAbstractFlashcardViewer viewer = controller.get();
+        assertThat("not disabled initially", viewer.mAutomaticAnswer.isDisabled(), is(false));
+        controller.pause();
+        assertThat("disabled after pause", viewer.mAutomaticAnswer.isDisabled(), is(true));
+        controller.resume();
+        assertThat("enabled after resume", viewer.mAutomaticAnswer.isDisabled(), is(false));
+    }
+
+    @Test
+    public void noAutomaticAnswerAfterRenderProcessGoneAndPaused_issue9632() {
+        ActivityController<NonAbstractFlashcardViewer> controller = getViewerController(true);
+        NonAbstractFlashcardViewer viewer = controller.get();
+        viewer.mAutomaticAnswer = new AutomaticAnswer(viewer, new AutomaticAnswerSettings(AutomaticAnswerAction.BURY_CARD, true, 5, 5));
+        viewer.executeCommand(ViewerCommand.COMMAND_SHOW_ANSWER);
+        assertThat("messages after flipping card", viewer.hasAutomaticAnswerQueued(), equalTo(true));
+        controller.pause();
+        assertThat("disabled after pause", viewer.mAutomaticAnswer.isDisabled(), is(true));
+        assertThat("no auto answer after pause", viewer.hasAutomaticAnswerQueued(), equalTo(false));
+        viewer.mOnRenderProcessGoneDelegate.onRenderProcessGone(viewer.getWebView(), mock(RenderProcessGoneDetail.class));
+        assertThat("no auto answer after onRenderProcessGone when paused", viewer.hasAutomaticAnswerQueued(), equalTo(false));
+    }
+
+
+    private void showNextCard(NonAbstractFlashcardViewer viewer) {
+        viewer.executeCommand(ViewerCommand.COMMAND_FLIP_OR_ANSWER_BETTER_THAN_RECOMMENDED);
+        viewer.executeCommand(ViewerCommand.COMMAND_FLIP_OR_ANSWER_BETTER_THAN_RECOMMENDED);
+    }
+
+
+    @CheckResult
     private NonAbstractFlashcardViewer getViewer() {
-        @NonNull Note n = getCol().newNote();
-        n.setField(0, "a");
-        getCol().addNote(n);
+        return getViewer(true);
+    }
+
+    @CheckResult
+    private NonAbstractFlashcardViewer getViewer(boolean addCard) {
+        return getViewerController(addCard).get();
+    }
+
+    @CheckResult
+    private ActivityController<NonAbstractFlashcardViewer> getViewerController(boolean addCard) {
+        if (addCard) {
+            @NonNull Note n = getCol().newNote();
+            n.setField(0, "a");
+            getCol().addNote(n);
+        }
 
         ActivityController<NonAbstractFlashcardViewer> multimediaController = Robolectric.buildActivity(NonAbstractFlashcardViewer.class, new Intent())
                 .create().start().resume().visible();
@@ -435,6 +321,6 @@ public class AbstractFlashcardViewerTest extends RobolectricTest {
         // AsyncTasks spawned by by loading the viewer finish. Is there a way to synchronize these things while under test?
         advanceRobolectricLooperWithSleep();
         advanceRobolectricLooperWithSleep();
-        return viewer;
+        return multimediaController;
     }
 }

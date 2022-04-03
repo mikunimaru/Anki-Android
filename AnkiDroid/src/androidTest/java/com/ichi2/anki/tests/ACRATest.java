@@ -1,6 +1,24 @@
+/***************************************************************************************
+ *                                                                                      *
+ * Copyright (c) 2018 Mike Hardy <github@mikehardy.net>                                 *
+ *                                                                                      *
+ * This program is free software; you can redistribute it and/or modify it under        *
+ * the terms of the GNU General Public License as published by the Free Software        *
+ * Foundation; either version 3 of the License, or (at your option) any later           *
+ * version.                                                                             *
+ *                                                                                      *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
+ *                                                                                      *
+ * You should have received a copy of the GNU General Public License along with         *
+ * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
+ ****************************************************************************************/
+
 package com.ichi2.anki.tests;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 
 import androidx.annotation.StringRes;
@@ -39,6 +57,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4.class)
+@SuppressLint("DirectSystemCurrentTimeMillisUsage")
 public class ACRATest extends InstrumentedTest {
 
     @Rule public GrantPermissionRule mRuntimePermissionRule =
@@ -46,7 +65,7 @@ public class ACRATest extends InstrumentedTest {
 
     private AnkiDroidApp mApp = null;
 
-    private final String[] debugLogcatArguments = { "-t", "300", "-v", "long", "ACRA:S"};
+    private final String[] mDebugLogcatArguments = { "-t", "300", "-v", "long", "ACRA:S"};
     //private String[] prodLogcatArguments = { "-t", "100", "-v", "time", "ActivityManager:I", "SQLiteLog:W", AnkiDroidApp.TAG + ":D", "*:S" };
 
 
@@ -66,10 +85,25 @@ public class ACRATest extends InstrumentedTest {
      * @exception NoSuchFieldException if the method isn't found, possibly IllegalAccess or InvocationAccess as well
      */
     private void setAcraConfig(String mode, SharedPreferences prefs) throws Exception {
-        Method method = mApp.getClass().getDeclaredMethod("set" + mode + "ACRAConfig", SharedPreferences.class);
+        Method method = findSetAcraConfigMethod(mode);
         method.setAccessible(true);
         method.invoke(mApp, prefs);
     }
+
+    /** @return the method: "set[Debug/Production]ACRAConfig" on the application instance */
+    private Method findSetAcraConfigMethod(String mode) {
+        Class<?> clazz = mApp.getClass();
+        String methodName = "set" + mode + "ACRAConfig";
+        while (clazz != null) {
+            try {
+                return clazz.getDeclaredMethod(methodName, SharedPreferences.class);
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new IllegalStateException(methodName + " not found");
+    }
+
 
     @Test
     public void testDebugConfiguration() throws Exception {
@@ -78,7 +112,7 @@ public class ACRATest extends InstrumentedTest {
         setAcraConfig("Debug");
         assertArrayEquals("Debug logcat arguments not set correctly",
                 mApp.getAcraCoreConfigBuilder().build().logcatArguments().toArray(),
-                new ImmutableList<>(debugLogcatArguments).toArray());
+                new ImmutableList<>(mDebugLogcatArguments).toArray());
         verifyDebugACRAPreferences();
     }
 
@@ -113,7 +147,7 @@ public class ACRATest extends InstrumentedTest {
         setAcraConfig("Production");
         verifyACRANotDisabled();
 
-        assertToastMessage(R.string.feedback_manual_toast_text);
+        assertToastMessage(R.string.feedback_for_manual_toast_text);
         assertToastIsEnabled();
         assertDialogEnabledStatus("Dialog should be enabled", true);
     }
@@ -196,7 +230,7 @@ public class ACRATest extends InstrumentedTest {
         setAcraReportingMode(FEEDBACK_REPORT_ASK);
 
         assertDialogEnabledStatus("dialog should be re-enabled after changed to ASK", true);
-        assertToastMessage(R.string.feedback_manual_toast_text);
+        assertToastMessage(R.string.feedback_for_manual_toast_text);
     }
 
     @Test
@@ -208,7 +242,7 @@ public class ACRATest extends InstrumentedTest {
         setAcraConfig("Production");
         verifyACRANotDisabled();
 
-        assertToastMessage(R.string.feedback_manual_toast_text);
+        assertToastMessage(R.string.feedback_for_manual_toast_text);
 
         setAcraReportingMode(FEEDBACK_REPORT_ALWAYS);
 

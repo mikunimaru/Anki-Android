@@ -40,6 +40,7 @@ import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.Consts;
 import com.ichi2.libanki.Decks;
 import com.ichi2.libanki.Note;
+import com.ichi2.libanki.SortOrder;
 import com.ichi2.libanki.Utils;
 import com.ichi2.libanki.Deck;
 import com.ichi2.libanki.DeckConfig;
@@ -73,8 +74,6 @@ import androidx.annotation.VisibleForTesting;
 import timber.log.Timber;
 
 import static com.ichi2.libanki.Consts.CARD_TYPE_RELEARNING;
-import static com.ichi2.libanki.Consts.DECK_DYN;
-import static com.ichi2.libanki.Consts.DECK_STD;
 import static com.ichi2.libanki.Consts.QUEUE_TYPE_DAY_LEARN_RELEARN;
 import static com.ichi2.async.CancelListener.isCancelled;
 import static com.ichi2.libanki.sched.AbstractSched.UnburyType.*;
@@ -215,9 +214,11 @@ public class SchedV2 extends AbstractSched {
         mHaveQueues = false;
         mHaveCounts = false;
         discardCurrentCard();
+        mCol.getDecks().update_active();
     }
 
     public void reset() {
+        mCol.getDecks().update_active();
         _updateCutoff();
         resetCounts(false);
         resetQueues(false);
@@ -524,14 +525,16 @@ public class SchedV2 extends AbstractSched {
     }
 
     // Overridden
+    /**
+     * Return sorted list of all decks.*/
     public @Nullable List<DeckDueTreeNode> deckDueList(@Nullable CancelListener collectionTask) {
         _checkDay();
         mCol.getDecks().checkIntegrity();
-        List<Deck> decks = mCol.getDecks().allSorted();
-        HashMap<String, Integer[]> lims = HashUtil.HashMapInit(decks.size());
-        ArrayList<DeckDueTreeNode> deckNodes = new ArrayList<>(decks.size());
+        List<Deck> allDecksSorted = mCol.getDecks().allSorted();
+        HashMap<String, Integer[]> lims = HashUtil.HashMapInit(allDecksSorted.size());
+        ArrayList<DeckDueTreeNode> deckNodes = new ArrayList<>(allDecksSorted.size());
         Decks.Node childMap = mCol.getDecks().childMap();
-        for (Deck deck : decks) {
+        for (Deck deck : allDecksSorted) {
             if (isCancelled(collectionTask)) {
                 return null;
             }
@@ -571,16 +574,15 @@ public class SchedV2 extends AbstractSched {
     public @NonNull List<DeckTreeNode> quickDeckDueTree() {
         // Similar to deckDueTree, ignoring the numbers
 
-        List<Deck> decks = mCol.getDecks().allSorted();
         // Similar to deckDueList
-        ArrayList<DeckTreeNode> data = new ArrayList<>();
-        for (JSONObject deck : decks) {
+        ArrayList<DeckTreeNode> allDecksSorted = new ArrayList<>();
+        for (JSONObject deck : mCol.getDecks().allSorted()) {
             DeckTreeNode g = new DeckTreeNode(mCol, deck.getString("name"), deck.getLong("id"));
-            data.add(g);
+            allDecksSorted.add(g);
         }
         // End of the similar part.
 
-        return _groupChildren(data, false);
+        return _groupChildren(allDecksSorted, false);
     }
 
 
@@ -590,45 +592,42 @@ public class SchedV2 extends AbstractSched {
 
     @Nullable
     public List<DeckDueTreeNode> deckDueTree(@Nullable CancelListener cancelListener) {
-        List<DeckDueTreeNode> deckDueTree = deckDueList(cancelListener);
-        if (deckDueTree == null) {
+        List<DeckDueTreeNode> allDecksSorted = deckDueList(cancelListener);
+        if (allDecksSorted == null) {
             return null;
         }
-        return _groupChildren(deckDueTree, true);
+        return _groupChildren(allDecksSorted, true);
     }
 
-    private @NonNull <T extends AbstractDeckTreeNode<T>> List<T> _groupChildren(@NonNull List<T> decks, boolean checkDone) {
-        // sort based on name's components
-        Collections.sort(decks);
-        // then run main function
-        return _groupChildrenMain(decks, checkDone);
-    }
-
-
-    protected @NonNull  <T extends AbstractDeckTreeNode<T>> List<T> _groupChildrenMain(@NonNull List<T> decks, boolean checkDone) {
-        return _groupChildrenMain(decks, 0, checkDone);
+    /**
+     * @return the tree with `allDecksSorted` content.
+     * @param allDecksSorted the set of all decks of the collection. Sorted.
+     * @param checkDone Whether the set of deck was checked. If false, we can'ta ssume all decks have parents
+     * and that there is no duplicate. Instead, we'll ignore problems.*/
+    protected @NonNull  <T extends AbstractDeckTreeNode<T>> List<T> _groupChildren(@NonNull List<T> allDecksSorted, boolean checkDone) {
+        return _groupChildren(allDecksSorted, 0, checkDone);
     }
 
     /**
         @return the tree structure of all decks from @descandants, starting
         at specified depth.
 
-        @param descendants a list of decks of dept at least depth, having all
+        @param sortedDescendants a list of decks of dept at least depth, having all
         the same first depth name elements, sorted in deck order.
         @param depth The depth of the tree we are creating
         @param checkDone whether the set of deck was checked. If
         false, we can't assume all decks have parents and that there
         is no duplicate. Instead, we'll ignore problems.
      */
-    protected @NonNull <T extends AbstractDeckTreeNode<T>> List<T> _groupChildrenMain(@NonNull List<T> descendants, int depth, boolean checkDone) {
-        List<T> children = new ArrayList<>();
+    protected @NonNull <T extends AbstractDeckTreeNode<T>> List<T> _groupChildren(@NonNull List<T> sortedDescendants, int depth, boolean checkDone) {
+        List<T> sortedChildren = new ArrayList<>();
         // group and recurse
-        ListIterator<T> it = descendants.listIterator();
+        ListIterator<T> it = sortedDescendants.listIterator();
         while (it.hasNext()) {
             T child = it.next();
             String head = child.getDeckNameComponent(depth);
-            List<T> descendantsOfChild  = new ArrayList<>();
-            /* Compose the "children" node list. The children is a
+            List<T> sortedDescendantsOfChild  = new ArrayList<>();
+            /* Compose the "sortedChildren" node list. The sortedChildren is a
              * list of all the nodes that proceed the current one that
              * contain the same at depth `depth`, except for the
              * current one itself.  I.e., they are subdecks that stem
@@ -648,7 +647,7 @@ public class SchedV2 extends AbstractSched {
                         Timber.d("Deck %s (%d)'s is a duplicate name. Ignoring for quick display.", deck.getString("name"), descendantOfChild.getDid());
                         continue;
                     }
-                    descendantsOfChild.add(descendantOfChild);
+                    sortedDescendantsOfChild.add(descendantOfChild);
                 } else {
                     // We've iterated past this head, so step back in order to use this descendant as the
                     // head in the next iteration of the outer loop.
@@ -656,12 +655,13 @@ public class SchedV2 extends AbstractSched {
                     break;
                 }
             }
-            // the children_sDescendant set contains direct children_sDescendant but not the children_sDescendant of children_sDescendant...
-            List<T> childrenNode = _groupChildrenMain(descendantsOfChild, depth + 1, checkDone);
+            // the childrenNode set contains direct child of `child`, but not
+            // any descendants of the children of `child`...
+            List<T> childrenNode = _groupChildren(sortedDescendantsOfChild, depth + 1, checkDone);
             child.setChildren(childrenNode, "std".equals(getName()));
-            children.add(child);
+            sortedChildren.add(child);
         }
-        return children;
+        return sortedChildren;
     }
 
 
@@ -977,7 +977,7 @@ public class SchedV2 extends AbstractSched {
             return 0;
         }
         lim = Math.min(lim, mReportLimit);
-    	return mCol.getDb().queryScalar("SELECT count() FROM (SELECT 1 FROM cards WHERE did = ? AND queue = " + Consts.QUEUE_TYPE_NEW + " LIMIT ?)",
+        return mCol.getDb().queryScalar("SELECT count() FROM (SELECT 1 FROM cards WHERE did = ? AND queue = " + Consts.QUEUE_TYPE_NEW + " LIMIT ?)",
                                         did, lim);
     }
 
@@ -1190,11 +1190,11 @@ public class SchedV2 extends AbstractSched {
     // Overriden
     protected void _answerLrnCard(@NonNull Card card, @Consts.BUTTON_TYPE int ease) {
         JSONObject conf = _lrnConf(card);
-        @Consts.CARD_TYPE int type;
+        @Consts.REVLOG_TYPE int type;
         if (card.getType() == Consts.CARD_TYPE_REV || card.getType() == Consts.CARD_TYPE_RELEARNING) {
-            type = Consts.CARD_TYPE_REV;
+            type = Consts.REVLOG_RELRN;
         } else {
-            type = Consts.CARD_TYPE_NEW;
+            type = Consts.REVLOG_LRN;
         }
 
         // lrnCount was decremented once when card was fetched
@@ -1914,7 +1914,7 @@ public class SchedV2 extends AbstractSched {
                 search = String.format(Locale.US, "(%s)", search);
             }
             search = String.format(Locale.US, "%s -is:suspended -is:buried -deck:filtered", search);
-            ids = mCol.findCards(search, orderlimit);
+            ids = mCol.findCards(search, new SortOrder.AfterSqlOrderBy(orderlimit));
             if (ids.isEmpty()) {
                 return total;
             }

@@ -1,3 +1,19 @@
+/*
+ *  Copyright (c) 2020 Arthur Milchior <arthur@milchior.fr>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ichi2.libanki;
 
 import com.ichi2.anki.RobolectricTest;
@@ -539,8 +555,12 @@ public class ModelTest extends RobolectricTest {
         reqSize(opt);
         r = opt.getJSONArray("req").getJSONArray(0);
         assertTrue(Arrays.asList(new String[] {REQ_ANY, REQ_ALL}).contains(r.getString(1)));
-        // TODO: Port anki@4e33775ed4346ef136ece6ef5efec5ba46057c6b
-        assertEquals(new JSONArray("[0]"), r.getJSONArray(2));
+        if (col.getModels() instanceof ModelsV16) {
+            assertEquals(new JSONArray("[0, 1]"), r.getJSONArray(2));
+        } else {
+            // TODO: Port anki@4e33775ed4346ef136ece6ef5efec5ba46057c6b
+            assertEquals(new JSONArray("[0]"), r.getJSONArray(2));
+        }
     }
 
     @Test
@@ -551,11 +571,12 @@ public class ModelTest extends RobolectricTest {
         Model basic = mm.byName("Basic");
         JSONObject template = basic.getJSONArray("tmpls").getJSONObject(0);
         template.put("qfmt", "{{|Front}}{{Front}}{{/Front}}{{Front}}");
-        mm.save(basic, true);
         try {
+            // in V16, the "save" throws, in V11, the "add" throws
+            mm.save(basic, true);
             Note note = addNoteUsingBasicModel("foo", "bar");
             fail();
-        } catch (IllegalStateException er) {
+        } catch (Exception er) {
         }
     }
 
@@ -651,5 +672,25 @@ public class ModelTest extends RobolectricTest {
         assertListEquals(Arrays.asList(0), Models.availOrds(reverse, new String[]{"Foo", ""}, Models.AllowEmpty.TRUE));
         assertListEquals(Arrays.asList(0, 1), Models.availOrds(reverse, new String[]{"Foo", "Bar"}, Models.AllowEmpty.TRUE));
         assertListEquals(Arrays.asList(1), Models.availOrds(reverse, new String[]{"  \t ", "Bar"}, Models.AllowEmpty.TRUE));
+    }
+
+    /**
+     * tests if Model.getDid() returns model did
+     * or default deck id (1) if null
+     */
+    @Test
+    public void getDid_test() {
+        Collection col = getCol();
+        ModelManager mm = col.getModels();
+        Model basic = mm.byName("Basic");
+        basic.put("did", 999L);
+
+        Long expected = 999L;
+        assertEquals("getDid() should return the model did", expected, basic.getDid());
+
+        // Check if returns default deck id (1) when did is null
+        basic.put("did", null);
+        Long expected2 = 1L;
+        assertEquals("getDid() should return 1 (default deck id) if model did is null", expected2, basic.getDid());
     }
 }

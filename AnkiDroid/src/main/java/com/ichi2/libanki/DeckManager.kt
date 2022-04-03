@@ -19,9 +19,10 @@ package com.ichi2.libanki
 import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
 import com.ichi2.anki.exception.ConfirmModSchemaException
-import com.ichi2.anki.exception.DeckRenameException
-import com.ichi2.anki.exception.FilteredAncestor
-import com.ichi2.utils.JSONObject
+import com.ichi2.libanki.backend.exception.DeckRenameException
+import com.ichi2.utils.DeckComparator
+import com.ichi2.utils.DeckNameComparator
+import com.ichi2.utils.KotlinCleanup
 import net.ankiweb.rsdroid.RustCleanup
 import java.util.*
 
@@ -33,9 +34,13 @@ abstract class DeckManager {
      */
 
     abstract fun load(decks: String, dconf: String)
-    fun save() = save(null)
-    /** Can be called with either a deck or a deck configuration. */
-    abstract fun save(g: JSONObject?)
+    @RustCleanup("Unused in V16")
+    /** @throws DeckRenameException */
+    abstract fun save()
+    /** Can be called with either a deck or a deck configuration.
+     * @throws DeckRenameException */
+    abstract fun save(g: Deck)
+    abstract fun save(g: DeckConfig)
     abstract fun flush()
 
     /*
@@ -44,7 +49,7 @@ abstract class DeckManager {
      */
 
     abstract fun id_for_name(name: String): Long?
-    @Throws(FilteredAncestor::class)
+    @Throws(DeckRenameException::class)
     abstract fun id(name: String): Long
     /** Same as id, but rename ancestors if filtered to avoid failure */
     fun id_safe(name: String) = id_safe(name, Decks.DEFAULT_DECK)
@@ -69,6 +74,7 @@ abstract class DeckManager {
     abstract fun collapse(did: Long)
 
     /** Return the number of decks. */
+    @RustCleanup("This is a long in V16 - shouldn't make a difference, but needs investigation")
     abstract fun count(): Int
     @CheckResult
     /** Obtains the deck from the DeckID, or default if the deck was not found */
@@ -85,7 +91,10 @@ abstract class DeckManager {
     @CheckResult
     abstract fun byName(name: String): Deck?
 
-    /** Add or update an existing deck. Used for syncing and merging. */
+    /**
+     * Add or update an existing deck. Used for syncing and merging.
+     * @throws DeckRenameException
+     */
     abstract fun update(g: Deck)
 
     /** Rename deck prefix to NAME if not exists. Updates children. */
@@ -98,7 +107,7 @@ abstract class DeckManager {
      */
 
     /** * A list of all deck config. */
-    abstract fun allConf(): ArrayList<DeckConfig>
+    abstract fun allConf(): List<DeckConfig>
     abstract fun confForDid(did: Long): DeckConfig
     abstract fun getConf(confId: Long): DeckConfig?
     abstract fun updateConf(g: DeckConfig)
@@ -122,9 +131,10 @@ abstract class DeckManager {
      * ***********************************************************
      */
 
-    abstract fun name(did: Long): String
-    fun cids(did: Long): Array<Long> = cids(did, false)
-    abstract fun cids(did: Long, children: Boolean): Array<Long>
+    fun name(did: Long): String = name(did, _default = false)
+    abstract fun name(did: Long, _default: Boolean = false): String
+    fun cids(did: Long): MutableList<Long> = cids(did, false)
+    abstract fun cids(did: Long, children: Boolean): MutableList<Long>
     abstract fun checkIntegrity()
 
     /*
@@ -163,7 +173,7 @@ abstract class DeckManager {
      */
 
     /** Return a new dynamic deck and set it as the current deck. */
-    @Throws(FilteredAncestor::class)
+    @Throws(DeckRenameException::class)
     abstract fun newDyn(name: String): Long
     abstract fun isDyn(did: Long): Boolean
 
@@ -172,34 +182,24 @@ abstract class DeckManager {
      * The methods below are not in LibAnki.
      * ***********************************************************
      */
-
-    abstract fun getActualDescription(): String
+    @KotlinCleanup("convert to extension method (possibly in servicelayer)")
+    fun getActualDescription(): String = current().optString("desc", "")
 
     /** @return the fully qualified name of the subdeck, or null if unavailable */
-    abstract fun getSubdeckName(did: Long, subdeckName: String?): String?
+    fun getSubdeckName(did: Long, subdeckName: String?): String? {
+        if (subdeckName.isNullOrEmpty()) {
+            return null
+        }
+        val newName = subdeckName.replace("\"".toRegex(), "")
+        if (newName.isEmpty()) {
+            return null
+        }
+        val deck = get(did, false) ?: return null
+        return deck.getString("name") + Decks.DECK_SEPARATOR + subdeckName
+    }
 
-    /* Methods only visible for testing */
-
-    @VisibleForTesting
-    abstract fun allSortedNames(): List<String>
-    /**
-     *
-     * @param name The name whose parents should exists
-     * @return The name, with potentially change in capitalization and unicode normalization, so that the parent's name corresponds to an existing deck.
-     * @throws FilteredAncestor if a parent is filtered
-     */
-    @VisibleForTesting
-    @Throws(FilteredAncestor::class)
-    protected abstract fun _ensureParents(name: String): String
-
-    /**
-     *
-     * Similar as ensure parent, to use when the method can't fail and it's better to allow more change to ancestor's names.
-     * @param name The name whose parents should exists
-     * @return The name similar to input, changed as required, and as little as required, so that no ancestor is filtered and the parent's name is an existing deck.
-     */
-    @VisibleForTesting
-    protected abstract fun _ensureParentsNotFiltered(name: String): String
+    @RustCleanup("to be removed")
+    abstract fun update_active()
 
     /*
      * Not in libAnki
@@ -212,9 +212,22 @@ abstract class DeckManager {
      * This method does not exist in the original python module but *must* be used for any user
      * interface components that display a deck list to ensure the ordering is consistent.
      */
-    abstract fun allSorted(): List<Deck>
+    /** {@inheritDoc}  */
+    fun allSorted(): List<Deck> {
+        val decks: List<Deck> = all()
+        Collections.sort(decks, DeckComparator.INSTANCE)
+        return decks
+    }
 
-    @RustCleanup("potentially an extension function")
+    @VisibleForTesting
+    @KotlinCleanup("potentially an extension function")
+    fun allSortedNames(): List<String> {
+        val names = allNames()
+        Collections.sort(names, DeckNameComparator.INSTANCE)
+        return names
+    }
+
+    @KotlinCleanup("potentially an extension function")
     fun allDynamicDeckIds(): Array<Long> {
         val ids = allIds()
         val validValues = ArrayList<Long>(ids.size)

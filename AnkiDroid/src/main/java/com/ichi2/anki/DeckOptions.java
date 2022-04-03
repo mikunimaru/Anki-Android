@@ -39,6 +39,7 @@ import com.ichi2.anim.ActivityTransitionAnimation;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
 import com.ichi2.anki.receiver.SdCardReceiver;
 import com.ichi2.anki.services.ReminderService;
+import com.ichi2.annotations.NeedsTest;
 import com.ichi2.async.CollectionTask;
 import com.ichi2.async.TaskListenerWithContext;
 import com.ichi2.async.TaskManager;
@@ -61,7 +62,6 @@ import com.ichi2.utils.JSONException;
 import com.ichi2.utils.JSONObject;
 import com.ichi2.utils.NamedJSONComparator;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -81,6 +81,7 @@ import static com.ichi2.anim.ActivityTransitionAnimation.Direction.FADE;
 /**
  * Preferences for the current deck.
  */
+@NeedsTest("onCreate - to be done after preference migration (5019)")
 public class DeckOptions extends AppCompatPreferenceActivity implements OnSharedPreferenceChangeListener {
 
     private DeckConfig mOptions;
@@ -227,6 +228,7 @@ public class DeckOptions extends AppCompatPreferenceActivity implements OnShared
 
                                 newInts.put(value);
                                 newInts.put(mOptions.getJSONObject("new").getJSONArray("ints").getInt(1));
+                                newInts.put(mOptions.getJSONObject("new").getJSONArray("ints").optInt(2, 7));
                                 mOptions.getJSONObject("new").put("ints", newInts);
                                 break;
                             }
@@ -235,6 +237,7 @@ public class DeckOptions extends AppCompatPreferenceActivity implements OnShared
 
                                 newInts.put(mOptions.getJSONObject("new").getJSONArray("ints").getInt(0));
                                 newInts.put(value);
+                                newInts.put(mOptions.getJSONObject("new").getJSONArray("ints").optInt(2, 7));
                                 mOptions.getJSONObject("new").put("ints", newInts);
                                 break;
                             }
@@ -809,7 +812,7 @@ public class DeckOptions extends AppCompatPreferenceActivity implements OnShared
     @SuppressWarnings("deprecation") // TODO Tracked in https://github.com/ankidroid/Anki-Android/issues/5019
     protected void buildLists() {
         android.preference.ListPreference deckConfPref = (android.preference.ListPreference) findPreference("deckConf");
-        ArrayList<DeckConfig> confs = mCol.getDecks().allConf();
+        List<DeckConfig> confs = mCol.getDecks().allConf();
         Collections.sort(confs, NamedJSONComparator.INSTANCE);
         String[] confValues = new String[confs.size()];
         String[] confLabels = new String[confs.size()];

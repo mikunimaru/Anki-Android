@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -49,16 +50,16 @@ import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.ActionMode;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -70,14 +71,13 @@ import com.ichi2.anki.dialogs.ConfirmationDialog;
 import com.ichi2.anki.dialogs.DeckSelectionDialog;
 import com.ichi2.anki.dialogs.DiscardChangesDialog;
 import com.ichi2.anki.dialogs.IntegerDialog;
-import com.ichi2.anki.dialogs.LocaleSelectionDialog;
 import com.ichi2.anki.dialogs.tags.TagsDialog;
 import com.ichi2.anki.dialogs.tags.TagsDialogFactory;
 import com.ichi2.anki.dialogs.tags.TagsDialogListener;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
 import com.ichi2.anki.multimediacard.IMultimediaEditableNote;
 import com.ichi2.anki.multimediacard.activity.MultimediaEditFieldActivity;
-import com.ichi2.anki.multimediacard.fields.AudioClipField;
+import com.ichi2.anki.multimediacard.fields.MediaClipField;
 import com.ichi2.anki.multimediacard.fields.AudioRecordingField;
 import com.ichi2.anki.multimediacard.fields.EFieldType;
 import com.ichi2.anki.multimediacard.fields.IField;
@@ -89,6 +89,7 @@ import com.ichi2.anki.noteeditor.FieldState.FieldChangeType;
 import com.ichi2.anki.noteeditor.CustomToolbarButton;
 import com.ichi2.anki.noteeditor.Toolbar;
 import com.ichi2.anki.receiver.SdCardReceiver;
+import com.ichi2.anki.servicelayer.LanguageHintService;
 import com.ichi2.anki.servicelayer.NoteService;
 import com.ichi2.anki.ui.NoteTypeSpinnerUtils;
 import com.ichi2.anki.widgets.DeckDropDownAdapter;
@@ -98,6 +99,7 @@ import com.ichi2.async.TaskManager;
 import com.ichi2.compat.CompatHelper;
 import com.ichi2.libanki.Card;
 import com.ichi2.libanki.Collection;
+import com.ichi2.libanki.Consts;
 import com.ichi2.libanki.Models;
 import com.ichi2.libanki.Model;
 import com.ichi2.libanki.Note;
@@ -108,11 +110,9 @@ import com.ichi2.themes.StyledProgressDialog;
 import com.ichi2.themes.Themes;
 import com.ichi2.anki.widgets.PopupMenuWithIcons;
 import com.ichi2.utils.AdaptionUtil;
-import com.ichi2.utils.FunctionalInterfaces.Consumer;
 import com.ichi2.utils.HashUtil;
 import com.ichi2.utils.KeyUtils;
 import com.ichi2.utils.MapUtil;
-import com.ichi2.utils.NamedJSONComparator;
 import com.ichi2.utils.NoteFieldDecorator;
 import com.ichi2.utils.TextViewUtil;
 import com.ichi2.widget.WidgetStatus;
@@ -122,13 +122,13 @@ import com.ichi2.utils.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -146,7 +146,7 @@ import static com.ichi2.libanki.Models.NOT_FOUND_NOTE_TYPE;
  * sides: a question and an answer. Any number of fields can appear on each side. When you add a note to Anki, cards
  * which show that note are generated. Some models generate one card, others generate more than one.
  *
- * @see <a href="http://ankisrs.net/docs/manual.html#cards">the Anki Desktop manual</a>
+ * @see <a href="https://docs.ankiweb.net/getting-started.html#cards">the Anki Desktop manual</a>
  */
 public class NoteEditor extends AnkiActivity implements
         DeckSelectionDialog.DeckSelectionListener,
@@ -223,7 +223,7 @@ public class NoteEditor extends AnkiActivity implements
     private Spinner mNoteTypeSpinner;
     private DeckSpinnerSelection mDeckSpinnerSelection;
 
-    // Non Null after onCollectionLoaded, but still null after construction. So essentially @NonNull but it would fail.
+    // Non Null after onCollectionLoaded, but still null after construction. So essentially @NonNull but it would fail.
     private Note mEditorNote;
     @Nullable
     /* Null if adding a new card. Presently NonNull if editing an existing note - but this is subject to change */
@@ -254,6 +254,9 @@ public class NoteEditor extends AnkiActivity implements
 
     // Use the same HTML if the same image is pasted multiple times.
     private HashMap<String, String> mPastedImageCache = new HashMap<>();
+
+    // save field index as key and text as value when toggle sticky clicked in Field Edit Text
+    private HashMap<Integer, String> mToggleStickyText = new HashMap<>();
 
     private final Onboarding.NoteEditor mOnboarding = new Onboarding.NoteEditor(this);
 
@@ -422,6 +425,7 @@ public class NoteEditor extends AnkiActivity implements
             mSelectedTags = savedInstanceState.getStringArrayList("tags");
             mReloadRequired = savedInstanceState.getBoolean("reloadRequired");
             mPastedImageCache = (HashMap<String, String>) savedInstanceState.getSerializable("imageCache");
+            mToggleStickyText = (HashMap<Integer, String>) savedInstanceState.getSerializable("toggleSticky");
             mChanged = savedInstanceState.getBoolean("changed");
         } else {
             mCaller = intent.getIntExtra(EXTRA_CALLER, CALLER_NOCALLER);
@@ -454,6 +458,7 @@ public class NoteEditor extends AnkiActivity implements
         savedInstanceState.putBoolean("reloadRequired", mReloadRequired);
         savedInstanceState.putIntegerArrayList("customViewIds", mCustomViewIds);
         savedInstanceState.putSerializable("imageCache", mPastedImageCache);
+        savedInstanceState.putSerializable("toggleSticky", mToggleStickyText);
         if (mSelectedTags == null) {
             mSelectedTags = new ArrayList<>(0);
         }
@@ -461,28 +466,10 @@ public class NoteEditor extends AnkiActivity implements
     }
 
 
-    /**
-     * Converts field values should to HTML linebreaks
-     */
+    @NonNull
     private Bundle getFieldsAsBundleForPreview() {
-        Bundle fields = new Bundle();
-        // Save the content of all the note fields. We use the field's ord as the key to
-        // easily map the fields correctly later.
-        if (mEditFields == null) {
-            //DA - I don't believe that this is required. Needs testing
-            mEditFields = new LinkedList<>();
-        }
-        for (FieldEditText e : mEditFields) {
-            if (e == null || e.getText() == null) {
-                continue;
-            }
-
-            String fieldValue = convertToHtmlNewline(e.getText().toString());
-            fields.putString(Integer.toString(e.getOrd()), fieldValue);
-        }
-        return fields;
+        return NoteService.getFieldsAsBundleForPreview(mEditFields, shouldReplaceNewlines());
     }
-
 
     // Finish initializing the activity after the collection has been correctly loaded
     @Override
@@ -585,7 +572,7 @@ public class NoteEditor extends AnkiActivity implements
         if (!mAddNote && mEditorNote.model().getJSONArray("tmpls").length()>1) {
             deckTextView.setText(R.string.CardEditorCardDeck);
         }
-        mDeckSpinnerSelection = new DeckSpinnerSelection(this, col, this.findViewById(R.id.note_deck_spinner));
+        mDeckSpinnerSelection = new DeckSpinnerSelection(this, col, this.findViewById(R.id.note_deck_spinner), false, true);
         mDeckSpinnerSelection.initializeNoteEditorDeckSpinner(mCurrentEditedCard, mAddNote);
 
         mCurrentDid = intent.getLongExtra(EXTRA_DID, mCurrentDid);
@@ -716,8 +703,8 @@ public class NoteEditor extends AnkiActivity implements
 
             case KeyEvent.KEYCODE_D:
                 //null check in case Spinner is moved into options menu in the future
-                if (event.isCtrlPressed() && (mDeckSpinnerSelection.getSpinner() != null)) {
-                    mDeckSpinnerSelection.displayDeckOverrideDialog(getCol());
+                if (event.isCtrlPressed()) {
+                    mDeckSpinnerSelection.displayDeckSelectionDialog(getCol());
                 }
                 break;
 
@@ -909,6 +896,9 @@ public class NoteEditor extends AnkiActivity implements
         if (mSelectedTags == null) {
             mSelectedTags = new ArrayList<>(0);
         }
+
+        saveToggleStickyMap();
+
         // treat add new note and edit existing note independently
         if (mAddNote) {
             //Different from libAnki, block if there are no cloze deletions.
@@ -934,6 +924,7 @@ public class NoteEditor extends AnkiActivity implements
             getCol().getModels().setChanged();
             mReloadRequired = true;
             TaskManager.launchCollectionTask(new CollectionTask.AddNote(mEditorNote), saveNoteHandler());
+            updateFieldsFromStickyText();
         } else {
             // Check whether note type has been changed
             final Model newModel = getCurrentlySelectedModel();
@@ -1047,6 +1038,13 @@ public class NoteEditor extends AnkiActivity implements
 
 
     @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateToolbar();
+    }
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.note_editor, menu);
         if (mAddNote) {
@@ -1120,6 +1118,10 @@ public class NoteEditor extends AnkiActivity implements
             item.setChecked(!item.isChecked()); // Needed for Android 9
             toggleCapitalize(item.isChecked());
             return true;
+        } else if (itemId == R.id.action_scroll_toolbar) {
+            item.setChecked(!item.isChecked());
+            AnkiDroidApp.getSharedPrefs(this).edit().putBoolean("noteEditorScrollToolbar", item.isChecked()).apply();
+            updateToolbar();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -1173,7 +1175,7 @@ public class NoteEditor extends AnkiActivity implements
         intent.putExtra(EXTRA_CALLER, CALLER_CARDEDITOR);
         intent.putExtra(EXTRA_DID, mCurrentDid);
         //mutate event with additional properties
-        intentEnricher.consume(intent);
+        intentEnricher.accept(intent);
         startActivityForResultWithAnimation(intent, REQUEST_ADD, START);
     }
 
@@ -1292,12 +1294,12 @@ public class NoteEditor extends AnkiActivity implements
         }
         ArrayList<String> tags = new ArrayList<>(getCol().getTags().all());
         ArrayList<String> selTags = new ArrayList<>(mSelectedTags);
-        TagsDialog dialog = mTagsDialogFactory.newTagsDialog().withArguments(TagsDialog.DialogType.ADD_TAG, selTags, tags);
+        TagsDialog dialog = mTagsDialogFactory.newTagsDialog().withArguments(TagsDialog.DialogType.EDIT_TAGS, selTags, tags);
         showDialogFragment(dialog);
     }
 
     @Override
-    public void onSelectedTags(List<String> selectedTags, int option) {
+    public void onSelectedTags(List<String> selectedTags, List<String> indeterminateTags, int option) {
         if (!mSelectedTags.equals(selectedTags)) {
             mTagsEdited = true;
         }
@@ -1352,6 +1354,10 @@ public class NoteEditor extends AnkiActivity implements
                     MultimediaEditableNote note = getCurrentMultimediaEditableNote(col);
                     note.setField(index, field);
                     FieldEditText fieldEditText = mEditFields.get(index);
+                    // Import field media
+                    // This goes before setting formattedValue to update
+                    // media paths with the checksum when they have the same name
+                    NoteService.importMediaToDirectory(col, field);
                     // Completely replace text for text fields (because current text was passed in)
                     String formattedValue = field.getFormattedValue();
                     if (field.getType() == EFieldType.TEXT) {
@@ -1361,8 +1367,6 @@ public class NoteEditor extends AnkiActivity implements
                     else if (fieldEditText.getText() != null) {
                         insertStringInField(fieldEditText, formattedValue);
                     }
-                    //DA - I think we only want to save the field here, not the note.
-                    NoteService.saveMedia(col, note);
                     mChanged = true;
                 }
                 break;
@@ -1493,25 +1497,32 @@ public class NoteEditor extends AnkiActivity implements
             newTextbox.setCapitalize(prefs.getBoolean("note_editor_capitalize", true));
 
             ImageButton mediaButton = edit_line_view.getMediaButton();
+            ImageButton toggleStickyButton = edit_line_view.getToggleSticky();
             // Load icons from attributes
-            int[] icons = Themes.getResFromAttr(this, new int[] { R.attr.attachFileImage, R.attr.upDownImage});
+            int[] icons = Themes.getResFromAttr(this, new int[] { R.attr.attachFileImage, R.attr.upDownImage, R.attr.toggleStickyImage});
             // Make the icon change between media icon and switch field icon depending on whether editing note type
             if (editModelMode && allowFieldRemapping()) {
                 // Allow remapping if originally more than two fields
                 mediaButton.setBackgroundResource(icons[1]);
                 setRemapButtonListener(mediaButton, i);
+                toggleStickyButton.setBackgroundResource(0);
             } else if (editModelMode && !allowFieldRemapping()) {
                 mediaButton.setBackgroundResource(0);
+                toggleStickyButton.setBackgroundResource(0);
             } else {
                 // Use media editor button if not changing note type
                 mediaButton.setBackgroundResource(icons[0]);
                 setMMButtonListener(mediaButton, i);
+                // toggle sticky button
+                toggleStickyButton.setBackgroundResource(icons[2]);
+                setToggleStickyButtonListener(toggleStickyButton, i);
             }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O && previous != null) {
                 previous.getLastViewInTabOrder().setNextFocusForwardId(R.id.CardEditorTagButton);
             }
 
             mediaButton.setContentDescription(getString(R.string.multimedia_editor_attach_mm_content, edit_line_view.getName()));
+            toggleStickyButton.setContentDescription(getString(R.string.note_editor_toggle_sticky, edit_line_view.getName()));
             mFieldsLayoutContainer.addView(edit_line_view);
         }
     }
@@ -1548,9 +1559,9 @@ public class NoteEditor extends AnkiActivity implements
                         Timber.i("NoteEditor:: Record audio button pressed");
                         startMultimediaFieldEditorForField(index, new AudioRecordingField());
                         return true;
-                    } else if (itemId == R.id.menu_multimedia_audio_clip) {
+                    } else if (itemId == R.id.menu_multimedia_audio_clip || itemId == R.id.menu_multimedia_video_clip) {
                         Timber.i("NoteEditor:: Add audio clip button pressed");
-                        startMultimediaFieldEditorForField(index, new AudioClipField());
+                        startMultimediaFieldEditorForField(index, new MediaClipField());
                         return true;
                     } else if (itemId == R.id.menu_multimedia_photo) {
                         Timber.i("NoteEditor:: Add image button pressed");
@@ -1575,6 +1586,44 @@ public class NoteEditor extends AnkiActivity implements
         });
     }
 
+    private void setToggleStickyButtonListener(ImageButton toggleStickyButton, final int index) {
+        if (mToggleStickyText.get(index) == null) {
+            toggleStickyButton.getBackground().setAlpha(64);
+        } else {
+            toggleStickyButton.getBackground().setAlpha(255);
+        }
+
+        toggleStickyButton.setOnClickListener(v -> {
+            onToggleStickyText(toggleStickyButton, index);
+        });
+    }
+
+    private void onToggleStickyText(ImageButton toggleStickyButton, int index) {
+        String text = mEditFields.get(index).getFieldText();
+        if (mToggleStickyText.get(index) == null) {
+            mToggleStickyText.put(index, text);
+            toggleStickyButton.getBackground().setAlpha(255);
+            Timber.d("Saved Text:: %s", mToggleStickyText.get(index));
+        } else {
+            mToggleStickyText.remove(index);
+            toggleStickyButton.getBackground().setAlpha(64);
+        }
+    }
+
+    private void saveToggleStickyMap() {
+        for (Map.Entry<Integer, String> index : mToggleStickyText.entrySet()) {
+            mToggleStickyText.put(index.getKey(), mEditFields.get(index.getKey()).getFieldText());
+        }
+    }
+
+    private void updateFieldsFromStickyText() {
+        for (Map.Entry<Integer, String> index : mToggleStickyText.entrySet()) {
+            // handle fields for different note type with different size
+            if (index.getKey() < mEditFields.size()) {
+                mEditFields.get(index.getKey()).setText(index.getValue());
+            }
+        }
+    }
 
     @VisibleForTesting
     void clearField(int index) {
@@ -1677,18 +1726,13 @@ public class NoteEditor extends AnkiActivity implements
         editText.setEnabled(enabled);
     }
 
-
+    @Nullable
     private Locale getHintLocaleForField(String name) {
         JSONObject field = getFieldByName(name);
         if (field == null) {
             return null;
         }
-        String languageTag = field.optString("ad-hint-locale", null);
-        if (languageTag == null) {
-            return null;
-        }
-
-        return Locale.forLanguageTag(languageTag);
+        return LanguageHintService.getLanguageHintForField(field);
     }
 
     @NonNull
@@ -1773,10 +1817,11 @@ public class NoteEditor extends AnkiActivity implements
         // determine what it should be again. An existing value means we are resuming the activity
         // where the target deck was already decided by the user.
         if (mCurrentDid != 0) {
+            mDeckSpinnerSelection.selectDeckById(mCurrentDid, false);
             return;
         }
         if (note == null || mAddNote || mCurrentEditedCard == null) {
-            JSONObject model = getCol().getModels().current();
+            Model model = getCol().getModels().current();
             if (getCol().get_config("addToCur", true)) {
                 mCurrentDid = getCol().get_config_long(CURRENT_DECK);
                 if (getCol().getDecks().isDyn(mCurrentDid)) {
@@ -1788,7 +1833,7 @@ public class NoteEditor extends AnkiActivity implements
                     mCurrentDid = 1;
                 }
             } else {
-                mCurrentDid = model.getLong("did");
+                mCurrentDid = model.getDid();
             }
         } else {
             mCurrentDid = mCurrentEditedCard.getDid();
@@ -1820,6 +1865,7 @@ public class NoteEditor extends AnkiActivity implements
         updateCards(mEditorNote.model());
         updateToolbar();
         populateEditFields(changeType, false);
+        updateFieldsFromStickyText();
     }
 
 
@@ -1872,6 +1918,11 @@ public class NoteEditor extends AnkiActivity implements
             // 0th button shows as '1' and is Ctrl + 1
             int visualIndex = b.getIndex() + 1;
             String text = Integer.toString(visualIndex);
+
+            if (!b.getButtonText().isEmpty()) {
+                text = b.getButtonText();
+            }
+
             Drawable bmp = mToolbar.createDrawableForString(text);
 
             View v = mToolbar.insertItem(0, bmp, b.toFormatter());
@@ -1880,7 +1931,7 @@ public class NoteEditor extends AnkiActivity implements
             v.setTag(Integer.toString(visualIndex % 10));
 
             v.setOnLongClickListener(discard -> {
-                suggestRemoveButton(b);
+                displayEditToolbarDialog(b);
                 return true;
             });
         }
@@ -1904,26 +1955,44 @@ public class NoteEditor extends AnkiActivity implements
                 .apply();
     }
 
-    private void addToolbarButton(String prefix, String suffix) {
+    private void addToolbarButton(String buttonText, String prefix, String suffix) {
         if (TextUtils.isEmpty(prefix) && TextUtils.isEmpty(suffix)) {
             return;
         }
 
         ArrayList<CustomToolbarButton> toolbarButtons = getToolbarButtons();
 
-        toolbarButtons.add(new CustomToolbarButton(toolbarButtons.size(), prefix, suffix));
+        toolbarButtons.add(new CustomToolbarButton(toolbarButtons.size(), buttonText, prefix, suffix));
         saveToolbarButtons(toolbarButtons);
 
         updateToolbar();
     }
 
+    private void editToolbarButton(String buttonText, String prefix, String suffix, CustomToolbarButton currentButton) {
 
-    private void suggestRemoveButton(CustomToolbarButton button) {
+        buttonText = TextUtils.isEmpty(buttonText)? currentButton.getButtonText() : buttonText;
+        prefix = TextUtils.isEmpty(prefix)? currentButton.getPrefix() : prefix;
+        suffix = TextUtils.isEmpty(suffix)? currentButton.getSuffix() : suffix;
+
+        ArrayList<CustomToolbarButton> toolbarButtons = getToolbarButtons();
+
+        int index = currentButton.getIndex();
+
+        toolbarButtons.set(index, new CustomToolbarButton(index, buttonText, prefix, suffix));
+        saveToolbarButtons(toolbarButtons);
+
+        updateToolbar();
+    }
+
+    private void suggestRemoveButton(CustomToolbarButton button, MaterialDialog editToolbarItemDialog) {
         new MaterialDialog.Builder(this)
                 .title(R.string.remove_toolbar_item)
                 .positiveText(R.string.dialog_positive_delete)
                 .negativeText(R.string.dialog_cancel)
-                .onPositive((dialog, action) -> removeButton(button))
+                .onPositive((dialog, action) -> {
+                    editToolbarItemDialog.dismiss();
+                    removeButton(button);
+                })
                 .show();
     }
 
@@ -1936,22 +2005,49 @@ public class NoteEditor extends AnkiActivity implements
         updateToolbar();
     }
 
+    private MaterialDialog.Builder getToolbarDialogBuilder() {
+        return new MaterialDialog.Builder(this)
+                .neutralText(R.string.help)
+                .negativeText(R.string.dialog_cancel)
+                .onNeutral((m, v) -> openUrl(Uri.parse(getString(R.string.link_manual_note_format_toolbar))));
+    }
+
     private void displayAddToolbarDialog() {
-        new MaterialDialog.Builder(this)
+        getToolbarDialogBuilder()
                 .title(R.string.add_toolbar_item)
                 .customView(R.layout.note_editor_toolbar_add_custom_item, true)
                 .positiveText(R.string.dialog_positive_create)
-                .neutralText(R.string.help)
-                .negativeText(R.string.dialog_cancel)
-                .onNeutral((m, v) -> openUrl(Uri.parse(getString(R.string.link_manual_note_format_toolbar))))
                 .onPositive((m, v) -> {
                     View view = m.getView();
+                    EditText etIcon =  view.findViewById(R.id.note_editor_toolbar_item_icon);
                     EditText et =  view.findViewById(R.id.note_editor_toolbar_before);
                     EditText et2 = view.findViewById(R.id.note_editor_toolbar_after);
 
-                    addToolbarButton(et.getText().toString(), et2.getText().toString());
+                    addToolbarButton(etIcon.getText().toString(), et.getText().toString(), et2.getText().toString());
                 })
                 .show();
+    }
+
+    private void displayEditToolbarDialog(CustomToolbarButton currentButton) {
+
+        View view = getLayoutInflater().inflate(R.layout.note_editor_toolbar_edit_custom_item, null);
+        final EditText etIcon =  view.findViewById(R.id.note_editor_toolbar_item_icon);
+        final EditText et =  view.findViewById(R.id.note_editor_toolbar_before);
+        final EditText et2 = view.findViewById(R.id.note_editor_toolbar_after);
+        final ImageButton btnDelete = view.findViewById(R.id.note_editor_toolbar_btn_delete);
+
+        etIcon.setText(currentButton.getButtonText());
+        et.setText(currentButton.getPrefix());
+        et2.setText(currentButton.getSuffix());
+
+        MaterialDialog toolbarDialog = getToolbarDialogBuilder()
+                .customView(view, true)
+                .positiveText(R.string.save)
+                .onPositive((m, v) -> editToolbarButton(etIcon.getText().toString(), et.getText().toString(), et2.getText().toString(), currentButton)).build();
+
+        btnDelete.setOnClickListener(view1 -> suggestRemoveButton(currentButton, toolbarDialog));
+
+        toolbarDialog.show();
     }
 
 
@@ -2007,20 +2103,12 @@ public class NoteEditor extends AnkiActivity implements
         if (fieldText != null) {
             fieldContent = fieldText.toString();
         }
-        String correctedFieldContent = convertToHtmlNewline(fieldContent);
+        String correctedFieldContent = NoteService.convertToHtmlNewline(fieldContent, shouldReplaceNewlines());
         if (!mEditorNote.values()[field.getOrd()].equals(correctedFieldContent)) {
             mEditorNote.values()[field.getOrd()] = correctedFieldContent;
             return true;
         }
         return false;
-    }
-
-
-    private String convertToHtmlNewline(@NonNull String fieldData) {
-        if (!shouldReplaceNewlines()) {
-            return fieldData;
-        }
-        return fieldData.replace(FieldEditText.NEW_LINE, "<br>");
     }
 
 
@@ -2081,13 +2169,12 @@ public class NoteEditor extends AnkiActivity implements
                 getCol().getDecks().save(currentDeck);
                 // Update deck
                 if (!getCol().get_config("addToCur", true)) {
-                    mCurrentDid = model.getLong("did");
+                    mCurrentDid = model.optLong("did", Consts.DEFAULT_DECK_ID);
                 }
 
                 refreshNoteData(FieldChangeType.changeFieldCount(shouldReplaceNewlines()));
                 setDuplicateFieldStyles();
-                mDeckSpinnerSelection.setDeckId(mCurrentDid);
-                mDeckSpinnerSelection.updateDeckPosition();
+                mDeckSpinnerSelection.updateDeckPosition(mCurrentDid);
             }
         }
 
@@ -2136,8 +2223,8 @@ public class NoteEditor extends AnkiActivity implements
                 findViewById(R.id.CardEditorTagButton).setEnabled(false);
                 //((LinearLayout) findViewById(R.id.CardEditorCardsButton)).setEnabled(false);
                 mDeckSpinnerSelection.setEnabledActionBarSpinner(false);
-                mDeckSpinnerSelection.setDeckId(mCurrentEditedCard.getDid());
-                mDeckSpinnerSelection.updateDeckPosition();
+                mDeckSpinnerSelection.updateDeckPosition(mCurrentEditedCard.getDid());
+                updateFieldsFromStickyText();
             } else {
                 populateEditFields(FieldChangeType.refresh(shouldReplaceNewlines()), false);
                 updateCards(mCurrentEditedCard.model());
@@ -2158,9 +2245,8 @@ public class NoteEditor extends AnkiActivity implements
      * button in the text selection menu.
      */
     @TargetApi(23)
-    private class ActionModeCallback implements ActionMode.Callback, LocaleSelectionDialog.LocaleSelectionDialogHandler {
+    private class ActionModeCallback implements ActionMode.Callback {
         private final FieldEditText mTextBox;
-        private final Field mField;
         private final int mClozeMenuId = View.generateViewId();
         @RequiresApi(Build.VERSION_CODES.N)
         private final int mSetLanguageId = View.generateViewId();
@@ -2168,7 +2254,6 @@ public class NoteEditor extends AnkiActivity implements
         private ActionModeCallback(FieldEditText textBox, Field field) {
             super();
             mTextBox = textBox;
-            mField = field;
         }
 
         @Override
@@ -2190,7 +2275,8 @@ public class NoteEditor extends AnkiActivity implements
             int initialSize = menu.size();
 
             if (isClozeType()) {
-                menu.add(Menu.NONE, mClozeMenuId, 0, R.string.multimedia_editor_popup_cloze);
+                // 10644: Do not pass in a R.string as the final parameter as MIUI on Android 12 crashes.
+                menu.add(Menu.NONE, mClozeMenuId, 0, getString(R.string.multimedia_editor_popup_cloze));
             }
 
             return initialSize != menu.size();
@@ -2213,24 +2299,6 @@ public class NoteEditor extends AnkiActivity implements
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             // Left empty on purpose
-        }
-
-        @Override
-        @RequiresApi(Build.VERSION_CODES.N)
-        public void onSelectedLocale(@NonNull Locale selectedLocale) {
-            mField.setHintLocale(selectedLocale);
-            mTextBox.setHintLocale(selectedLocale);
-
-            dismissAllDialogFragments();
-
-            //NICE_TO_HAVE: show the new keyboard and focus the field here.
-        }
-
-
-        @Override
-        @RequiresApi(Build.VERSION_CODES.N)
-        public void onLocaleSelectionCancelled() {
-            dismissAllDialogFragments();
         }
     }
 
@@ -2309,6 +2377,15 @@ public class NoteEditor extends AnkiActivity implements
     }
 
 
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    void setCurrentlySelectedModel(long mid) {
+        int position = mAllModelIds.indexOf(mid);
+        if (position == -1) {
+            throw new IllegalStateException(mid + " not found");
+        }
+        mNoteTypeSpinner.setSelection(position);
+    }
+
     private class EditFieldTextWatcher implements TextWatcher {
         private final int mIndex;
 
@@ -2347,18 +2424,6 @@ public class NoteEditor extends AnkiActivity implements
         public Field(JSONObject fieldObject, Collection collection) {
             this.mField = fieldObject;
             this.mCol = collection;
-        }
-
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        public void setHintLocale(@NonNull Locale selectedLocale) {
-            String input = selectedLocale.toLanguageTag();
-            mField.put("ad-hint-locale", input);
-            try {
-                mCol.getModels().save();
-            } catch (Exception e) {
-                Timber.w(e, "Failed to save hint locale");
-            }
         }
     }
 }

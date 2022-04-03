@@ -11,10 +11,15 @@ import com.ichi2.anki.lint.rules.DirectSystemCurrentTimeMillisUsage;
 import com.ichi2.anki.lint.rules.DirectDateInstantiation;
 import com.ichi2.anki.lint.rules.DirectGregorianInstantiation;
 import com.ichi2.anki.lint.rules.DirectToastMakeTextUsage;
+import com.ichi2.anki.lint.rules.InvalidStringFormatDetector;
+import com.ichi2.anki.lint.rules.JUnitNullAssertionDetector;
 import com.ichi2.anki.lint.rules.DuplicateCrowdInStrings;
 import com.ichi2.anki.lint.rules.DuplicateTextInPreferencesXml;
 import com.ichi2.anki.lint.rules.FixedPreferencesTitleLength;
 import com.ichi2.anki.lint.rules.InconsistentAnnotationUsage;
+import com.ichi2.anki.lint.rules.KotlinMigrationBrokenEmails;
+import com.ichi2.anki.lint.rules.KotlinMigrationFixLineBreaks;
+import com.ichi2.anki.lint.rules.NonPositionalFormatSubstitutions;
 import com.ichi2.anki.lint.rules.NonPublicNonStaticJavaFieldDetector;
 import com.ichi2.anki.lint.rules.PreferIsEmptyOverSizeCheck;
 import com.ichi2.anki.lint.rules.PrintStackTraceUsage;
@@ -42,13 +47,18 @@ public class IssueRegistry extends com.android.tools.lint.client.api.IssueRegist
         issues.add(DuplicateCrowdInStrings.ISSUE);
         issues.add(DuplicateTextInPreferencesXml.ISSUE);
         issues.add(InconsistentAnnotationUsage.ISSUE);
+        issues.add(JUnitNullAssertionDetector.ISSUE);
+        issues.add(KotlinMigrationBrokenEmails.ISSUE);
+        issues.add(KotlinMigrationFixLineBreaks.ISSUE);
         issues.add(PreferIsEmptyOverSizeCheck.ISSUE);
         issues.add(PrintStackTraceUsage.ISSUE);
+        issues.add(NonPositionalFormatSubstitutions.ISSUE);
         issues.add(NonPublicNonStaticJavaFieldDetector.ISSUE);
         issues.add(ConstantJavaFieldDetector.ISSUE);
         issues.add(FixedPreferencesTitleLength.ISSUE_MAX_LENGTH);
         issues.add(FixedPreferencesTitleLength.ISSUE_TITLE_LENGTH);
         issues.add(VariableNamingDetector.ISSUE);
+        issues.add(InvalidStringFormatDetector.ISSUE);
         return issues;
     }
 

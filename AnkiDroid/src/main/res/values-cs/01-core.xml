@@ -45,7 +45,7 @@
     <string name="statistics">Statistiky</string>
     <string name="settings">Nastavení</string>
     <string name="help">Nápověda</string>
-    <string name="drawing">Drawing</string>
+    <string name="drawing">Kreslení</string>
     <string name="send_feedback">Odeslat zpětnou vazbu</string>
     <string name="studyoptions_due_today">Dnes k zopakování:</string>
     <string name="studyoptions_new_total">Celkem nových karet:</string>
@@ -130,15 +130,12 @@
     <string name="menu_flag_card_seven">Purpurový příznak</string>
     <string name="menu_edit_tags">Upravit štítky</string>
     <string name="delete_note_message">Opravdu smazat poznámku a všechny její karty?\n%s</string>
-    <string name="menu_select">Vybrat text</string>
-    <string name="menu_lookup">Vyhledat text</string>
     <string name="menu_search">Vyhledat v %1$s</string>
     <string name="menu_mark_note">Označit poznámku</string>
     <string name="menu_unmark_note">Odznačit poznámku</string>
     <string name="menu_toggle_mic_tool_bar">Zkontrolovat výslovnost</string>
     <string name="new_deck">Vytvořit balíček</string>
     <string name="new_dynamic_deck">Vytvořit filtrovaný balíček</string>
-    <string name="night_mode">Noční režim</string>
     <string name="directory_inaccessible">AnkiDroid adresář není přístupný</string>
     <!--This is shown when AnkiDroid starts up with no storage permissions.
     The user is taken to the "App Info" screen, and needs to click "Permissions" and
@@ -169,7 +166,8 @@
     <string name="custom_study_deck_name">Dodatečné procvičování</string>
     <string name="custom_study_deck_exists">Nejdříve přejmenujte stávající balíček vlastního učení</string>
     <string name="empty_deck">Tento balíček je prázdný</string>
-    <string name="search_deck">Hledat balíček</string>
+    <string name="search_deck" comment="Deck search for selecting it">Hledat balíček</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Deck Search</string>
     <string name="empty_deck_add_note">Přidat kartu</string>
     <string name="invalid_deck_name">Neplatný název balíčku</string>
     <string name="studyoptions_empty">Tento balíček je prázdný. Stiskněte tlačítko +, abyste přidali nový obsah.</string>
@@ -178,7 +176,7 @@
     <string name="studyoptions_congrats_finished">Blahopřejeme! Prozatím jste hotov.</string>
     <string name="studyoptions_congrats_more_rev">Bylo dosaženo limitu dnešního opakování, ale stále existují karty pro přezkoušení. Pro optimální zapamatování zvažte zvýšení denního limitu v možnostech.</string>
     <string name="studyoptions_congrats_more_new">Dnešní limit byl dosažen. K dispozici je více nových karet, v možnostech můžete zvýšit limit, ale to zvýší vaše krátkodobé vytížení.</string>
-    <string name="studyoptions_congrats_custom">Jestliže chcete studovat mimo normální plán, klepněte na tlačítko „Vlastní učení“</string>
+    <string name="studyoptions_congrats_custom">Jestliže chcete studovat mimo normální plán, klepněte na tlačítko „Vlastní učení“.</string>
     <string name="studyoptions_no_cards_due">Žádné karty ještě nejsou ke zkoušení</string>
     <string name="sd_card_not_mounted">Zařízení úložiště není připojeno</string>
     <string name="empty_cloze_warning">Upravte tuto poznámku a přidejte nějaké doplňovačky. (%1$s)</string>
@@ -250,5 +248,5 @@
         <item quantity="many">%1$d karty (0 ke zkoušení)</item>
         <item quantity="other">%1$d karet (0 ke zkoušení)</item>
     </plurals>
-    <string name="copy_note_type_name" comment="The new name of a copied note type">%s copy</string>
+    <string name="copy_note_type_name" comment="The new name of a copied note type">%s kopie</string>
 </resources>

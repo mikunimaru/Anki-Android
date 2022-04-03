@@ -55,8 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">Gestos</string>
     <string name="pref_cat_gestures_summ">Usar gestos em vez de botões</string>
     <string name="pref_cat_actions" maxLength="41">Ações</string>
-    <string name="pref_cat_controls" maxLength="41">Controls</string>
-    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
+    <string name="pref_cat_controls" maxLength="41">Controles</string>
+    <string name="pref_cat_controls_summ">Configurar teclados e outros dispositivos</string>
     <string name="pref_cat_advanced" maxLength="41">Avançado</string>
     <string name="pref_cat_advanced_summ">Otimização e funcionalidades experimentais</string>
     <string name="pref_cat_performance" maxLength="41">Desempenho</string>
@@ -67,8 +67,7 @@
     <!-- preferences.xml entries-->
     <string name="whiteboard_stroke_width" maxLength="41">Largura do traço</string>
     <string name="use_input_tag" maxLength="41">Digite a resposta no card</string>
-    <string name="use_input_tag_summ">Use um espaço dentro do card para digitar a resposta</string>
-    <string name="dictionary" maxLength="41">Dicionário de busca</string>
+    <string name="use_input_tag_summ">Use um campo no card para digitar a resposta</string>
     <string name="reset_languages" maxLength="41">Redefinir línguas</string>
     <string name="reset_languages_summ">Redefinir as atribuições de linguagem (Texto para fala e dicionários) para todos os baralhos</string>
     <string name="reset_languages_question">Redefinir todas as atribuições de idioma?</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>Acima</item>
         <item>Abaixo</item>
+        <item>Nenhuma</item>
     </string-array>
     <string name="gestures" maxLength="41">Habilitar gestos</string>
     <string name="gestures_summ">Atribuir gestos a ações tais como responder e editar cards.</string>
-    <string name="gestures_allow_links" maxLength="41">Ignorar gestos de toque nos links</string>
-    <string name="gestures_allow_links_summary">Gestos de toque não serão processados se um link/dica for pressionado.</string>
     <string name="gestures_corner_touch" maxLength="41">9 Ações de Toque </string>
     <string name="gestures_corner_touch_summary">Permitir gestos de toque nos cantos da tela</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">Painel de navegação em tela cheia</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Toque Baixo Esquerda</string>
     <string name="gestures_corner_tap_bottom_center">Toque Baixo Centro</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Toque Baixo Direita</string>
-    <string name="gestures_volume_up" maxLength="41">Aumentar Volume</string>
-    <string name="gestures_volume_down" maxLength="41">Diminuir Volume</string>
     <string name="more_scrolling_buttons" maxLength="41">eReader</string>
     <string name="more_scrolling_buttons_summ">Também utilizar botões de kanji/katakana, emoji/kao-moji para rolagem</string>
     <string name="card_browser_enable_external_context_menu">‘%s’ Menu </string>
@@ -137,6 +133,7 @@
     <string name="automatic_sync_choice_summ">Sincronizar automaticamente ao iniciar/sair do aplicativo se a última sincronização foi há mais de 10 minutos.</string>
     <string name="sync_status_badge" maxLength="41">Exibir status da sincronização</string>
     <string name="sync_status_badge_summ">Alterar o ícone de sincronização quando alterações forem enviadas.</string>
+    <string name="app_theme" maxLength="41">Tema</string>
     <string name="day_theme" maxLength="41">Tema Dia</string>
     <string name="night_theme" maxLength="41">Tema Noite</string>
     <string name="default_font" maxLength="41">Fonte padrão</string>
@@ -151,6 +148,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Vibrar</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Luz de piscamento</string>
     <string name="timeout_answer_text" maxLength="41">Exibir resposta automaticamente</string>
+    <string name="timeout_answer" maxLength="41">Resposta de tempo limite</string>
     <string name="timeout_answer_summ">Mostra a resposta automaticamente sem intervenção do usuário. Inclui atraso para reprodução automatica de arquivos de áudio.</string>
     <string name="timeout_answer_seconds" maxLength="41">Tempo para mostrar a resposta</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -173,7 +171,7 @@
     <string name="show_large_answer_buttons" maxLength="41">Mostrar botões de resposta grandes</string>
     <string name="show_large_answer_buttons_summ">Mostrar botão de resposta em 2 linhas</string>
     <string name="show_top_bar" maxLength="41">Mostrar barra superior</string>
-    <string name="show_top_bar_summ">Mostrar contagem de cards, sinalizador e marca na barra superior</string>
+    <string name="show_top_bar_summ">Mostrar contagem de cards, sinalização e marca na barra superior</string>
     <string name="show_progress" maxLength="41">Mostar restantes</string>
     <string name="show_progress_summ">Mostrar contagem de cards restantes</string>
     <string name="show_eta" maxLength="41">Mostrar tempo restante estimado</string>
@@ -213,6 +211,13 @@
     <string name="paste_as_png_summary">Por padrão, o Anki cola imagens na área de transferência como arquivos JPG para economizar espaço em disco. Você pode usar esta opção para colar como imagens PNG.</string>
     <string name="exit_via_double_tap_back" maxLength="41">Duplo toque em voltar para voltar/sair</string>
     <string name="exit_via_double_tap_back_summ">Para evitar saídas acidentais do revisor ou do aplicativo</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Importar todos os arquivos de mídia</string>
+    <string name="media_import_allow_all_files_summ">Se o Android não reconhecer um arquivo de mídia</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Baralho padrão ao abrir estatísticas</string>
+    <string name="stats_default_deck_current">Exibir estatísticas do baralho mais recente</string>
+    <string name="stats_default_deck_all">Exibir estatísticas de todos os baralhos</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Estatísticas avançadas</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Habilitar estatísticas avançadas</string>
@@ -229,7 +234,7 @@
     <string name="custom_sync_server_media_url_title" maxLength="41">Url de sincronismo de mídia</string>
     <string name="custom_sync_server_media_url_invalid">Mídia com URL de sincronização inválido</string>
     <!-- Key Bindings -->
-    <string name="controls_main_category" maxLength="41">Command mapping</string>
+    <string name="controls_main_category" maxLength="41">Mapeamento de controles</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Alterações às opções do grupo de deck afetarão vários decks. Se você deseja alterar apenas o deck atual, por favor, adicione um novo grupo de opções primeiro</string>
     <string name="studyoptions_limit_select_tags">Selecione Tags</string>
@@ -251,7 +256,7 @@
     <string name="deck_conf_graduating_ivl" maxLength="41">Intervalo de graduação</string>
     <string name="deck_conf_days">XXX dia(s)</string>
     <string name="deck_conf_easy_ivl" maxLength="41">Intervalo fácil</string>
-    <string name="deck_conf_start_ease" maxLength="41">Espaçamento inicial</string>
+    <string name="deck_conf_start_ease" maxLength="41">Retenção inicial</string>
     <string name="deck_conf_max_rev" maxLength="41">Máximo de revisões/dia</string>
     <string name="deck_conf_new_bury" maxLength="41">Enterrar cards novos relacionados</string>
     <string name="deck_conf_new_bury_summ">Cards novos relacionados serão enterrados até o dia seguinte</string>
@@ -314,7 +319,7 @@
     <!-- Open Changelog-->
     <string name="open_changelog">Abrir Changelog</string>
     <string name="binding_add_gesture">Adicionar gesto</string>
-    <string name="binding_add_key">Português</string>
+    <string name="binding_add_key">Adicionar tecla</string>
     <string name="key_picker_default_press_key">Pressione uma tecla</string>
     <!-- Select card side -->
     <string name="card_side_selection_title">Selecionar lado da carta</string>
@@ -325,6 +330,6 @@
     <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">R: %s</string>
     <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
     <!-- Binding Preference -->
-    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
-    <string name="bindings_already_bound">Already bound to %s</string>
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remover ‘%s\'</string>
+    <string name="bindings_already_bound">Já vinculado a %s</string>
 </resources>

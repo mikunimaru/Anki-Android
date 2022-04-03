@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">Lapad ng stroke</string>
     <string name="use_input_tag" maxLength="41">I-type ang sagot sa card</string>
     <string name="use_input_tag_summ">Gumamit ng isang kahon ng pag-input ng teksto sa loob ng card upang i-type ang sagot</string>
-    <string name="dictionary" maxLength="41">Paghahanap ng diksyunaryo</string>
     <string name="reset_languages" maxLength="41">I-reset ang mga wika</string>
     <string name="reset_languages_summ">I-reset ang mga tugmang wika (para sa teksto sa pagsasalita at mga diksyunaryo) para sa lahat ng mga deck</string>
     <string name="reset_languages_question">I-reset ang lahat ng mga takdang wika?</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>Itaas</item>
         <item>Ibaba</item>
+        <item>None</item>
     </string-array>
     <string name="gestures" maxLength="41">Paganahin ang mga galaw</string>
     <string name="gestures_summ">Magtalaga ng mga kilos sa mga aksyon tulad ng pagsagot at pag-edit ng mga card.</string>
-    <string name="gestures_allow_links" maxLength="41">Ignore touch gestures on links</string>
-    <string name="gestures_allow_links_summary">Touch gestures will not be processed if a link/hint is pressed.</string>
     <string name="gestures_corner_touch" maxLength="41">9-point touch</string>
     <string name="gestures_corner_touch_summary">Allow touch gestures in screen corners</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">Full screen navigation drawer</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Touch bottom left</string>
     <string name="gestures_corner_tap_bottom_center">Touch bottom center</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Touch bottom right</string>
-    <string name="gestures_volume_up" maxLength="41">Volume up</string>
-    <string name="gestures_volume_down" maxLength="41">Volume down</string>
     <string name="more_scrolling_buttons" maxLength="41">eReader</string>
     <string name="more_scrolling_buttons_summ">Gamitin din ang kanji / katakana, emoji / kao-moji na mga pindutan para sa pag-scroll</string>
     <string name="card_browser_enable_external_context_menu">‘%s’ Menu</string>
@@ -138,6 +134,7 @@
         minuto ang nakalipas.</string>
     <string name="sync_status_badge" maxLength="41">Display synchronization status</string>
     <string name="sync_status_badge_summ">Change the sync icon when changes can be uploaded</string>
+    <string name="app_theme" maxLength="41">Theme</string>
     <string name="day_theme" maxLength="41">Araw ng tema</string>
     <string name="night_theme" maxLength="41">Tema ng gabi</string>
     <string name="default_font" maxLength="41">Default na font</string>
@@ -152,6 +149,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Tumagingting</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Kisap ng ilaw</string>
     <string name="timeout_answer_text" maxLength="41">Awtomatikong sagot na ipakita</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">Awtomatikong ipakita ang sagot nang hindi gumagamit ng input. Kasama ang pag-antala ng oras para sa awtomatikong pag-play ng mga audio file.</string>
     <string name="timeout_answer_seconds" maxLength="41">Oras upang ipakita ang sagot</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -173,7 +171,7 @@
     <string name="show_estimates_summ">Ipakita ang susunod na oras ng pagsusuri sa mga pindutan ng sagot</string>
     <string name="show_large_answer_buttons" maxLength="41">Show large answer buttons</string>
     <string name="show_large_answer_buttons_summ">Show answer button in 2 rows</string>
-    <string name="show_top_bar" maxLength="41">Show Top Bar</string>
+    <string name="show_top_bar" maxLength="41">Show top bar</string>
     <string name="show_top_bar_summ">Show card counts, flag and mark in top bar</string>
     <string name="show_progress" maxLength="41">Ipakita ang natitira</string>
     <string name="show_progress_summ">Ipakita ang natitirang bilang ng card</string>
@@ -214,6 +212,13 @@
     <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
     <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
     <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Default deck when opening statistics</string>
+    <string name="stats_default_deck_current">Show stats for most recent deck</string>
+    <string name="stats_default_deck_all">Show stats for all decks</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Mga advanced na istatistika</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Paganahin ang mga advanced na istatistika</string>

@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">സ്ട്രോക്ക് വീതി</string>
     <string name="use_input_tag" maxLength="41">കാർഡിൽ ഉത്തരം ടൈപ്പുചെയ്യുക</string>
     <string name="use_input_tag_summ">ഉത്തരം ടൈപ്പുചെയ്യുന്നതിന് കാർഡിനുള്ളിലെ ഒരു വാചക ഇൻപുട്ട് ബോക്സ് ഉപയോഗിക്കുക</string>
-    <string name="dictionary" maxLength="41">ലുക്കപ്പ് നിഘണ്ടു</string>
     <string name="reset_languages" maxLength="41">ഭാഷകൾ പുന  സജ്ജമാക്കുക</string>
     <string name="reset_languages_summ">എല്ലാ ഡെക്കുകൾക്കുമായി ഭാഷാ അസൈൻമെന്റുകൾ പുന text സജ്ജമാക്കുക (വാചകം മുതൽ സംഭാഷണം, നിഘണ്ടുക്കൾ വരെ)</string>
     <string name="reset_languages_question">എല്ലാ ഭാഷാ അസൈൻമെന്റുകളും പുന സജ്ജമാക്കണോ?</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>മുകളിൽ</item>
         <item>ചുവടെ</item>
+        <item>None</item>
     </string-array>
     <string name="gestures" maxLength="41">ആംഗ്യങ്ങൾ പ്രവർത്തനക്ഷമമാക്കുക</string>
     <string name="gestures_summ">കാർഡുകൾക്ക് ഉത്തരം നൽകൽ, എഡിറ്റുചെയ്യൽ എന്നിവ പോലുള്ള പ്രവർത്തനങ്ങൾക്ക് ആംഗ്യങ്ങൾ നൽകുക.</string>
-    <string name="gestures_allow_links" maxLength="41">ലിങ്കുകളിലെ ടച്ച് സവിശേഷതകൾ അവഗണിക്കുക</string>
-    <string name="gestures_allow_links_summary">ഒരു ലിങ്ക് / സൂചന അമർത്തിയാൽ ടച്ച് സവിശേഷതകൾ പ്രോസസ്സ് ചെയ്യില്ല.</string>
     <string name="gestures_corner_touch" maxLength="41">9-point touch</string>
     <string name="gestures_corner_touch_summary">സ്‌ക്രീൻ കോണുകളിൽ ടച്ച് സവിശേഷതകൾ അനുവദിക്കുക</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">Full screen navigation drawer</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">ചുവടെ ഇടത് സ്പർശിക്കുക</string>
     <string name="gestures_corner_tap_bottom_center">ചുവടെയുള്ള മധ്യത്തിൽ സ്‌പർശിക്കുക</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">ചുവടെ വലതുവശത്ത് സ്‌പർശിക്കുക</string>
-    <string name="gestures_volume_up" maxLength="41">വോളിയം ഉയർത്തുക</string>
-    <string name="gestures_volume_down" maxLength="41">വോളിയം കുറയ്ക്കുക</string>
     <string name="more_scrolling_buttons" maxLength="41">eReader</string>
     <string name="more_scrolling_buttons_summ">സ്ക്രോളിംഗിനായി കാഞ്ചി / കറ്റക്കാന, ഇമോജി / കാവോ-മോജി ബട്ടണുകളും ഉപയോഗിക്കുക</string>
     <string name="card_browser_enable_external_context_menu">‘%s’ മെനു</string>
@@ -137,6 +133,7 @@
     <string name="automatic_sync_choice_summ">അവസാന സമന്വയം 10 ​​ൽ കൂടുതലാണെങ്കിൽ അപ്ലിക്കേഷൻ ആരംഭത്തിൽ / പുറത്തുകടക്കുമ്പോൾ യാന്ത്രികമായി സമന്വയിപ്പിക്കുക</string>
     <string name="sync_status_badge" maxLength="41">സമന്വയ നില പ്രദർശിപ്പിക്കുക</string>
     <string name="sync_status_badge_summ">മാറ്റങ്ങൾ അപ്‌ലോഡ് ചെയ്യാൻ കഴിയുമ്പോൾ സമന്വയ ഐക്കൺ മാറ്റുക</string>
+    <string name="app_theme" maxLength="41">Theme</string>
     <string name="day_theme" maxLength="41">ദിവസത്തെ തീം</string>
     <string name="night_theme" maxLength="41">രാത്രി തീം</string>
     <string name="default_font" maxLength="41">സ്ഥിരസ്ഥിതി ഫോണ്ട്</string>
@@ -151,6 +148,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">വൈബ്രേറ്റുചെയ്യുക</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">ബ്ലിങ്ക് ലൈറ്റ്</string>
     <string name="timeout_answer_text" maxLength="41">യാന്ത്രിക പ്രദർശന ഉത്തരം</string>
+    <string name="timeout_answer" maxLength="41">Timeout answer</string>
     <string name="timeout_answer_summ">ഉപയോക്തൃ ഇൻ‌പുട്ട് ഇല്ലാതെ സ്വപ്രേരിതമായി ഉത്തരം കാണിക്കുക. സ്വപ്രേരിതമായി പ്ലേ ചെയ്യുന്ന ഓഡിയോ ഫയലുകൾക്കുള്ള സമയം കാലതാമസം ഉൾക്കൊള്ളുന്നു.</string>
     <string name="timeout_answer_seconds" maxLength="41">ഉത്തരം കാണിക്കാനുള്ള സമയം</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -172,7 +170,7 @@
     <string name="show_estimates_summ">Show next review time on answer buttons</string>
     <string name="show_large_answer_buttons" maxLength="41">Show large answer buttons</string>
     <string name="show_large_answer_buttons_summ">Show answer button in 2 rows</string>
-    <string name="show_top_bar" maxLength="41">Show Top Bar</string>
+    <string name="show_top_bar" maxLength="41">Show top bar</string>
     <string name="show_top_bar_summ">Show card counts, flag and mark in top bar</string>
     <string name="show_progress" maxLength="41">Show remaining</string>
     <string name="show_progress_summ">Show remaining card count</string>
@@ -213,6 +211,13 @@
     <string name="paste_as_png_summary">By default Anki pastes images on the clipboard as JPG files to save disk space. You can use this option to paste as PNG images instead.</string>
     <string name="exit_via_double_tap_back" maxLength="41">Press back twice to go back/exit</string>
     <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
+    <string name="media_import_allow_all_files_summ">If Android doesn’t recognize a media file</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Default deck when opening statistics</string>
+    <string name="stats_default_deck_current">Show stats for most recent deck</string>
+    <string name="stats_default_deck_all">Show stats for all decks</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">വിശദമായ സ്റ്ററ്റിസ്റ്റിക്സ്‌</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Enable advanced statistics</string>

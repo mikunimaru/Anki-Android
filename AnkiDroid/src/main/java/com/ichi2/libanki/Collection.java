@@ -33,6 +33,7 @@ import com.ichi2.anki.analytics.UsageAnalytics;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
 import com.ichi2.async.CancelListener;
 import com.ichi2.async.CollectionTask;
+import com.ichi2.libanki.TemplateManager.TemplateRenderContext.TemplateRenderOutput;
 import com.ichi2.libanki.backend.DroidBackend;
 import com.ichi2.async.ProgressSender;
 import com.ichi2.async.TaskManager;
@@ -49,7 +50,7 @@ import com.ichi2.libanki.utils.Time;
 import com.ichi2.upgrade.Upgrade;
 import com.ichi2.utils.FunctionalInterfaces;
 import com.ichi2.utils.HashUtil;
-import com.ichi2.utils.LanguageUtil;
+import com.ichi2.utils.KotlinCleanup;
 import com.ichi2.utils.VersionUtils;
 
 import com.ichi2.utils.JSONArray;
@@ -78,6 +79,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import androidx.annotation.CheckResult;
@@ -107,9 +109,10 @@ public class Collection implements CollectionGetter {
     private boolean mServer;
     //private double mLastSave;
     private final Media mMedia;
-    private final DeckManager mDecks;
-    private ModelManager mModels;
-    private final TagManager mTags;
+    protected DeckManager mDecks;
+    protected ModelManager mModels;
+    protected TagManager mTags;
+    protected ConfigManager mConf;
 
     private AbstractSched mSched;
 
@@ -123,14 +126,13 @@ public class Collection implements CollectionGetter {
     private boolean mDty;
     private int mUsn;
     private long mLs;
-    private JSONObject mConf;
     // END: SQL table columns
 
     // API 21: Use a ConcurrentLinkedDeque
     private LinkedBlockingDeque<UndoAction> mUndo;
 
-    private final String mPath;
-    private final DroidBackend mDroidBackend;
+    private final @NonNull String mPath;
+    protected final DroidBackend mDroidBackend;
     private boolean mDebugLog;
     private PrintWriter mLogHnd;
 
@@ -155,7 +157,7 @@ public class Collection implements CollectionGetter {
             +
             // review options
             "\"activeDecks\": [1], " + "\"curDeck\": 1, " + "\"newSpread\": " + Consts.NEW_CARDS_DISTRIBUTE + ", "
-            + "\"collapseTime\": 1200, " + "\"timeLim\": 0, " + "\"estTimes\": true, " + "\"dueCounts\": true, "
+            + "\"collapseTime\": 1200, " + "\"timeLim\": 0, " + "\"estTimes\": true, " + "\"dueCounts\": true, \"dayLearnFirst\":false, "
             +
             // other config
             "\"curModel\": null, " + "\"nextPos\": 1, " + "\"sortType\": \"noteFld\", "
@@ -164,7 +166,7 @@ public class Collection implements CollectionGetter {
     private static final int UNDO_SIZE_MAX = 20;
 
     @VisibleForTesting
-    public Collection(Context context, DB db, String path, boolean server, boolean log, @NonNull Time time, @NonNull DroidBackend droidBackend) {
+    public Collection(Context context, DB db, @NonNull String path, boolean server, boolean log, @NonNull Time time, @NonNull DroidBackend droidBackend) {
         mContext = context;
         mDebugLog = log;
         mDb = db;
@@ -177,8 +179,7 @@ public class Collection implements CollectionGetter {
         //mLastSave = getTime().now(); // assigned but never accessed - only leaving in for upstream comparison
         clearUndo();
         mMedia = new Media(this, server);
-        mDecks = new Decks(this);
-        mTags = new Tags(this);
+        mTags = initTags();
         load();
         if (mCrt == 0) {
             mCrt = UIUtils.getDayStart(getTime()) / 1000;
@@ -189,6 +190,37 @@ public class Collection implements CollectionGetter {
         if (!get_config("newBury", false)) {
             set_config("newBury", true);
         }
+    }
+
+
+
+    protected DeckManager initDecks(String deckConf) {
+        DeckManager deckManager = new Decks(this);
+        // getModels().load(loadColumn("models")); This code has been
+        // moved to `CollectionHelper::loadLazyCollection` for
+        // efficiency Models are loaded lazily on demand. The
+        // application layer can asynchronously pre-fetch those parts;
+        // otherwise they get loaded when required.
+        deckManager.load(loadColumn("decks"), deckConf);
+        return deckManager;
+    }
+
+
+    @NonNull
+    protected ConfigManager initConf(String conf) {
+        return new Config(conf);
+    }
+
+    @NonNull
+    protected TagManager initTags() {
+        return new Tags(this);
+    }
+
+    @NonNull
+    protected ModelManager initModels() {
+        Models models = new Models(this);
+        models.load(loadColumn("models"));
+        return models;
     }
 
 
@@ -272,7 +304,7 @@ public class Collection implements CollectionGetter {
             mDty = cursor.getInt(3) == 1; // No longer used
             mUsn = cursor.getInt(4);
             mLs = cursor.getLong(5);
-            mConf = new JSONObject(cursor.getString(6));
+            mConf = initConf(cursor.getString(6));
             deckConf = cursor.getString(7);
             mTags.load(cursor.getString(8));
         } finally {
@@ -280,12 +312,7 @@ public class Collection implements CollectionGetter {
                 cursor.close();
             }
         }
-        // getModels().load(loadColumn("models")); This code has been
-        // moved to `CollectionHelper::loadLazyCollection` for
-        // efficiency Models are loaded lazily on demand. The
-        // application layer can asynchronously pre-fetch those parts;
-        // otherwise they get loaded when required.
-        mDecks.load(loadColumn("decks"), deckConf);
+        mDecks = initDecks(deckConf);
     }
 
     private static int sChunk = 0;
@@ -357,8 +384,15 @@ public class Collection implements CollectionGetter {
         values.put("dty", mDty ? 1 : 0);
         values.put("usn", mUsn);
         values.put("ls", mLs);
-        values.put("conf", Utils.jsonToString(mConf));
+        if (flushConf()) {
+            values.put("conf", Utils.jsonToString(getConf()));
+        }
         mDb.update("col", values);
+    }
+
+
+    protected boolean flushConf() {
+        return true;
     }
 
 
@@ -402,8 +436,11 @@ public class Collection implements CollectionGetter {
         close(true);
     }
 
-
     public synchronized void close(boolean save) {
+        close(save, false);
+    }
+
+    public synchronized void close(boolean save, boolean downgrade) {
         if (mDb != null) {
             try {
                 SupportSQLiteDatabase db = mDb.getDatabase();
@@ -419,7 +456,7 @@ public class Collection implements CollectionGetter {
             if (!mServer) {
                 mDb.getDatabase().disableWriteAheadLogging();
             }
-            mDb.close();
+            mDroidBackend.closeCollection(mDb, downgrade);
             mDb = null;
             mMedia.close();
             _closeLog();
@@ -500,7 +537,8 @@ public class Collection implements CollectionGetter {
         // ensure db is compacted before upload
         mDb.execute("vacuum");
         mDb.execute("analyze");
-        close();
+        // downgrade the collection
+        close(true, true);
     }
 
 
@@ -718,9 +756,9 @@ public class Collection implements CollectionGetter {
     /**
      * Generate cards for non-empty templates, return ids to remove.
      */
-	public ArrayList<Long> genCards(java.util.Collection<Long> nids, @NonNull Model model) {
-	    return genCards(Utils.collection2Array(nids), model);
-	}
+    public ArrayList<Long> genCards(java.util.Collection<Long> nids, @NonNull Model model) {
+        return genCards(Utils.collection2Array(nids), model);
+    }
 
     public <T extends ProgressSender<Integer> & CancelListener> ArrayList<Long> genCards(java.util.Collection<Long> nids, @NonNull Model model, @Nullable T task) {
        return genCards(Utils.collection2Array(nids), model, task);
@@ -832,7 +870,7 @@ public class Collection implements CollectionGetter {
                     due = (long) nextID("pos");
                 }
                 if (did == null || did == 0L) {
-                    did = model.getLong("did");
+                    did = model.getDid();
                 }
                 // add any missing cards
                 ArrayList<JSONObject> tmpls = _tmplsFromOrds(model, avail);
@@ -993,7 +1031,7 @@ public class Collection implements CollectionGetter {
         mDb.execute("DELETE FROM cards WHERE id IN " + sids);
         // then notes
         if (!notes) {
-        	return;
+            return;
         }
         nids = mDb.queryLongList("SELECT id FROM notes WHERE id IN " + Utils.ids2str(nids)
                         + " AND id NOT IN (SELECT nid FROM cards)");
@@ -1081,12 +1119,14 @@ public class Collection implements CollectionGetter {
     /**
      * Returns hash of id, question, answer.
      */
+    @NonNull
     public HashMap<String, String> _renderQA(long cid, Model model, long did, int ord, String tags, String[] flist, int flags) {
         return _renderQA(cid, model, did, ord, tags, flist, flags, false, null, null);
     }
 
 
     @RustCleanup("#8951 - Remove FrontSide added to the front")
+    @NonNull
     public HashMap<String, String> _renderQA(long cid, Model model, long did, int ord, String tags, String[] flist, int flags, boolean browser, String qfmt, String afmt) {
         // data is [cid, nid, mid, did, ord, tags, flds, cardFlags]
         // unpack fields and create dict
@@ -1177,34 +1217,36 @@ public class Collection implements CollectionGetter {
         return data;
     }
 
-	public String _flagNameFromCardFlags(int flags){
-		int flag = flags & 0b111;
-		if (flag == 0) {
-			return "";
-		}
-		return "flag"+flag;
-	}
+    public String _flagNameFromCardFlags(int flags){
+        int flag = flags & 0b111;
+        if (flag == 0) {
+            return "";
+        }
+        return "flag"+flag;
+    }
 
     /*
       Finding cards ************************************************************ ***********************************
      */
 
     /** Return a list of card ids */
+    @KotlinCleanup("set reasonable defaults")
     public List<Long> findCards(String search) {
-        return new Finder(this).findCards(search, null);
+        return findCards(search, new SortOrder.NoOrdering());
     }
 
-
-    /** Return a list of card ids */
-    public List<Long> findCards(String search, String order) {
+    /**
+     * @return A list of card ids
+     * @throws com.ichi2.libanki.exception.InvalidSearchException Invalid search string
+     */
+    public List<Long> findCards(String search, @NonNull SortOrder order) {
         return new Finder(this).findCards(search, order);
     }
-
-    public List<Long> findCards(String search, boolean order) {
-        return findCards(search, order, null);
-    }
-
-    public List<Long> findCards(String search, boolean order, CollectionTask.PartialSearch task) {
+    /**
+     * @return A list of card ids
+     * @throws com.ichi2.libanki.exception.InvalidSearchException Invalid search string
+     */
+    public List<Long> findCards(String search, @NonNull SortOrder order, CollectionTask.PartialSearch task) {
         return new Finder(this).findCards(search, order, task);
     }
 
@@ -1345,6 +1387,42 @@ public class Collection implements CollectionGetter {
     }
 
 
+    @Nullable
+    public TemplateRenderOutput render_output(@NonNull Card c, boolean reload, boolean browser) {
+        return render_output_legacy(c, reload, browser);
+    }
+
+
+    @NonNull
+    @RustCleanup("Hack for Card Template Previewer, needs review")
+    public TemplateRenderOutput render_output_legacy(@NonNull Card c, boolean reload, boolean browser) {
+        Note f = c.note(reload);
+        Model m = c.model();
+        JSONObject t = c.template();
+        long did;
+        if (c.isInDynamicDeck()) {
+            did = c.getODid();
+        } else {
+            did = c.getDid();
+        }
+        HashMap<String, String> qa;
+        if (browser) {
+            String bqfmt = t.getString("bqfmt");
+            String bafmt = t.getString("bafmt");
+            qa = _renderQA(c.getId(), m, did, c.getOrd(), f.stringTags(), f.getFields(), c.internalGetFlags(), browser, bqfmt, bafmt);
+        } else {
+            qa = _renderQA(c.getId(), m, did, c.getOrd(), f.stringTags(), f.getFields(), c.internalGetFlags());
+        }
+
+        return new TemplateRenderOutput(
+                qa.get("q"),
+                qa.get("a"),
+                null,
+                null,
+                c.model().getString("css"));
+    }
+
+
     @VisibleForTesting
     public static class UndoReview extends UndoAction {
         private final boolean mWasLeech;
@@ -1417,7 +1495,7 @@ public class Collection implements CollectionGetter {
         final int[] currentTask = {1};
         int totalTasks = (getModels().all().size() * 4) + 27; // a few fixes are in all-models loops, the rest are one-offs
         Runnable notifyProgress = () -> fixIntegrityProgress(progressCallback, currentTask[0]++, totalTasks);
-        FunctionalInterfaces.Consumer<FunctionalInterfaces.FunctionThrowable<Runnable, List<String>, JSONException>> executeIntegrityTask =
+        Consumer<FunctionalInterfaces.FunctionThrowable<Runnable, List<String>, JSONException>> executeIntegrityTask =
                 function -> {
                     //DEFECT: notifyProgress will lag if an exception is thrown.
                     try {
@@ -1459,29 +1537,29 @@ public class Collection implements CollectionGetter {
             }
         }
 
-        executeIntegrityTask.consume(this::deleteNotesWithMissingModel);
+        executeIntegrityTask.accept(this::deleteNotesWithMissingModel);
         // for each model
         for (Model m : getModels().all()) {
-            executeIntegrityTask.consume((callback) -> deleteCardsWithInvalidModelOrdinals(callback, m));
-            executeIntegrityTask.consume((callback) -> deleteNotesWithWrongFieldCounts(callback, m));
+            executeIntegrityTask.accept((callback) -> deleteCardsWithInvalidModelOrdinals(callback, m));
+            executeIntegrityTask.accept((callback) -> deleteNotesWithWrongFieldCounts(callback, m));
         }
-        executeIntegrityTask.consume(this::deleteNotesWithMissingCards);
-        executeIntegrityTask.consume(this::deleteCardsWithMissingNotes);
-        executeIntegrityTask.consume(this::removeOriginalDuePropertyWhereInvalid);
-        executeIntegrityTask.consume(this::removeDynamicPropertyFromNonDynamicDecks);
-        executeIntegrityTask.consume(this::removeDeckOptionsFromDynamicDecks);
-        executeIntegrityTask.consume(this::resetInvalidDeckOptions);
-        executeIntegrityTask.consume(this::rebuildTags);
-        executeIntegrityTask.consume(this::updateFieldCache);
-        executeIntegrityTask.consume(this::fixNewCardDuePositionOverflow);
-        executeIntegrityTask.consume(this::resetNewCardInsertionPosition);
-        executeIntegrityTask.consume(this::fixExcessiveReviewDueDates);
+        executeIntegrityTask.accept(this::deleteNotesWithMissingCards);
+        executeIntegrityTask.accept(this::deleteCardsWithMissingNotes);
+        executeIntegrityTask.accept(this::removeOriginalDuePropertyWhereInvalid);
+        executeIntegrityTask.accept(this::removeDynamicPropertyFromNonDynamicDecks);
+        executeIntegrityTask.accept(this::removeDeckOptionsFromDynamicDecks);
+        executeIntegrityTask.accept(this::resetInvalidDeckOptions);
+        executeIntegrityTask.accept(this::rebuildTags);
+        executeIntegrityTask.accept(this::updateFieldCache);
+        executeIntegrityTask.accept(this::fixNewCardDuePositionOverflow);
+        executeIntegrityTask.accept(this::resetNewCardInsertionPosition);
+        executeIntegrityTask.accept(this::fixExcessiveReviewDueDates);
         // v2 sched had a bug that could create decimal intervals
-        executeIntegrityTask.consume(this::fixDecimalCardsData);
-        executeIntegrityTask.consume(this::fixDecimalRevLogData);
-        executeIntegrityTask.consume(this::restoreMissingDatabaseIndices);
-        executeIntegrityTask.consume(this::ensureModelsAreNotEmpty);
-        executeIntegrityTask.consume((progressNotifier) -> this.ensureCardsHaveHomeDeck(progressNotifier, result));
+        executeIntegrityTask.accept(this::fixDecimalCardsData);
+        executeIntegrityTask.accept(this::fixDecimalRevLogData);
+        executeIntegrityTask.accept(this::restoreMissingDatabaseIndices);
+        executeIntegrityTask.accept(this::ensureModelsAreNotEmpty);
+        executeIntegrityTask.accept((progressNotifier) -> this.ensureCardsHaveHomeDeck(progressNotifier, result));
         // and finally, optimize (unable to be done inside transaction).
         try {
             optimize(notifyProgress);
@@ -2044,10 +2122,9 @@ public class Collection implements CollectionGetter {
      *
      * @return The model manager
      */
-    public synchronized ModelManager getModels() {
+    public final synchronized ModelManager getModels() {
         if (mModels == null) {
-            mModels = new Models(this);
-            mModels.load(loadColumn("models"));
+            mModels = initModels();
         }
         return mModels;
     }
@@ -2055,12 +2132,12 @@ public class Collection implements CollectionGetter {
     /** Check if this collection is valid. */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean validCollection() {
-    	//TODO: more validation code
-    	return getModels().validateModel();
+        //TODO: more validation code
+        return getModels().validateModel();
     }
 
     public JSONObject getConf() {
-        return mConf;
+        return mConf.getJson();
     }
 
 
@@ -2073,7 +2150,7 @@ public class Collection implements CollectionGetter {
         // prior to version 2.16 and has been corrected with
         // dae/anki#347
         Upgrade.upgradeJSONIfNecessary(this, "sortBackwards", false);
-        mConf = conf;
+        mConf.setJson(conf);
     }
 
     // region JSON-Related Config
@@ -2144,7 +2221,7 @@ public class Collection implements CollectionGetter {
     @Nullable
     @Contract("_, !null -> !null")
     public Boolean get_config(@NonNull String key, @Nullable Boolean defaultValue) {
-        if (!mConf.has(key)) {
+        if (mConf.isNull(key)) {
             return defaultValue;
         }
         return mConf.getBoolean(key);
@@ -2153,7 +2230,7 @@ public class Collection implements CollectionGetter {
     @Nullable
     @Contract("_, !null -> !null")
     public Long get_config(@NonNull String key, @Nullable Long defaultValue) {
-        if (!mConf.has(key)) {
+        if (mConf.isNull(key)) {
             return defaultValue;
         }
         return mConf.getLong(key);
@@ -2162,7 +2239,7 @@ public class Collection implements CollectionGetter {
     @Nullable
     @Contract("_, !null -> !null")
     public Integer get_config(@NonNull String key, @Nullable Integer defaultValue) {
-        if (!mConf.has(key)) {
+        if (mConf.isNull(key)) {
             return defaultValue;
         }
         return mConf.getInt(key);
@@ -2170,7 +2247,7 @@ public class Collection implements CollectionGetter {
 
     @Contract("_, !null -> !null")
     public Double get_config(@NonNull String key, @Nullable Double defaultValue) {
-        if (!mConf.has(key)) {
+        if (mConf.isNull(key)) {
             return defaultValue;
         }
         return mConf.getDouble(key);
@@ -2179,7 +2256,7 @@ public class Collection implements CollectionGetter {
     @Nullable
     @Contract("_, !null -> !null")
     public String get_config(@NonNull String key, @Nullable String defaultValue) {
-        if (!mConf.has(key)) {
+        if (mConf.isNull(key)) {
             return defaultValue;
         }
         return mConf.getString(key);
@@ -2189,7 +2266,7 @@ public class Collection implements CollectionGetter {
     @Nullable
     @Contract("_, !null -> !null")
     public JSONObject get_config(@NonNull String key, @Nullable JSONObject defaultValue) {
-        if (!mConf.has(key)) {
+        if (mConf.isNull(key)) {
             return defaultValue == null ? null : new JSONObject(defaultValue);
         }
         return new JSONObject(mConf.getJSONObject(key));
@@ -2199,7 +2276,7 @@ public class Collection implements CollectionGetter {
     @Nullable
     @Contract("_, !null -> !null")
     public JSONArray get_config(@NonNull String key, @Nullable JSONArray defaultValue) {
-        if (!mConf.has(key)) {
+        if (mConf.isNull(key)) {
             return defaultValue == null ? null : new JSONArray(defaultValue);
         }
         return new JSONArray(mConf.getJSONArray(key));

@@ -52,7 +52,7 @@ public class Storage {
 
 
     /* Open a new or existing collection. Path must be unicode */
-    public static Collection Collection(Context context, String path) {
+    public static Collection Collection(Context context, @NonNull String path) {
         return Collection(context, path, false, false);
     }
 
@@ -72,10 +72,10 @@ public class Storage {
         }
     }
 
-    public static Collection Collection(Context context, String path, boolean server, boolean log) {
+    public static Collection Collection(Context context, @NonNull String path, boolean server, boolean log) {
         return Collection(context, path, server, log, new SystemTime());
     }
-    public static Collection Collection(Context context, String path, boolean server, boolean log, @NonNull Time time) {
+    public static Collection Collection(Context context, @NonNull String path, boolean server, boolean log, @NonNull Time time) {
         assert (path.endsWith(".anki2") || path.endsWith(".anki21"));
         File dbFile = new File(path);
         boolean create = !dbFile.exists();
@@ -92,16 +92,13 @@ public class Storage {
             }
             db.execute("PRAGMA temp_store = memory");
             // add db to col and do any remaining upgrades
-            Collection col = new Collection(context, db, path, server, log, time, backend);
+            Collection col = backend.createCollection(context, db, path, server, log, time);
             if (ver < Consts.SCHEMA_VERSION) {
                 _upgrade(col, ver);
             } else if (ver > Consts.SCHEMA_VERSION) {
                 throw new RuntimeException("This file requires a newer version of Anki.");
             } else if (create) {
-                // add in reverse order so basic is default
-                for (int i = StdModels.STD_MODELS.length-1; i>=0; i--) {
-                    StdModels.STD_MODELS[i].add(col);
-                }
+                addNoteTypes(col, backend);
                 col.onCreate();
                 col.save();
             }
@@ -112,6 +109,19 @@ public class Storage {
             throw e;
         }
     }
+
+    /** Add note types when creating database */
+    private static void addNoteTypes(Collection col, DroidBackend backend) {
+        if (backend.databaseCreationInitializesData()) {
+            Timber.i("skipping adding note types - already exist");
+            return;
+        }
+        // add in reverse order so basic is default
+        for (int i = StdModels.STD_MODELS.length-1; i>=0; i--) {
+            StdModels.STD_MODELS[i].add(col);
+        }
+    }
+
 
     /**
      * Whether the collection should try to be opened with a Rust-based DB Backend
@@ -139,7 +149,7 @@ public class Storage {
         // remove did from notes
         if (db.queryScalar("SELECT ver FROM col") == 2) {
             db.execute("ALTER TABLE notes RENAME TO notes2");
-            _addSchema(db, time);
+            _addSchema(db, true, time);
             db.execute("insert into notes select id, guid, mid, mod, usn, tags, flds, sfld, csum, flags, data from notes2");
             db.execute("DROP TABLE notes2");
             db.execute("UPDATE col SET ver = 3");
@@ -301,24 +311,21 @@ public class Storage {
 
     private static int _createDB(DB db, @NonNull Time time, DroidBackend backend) {
         if (backend.databaseCreationCreatesSchema()) {
-            _setColVars(db, time);
+            if (!backend.databaseCreationInitializesData()) {
+                _setColVars(db, time);
+            }
             // This line is required for testing - otherwise Rust will override a mocked time.
             db.execute("update col set crt = ?", UIUtils.getDayStart(time) / 1000);
         } else {
             db.execute("PRAGMA page_size = 4096");
             db.execute("PRAGMA legacy_file_format = 0");
             db.execute("VACUUM");
-            _addSchema(db, time);
+            _addSchema(db, true, time);
             _updateIndices(db);
         }
 
         db.execute("ANALYZE");
         return Consts.SCHEMA_VERSION;
-    }
-
-
-    private static void _addSchema(DB db, @NonNull Time time) {
-        _addSchema(db, true, time);
     }
 
 

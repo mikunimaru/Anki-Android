@@ -45,7 +45,7 @@
     <string name="statistics">סטטיסטיקה</string>
     <string name="settings">הגדרות</string>
     <string name="help">עזרה</string>
-    <string name="drawing">Drawing</string>
+    <string name="drawing">ציור</string>
     <string name="send_feedback">שליחת משוב</string>
     <string name="studyoptions_due_today">להיום:</string>
     <string name="studyoptions_new_total">סך כל הקלפים החדשים:</string>
@@ -131,15 +131,12 @@
     <string name="menu_flag_card_seven">דגל סגול</string>
     <string name="menu_edit_tags">ערוך תגיות</string>
     <string name="delete_note_message">למחוק את הרשומה הזאת ואת כל הקלפים שלה?‏\n%s</string>
-    <string name="menu_select">בחירת טקסט</string>
-    <string name="menu_lookup">חיפוש טקסט</string>
     <string name="menu_search">חפש ב%1$s</string>
     <string name="menu_mark_note">סמן הערה</string>
     <string name="menu_unmark_note">הסר סימון הערה</string>
     <string name="menu_toggle_mic_tool_bar">בדוק הגיה</string>
     <string name="new_deck">יצירת חפיסה</string>
     <string name="new_dynamic_deck">יצירת חפיסה מסוננת</string>
-    <string name="night_mode">מצב לילה</string>
     <string name="directory_inaccessible">הספרייה של AnkiDroid אינה נגישה</string>
     <!--This is shown when AnkiDroid starts up with no storage permissions.
     The user is taken to the "App Info" screen, and needs to click "Permissions" and
@@ -170,7 +167,8 @@
     <string name="custom_study_deck_name">שיעור למידה מותאם</string>
     <string name="custom_study_deck_exists">ראשית, ערוך שם חפיסה חדשה</string>
     <string name="empty_deck">החפיסה ריקה</string>
-    <string name="search_deck">חיפוש חפיסה</string>
+    <string name="search_deck" comment="Deck search for selecting it">חיפוש חפיסה</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Deck Search</string>
     <string name="empty_deck_add_note">הוספת קלף</string>
     <string name="invalid_deck_name">שם חפיסה לא חוקי</string>
     <string name="studyoptions_empty">החפיסה ריקה. לחץ על כפתור ה+ להוספת תוכן חדש.</string>

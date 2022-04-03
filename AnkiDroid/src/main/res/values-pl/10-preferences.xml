@@ -55,8 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">Gesty</string>
     <string name="pref_cat_gestures_summ">Użyj gestów zamiast przycisków</string>
     <string name="pref_cat_actions" maxLength="41">Czynności</string>
-    <string name="pref_cat_controls" maxLength="41">Controls</string>
-    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
+    <string name="pref_cat_controls" maxLength="41">Sterowanie</string>
+    <string name="pref_cat_controls_summ">Skonfiguruj klawiatury i inne urządzenia</string>
     <string name="pref_cat_advanced" maxLength="41">Zaawansowane</string>
     <string name="pref_cat_advanced_summ">Optymalizacja i funkcje eksperymentalne</string>
     <string name="pref_cat_performance" maxLength="41">Wydajność</string>
@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">Szerokość kreski</string>
     <string name="use_input_tag" maxLength="41">Wprowadź odpowiedź do karty</string>
     <string name="use_input_tag_summ">Użyj pola tekstowego na karcie do wprowadzenia odpowiedzi</string>
-    <string name="dictionary" maxLength="41">Słownik</string>
     <string name="reset_languages" maxLength="41">Zresetuj język</string>
     <string name="reset_languages_summ">Zresetuj przypisania języka (dla czytania tekstu i dla słowników) dla wszystkich talii</string>
     <string name="reset_languages_question">Reset wszystkich ustawień języków?</string>
@@ -89,15 +88,14 @@
     <string-array name="answer_buttons_position_labels">
         <item>Góra</item>
         <item>Dół</item>
+        <item>None</item>
     </string-array>
     <string name="gestures" maxLength="41">Włącz obsługę gestów</string>
     <string name="gestures_summ">Przydziel gesty do akcji takich jak odpowiedzi lub edycja kart.</string>
-    <string name="gestures_allow_links" maxLength="41">Ignoruj gesty przy dotknięciu linków</string>
-    <string name="gestures_allow_links_summary">Gesty dotykowe nie będą przetwarzane jeśli naciśnięto odnośnik/wskazówkę.</string>
     <string name="gestures_corner_touch" maxLength="41">Dotyk 9-punktowy</string>
     <string name="gestures_corner_touch_summary">Zezwalaj na gesty dotykowe w rogach ekranu</string>
-    <string name="gestures_full_screen_nav_drawer" maxLength="41">Full screen navigation drawer</string>
-    <string name="gestures_fullscreen_nav_drawer_summary">Open navigation drawer when swiped right from anywhere on the screen</string>
+    <string name="gestures_full_screen_nav_drawer" maxLength="41">Panel nawigacyjny w pełnym ekranie</string>
+    <string name="gestures_fullscreen_nav_drawer_summary">Otwórz panel nawigacyjny po przesunięciu w prawo w dowolnym miejscu ekranu</string>
     <string name="gestures_swipe_up" maxLength="41">Przesuń w górę</string>
     <string name="gestures_swipe_down" maxLength="41">Przesuń w dół</string>
     <string name="gestures_swipe_left" maxLength="41">Przesuń w lewo</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Dotknij lewej dolnej części ekranu</string>
     <string name="gestures_corner_tap_bottom_center">Dotknij dolnej środkowej części ekranu</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Dotknij prawej dolnej części ekranu</string>
-    <string name="gestures_volume_up" maxLength="41">Zwiększ głośność</string>
-    <string name="gestures_volume_down" maxLength="41">Zmniejsz głośność</string>
     <string name="more_scrolling_buttons" maxLength="41">eCzytnik</string>
     <string name="more_scrolling_buttons_summ">Użyj także przycisków kanji/katakana, emoji/kao-moji do przewijania</string>
     <string name="card_browser_enable_external_context_menu">Menu „%s”</string>
@@ -137,6 +133,7 @@
     <string name="automatic_sync_choice_summ">Synchronizuj automatycznie podczas startu/zakończenia aplikacji jeżeli ostatnia synchronizacja była później niż 10 minut.</string>
     <string name="sync_status_badge" maxLength="41">Wyświetl status synchronizacji</string>
     <string name="sync_status_badge_summ">Zmień ikonę synchronizacji, jeśli istnieją zmiany do przesłania</string>
+    <string name="app_theme" maxLength="41">Theme</string>
     <string name="day_theme" maxLength="41">Motyw na dzień</string>
     <string name="night_theme" maxLength="41">Motyw na noc</string>
     <string name="default_font" maxLength="41">Domyślna czcionka</string>
@@ -151,6 +148,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Wibracje</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Migotanie</string>
     <string name="timeout_answer_text" maxLength="41">Automatyczne wyświetlanie odpowiedzi</string>
+    <string name="timeout_answer" maxLength="41">Przekroczenie czasu na odpowiedź</string>
     <string name="timeout_answer_summ">Pokaż odpowiedź automatycznie bez interakcji z użytkownikiem. Opóźnienie czas automatycznego odtwarzania plików dźwiękowych.</string>
     <string name="timeout_answer_seconds" maxLength="41">Czas do pokazania odpowiedzi</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -213,6 +211,13 @@
     <string name="paste_as_png_summary">Domyślnie by oszczędzać miejsce na dysku Anki wkleja obrazy ze schowka w formacie JPG. Możesz użyć tej opcji by zamiast tego używać formatu PNG</string>
     <string name="exit_via_double_tap_back" maxLength="41">Kliknij dwa razy \"wstecz\" by wrócić/wyjść</string>
     <string name="exit_via_double_tap_back_summ">Aby uniknąć przypadkowego opuszczenia aplikacji lub ekranu powtórek</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Zezwalaj na import wszystkich plików</string>
+    <string name="media_import_allow_all_files_summ">Jeśli Android nie rozpoznaje pliku multimedialnego</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Default deck when opening statistics</string>
+    <string name="stats_default_deck_current">Show stats for most recent deck</string>
+    <string name="stats_default_deck_all">Show stats for all decks</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Zaawansowane statystyki</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Włącz zaawansowane statystyki</string>
@@ -229,7 +234,7 @@
     <string name="custom_sync_server_media_url_title" maxLength="41">Adres url synchronizacji mediów</string>
     <string name="custom_sync_server_media_url_invalid">Nieprawidłowy adres url synchronizacji mediów</string>
     <!-- Key Bindings -->
-    <string name="controls_main_category" maxLength="41">Command mapping</string>
+    <string name="controls_main_category" maxLength="41">Przypisywanie poleceń</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Zmiany opcji grup talii będzie mieć wpływ na wiele talii. Jeśli chcesz zmienić tylko obecną talię, najpierw dodaj nowe ustawienie talii</string>
     <string name="studyoptions_limit_select_tags">Wybierz etykiety</string>
@@ -318,17 +323,17 @@
     <!-- Open Changelog-->
     <string name="open_changelog">Otwórz listę zmian w programie</string>
     <string name="binding_add_gesture">Dodaj gest</string>
-    <string name="binding_add_key">Add key</string>
-    <string name="key_picker_default_press_key">Press a key</string>
+    <string name="binding_add_key">Dodaj klawisz</string>
+    <string name="key_picker_default_press_key">Naciśnij klawisz</string>
     <!-- Select card side -->
     <string name="card_side_selection_title">Wybierz stronę karty</string>
     <string name="card_side_question">Pytanie</string>
     <string name="card_side_answer">Odpowiedź</string>
-    <string name="card_side_both">Question &amp; Answer</string>
+    <string name="card_side_both">Pytanie &amp; Odpowiedź</string>
     <string name="display_binding_card_side_question" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the question">Q: %s</string>
     <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">A: %s</string>
     <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
     <!-- Binding Preference -->
-    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
-    <string name="bindings_already_bound">Already bound to %s</string>
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Usuń \'%s\'</string>
+    <string name="bindings_already_bound">Już przypisane do %s</string>
 </resources>

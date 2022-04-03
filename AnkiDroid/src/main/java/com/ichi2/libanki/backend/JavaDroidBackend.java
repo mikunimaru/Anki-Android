@@ -16,12 +16,19 @@
 
 package com.ichi2.libanki.backend;
 
+import android.content.Context;
+
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.DB;
+import com.ichi2.libanki.TemplateManager;
 import com.ichi2.libanki.backend.exception.BackendNotSupportedException;
 import com.ichi2.libanki.backend.model.SchedTimingToday;
+import com.ichi2.libanki.utils.Time;
 
 import net.ankiweb.rsdroid.RustCleanup;
+
+import BackendProto.Backend;
+import androidx.annotation.NonNull;
 
 /**
  * A class which implements the Rust backend functionality in Java - this is to allow moving our current Java code to
@@ -32,19 +39,31 @@ import net.ankiweb.rsdroid.RustCleanup;
 @RustCleanup("After the rust conversion is complete - this will be removed")
 public class JavaDroidBackend implements DroidBackend {
     @Override
-    public DB openCollectionDatabase(String path) {
+    public Collection createCollection(@NonNull Context context, @NonNull DB db, String path, boolean server, boolean log, @NonNull Time time) {
+        return new Collection(context, db, path, server, log, time, this);
+    }
+
+
+    @Override
+    public DB openCollectionDatabase(@NonNull String path) {
         return new DB(path);
     }
 
 
     @Override
-    public void closeCollection() {
-        // Nothing to do
+    public void closeCollection(DB db, boolean downgradeToSchema11) {
+        db.close();
     }
 
 
     @Override
     public boolean databaseCreationCreatesSchema() {
+        return false;
+    }
+
+
+    @Override
+    public boolean databaseCreationInitializesData() {
         return false;
     }
 
@@ -76,5 +95,17 @@ public class JavaDroidBackend implements DroidBackend {
     @Override
     public void useNewTimezoneCode(Collection col) {
         // intentionally blank - unavailable on Java backend
+    }
+
+
+    @Override
+    public @NonNull Backend.ExtractAVTagsOut extract_av_tags(@NonNull String text, boolean question_side) throws BackendNotSupportedException {
+        throw new BackendNotSupportedException();
+    }
+
+
+    @Override
+    public @NonNull Backend.RenderCardOut renderCardForTemplateManager(@NonNull TemplateManager.TemplateRenderContext templateRenderContext) throws BackendNotSupportedException {
+        throw new BackendNotSupportedException();
     }
 }

@@ -45,7 +45,7 @@
     <string name="statistics">Статыстыка</string>
     <string name="settings">Налады</string>
     <string name="help">Даведка</string>
-    <string name="drawing">Drawing</string>
+    <string name="drawing">Маляванне</string>
     <string name="send_feedback">Адправіць водгук</string>
     <string name="studyoptions_due_today">За сёння:</string>
     <string name="studyoptions_new_total">Усяго новых картак:</string>
@@ -113,10 +113,10 @@
     <string name="menu_dismiss_note">Схаваць / выдаліць</string>
     <string name="menu_bury_card">Адкласці картку</string>
     <string name="menu_bury_note">Адкласці запіс</string>
-    <string name="menu_suspend_card">Выключыць картку</string>
+    <string name="menu_suspend_card">Прыпыніць картку</string>
     <string name="menu_suspend_note">Прыпыніць запіс</string>
     <string name="menu_bury">Адкласці</string>
-    <string name="menu_suspend">Выключыць</string>
+    <string name="menu_suspend">Прыпыніць</string>
     <string name="menu_delete_note">Выдаліць запіс</string>
     <string name="menu_flag">Сцяжок</string>
     <string name="menu_flag_card">Пазначыць картку</string>
@@ -130,15 +130,12 @@
     <string name="menu_flag_card_seven">Фіялетавы сцяжок</string>
     <string name="menu_edit_tags">Змяніць меткі</string>
     <string name="delete_note_message">Сапраўды выдаліць гэты запіс і ўсе яе карткі?\n%s</string>
-    <string name="menu_select">Выбраць тэкст</string>
-    <string name="menu_lookup">Шукаць у тэксце</string>
     <string name="menu_search">Шукаць у %1$s</string>
     <string name="menu_mark_note">Пазначыць запіс</string>
     <string name="menu_unmark_note">Зняць пазнаку з запісу</string>
     <string name="menu_toggle_mic_tool_bar">Праверыць вымаўленне</string>
     <string name="new_deck">Стварыць калоду</string>
     <string name="new_dynamic_deck">Стварыць фільтраваную калоду</string>
-    <string name="night_mode">Начны рэжым</string>
     <string name="directory_inaccessible">Каталог AnkiDroid недаступны</string>
     <!--This is shown when AnkiDroid starts up with no storage permissions.
     The user is taken to the "App Info" screen, and needs to click "Permissions" and
@@ -169,7 +166,8 @@
     <string name="custom_study_deck_name">Дадатковая навучанне</string>
     <string name="custom_study_deck_exists">Спачатку дайце новую назву калодзе дадатковага навучання</string>
     <string name="empty_deck">Гэта калода пустая</string>
-    <string name="search_deck">Пошук калоды</string>
+    <string name="search_deck" comment="Deck search for selecting it">Пошук калоды</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Пошук калоды</string>
     <string name="empty_deck_add_note">Дадаць картку</string>
     <string name="invalid_deck_name">Памылковая назва калоды</string>
     <string name="studyoptions_empty">Гэта калода пустая. Націсніце кнопку +, каб дадаць новае змесціва.</string>

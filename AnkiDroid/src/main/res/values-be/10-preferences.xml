@@ -49,14 +49,14 @@
     <string name="pref_cat_flashcard" maxLength="41">Экран</string>
     <string name="pref_cat_whiteboard" maxLength="41">Дошка</string>
     <string name="pref_cat_appearance" maxLength="41">Знешні выгляд</string>
-    <string name="pref_cat_appearance_summ">Змена тэмы і шрыфтоў</string>
+    <string name="pref_cat_appearance_summ">Змена тэмы і стандартны шрыфт</string>
     <string name="pref_cat_themes" maxLength="41">Тэмы</string>
     <string name="pref_cat_fonts" maxLength="41">Шрыфты</string>
     <string name="pref_cat_gestures" maxLength="41">Жэсты</string>
     <string name="pref_cat_gestures_summ">Выкарыстоўваць націскі і чырканні замест кнопак</string>
     <string name="pref_cat_actions" maxLength="41">Дзеянні</string>
-    <string name="pref_cat_controls" maxLength="41">Controls</string>
-    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
+    <string name="pref_cat_controls" maxLength="41">Кіраванне</string>
+    <string name="pref_cat_controls_summ">Наладжванне клавіятуры і іншых прылад</string>
     <string name="pref_cat_advanced" maxLength="41">Дадаткова</string>
     <string name="pref_cat_advanced_summ">Аптымізацыя і эксперыментальныя магчымасці</string>
     <string name="pref_cat_performance" maxLength="41">Прадукцыйнасць</string>
@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">Шырыня штрыха</string>
     <string name="use_input_tag" maxLength="41">Уводзіць адказ на картцы</string>
     <string name="use_input_tag_summ">Дадае на картку поле ўводу для адказу</string>
-    <string name="dictionary" maxLength="41">Паглядзець у слоўніку</string>
     <string name="reset_languages" maxLength="41">Скінуць мовы</string>
     <string name="reset_languages_summ">Скінуць прызначэнне моў (для агучвання тэкстаў і слоўнікаў) для ўсіх калод</string>
     <string name="reset_languages_question">Скінуць усе моўныя прызначэнні?</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>Зверху</item>
         <item>Знізу</item>
+        <item>Няма</item>
     </string-array>
     <string name="gestures" maxLength="41">Уключыць жэсты</string>
     <string name="gestures_summ">Прызначыць жэсты для такіх дзеянняў, як адказ і рэдагаванне картак.</string>
-    <string name="gestures_allow_links" maxLength="41">Ігнараваць сэнсарныя жэсты на спасылках</string>
-    <string name="gestures_allow_links_summary">Сэнсарныя жэсты не будуць успрымацца, калі націснута спасылка або падказка.</string>
     <string name="gestures_corner_touch" maxLength="41">9-пунктавы дотык</string>
     <string name="gestures_corner_touch_summary">Дазволіць сэнсарныя жэсты ў вуглах экрана</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">Поўнаэкранная панэль навігацыі</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Дотык ніжняга левага вугла</string>
     <string name="gestures_corner_tap_bottom_center">Дотык знізу па цэнтры</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Дотык ніжняга правага вугла</string>
-    <string name="gestures_volume_up" maxLength="41">Павялічыць гук</string>
-    <string name="gestures_volume_down" maxLength="41">Паменшыць гук</string>
     <string name="more_scrolling_buttons" maxLength="41">eReader</string>
     <string name="more_scrolling_buttons_summ">Таксама выкарыстоўваць кнопкі kanji/katakana, emoji/kao-moji для прагорткі</string>
     <string name="card_browser_enable_external_context_menu">Меню “%s”</string>
@@ -138,10 +134,11 @@
         калі з часу апошняй сінхранізацыі мінула больш чым 10 хвілін.</string>
     <string name="sync_status_badge" maxLength="41">Адлюстроўваць статус сінхранізацыі</string>
     <string name="sync_status_badge_summ">Значок сінхранізацыі зменіцца, калі можна будзе загрузіць змены</string>
+    <string name="app_theme" maxLength="41">Тэма</string>
     <string name="day_theme" maxLength="41">Дзённая тэма</string>
     <string name="night_theme" maxLength="41">Начная тэма</string>
-    <string name="default_font" maxLength="41">Шрыфт па змаўчанні</string>
-    <string name="override_font" maxLength="41">Ужыванне шрыфту па змаўчанні</string>
+    <string name="default_font" maxLength="41">Стандартны шрыфт</string>
+    <string name="override_font" maxLength="41">Ужыванне стандартнага шрыфту</string>
     <string name="language" maxLength="41">Мова</string>
     <string name="language_system">Сістэмная мова</string>
     <string name="notification_pref" maxLength="41">Апавяшчэнні</string>
@@ -152,6 +149,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Вібрацыя</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Мігаценне святлодыёда</string>
     <string name="timeout_answer_text" maxLength="41">Аўтаматычна паказваць адказ</string>
+    <string name="timeout_answer" maxLength="41">Затрымка з адказам</string>
     <string name="timeout_answer_summ">Аўтаматычна паказваць адказ без уводу даных карыстальнікам. Затрымка складаецца з часу аўтаматычнага прайгравання аўдыяфайлаў.</string>
     <string name="timeout_answer_seconds" maxLength="41">Час на паказ адказу</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX сек</string>
@@ -204,16 +202,23 @@
     <string name="custom_buttons_setting_always_show">Заўсёды паказваць</string>
     <string name="custom_buttons_setting_if_room">Паказваць, калі ёсць месца</string>
     <string name="custom_buttons_setting_menu_only">Толькі меню</string>
-    <string name="reset_custom_buttons" maxLength="41">Скід па змаўчанні</string>
+    <string name="reset_custom_buttons" maxLength="41">Скінуць да стандартных</string>
     <string name="thirdparty_apps_title" maxLength="41">Праграмныя API іншых распрацоўшчыкаў</string>
     <string name="thirdparty_apps_summary">Паглядзець спіс праграм, якія выкарыстоўваць API AnkiDroid (слоўнікі, службовыя праграмы і г.д.).</string>
     <string name="html_javascript_debugging" maxLength="41">Адладка HTML / JavaScript</string>
     <string name="html_javascript_debugging_summ">Уключыць аддаленыя злучэнні WebView і захаваць картку HTML у каталозе AnkiDroid</string>
     <!-- Paste clipboard image as png option -->
     <string name="paste_as_png" maxLength="41">Устаўляць з буфера абмену выявы як PNG</string>
-    <string name="paste_as_png_summary">Па змаўчанні, праграма ўстаўляе выявы ў буфер абмену як файлы JPG для эканоміі дыскавай прасторы. Вы можаце скарыстацца гэтым параметрам для ўстаўкі выяваў PNG замест JPG.</string>
+    <string name="paste_as_png_summary">Стандартна, праграма ўстаўляе выявы ў буфер абмену як файлы JPG для эканоміі дыскавай прасторы. Вы можаце скарыстацца гэтым параметрам для ўстаўкі выяваў PNG замест JPG.</string>
     <string name="exit_via_double_tap_back" maxLength="41">Націсніце \"Назад\" двойчы для выхаду</string>
     <string name="exit_via_double_tap_back_summ">Для прадухілення нечаканага выхаду з праграмы</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Дазволіць усе файлы пры імпарце медыя</string>
+    <string name="media_import_allow_all_files_summ">Калі Android не распазнае файл з медыя</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Калода пры адкрыцці статыстыкі</string>
+    <string name="stats_default_deck_current">Паказаць статыстыку для нядаўняй калоды</string>
+    <string name="stats_default_deck_all">Паказаць статыстыку для ўсіх калод</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Пашыраная статыстыка</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Уключыць пашыраную статыстыку</string>
@@ -230,7 +235,7 @@
     <string name="custom_sync_server_media_url_title" maxLength="41">Спасылка для медыяфайлаў</string>
     <string name="custom_sync_server_media_url_invalid">Памылковая спасылка сінхранізацыі медыяфайлаў</string>
     <!-- Key Bindings -->
-    <string name="controls_main_category" maxLength="41">Command mapping</string>
+    <string name="controls_main_category" maxLength="41">Супастаўленне каманд</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Змяненні параметраў у групавой калодзе закране некалькі калод. Калі вы хочаце змяніць толькі бягучую калоду, калі ласка, спачатку дадайце новую групу параметраў</string>
     <string name="studyoptions_limit_select_tags">Выберыце меткі</string>
@@ -281,8 +286,8 @@
     <string name="deck_conf_manage_summ">Дадаць і змяніць параметры групы</string>
     <string name="deck_conf_current_group" maxLength="41">Бягучая група</string>
     <string name="deck_conf_rename" maxLength="41" comment="Menu entry to rename a deck">Перайменаваць</string>
-    <string name="deck_conf_reset" maxLength="41">Скінуць налады</string>
-    <string name="deck_conf_reset_message">Аднавіць значэнні бягучых групавых параметраў да пачатковых?</string>
+    <string name="deck_conf_reset" maxLength="41">Скінуць да стандартных</string>
+    <string name="deck_conf_reset_message">Аднавіць значэнні бягучых групавых параметраў да першапачатковых значэнняў?</string>
     <string name="deck_conf_add" maxLength="41" comment="Adding a new deck option group">Дадаць</string>
     <string name="deck_conf_add_summ">Стварыць копію бягучых групавых параметраў</string>
     <string name="deck_conf_remove_message">Выдаліць бягучыя групавыя параметры?</string>
@@ -330,6 +335,6 @@
     <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">А: %s</string>
     <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
     <!-- Binding Preference -->
-    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
-    <string name="bindings_already_bound">Already bound to %s</string>
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Выдаліць “%s”</string>
+    <string name="bindings_already_bound">Ужо прызначана \"%s\"</string>
 </resources>

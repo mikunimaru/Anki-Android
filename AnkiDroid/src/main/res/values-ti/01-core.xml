@@ -120,15 +120,12 @@
     <string name="menu_flag_card_seven">Purple flag</string>
     <string name="menu_edit_tags">Edit tags</string>
     <string name="delete_note_message">ናይባሓቂ ነዚ ጽሑፍ ከምኡ ውን ነዞም ካርድታትን ክትድምስስ ደሊኻ?\n%s</string>
-    <string name="menu_select">ጽሑፍ ምረጽ</string>
-    <string name="menu_lookup">Lookup text</string>
     <string name="menu_search">ኣብ %1$s ርአ</string>
     <string name="menu_mark_note">ጽሑፍ ምልክት ግበረሉ</string>
     <string name="menu_unmark_note">ምልክት ዝገበርካሉ ጽሑፍ ምልክቱ ደምስስ</string>
     <string name="menu_toggle_mic_tool_bar">Check pronunciation</string>
     <string name="new_deck">ሓዲሽ ባይታ ፍጠር</string>
     <string name="new_dynamic_deck">ዝፍለ ባይታ ፍጠር</string>
-    <string name="night_mode">ናይ እዋን ለይቲ ኩነት</string>
     <string name="directory_inaccessible">ዲክሽነርይ AnkiDroid ክእቶ ኣይክእልን ኢዩ።</string>
     <!--This is shown when AnkiDroid starts up with no storage permissions.
     The user is taken to the "App Info" screen, and needs to click "Permissions" and
@@ -159,7 +156,8 @@
     <string name="custom_study_deck_name">መጽናዕቲ ብዝጠዕም ምምዕርራይ</string>
     <string name="custom_study_deck_exists">መጀመርያ ዝነበረ ምምዕርራይ መጽናዕቲ ባይታ ከምባሓዱሽ ሰዩም።</string>
     <string name="empty_deck">እዚ ባይታ እዚ ጥርሑ እዩ ዘሎ።</string>
-    <string name="search_deck">Deck Search</string>
+    <string name="search_deck" comment="Deck search for selecting it">Deck Search</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Deck Search</string>
     <string name="empty_deck_add_note">Add card</string>
     <string name="invalid_deck_name">Invalid deck name</string>
     <string name="studyoptions_empty">ባይታ ጥርሑ ኣሎ። መልጎም + ጠውቅ ሓዲሽ ትሕዝቶ ክትውስኹ።</string>
@@ -187,7 +185,7 @@
     <string name="card_template_editor_back">ድሕረ ባይታ</string>
     <string name="card_template_editor_styling">ፋሽን</string>
     <string name="card_template_editor_menu_card_browser_appearance">Card Browser Appearance</string>
-    <string name="card_template_editor_deck_override">Deck Override</string>
+    <string name="card_template_editor_deck_override">Deck override</string>
     <string name="card_template_editor_insert_field">Insert field</string>
     <string name="card_template_editor_select_field">Select field</string>
     <string name="card_template_editor_cant_delete">ብውሕዱ ሓደ ካርድ የድሊ ኣሎ</string>

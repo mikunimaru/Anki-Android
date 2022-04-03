@@ -55,8 +55,8 @@
     <string name="pref_cat_gestures" maxLength="41">الإيماءات</string>
     <string name="pref_cat_gestures_summ">استخدم النقرات والسحب بدلًا من الأزرار</string>
     <string name="pref_cat_actions" maxLength="41">الإجراءات</string>
-    <string name="pref_cat_controls" maxLength="41">Controls</string>
-    <string name="pref_cat_controls_summ">Configure keyboards and other devices</string>
+    <string name="pref_cat_controls" maxLength="41">عناصر التحكم</string>
+    <string name="pref_cat_controls_summ">ضبط لوحات المفاتيح والأجهزة الأخرى</string>
     <string name="pref_cat_advanced" maxLength="41">خيارات متقدمة</string>
     <string name="pref_cat_advanced_summ">التحسين والميزات التجريبية</string>
     <string name="pref_cat_performance" maxLength="41">الأداء</string>
@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">عرض الخط</string>
     <string name="use_input_tag" maxLength="41">إدخال الجواب في البطاقة</string>
     <string name="use_input_tag_summ">استخدام مربع إدخال نصي داخل البطاقة لكتابة الجواب</string>
-    <string name="dictionary" maxLength="41">قاموس البحث</string>
     <string name="reset_languages" maxLength="41">إعادة تعيين اللغات</string>
     <string name="reset_languages_summ">إعادة ضبط إعدادات اللغة (من أجل تحويل النص إلى كلام والقواميس) لجميع الرزم</string>
     <string name="reset_languages_question">إعادة تعيين كافة تعيينات اللغة؟</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>في الأعلى</item>
         <item>في الأسفل</item>
+        <item>لا شيء</item>
     </string-array>
     <string name="gestures" maxLength="41">تفعيل الإيماءات</string>
     <string name="gestures_summ">تعيين إيماءات إلى إجراءات مثل إجابة البطاقات وتحريرها.</string>
-    <string name="gestures_allow_links" maxLength="41">تجاهل إيماءات اللمس على الروابط</string>
-    <string name="gestures_allow_links_summary">لن تُعالَج إيماءات اللمس إذا ضُغِط على رابط/تلميح.</string>
     <string name="gestures_corner_touch" maxLength="41">لمس بحجم 9 نقاط</string>
     <string name="gestures_corner_touch_summary">السماح بإيماءات اللمس في حواف الشاشة</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">قائمة تجول ملء الشاشة</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">النقر في أسفل اليسار</string>
     <string name="gestures_corner_tap_bottom_center">النقر في أسفل الوسط</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">النقر في أسفل اليمين</string>
-    <string name="gestures_volume_up" maxLength="41">رفع مستوى الصوت</string>
-    <string name="gestures_volume_down" maxLength="41">خفض مستوى الصوت</string>
     <string name="more_scrolling_buttons" maxLength="41">القارئ الإلكتروني</string>
     <string name="more_scrolling_buttons_summ">استخدم أيضًا أزرار كانجي/كاتاكانا، الرموز التعبيرية/كاو - موجي للتمرير</string>
     <string name="card_browser_enable_external_context_menu">قائمة \'%s\'</string>
@@ -137,6 +133,7 @@
     <string name="automatic_sync_choice_summ">مزامنة تلقائية عند بدء/إغلاق التطبيق إذا مضى على المزامنة الأخيرة        أكثر من 10 دقائق.</string>
     <string name="sync_status_badge" maxLength="41">عرض حالة المزامنة</string>
     <string name="sync_status_badge_summ">تغيير زر المزامنة المعروض عندما يكون من الممكن رفع التغييرات</string>
+    <string name="app_theme" maxLength="41">السمة</string>
     <string name="day_theme" maxLength="41">سمة النهار</string>
     <string name="night_theme" maxLength="41">سمة الليل</string>
     <string name="default_font" maxLength="41">الخط الافتراضي</string>
@@ -151,6 +148,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">اهتزاز</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">وميض الضوء</string>
     <string name="timeout_answer_text" maxLength="41">عرض الجواب تلقائيًا</string>
+    <string name="timeout_answer" maxLength="41">الإجابة بعد انتهاء المهلة</string>
     <string name="timeout_answer_summ">إظهار الجواب تلقائيًا بدون تدخل المستخدم. تتضمن المهلة وقت تشغيل الملفات الصوتية تلقائيًا.</string>
     <string name="timeout_answer_seconds" maxLength="41">مهلة إظهار الجواب</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX ثانية</string>
@@ -213,6 +211,13 @@
     <string name="paste_as_png_summary">بشكل افتراضي يلصق أنكي الصور في الحافظة بصيغة JPG لتوفير مساحة القرص. تستطيع استخدام هذا الخيار للصق الصور بصيعة PNG بدلًا من ذلك.</string>
     <string name="exit_via_double_tap_back" maxLength="41">اضغط رجوع مرتين للعودة أو الخروج</string>
     <string name="exit_via_double_tap_back_summ">لتجنب مغادرة شاشة المراجعة أو التطبيق بدون قصد</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">السماح بجميع الملفات في استيرادات الوسائط</string>
+    <string name="media_import_allow_all_files_summ">إذا لم يتعرف أندرويد على ملف وسائط</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">الرزمة الافتراضية عند فتح الإحصائيات</string>
+    <string name="stats_default_deck_current">إظهار الإحصائيات للرزمة الأخيرة</string>
+    <string name="stats_default_deck_all">إظهار الإحصائيات لكل الرزم</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">إحصائيات متقدمة</string>
     <string name="enable_advanced_statistics_title" maxLength="41">تفعيل الإحصائيات المتقدمة</string>
@@ -229,7 +234,7 @@
     <string name="custom_sync_server_media_url_title" maxLength="41">رابط مزامنة الوسائط</string>
     <string name="custom_sync_server_media_url_invalid">رابط مزامنة الوسائط غير صالح</string>
     <!-- Key Bindings -->
-    <string name="controls_main_category" maxLength="41">Command mapping</string>
+    <string name="controls_main_category" maxLength="41">تعيين الأوامر</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">ستؤثر التغييرات في خيارات مجموعة الرزم على عدة رزم. إذا كنت ترغب في تغيير الرزمة الحالية فقط، أضف مجموعة خيارات جديدة أولًا.</string>
     <string name="studyoptions_limit_select_tags">اختيار وسوم</string>
@@ -265,7 +270,7 @@
     <string name="deck_conf_use_general_timeout_settings_summ">استخدم إعدادات «عرض الجواب التلقائي» العامة بدلًا من إعدادات هذه المجموعة.</string>
     <string name="deck_conf_easy_bonus" maxLength="41">مكافأة البطاقات السهلة</string>
     <string name="deck_conf_hard_factor" maxLength="41">الفاصل الزمني للبطاقات الصعبة</string>
-    <string name="deck_conf_ivl_fct" maxLength="41">مُعدِّل الفاصل الزمني</string>
+    <string name="deck_conf_ivl_fct" maxLength="41">مضاعف الفاصل</string>
     <string name="deck_conf_max_ivl" maxLength="41">الفاصل الزمني الأقصى</string>
     <string name="deck_conf_new_lps_ivl" maxLength="41">الفاصل الزمني الجديد</string>
     <string name="deck_conf_min_ivl" maxLength="41">الفاصل الزمني الأصغر</string>
@@ -333,6 +338,6 @@
     <string name="display_binding_card_side_answer" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to the answer">ج: %s</string>
     <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
     <!-- Binding Preference -->
-    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
-    <string name="bindings_already_bound">Already bound to %s</string>
+    <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">إزالة \'%s\'</string>
+    <string name="bindings_already_bound">مربوط بالفعل بـ %s</string>
 </resources>

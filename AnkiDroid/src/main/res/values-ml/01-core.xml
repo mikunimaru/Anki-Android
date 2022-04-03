@@ -45,7 +45,7 @@
     <string name="statistics">സ്ഥിതിവിവരക്കണക്കുകൾ</string>
     <string name="settings">ക്രമീകരണങ്ങൾ</string>
     <string name="help">സഹായം</string>
-    <string name="drawing">Drawing</string>
+    <string name="drawing">Hi</string>
     <string name="send_feedback">ഫീഡ്‌ബാക്ക് അയയ്‌ക്കുക</string>
     <string name="studyoptions_due_today">ഇന്ന് അവസാന തീയതി:</string>
     <string name="studyoptions_new_total">ആകെ പുതിയ കാർഡുകൾ:</string>
@@ -120,15 +120,12 @@
     <string name="menu_flag_card_seven">Purple flag</string>
     <string name="menu_edit_tags">ടാഗുകൾ എഡിറ്റുചെയ്യുക</string>
     <string name="delete_note_message">ഈ കുറിപ്പും അതിന്റെ എല്ലാ കാർഡുകളും ശരിക്കും ഇല്ലാതാക്കുക?\n%s</string>
-    <string name="menu_select">വാചകം തിരഞ്ഞെടുക്കുക</string>
-    <string name="menu_lookup">വാചകം തിരയുക</string>
     <string name="menu_search">%1$s ൽ തിരയുക</string>
     <string name="menu_mark_note">കുറിപ്പ് അടയാളപ്പെടുത്തുക</string>
     <string name="menu_unmark_note">കുറിപ്പ് അടയാളപ്പെടുത്തുക</string>
     <string name="menu_toggle_mic_tool_bar">ഉച്ചാരണം പരിശോധിക്കുക</string>
     <string name="new_deck">ഡെക്ക് സൃഷ്ടിക്കുക</string>
     <string name="new_dynamic_deck">ഫിൽട്ടർ ചെയ്ത ഡെക്ക് സൃഷ്ടിക്കുക</string>
-    <string name="night_mode">നൈറ്റ് മോഡ്</string>
     <string name="directory_inaccessible">AnkiDroid ഡയറക്‌ടറി ആക്‌സസ്സുചെയ്യാനാകില്ല</string>
     <!--This is shown when AnkiDroid starts up with no storage permissions.
     The user is taken to the "App Info" screen, and needs to click "Permissions" and
@@ -159,7 +156,8 @@
     <string name="custom_study_deck_name">ഇഷ്‌ടാനുസൃത പഠന സെഷൻ</string>
     <string name="custom_study_deck_exists">ആദ്യം നിലവിലുള്ള ഇഷ്‌ടാനുസൃത പഠന ഡെക്കിന്റെ പേരുമാറ്റുക</string>
     <string name="empty_deck">ഈ ഡെക്ക് ശൂന്യമാണ്</string>
-    <string name="search_deck">ഡെക്ക് തിരയൽ</string>
+    <string name="search_deck" comment="Deck search for selecting it">ഡെക്ക് തിരയൽ</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Deck Search</string>
     <string name="empty_deck_add_note">കാർഡ് ചേർക്കുക</string>
     <string name="invalid_deck_name">ഡെക്കിന്റെ പേര് അസാധുവാണ്</string>
     <string name="studyoptions_empty">ഈ ഡെക്ക് ശൂന്യമാണ്. പുതിയ ഉള്ളടക്കം ചേർക്കാൻ + ബട്ടൺ അമർത്തുക</string>

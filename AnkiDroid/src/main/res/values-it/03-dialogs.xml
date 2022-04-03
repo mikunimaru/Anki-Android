@@ -53,7 +53,7 @@
     <string name="no_tts_available_message">Nessuna lingua per la sintesi vocale disponibile</string>
     <string name="initializing_tts">Inizializzo TTS&#8230;</string>
     <string name="tts_no_tts">Non parlare</string>
-    <string name="unused_strings">\n\nUnused files:\n</string>
+    <string name="unused_strings">\n\nFile inutilizzati:\n</string>
     <string-array name="about_content">
         <item><![CDATA[<h2>%1$s: <br/> Flashcards per Android</h2>AnkiDroid è un\'applicazione di flashcard che è pienamente compatibile con il software desktop <a href=\"%2$s\"> Anki</a>. Si può creare, scaricare e studiare materiale su entrambi AnkiDroid o Anki Desktop e sincronizzarli facilmente con AnkiWeb.]]></item>
         <item><![CDATA[Per aiutarci a rendere AnkiDroid migliore, segnala i bug a <a href=\"%1$s\">gestione problemi</a>; proposte di nuove funzioni sono benvenute. Trova risposte sulla <a href=\"%2$s\"> wiki</a> o avvia una discussione sul <a href=\"%3$s\">forum</a>.]]></item>
@@ -76,9 +76,9 @@
         <item quantity="other">%d carte resettate</item>
     </plurals>
     <!-- Reschedule Card Dialog -->
-    <plurals name="reschedule_cards_dialog_title">
-        <item quantity="one">Riprogramma la carta</item>
-        <item quantity="other">Riprogramma le carte</item>
+    <plurals name="reschedule_cards_dialog_title_new">
+        <item quantity="one">Riprogramma %d carta</item>
+        <item quantity="other">Riprogramma %d carte</item>
     </plurals>
     <plurals name="reschedule_card_dialog_interval">
         <item quantity="one">Intervallo attuale: %d giorno</item>
@@ -119,6 +119,7 @@
     <string name="no_space_to_downgrade_content">AnkiDroid ha bisogno di %s di archiviazione, libera dello spazio per continuare</string>
     <string name="restore_backup_title">Ripristinare il backup?</string>
     <string name="restore_backup">La tua collezione verrà sostituita con una copia meno recente. I cambiamenti non salvati verranno persi.</string>
+    <string name="restore_backup_choose_another">Scegli un altro</string>
     <string name="dialog_cancel">Annulla</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_no">No</string>
@@ -133,7 +134,6 @@
     <string name="dialog_positive_replace">Sostituisci</string>
     <string name="dialog_positive_restore">Ripristina</string>
     <string name="dialog_positive_set">Imposta</string>
-    <string name="lookup_button_content">Cerca</string>
     <string name="dialog_collection_path_not_dir">Il percorso specificato non era una cartella valida</string>
     <!-- Media checking -->
     <string name="check_media_title">Controllare i media?</string>
@@ -185,6 +185,7 @@
     <string name="card_browser_deck_change_error">Impossibile cambiare mazzo</string>
     <!-- AbstractFlashCardViewer -->
     <string name="card_viewer_url_decode_error">Errore nella decodifica dei dati dalla carta</string>
+    <string name="undo_succeeded"> «%s» annullato</string>
     <!-- Deck Options -->
     <string name="deck_options_corrupt">Elaborazione delle opzioni del mazzo non riuscita: %s</string>
     <!-- Database Errors-->
@@ -249,6 +250,6 @@
     sched V2. For V1, it was counting the number of repetitions of cards in learning. This approximation is acceptable
     for the sake of simplicity and because V1 will leave.-->
     <string name="deck_picker_counts">Aprire la pagina panoramica del mazzo contenente il numero di carte da vedere oggi.</string>
-    <string name="import_deck_package">Deck package (.apkg)</string>
-    <string name="import_collection_package">Collection package (.colpkg)</string>
+    <string name="import_deck_package">Pacchetto mazzo (.apkg)</string>
+    <string name="import_collection_package">Pacchetto di raccolta (.colpkg)</string>
 </resources>

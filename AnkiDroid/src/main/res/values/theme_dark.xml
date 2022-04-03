@@ -40,7 +40,7 @@
         <item name="actionBarPopupTextColor">@color/theme_dark_primary_text</item>
         <item name="actionModeBackground">@color/theme_dark_primary</item>
         <!-- Deck list colors and divider -->
-        <item name="currentDeckBackground">@drawable/item_background_selected_pre21_dark</item>
+        <item name="currentDeckBackground">@drawable/item_background_selected</item>
         <item name="currentDeckBackgroundColor">@color/theme_dark_row_current</item>
         <item name="dynDeckColor">#6699d6</item>
         <item name="deckDivider">@drawable/divider_dark</item>
@@ -105,10 +105,11 @@
         <item name="fab_normal">@color/material_light_blue_700</item>
         <item name="fab_pressed">@color/material_light_blue_900</item>
         <item name="fab_labelsTextColor">@color/white</item>
-        <item name="fab_item_background">@drawable/fab_label_background_pre21</item>
+        <item name="fab_item_background">@drawable/fab_label_background</item>
         <!-- Images -->
         <item name="navDrawerImage">@drawable/nav_drawer_logo_dark_theme</item>
         <item name="attachFileImage">@drawable/ic_attachment_white</item>
+        <item name="toggleStickyImage">@drawable/ic_baseline_push_pin_24</item>
         <item name="upDownImage">@drawable/ic_import_export_white</item>
         <item name="dialogErrorIcon">@drawable/ic_warning_white</item>
         <item name="dialogSyncErrorIcon">@drawable/ic_sync_problem_white</item>
@@ -120,6 +121,8 @@
         <item name="customTabNavBarColor">@color/material_grey_800</item>
         <item name="popupBackgroundColor">@color/popup_background_theme_dark</item>
         <item name="editTextDisabled">@color/material_grey_500</item>
+
+        <item name="android:navigationBarColor">@color/black</item>
     </style>
 
     <!-- Preferences screens -->

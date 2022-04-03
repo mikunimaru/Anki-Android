@@ -19,10 +19,15 @@
 package com.ichi2.libanki.backend
 
 import com.google.protobuf.ByteString
+import com.ichi2.libanki.Deck
 import com.ichi2.libanki.DeckConfigV16
 import com.ichi2.libanki.DeckV16
+import com.ichi2.libanki.Decks
 import com.ichi2.libanki.backend.BackendUtils.from_json_bytes
+import com.ichi2.libanki.backend.BackendUtils.jsonToArray
 import com.ichi2.libanki.backend.BackendUtils.toByteString
+import com.ichi2.libanki.backend.exception.DeckRenameException
+import com.ichi2.utils.JSONObject
 import java8.util.Optional
 import net.ankiweb.rsdroid.BackendV1
 import net.ankiweb.rsdroid.database.NotImplementedException
@@ -64,8 +69,6 @@ interface DecksBackend {
     fun remove_deck(did: did)
 }
 
-class DeckRenameError(message: String) : Exception(message)
-
 /** WIP: Backend implementation for usage in Decks.kt */
 class RustDroidDeckBackend(private val backend: BackendV1) : DecksBackend {
 
@@ -89,16 +92,19 @@ class RustDroidDeckBackend(private val backend: BackendV1) : DecksBackend {
     }
 
     override fun all_config(): MutableList<DeckConfigV16.Config> {
-        val jsonObject = from_json_bytes(backend.allDeckConfigLegacy())
-        throw NotImplementedException()
+        return jsonToArray(backend.allDeckConfigLegacy())
+            .jsonObjectIterable()
+            .map { obj -> DeckConfigV16.Config(obj) }
+            .toMutableList()
     }
 
+    @Throws(DeckRenameException::class)
     override fun add_or_update_deck_legacy(deck: DeckV16, preserve_usn: Boolean): did {
         try {
             val addOrUpdateResult = backend.addOrUpdateDeckLegacy(deck.to_json_bytes(), preserve_usn)
             return addOrUpdateResult.did
         } catch (ex: BackendDeckIsFilteredException) {
-            throw DeckRenameError("deck was filtered")
+            throw DeckRenameException.filteredAncestor(deck.name, "")
         }
     }
 
@@ -112,8 +118,13 @@ class RustDroidDeckBackend(private val backend: BackendV1) : DecksBackend {
 
     override fun get_deck_legacy(did: did): Optional<DeckV16> {
         try {
-            val ret = from_json_bytes(backend.getDeckLegacy(did))
-            throw NotImplementedException("convert to either filtered or not filtered")
+            val jsonObject = from_json_bytes(backend.getDeckLegacy(did))
+            val ret = if (Decks.isDynamic(Deck(jsonObject))) {
+                DeckV16.FilteredDeck(jsonObject)
+            } else {
+                DeckV16.NonFilteredDeck(jsonObject)
+            }
+            return Optional.of(ret)
         } catch (ex: BackendNotFoundException) {
             return Optional.empty()
         }
@@ -129,19 +140,20 @@ class RustDroidDeckBackend(private val backend: BackendV1) : DecksBackend {
     }
 
     override fun all_decks_legacy(): MutableList<DeckV16> {
-        throw NotImplementedException()
-        // mutableListOf(from_json_bytes(mBackend.allDecksLegacy).values())
+        return from_json_bytes(backend.allDecksLegacy)
+            .objectIterable { obj -> DeckV16.Generic(obj) }
+            .toMutableList()
     }
 
     override fun all_names_and_ids(skip_empty_default: Boolean, include_filtered: Boolean): List<DeckNameId> {
         return backend.getDeckNames(skip_empty_default, include_filtered).entriesList.map {
-            entry ->
+                entry ->
             DeckNameId(entry.name, entry.id)
         }
     }
 
     override fun deck_tree(now: Long, top_deck_id: Long): DeckTreeNode {
-        val tree = backend.deckTree(now, top_deck_id)
+        backend.deckTree(now, top_deck_id)
         throw NotImplementedException()
     }
 
@@ -159,5 +171,9 @@ class RustDroidDeckBackend(private val backend: BackendV1) : DecksBackend {
 
     private fun DeckConfigV16.to_json_bytes(): ByteString {
         return toByteString(this.config)
+    }
+
+    private fun <T> JSONObject.objectIterable(f: (JSONObject) -> T) = sequence {
+        keys().forEach { k -> yield(f(getJSONObject(k))) }
     }
 }

@@ -1,3 +1,19 @@
+/*
+ *  Copyright (c) 2020 David Allison <davidallisongithub@gmail.com>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ichi2.anki.multimediacard.fields;
 
 import com.ichi2.libanki.Collection;
@@ -78,7 +94,7 @@ public class ImageFieldTest {
     @Test
     public void testNoImagePathIsNothing() {
         String knownBadImage = "<br />";
-        Collection col = collectionWithMediaFolder("media");
+        Collection col = collectionWithMediaDirectory("media");
 
         String imageSrc = ImageField.getImageFullPath(col, knownBadImage);
 
@@ -88,7 +104,7 @@ public class ImageFieldTest {
     @Test
     public void testNoImagePathConcat() {
         String goodImage = "<img src='1.png'/>";
-        Collection col = collectionWithMediaFolder("media");
+        Collection col = collectionWithMediaDirectory("media");
 
         String imageSrc = ImageField.getImageFullPath(col, goodImage);
 
@@ -96,7 +112,7 @@ public class ImageFieldTest {
     }
 
     @CheckResult
-    protected Collection collectionWithMediaFolder(String dir) {
+    protected Collection collectionWithMediaDirectory(String dir) {
         Media media = mock(Media.class);
         when(media.dir()).thenReturn(dir);
 

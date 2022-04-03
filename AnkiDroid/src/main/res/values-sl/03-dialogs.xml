@@ -82,11 +82,11 @@
         <item quantity="other">%d cards reset</item>
     </plurals>
     <!-- Reschedule Card Dialog -->
-    <plurals name="reschedule_cards_dialog_title">
-        <item quantity="one">Reschedule card</item>
-        <item quantity="two">Reschedule cards</item>
-        <item quantity="few">Reschedule cards</item>
-        <item quantity="other">Reschedule cards</item>
+    <plurals name="reschedule_cards_dialog_title_new">
+        <item quantity="one">Reschedule %d card</item>
+        <item quantity="two">Reschedule %d cards</item>
+        <item quantity="few">Reschedule %d cards</item>
+        <item quantity="other">Reschedule %d cards</item>
     </plurals>
     <plurals name="reschedule_card_dialog_interval">
         <item quantity="one">Current interval: %d day</item>
@@ -131,6 +131,7 @@
     <string name="no_space_to_downgrade_content">AnkiDroid needs %s free storage space to continue. Please clear some space</string>
     <string name="restore_backup_title">Obnovi varnostno kopijo?</string>
     <string name="restore_backup">Vaša zbirka bo nadomeščena s starejšo kopijo. Vse neshranjene spremembe bodo izgubljene.</string>
+    <string name="restore_backup_choose_another">Choose another</string>
     <string name="dialog_cancel">Prekliči</string>
     <string name="dialog_ok">V redu</string>
     <string name="dialog_no">No</string>
@@ -145,7 +146,6 @@
     <string name="dialog_positive_replace">Nadomesti</string>
     <string name="dialog_positive_restore">Obnovi</string>
     <string name="dialog_positive_set">Nastavi</string>
-    <string name="lookup_button_content">Poišči</string>
     <string name="dialog_collection_path_not_dir">Navedena pot ni veljavna mapa</string>
     <!-- Media checking -->
     <string name="check_media_title">Preveri predstavnost?</string>
@@ -199,6 +199,7 @@
     <string name="card_browser_deck_change_error">Could not change deck</string>
     <!-- AbstractFlashCardViewer -->
     <string name="card_viewer_url_decode_error">Error decoding data from card</string>
+    <string name="undo_succeeded">Undone \"%s\"</string>
     <!-- Deck Options -->
     <string name="deck_options_corrupt">Failed to process deck options: %s</string>
     <!-- Database Errors-->

@@ -83,7 +83,9 @@ import static java.lang.Math.min;
         "PMD.SwitchStmtsShouldHaveDefault","PMD.EmptyIfStmt","PMD.SimplifyBooleanReturns","PMD.CollapsibleIfStatements"})
 public class Media {
 
-    private static final Pattern fIllegalCharReg = Pattern.compile("[><:\"/?*^\\\\|\\x00\\r\\n]");
+    // Upstream illegal chars defined on disallowed_char()
+    // in https://github.com/ankitects/anki/blob/main/rslib/src/media/files.rs
+    private static final Pattern fIllegalCharReg = Pattern.compile("[\\[\\]><:\"/?*^\\\\|\\x00\\r\\n]");
     private static final Pattern fRemotePattern  = Pattern.compile("(https?|ftp)://");
 
     /*
@@ -278,15 +280,8 @@ public class Media {
             if (Utils.fileChecksum(path).equals(csum)) {
                 return fname;
             }
-            // otherwise, increment the index in the filename
-            Pattern reg = Pattern.compile(" \\((\\d+)\\)$");
-            Matcher m = reg.matcher(root);
-            if (!m.find()) {
-                root = root + " (1)";
-            } else {
-                int n = Integer.parseInt(m.group(1));
-                root = String.format(Locale.US, " (%d)", n + 1);
-            }
+            // otherwise, increment the checksum in the filename
+            root = root + "-" + csum;
         }
     }
 
@@ -386,7 +381,7 @@ public class Media {
     }
 
 
-    public String escapeImages(String string) {
+    public static String escapeImages(String string) {
         return escapeImages(string, false);
     }
 
@@ -396,7 +391,7 @@ public class Media {
      * @param string The string to search for image references and escape the filenames.
      * @return The string with the filenames of any local images percent-escaped as UTF-8.
      */
-    public String escapeImages(String string, boolean unescape) {
+    public static String escapeImages(String string, boolean unescape) {
         for (Pattern p : Arrays.asList(fImgRegExpQ, fImgRegExpU)) {
             Matcher m = p.matcher(string);
             // NOTE: python uses the named group 'fname'. Java doesn't have named groups, so we have to determine
@@ -457,7 +452,7 @@ public class Media {
                 allRefs.addAll(noteRefs);
             }
         }
-        // loop through media folder
+        // loop through media directory
         List<String> unused = new ArrayList<>();
         List<String> invalid = new ArrayList<>();
         File[] files;
@@ -620,7 +615,7 @@ public class Media {
      */
 
     /**
-     * Scan the media folder if it's changed, and note any changes.
+     * Scan the media directory if it's changed, and note any changes.
      */
     public void findChanges() {
         findChanges(false);
@@ -628,7 +623,7 @@ public class Media {
 
 
     /**
-     * @param force Unconditionally scan the media folder for changes (i.e., ignore differences in recorded and current
+     * @param force Unconditionally scan the media directory for changes (i.e., ignore differences in recorded and current
      *            directory mod times). Use this when rebuilding the media database.
      */
     public void findChanges(boolean force) {
@@ -714,7 +709,7 @@ public class Media {
         List<String> removed = new ArrayList<>();
         // loop through on-disk files
         for (File f : new File(dir()).listFiles()) {
-            // ignore folders and thumbs.db
+            // ignore directories and thumbs.db
             if (f.isDirectory()) {
                 continue;
             }
@@ -853,7 +848,7 @@ public class Media {
      * - This method will be repeatedly called from MediaSyncer until there are no more files (marked "dirty" in the DB)
      * to send.
      * <p>
-     * - Since AnkiDroid avoids scanning the media folder on every sync, it is possible for a file to be marked as a
+     * - Since AnkiDroid avoids scanning the media directory on every sync, it is possible for a file to be marked as a
      * new addition but actually have been deleted (e.g., with a file manager). In this case we skip over the file
      * and mark it as removed in the database. (This behaviour differs from the desktop client).
      * <p>
@@ -863,7 +858,7 @@ public class Media {
         List<String> fnames = new ArrayList<>();
         try (ZipOutputStream z = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(f)));
              Cursor cur = mDb.query(
-                "select fname, csum from media where dirty=1 limit " + Consts.SYNC_ZIP_COUNT)
+                "select fname, csum from media where dirty=1 limit " + Consts.SYNC_MAX_FILES)
         ) {
             z.setMethod(ZipOutputStream.DEFLATED);
 
@@ -906,7 +901,7 @@ public class Media {
                     mCol.log("-media zip " + fname);
                     meta.put(new JSONArray().put(normname).put(""));
                 }
-                if (sz >= Consts.SYNC_ZIP_SIZE) {
+                if (sz >= Consts.SYNC_MAX_BYTES) {
                     break;
                 }
             }

@@ -68,7 +68,6 @@
     <string name="whiteboard_stroke_width" maxLength="41">Šířka tahu</string>
     <string name="use_input_tag" maxLength="41">Napište odpověď do karty</string>
     <string name="use_input_tag_summ">Odpověď vložte do textového pole na kartě</string>
-    <string name="dictionary" maxLength="41">Slovník</string>
     <string name="reset_languages" maxLength="41">Obnovit jazyky</string>
     <string name="reset_languages_summ">Vynulovat přiřazení jazyka (pro převod textu na řeč a slovníky) pro všechny balíčky</string>
     <string name="reset_languages_question">Obnovit všechny přiřazení jazyka?</string>
@@ -89,11 +88,10 @@
     <string-array name="answer_buttons_position_labels">
         <item>Nahoře</item>
         <item>Dole</item>
+        <item>Žádné</item>
     </string-array>
     <string name="gestures" maxLength="41">Povolit gesta</string>
     <string name="gestures_summ">Přiřazení gest akcím, jako je odpovídání a úprava karet.</string>
-    <string name="gestures_allow_links" maxLength="41">Ignorovat dotyková gesta na odkazech</string>
-    <string name="gestures_allow_links_summary">Dotyková gesta nebudou provedena, jestliže se stiskne odkaz/nápověda.</string>
     <string name="gestures_corner_touch" maxLength="41">Devítibodový dotyk</string>
     <string name="gestures_corner_touch_summary">Povolí dotyková gesta v rozích obrazovky</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">Navigační menu v režimu celé obrazovky</string>
@@ -117,8 +115,6 @@
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Klepnutí vlevo dole</string>
     <string name="gestures_corner_tap_bottom_center">Klepnutí dole uprostřed</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Klepnutí vpravo dole</string>
-    <string name="gestures_volume_up" maxLength="41">Hlasitost nahoru</string>
-    <string name="gestures_volume_down" maxLength="41">Hlasitost dolů</string>
     <string name="more_scrolling_buttons" maxLength="41">eReader</string>
     <string name="more_scrolling_buttons_summ">Použít také kanji/katakana, emoji/kao-moji tlačítka pro posouvání</string>
     <string name="card_browser_enable_external_context_menu">Menu „%s“</string>
@@ -137,6 +133,7 @@
     <string name="automatic_sync_choice_summ">Automaticky synchronizovat při spuštění/ukončení aplikace, jestliže od poslední synchronizace uplynulo více než 10 minut.</string>
     <string name="sync_status_badge" maxLength="41">Zobrazit stav synchronizace</string>
     <string name="sync_status_badge_summ">Změnit ikonu synchronizace, když lze nahrát změny</string>
+    <string name="app_theme" maxLength="41">Motiv</string>
     <string name="day_theme" maxLength="41">Motivy vzhledu - den</string>
     <string name="night_theme" maxLength="41">Motivy vzhledu - noc</string>
     <string name="default_font" maxLength="41">Výchozí písmo</string>
@@ -151,6 +148,7 @@
     <string name="notification_minimum_cards_due_vibrate" maxLength="41">Vibrace</string>
     <string name="notification_minimum_cards_due_blink" maxLength="41">Blikající světlo</string>
     <string name="timeout_answer_text" maxLength="41">Automatické zobrazení odpovědi</string>
+    <string name="timeout_answer" maxLength="41">Odpověď po časovém limitu</string>
     <string name="timeout_answer_summ">Zobrazit odpověď automaticky bez zásahu uživatele. Zpoždění zahrnuje čas pro automaticky přehrávané audio soubory.</string>
     <string name="timeout_answer_seconds" maxLength="41">Čas pro zobrazení odpovědi</string>
     <string name="timeout_answer_seconds_summ" comment="The time to wait (in seconds) in the reviewer before automatically showing the next question or answer">XXX s</string>
@@ -213,6 +211,13 @@
     <string name="paste_as_png_summary">Ve výchozím nastavení Anki vkládá obrázky ve schránce jako JPG soubory, aby se šetřilo místo na disku. Můžete použít tuto volbu, aby se místo toho vkládaly PNG obrázky.</string>
     <string name="exit_via_double_tap_back" maxLength="41">Pro návrat/ukončit stisknout zpět dvakrát</string>
     <string name="exit_via_double_tap_back_summ">Vyhnout se nechtěnému opuštění opakování nebo ukončení aplikace</string>
+    <!-- Allow all files in media imports -->
+    <string name="media_import_allow_all_files" maxLength="41">Povolit všechny soubory při importu médií</string>
+    <string name="media_import_allow_all_files_summ">Pokud Android nerozpozná multimediální soubor</string>
+    <!-- Statistics settings -->
+    <string name="stats_default_deck_title" maxLength="41">Výchozí balíček při otevírání statistik</string>
+    <string name="stats_default_deck_current">Zobrazit statistiky posledního balíčku</string>
+    <string name="stats_default_deck_all">Zobrazit statistiky všech balíčků</string>
     <!-- Advanced statistics settings -->
     <string name="advanced_statistics_title" maxLength="41">Pokročilé statistiky</string>
     <string name="enable_advanced_statistics_title" maxLength="41">Zapnout pokročilé statistiky</string>

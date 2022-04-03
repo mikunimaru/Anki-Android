@@ -45,7 +45,7 @@
     <string name="statistics">Statystyki</string>
     <string name="settings">Ustawienia</string>
     <string name="help">Pomoc</string>
-    <string name="drawing">Drawing</string>
+    <string name="drawing">rysunek</string>
     <string name="send_feedback">Prześlij opinię</string>
     <string name="studyoptions_due_today">Na dziś:</string>
     <string name="studyoptions_new_total">Łącznie nowych kart:</string>
@@ -130,15 +130,12 @@
     <string name="menu_flag_card_seven">Fioletowa flaga</string>
     <string name="menu_edit_tags">Edytuj etykiety</string>
     <string name="delete_note_message">Jesteś pewny, że chcesz usunąć tę notatkę i wszystkie jej karty?\n%s</string>
-    <string name="menu_select">Zaznacz tekst</string>
-    <string name="menu_lookup">Tekst do wyszukania</string>
     <string name="menu_search">Wyszukiwanie w %1$s</string>
     <string name="menu_mark_note">Wyróżnij notatkę</string>
     <string name="menu_unmark_note">Cofnij wyróżnienie notatki</string>
     <string name="menu_toggle_mic_tool_bar">Sprawdź wymowę</string>
     <string name="new_deck">Stwórz talię</string>
     <string name="new_dynamic_deck">Stwórz filtrowaną talię</string>
-    <string name="night_mode">Tryb nocny</string>
     <string name="directory_inaccessible">Katalog AnkiDroid jest niedostępny</string>
     <!--This is shown when AnkiDroid starts up with no storage permissions.
     The user is taken to the "App Info" screen, and needs to click "Permissions" and
@@ -169,7 +166,8 @@
     <string name="custom_study_deck_name">Sesja nauki niestandardowej</string>
     <string name="custom_study_deck_exists">Najpierw zmień nazwę istniejącej talii nauki niestandardowej.</string>
     <string name="empty_deck">Ta talia jest pusta</string>
-    <string name="search_deck">Przeszukaj talię</string>
+    <string name="search_deck" comment="Deck search for selecting it">Przeszukaj talię</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Wyszukiwanie talii</string>
     <string name="empty_deck_add_note">Dodaj kartę</string>
     <string name="invalid_deck_name">Nieprawidłowa nazwa talii</string>
     <string name="studyoptions_empty">Talia jest pusta. Wybierz przycisk + żeby dodać karty.</string>
@@ -210,7 +208,7 @@
     <plurals name="card_template_editor_confirm_delete">
         <item quantity="one">Czy usunąć typ kart “%2$s” oraz jego %1$d kartę?</item>
         <item quantity="few">Czy usunąć typ kart “%2$s” oraz jego %1$d karty?</item>
-        <item quantity="many">Czy usunąć typ kart “%2$s” oraz jego %1$d kart?</item>
+        <item quantity="many">Czy usunąć typ kart “%2$s” oraz %1$d kart tego rodzaju?</item>
         <item quantity="other">Czy usunąć typ kart “%2$s” oraz jego %1$d kart?</item>
     </plurals>
     <string name="invalid_template">Karta nie mogła zostać wygenerowana</string>

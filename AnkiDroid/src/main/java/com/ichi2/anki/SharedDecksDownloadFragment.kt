@@ -134,7 +134,7 @@ class SharedDecksDownloadFragment : Fragment() {
      * the download progress checker.
      */
     private fun downloadFile(fileToBeDownloaded: DownloadFile) {
-        // Register broadcast receiver for download completion. 
+        // Register broadcast receiver for download completion.
         Timber.d("Registering broadcast receiver for download completion")
         activity?.registerReceiver(mOnComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
@@ -208,7 +208,7 @@ class SharedDecksDownloadFragment : Fragment() {
                 stopDownloadProgressChecker()
 
                 // Halt execution if file doesn't have extension as 'apkg' or 'colpkg'
-                if (!ImportUtils.isFileAValidDeck(mFileName)) {
+                if (!ImportUtils.isFileAValidDeck(mFileName!!)) {
                     Timber.i("File does not have 'apkg' or 'colpkg' extension, abort the deck opening task")
                     checkDownloadStatusAndUnregisterReceiver(isSuccessful = false, isInvalidDeckFile = true)
                     return

@@ -43,11 +43,15 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import timber.log.Timber;
 
 
@@ -92,6 +96,15 @@ public class Sound {
      * Weak reference to the activity which is attempting to play the sound
      */
     private WeakReference<Activity> mCallingActivity;
+
+    @VisibleForTesting
+    public ArrayList<String> getSounds(@NonNull Sound.SoundSide side) {
+        if (side == SoundSide.QUESTION_AND_ANSWER) {
+            makeQuestionAnswerList();
+        }
+        return mSoundPaths.get(side);
+    }
+
 
     /**
      * Subset Flags: Flags that indicate the subset of sounds to involve
@@ -139,30 +152,40 @@ public class Sound {
 
 
     /**
-     * The function addSounds() parses content for sound files, and stores entries to the filepaths for them,
-     * categorized as belonging to the front (question) or back (answer) of cards. Note that all sounds embedded in
-     * the content will be given the same base categorization of question or answer. Additionally, the result is to be
-     * sorted by the order of appearance on the card.
+     * Stores entries to the filepaths for sounds, categorized as belonging to the front (question) or back (answer) of cards.
+     * Note that all sounds embedded in the content will be given the same base categorization of question or answer.
+     * Additionally, the result is to be sorted by the order of appearance on the card.
      * @param soundDir -- base path to the media files
-     * @param content -- parsed for sound entries, the entries expected in display order
+     * @param tags -- the entries expected in display order
      * @param qa -- the base categorization of the sounds in the content, SoundSide.SOUNDS_QUESTION or SoundSide.SOUNDS_ANSWER
      */
-    public void addSounds(String soundDir, String content, SoundSide qa) {
-        Matcher matcher = SOUND_PATTERN.matcher(content);
-        // While there is matches of the pattern for sound markers
-        while (matcher.find()) {
+    public void addSounds(String soundDir, List<SoundOrVideoTag> tags, SoundSide qa) {
+        for (SoundOrVideoTag tag: tags) {
             // Create appropriate list if needed; list must not be empty so long as code does no check
             if (!mSoundPaths.containsKey(qa)) {
                 mSoundPaths.put(qa, new ArrayList<>(0));
             }
 
-            // Get the sound file name
-            String sound = matcher.group(1);
-
+            String soundPath = getSoundPath(soundDir, tag.getFilename());
             // Construct the sound path and store it
             Timber.d("Adding Sound to side: %s", qa);
-            mSoundPaths.get(qa).add(getSoundPath(soundDir, sound));
+            mSoundPaths.get(qa).add(soundPath);
         }
+    }
+
+
+    /** Extract SoundOrVideoTag instances from content where sound tags are in the form: [sound:filename.mp3] */
+    @CheckResult
+    public static List<SoundOrVideoTag> extractTagsFromLegacyContent(String content) {
+        Matcher matcher = SOUND_PATTERN.matcher(content);
+        // While there is matches of the pattern for sound markers
+        List<SoundOrVideoTag> ret = new ArrayList<>();
+        while (matcher.find()) {
+            // Get the sound file name
+            String sound = matcher.group(1);
+            ret.add(new SoundOrVideoTag(sound));
+        }
+        return ret;
     }
 
     /**
@@ -205,6 +228,7 @@ public class Sound {
      * @param content -- card content to be rendered that may contain embedded audio
      * @return -- the same content but in a format that will render working play buttons when audio was embedded
      */
+    @NonNull
     public static String expandSounds(String soundDir, String content) {
         StringBuilder stringBuilder = new StringBuilder();
         String contentLeft = content;
@@ -223,12 +247,14 @@ public class Sound {
             // Construct the new content, appending the substring from the beginning of the content left until the
             // beginning of the sound marker
             // and then appending the html code to add the play button
-            String button = "<svg viewBox=\"0 0 32 32\"><polygon points=\"11,25 25,16 11,7\"/>Replay</svg>";
+            String button = "<svg viewBox=\"0 0 64 64\"><circle cx=\"32\" cy=\"32\" r=\"29\" fill = \"lightgrey\"/>" +
+                    "<path d=\"M56.502,32.301l-37.502,20.101l0.329,-40.804l37.173,20.703Z\" fill = \"" +
+                    "black\"/>Replay</svg>";
             String soundMarker = matcher.group();
             int markerStart = contentLeft.indexOf(soundMarker);
             stringBuilder.append(contentLeft.substring(0, markerStart));
             // The <span> around the button (SVG or PNG image) is needed to make the vertical alignment work.
-            stringBuilder.append("<a class='replaybutton' href=\"playsound:").append(soundPath).append("\">")
+            stringBuilder.append("<a class='replay-button replaybutton' href=\"playsound:").append(soundPath).append("\">")
                     .append("<span>").append(button)
                     .append("</span></a>");
             contentLeft = contentLeft.substring(markerStart + soundMarker.length());
@@ -315,9 +341,11 @@ public class Sound {
         return mMediaPlayer == null;
     }
 
-    /** Plays a sound without ensuring that the playAllListener will release the audio */
+    /**
+     * Plays a sound without ensuring that the playAllListener will release the audio
+     */
     @SuppressWarnings({"PMD.EmptyIfStmt","PMD.CollapsibleIfStatements"})
-    private void playSoundInternal(String soundPath, OnCompletionListener playAllListener, VideoView videoView, OnErrorListener errorListener) {
+    private void playSoundInternal(String soundPath, @NonNull OnCompletionListener playAllListener, VideoView videoView, OnErrorListener errorListener) {
         Timber.d("Playing %s has listener? %b", soundPath, playAllListener != null);
         Uri soundUri = Uri.parse(soundPath);
         mCurrentAudioUri = soundUri;
@@ -382,9 +410,7 @@ public class Sound {
                     Timber.d("Starting media player");
                     mMediaPlayer.start();
                 });
-                if (playAllListener != null) {
-                    mMediaPlayer.setOnCompletionListener(playAllListener);
-                }
+                mMediaPlayer.setOnCompletionListener(playAllListener);
                 mMediaPlayer.prepareAsync();
                 Timber.d("Requesting audio focus");
 
@@ -397,7 +423,10 @@ public class Sound {
                 CompatHelper.getCompat().requestAudioFocus(mAudioManager, afChangeListener, mAudioFocusRequest);
             } catch (Exception e) {
                 Timber.e(e, "playSounds - Error reproducing sound %s", soundPath);
-                releaseSound();
+                if (!errorHandler.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNSUPPORTED, 0, soundPath)) {
+                    Timber.d("Force playing next sound.");
+                    playAllListener.onCompletion(mMediaPlayer);
+                }
             }
         }
     }

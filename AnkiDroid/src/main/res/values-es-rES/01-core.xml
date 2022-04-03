@@ -45,7 +45,7 @@
     <string name="statistics">Estadísticas</string>
     <string name="settings">Configuración</string>
     <string name="help">Ayuda</string>
-    <string name="drawing">Drawing</string>
+    <string name="drawing">Dibujar</string>
     <string name="send_feedback">Enviar comentarios</string>
     <string name="studyoptions_due_today">Programadas para hoy:</string>
     <string name="studyoptions_new_total">Tarjetas nuevas totales:</string>
@@ -96,7 +96,7 @@
     <string name="unbury">Desenterrar</string>
     <string name="rename_deck">Renombrar mazo</string>
     <string name="create_shortcut">Crear acceso directo</string>
-    <string name="browse_cards">Browse cards</string>
+    <string name="browse_cards">Buscar cartas</string>
     <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Añadir</string>
     <string name="menu_add_note">Añadir nota</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">Cuenta de sincronización</string>
@@ -115,20 +115,17 @@
     <string name="menu_flag_card_two">Marca naranja</string>
     <string name="menu_flag_card_three">Marca verde</string>
     <string name="menu_flag_card_four">Marca azul</string>
-    <string name="menu_flag_card_five">Uaujskz</string>
-    <string name="menu_flag_card_six">I like your home </string>
-    <string name="menu_flag_card_seven">Purple flag</string>
+    <string name="menu_flag_card_five">Bandera rosa</string>
+    <string name="menu_flag_card_six">Bandera turquesa</string>
+    <string name="menu_flag_card_seven">Bandera morada</string>
     <string name="menu_edit_tags">Editar etiquetas</string>
     <string name="delete_note_message">¿Realmente deseas eliminar esta nota y todas sus tarjetas?\n%s</string>
-    <string name="menu_select">Seleccionar texto</string>
-    <string name="menu_lookup">Texto de búsqueda</string>
     <string name="menu_search">Búsqueda en %1$s</string>
     <string name="menu_mark_note">Marcar nota</string>
     <string name="menu_unmark_note">Desmarcar nota</string>
     <string name="menu_toggle_mic_tool_bar">Comprobar pronunciación</string>
     <string name="new_deck">Crear mazo</string>
     <string name="new_dynamic_deck">Crear mazo filtrado</string>
-    <string name="night_mode">Modo nocturno</string>
     <string name="directory_inaccessible">El directorio AnkiDroid es inaccesible</string>
     <!--This is shown when AnkiDroid starts up with no storage permissions.
     The user is taken to the "App Info" screen, and needs to click "Permissions" and
@@ -151,15 +148,16 @@
     <string name="time_quantity_months">%.1f mes</string>
     <string name="time_quantity_years">%.1f año</string>
     <!-- or "%.1f a" -->
-    <string name="rebuild_filtered_deck">Reconstruyendo mazo filtrado</string>
+    <string name="rebuild_filtered_deck">Reconstruyendo mazo filtrado&#8230;</string>
     <string name="rebuild_cram_label">Reconstruir</string>
     <string name="empty_cram_label">Vaciar</string>
     <string name="create_subdeck">Crear submazo</string>
-    <string name="empty_filtered_deck">Vaciando mazo filtrado</string>
+    <string name="empty_filtered_deck">Vaciando mazo filtrado&#8230;</string>
     <string name="custom_study_deck_name">Sesión de estudio personalizado</string>
     <string name="custom_study_deck_exists">Renombra el mazo de estudio personalizado primero</string>
     <string name="empty_deck">Este mazo está vacío</string>
-    <string name="search_deck">Búsqueda de Mazos</string>
+    <string name="search_deck" comment="Deck search for selecting it">Buscar Mazos</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Búsqueda de Mazo</string>
     <string name="empty_deck_add_note">Añadir tarjeta</string>
     <string name="invalid_deck_name">Nombre de mazo no válido</string>
     <string name="studyoptions_empty">Este mazo está vacío. Pulsa el botón + para añadir contenido nuevo.</string>
@@ -188,12 +186,12 @@
     <string name="card_template_editor_styling">Estilo</string>
     <string name="card_template_editor_menu_card_browser_appearance">Apariencia del Navegador de Tarjetas</string>
     <string name="card_template_editor_deck_override">Anulación de mazo</string>
-    <string name="card_template_editor_insert_field">Insert field</string>
-    <string name="card_template_editor_select_field">Select field</string>
+    <string name="card_template_editor_insert_field">Insertar campos</string>
+    <string name="card_template_editor_select_field">Seleccionar campo</string>
     <string name="card_template_editor_cant_delete">Se requiere al menos un tipo de tarjeta</string>
     <plurals name="card_template_editor_confirm_add">
-        <item quantity="one">This will create %1$d card. Proceed?</item>
-        <item quantity="other">This will create %1$d cards. Proceed?</item>
+        <item quantity="one">Esto creará %1$d tarjeta. ¿Continuar?</item>
+        <item quantity="other">Esto creará %1$d tarjetas. ¿Continuar?</item>
     </plurals>
     <plurals name="card_template_editor_confirm_delete">
         <item quantity="one">¿Eliminar el tipo de tarjeta \'%2$s\' y su %1$d tarjeta?</item>
@@ -212,7 +210,7 @@
     <string name="read_write_permission_label">Leer y escribir en la base de datos de AnkiDroid</string>
     <string name="read_write_permission_description">acceder a notas, tarjetas, tipo de notas, y mazos existentes, así como crear otros nuevos</string>
     <!-- Context Menu -->
-    <string name="card_browser_context_menu" comment="The value which appears in the system context menu. Note the casing difference">Navegador de la tarjeta</string>
+    <string name="card_browser_context_menu" comment="The value which appears in the system context menu. Note the casing difference">Explorador de tarjetas</string>
     <string name="context_menu_anki_card_label">Tarjeta Anki</string>
     <string name="has_a_problem" comment="First field is either front template or back template. Second field is the error message.">%1$s tiene un problema:<br/>%2$s</string>
     <string name="more_information">Más información</string>
@@ -231,8 +229,8 @@
     <string name="sync_conflict_title_new">Selecciona la colección a mantener</string>
     <string name="sync_conflict_replace_title">Reemplazar colección</string>
     <plurals name="deckpicker_title_zero_due">
-        <item quantity="one">%1$d card (0 due)</item>
-        <item quantity="other">%1$d cards (0 due)</item>
+        <item quantity="one">%1$d tarjeta (0 pendiente)</item>
+        <item quantity="other">%1$d tarjetas (0 pendiente)</item>
     </plurals>
-    <string name="copy_note_type_name" comment="The new name of a copied note type">%s copy</string>
+    <string name="copy_note_type_name" comment="The new name of a copied note type">%s copiar</string>
 </resources>

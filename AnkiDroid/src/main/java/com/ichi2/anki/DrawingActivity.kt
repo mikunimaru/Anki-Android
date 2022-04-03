@@ -27,8 +27,11 @@ import timber.log.Timber
 import java.io.FileNotFoundException
 
 /**
- * Drawer actvity will allow user to draw image on empty activity
+ * Activity allowing the user to draw an image to be added the collection
+ *
  * user can use all basic whiteboard functionally and can save image from this activity.
+ *
+ * To access this screen: Add/Edit Note - Attachment - Add Image - Drawing
  */
 class DrawingActivity : AnkiActivity() {
     private lateinit var mColorPalette: LinearLayout
@@ -43,7 +46,7 @@ class DrawingActivity : AnkiActivity() {
         enableToolbar()
         mColorPalette = findViewById(R.id.whiteboard_editor)
         mWhiteboard = Whiteboard.createInstance(this, true, null)
-        mWhiteboard.setOnTouchListener { _: View?, event: MotionEvent? -> mWhiteboard.handleTouchEvent(event) }
+        mWhiteboard.setOnTouchListener { _: View?, event: MotionEvent? -> mWhiteboard.handleTouchEvent(event!!) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

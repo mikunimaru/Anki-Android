@@ -1,3 +1,5 @@
+//noinspection MissingCopyrightHeader #8659
+
 package com.ichi2.anki;
 
 import android.content.Context;
@@ -8,11 +10,13 @@ import android.content.pm.PackageManager;
 import android.view.Menu;
 
 import com.ichi2.anki.dialogs.DatabaseErrorDialog;
+import com.ichi2.anki.dialogs.DeckPickerConfirmDeleteDeckDialog;
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.DB;
 import com.ichi2.libanki.DeckConfig;
 import com.ichi2.libanki.Storage;
 import com.ichi2.libanki.sched.AbstractSched;
+import com.ichi2.testutils.AnkiActivityUtils;
 import com.ichi2.testutils.BackendEmulatingOpenConflict;
 import com.ichi2.testutils.BackupManagerTestUtilities;
 import com.ichi2.testutils.DbUtils;
@@ -21,6 +25,9 @@ import com.ichi2.utils.ResourceLoader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.robolectric.ParameterizedRobolectricTestRunner;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameter;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
@@ -32,20 +39,23 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.DialogFragment;
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
 import androidx.test.core.app.ActivityScenario;
 
 import static com.ichi2.anki.DeckPicker.UPGRADE_VERSION_KEY;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -71,20 +81,20 @@ public class DeckPickerTest extends RobolectricTest {
     @Test
     public void verifyCodeMessages() {
 
-        Map<Integer, String> mCodeResponsePairs = new HashMap<>();
+        Map<Integer, String> codeResponsePairs = new HashMap<>();
         final Context context = getTargetContext();
-        mCodeResponsePairs.put(407, context.getString(R.string.sync_error_407_proxy_required));
-        mCodeResponsePairs.put(409, context.getString(R.string.sync_error_409));
-        mCodeResponsePairs.put(413, context.getString(R.string.sync_error_413_collection_size));
-        mCodeResponsePairs.put(500, context.getString(R.string.sync_error_500_unknown));
-        mCodeResponsePairs.put(501, context.getString(R.string.sync_error_501_upgrade_required));
-        mCodeResponsePairs.put(502, context.getString(R.string.sync_error_502_maintenance));
-        mCodeResponsePairs.put(503, context.getString(R.string.sync_too_busy));
-        mCodeResponsePairs.put(504, context.getString(R.string.sync_error_504_gateway_timeout));
+        codeResponsePairs.put(407, context.getString(R.string.sync_error_407_proxy_required));
+        codeResponsePairs.put(409, context.getString(R.string.sync_error_409));
+        codeResponsePairs.put(413, context.getString(R.string.sync_error_413_collection_size));
+        codeResponsePairs.put(500, context.getString(R.string.sync_error_500_unknown));
+        codeResponsePairs.put(501, context.getString(R.string.sync_error_501_upgrade_required));
+        codeResponsePairs.put(502, context.getString(R.string.sync_error_502_maintenance));
+        codeResponsePairs.put(503, context.getString(R.string.sync_too_busy));
+        codeResponsePairs.put(504, context.getString(R.string.sync_error_504_gateway_timeout));
 
         try (ActivityScenario<DeckPicker> scenario = ActivityScenario.launch(DeckPicker.class)) {
             scenario.onActivity(deckPicker -> {
-                for (Map.Entry<Integer, String> entry : mCodeResponsePairs.entrySet()) {
+                for (Map.Entry<Integer, String> entry : codeResponsePairs.entrySet()) {
                     assertEquals(deckPicker.rewriteError(entry.getKey()), entry.getValue());
                 }
             });
@@ -201,7 +211,9 @@ public class DeckPickerTest extends RobolectricTest {
         AbstractSched sched = col.getSched();
 
         DeckConfig dconf = col.getDecks().getConf(1);
+        assertNotNull(dconf);
         dconf.getJSONObject("new").put("perDay", 10);
+        col.getDecks().save(dconf);
         for (int i = 0; i < 11; i++) {
             addNoteUsingBasicModel("Which card is this ?", Integer.toString(i));
         }
@@ -227,6 +239,19 @@ public class DeckPickerTest extends RobolectricTest {
         advanceRobolectricLooperWithSleep();
 
         assertThat("deck was deleted", getCol().getDecks().count(), is(1));
+    }
+
+    @Test
+    public void deletion_of_filtered_deck_shows_warning_issue_10238() {
+        // Filtered decks contain their own options, deleting one can cause a significant loss of work.
+        // And they are more likely to be empty temporarily
+        long did = addDynamicDeck("filtered");
+        DeckPicker deckPicker = startActivityNormallyOpenCollectionWithIntent(DeckPicker.class, new Intent());
+        deckPicker.confirmDeckDeletion(did);
+
+
+        DialogFragment fragment = AnkiActivityUtils.getDialogFragment(deckPicker);
+        assertThat("deck deletion confirmation window should be shown", fragment, instanceOf(DeckPickerConfirmDeleteDeckDialog.class));
     }
 
     @Test
@@ -399,7 +424,7 @@ public class DeckPickerTest extends RobolectricTest {
             setupColV16();
 
             // corrupt col
-            DbUtils.performQuery(getTargetContext(), "drop table deck_config");
+            DbUtils.performQuery(getTargetContext(), "drop table decks");
 
             InitialActivityWithConflictTest.setupForValid(getTargetContext());
 
@@ -414,17 +439,17 @@ public class DeckPickerTest extends RobolectricTest {
     }
 
     @Test
-    public void notEnoughSpaceToBackupShowsError() {
+    public void notEnoughSpaceToBackupBeforeDowngradeShowsError() {
         Class<DeckPickerNoSpaceForBackup> clazz = DeckPickerNoSpaceForBackup.class;
-        try {
-            setupColV16();
+        try (MockedStatic<InitialActivity> initialActivityMock = mockStatic(InitialActivity.class, Mockito.CALLS_REAL_METHODS)) {
+            initialActivityMock
+                .when(() -> InitialActivity.getStartupFailureType(any()))
+                .thenAnswer((Answer<InitialActivity.StartupFailure>) invocation -> InitialActivity.StartupFailure.DATABASE_DOWNGRADE_REQUIRED);
 
             InitialActivityWithConflictTest.setupForValid(getTargetContext());
 
             DeckPickerNoSpaceForBackup deckPicker = super.startActivityNormallyOpenCollectionWithIntent(clazz, new Intent());
-            waitForAsyncTasksToComplete();
 
-            assertThat("Collection should not be open", !CollectionHelper.getInstance().colIsOpen());
             assertThat("A downgrade failed dialog should be shown", deckPicker.mDisplayedDowngradeFailed, is(true));
         } finally {
             InitialActivityWithConflictTest.setupForDefault();
@@ -469,7 +494,7 @@ public class DeckPickerTest extends RobolectricTest {
 
         // set collection path
         SharedPreferences preferences = AnkiDroidApp.getSharedPrefs(getTargetContext());
-        preferences.edit().putString("deckPath", collectionDirectory).apply();
+        preferences.edit().putString(CollectionHelper.PREF_DECK_PATH, collectionDirectory).apply();
 
         // ensure collection not loaded yet
         assertThat("collection should not be loaded", CollectionHelper.getInstance().colIsOpen(), is(false));

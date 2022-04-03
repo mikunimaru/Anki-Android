@@ -16,16 +16,16 @@
 
 package com.ichi2.testutils.libanki;
 
-import com.ichi2.anki.exception.FilteredAncestor;
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.DeckConfig;
+import com.ichi2.libanki.backend.exception.DeckRenameException;
 
 public class FilteredDeckUtil {
     public static long createFilteredDeck(Collection col, String name, String search) {
         long filteredDid = 0;
         try {
             filteredDid = col.getDecks().newDyn(name);
-        } catch (FilteredAncestor filteredAncestor) {
+        } catch (DeckRenameException filteredAncestor) {
             throw new RuntimeException(filteredAncestor);
         }
 
@@ -33,7 +33,7 @@ public class FilteredDeckUtil {
 
         conf.getJSONArray("terms").getJSONArray(0).put(0, search);
 
-        col.getDecks().updateConf(conf);
+        col.getDecks().save(conf);
 
         return filteredDid;
     }

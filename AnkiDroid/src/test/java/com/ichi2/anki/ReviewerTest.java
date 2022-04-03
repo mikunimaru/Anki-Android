@@ -1,3 +1,18 @@
+/*
+ *  Copyright (c) 2021 Mike Hardy <github@mikehardy.net>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.ichi2.anki;
 
@@ -6,7 +21,6 @@ import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.ichi2.anki.AbstractFlashcardViewer.JavaScriptFunction;
 import com.ichi2.anki.cardviewer.ViewerCommand;
 import com.ichi2.anki.reviewer.ActionButtonStatus;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
@@ -38,12 +52,11 @@ import androidx.annotation.NonNull;
 import androidx.test.core.app.ActivityScenario;
 import timber.log.Timber;
 
-import static com.ichi2.anki.AbstractFlashcardViewer.EASE_4;
 import static com.ichi2.anki.AbstractFlashcardViewer.RESULT_DEFAULT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -104,6 +117,19 @@ public class ReviewerTest extends RobolectricTest {
     }
 
     @Test
+    public void noErrorShouldOccurIfSoundFileNotPresent() {
+        Note firstNote = addNoteUsingBasicModel("[[sound:not_on_file_system.mp3]]", "World");
+        moveToReviewQueue(firstNote.firstCard());
+
+        Reviewer reviewer = startReviewer();
+        reviewer.generateQuestionSoundList();
+        reviewer.displayCardQuestion();
+
+        assertThat("If the sound file with given name is not present, then no error occurs", true);
+    }
+
+
+    @Test
     public void jsTime4ShouldBeBlankIfButtonUnavailable() {
         // #6623 - easy should be blank when displaying a card with 3 buttons (after displaying a review)
         Note firstNote = addNoteUsingBasicModel("Hello", "World");
@@ -112,7 +138,7 @@ public class ReviewerTest extends RobolectricTest {
         addNoteUsingBasicModel("Hello", "World2");
 
         Reviewer reviewer = startReviewer();
-        JavaScriptFunction javaScriptFunction = reviewer.javaScriptFunction();
+        AnkiDroidJsAPI javaScriptFunction = reviewer.javaScriptFunction();
 
 
         // The answer needs to be displayed to be able to get the time.
@@ -120,17 +146,17 @@ public class ReviewerTest extends RobolectricTest {
         assertThat("4 buttons should be displayed", reviewer.getAnswerButtonCount(), is(4));
 
         String nextTime = javaScriptFunction.ankiGetNextTime4();
-        assertThat(nextTime, not(isEmptyString()));
+        assertThat(nextTime, not(emptyString()));
 
         // Display the next answer
-        reviewer.answerCard(EASE_4);
+        reviewer.answerCard(Consts.BUTTON_FOUR);
 
         displayAnswer(reviewer);
 
         if (schedVersion == 1) {
             assertThat("The 4th button should not be visible", reviewer.getAnswerButtonCount(), is(3));
             String learnTime = javaScriptFunction.ankiGetNextTime4();
-            assertThat("If the 4th button is not visible, there should be no time4 in JS", learnTime, isEmptyString());
+            assertThat("If the 4th button is not visible, there should be no time4 in JS", learnTime, emptyString());
         }
     }
 
@@ -263,7 +289,7 @@ public class ReviewerTest extends RobolectricTest {
         decks.select(didA);
 
         Reviewer reviewer = startReviewer();
-        JavaScriptFunction javaScriptFunction = reviewer.javaScriptFunction();
+        AnkiDroidJsAPI javaScriptFunction = reviewer.javaScriptFunction();
 
         waitForAsyncTasksToComplete();
         assertThat(javaScriptFunction.ankiGetDeckName(), is("B"));
@@ -307,7 +333,7 @@ public class ReviewerTest extends RobolectricTest {
     private void assertCounts(Reviewer r, int newCount, int stepCount, int revCount) {
 
         List<String> countList = new ArrayList<>();
-        JavaScriptFunction jsApi = r.javaScriptFunction();
+        AnkiDroidJsAPI jsApi = r.javaScriptFunction();
         countList.add(jsApi.ankiGetNewCardCount());
         countList.add(jsApi.ankiGetLrnCardCount());
         countList.add(jsApi.ankiGetRevCardCount());

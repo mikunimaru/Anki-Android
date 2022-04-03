@@ -1,3 +1,19 @@
+/*
+ *  Copyright (c) 2020 Arthur Milchior <arthur@milchior.fr>
+ *
+ *  This program is free software; you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation; either version 3 of the License, or (at your option) any later
+ *  version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ *  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *  PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ichi2.libanki;
 
 import com.ichi2.anki.RobolectricTest;
@@ -15,7 +31,7 @@ public class MediaTest extends RobolectricTest {
     /*****************
      ** Media        *
      *****************/
-    // copying files to media folder
+    // copying files to media directory
 
     /* TODO: media
        @Test
@@ -51,9 +67,9 @@ public class MediaTest extends RobolectricTest {
         assertEquals("aoeu", col.getMedia().strip("aoeu"));
         assertEquals("aoeuaoeu", col.getMedia().strip("aoeu[sound:foo.mp3]aoeu"));
         assertEquals("aoeu", col.getMedia().strip("a<img src=yo>oeu"));
-        assertEquals("aoeu", col.getMedia().escapeImages("aoeu"));
-        assertEquals("<img src='http://foo.com'>", col.getMedia().escapeImages("<img src='http://foo.com'>"));
-        assertEquals("<img src=\"foo%20bar.jpg\">", col.getMedia().escapeImages("<img src=\"foo bar.jpg\">"));
+        assertEquals("aoeu", Media.escapeImages("aoeu"));
+        assertEquals("<img src='http://foo.com'>", Media.escapeImages("<img src='http://foo.com'>"));
+        assertEquals("<img src=\"foo%20bar.jpg\">", Media.escapeImages("<img src=\"foo bar.jpg\">"));
     }
 
     /* TODO: file
