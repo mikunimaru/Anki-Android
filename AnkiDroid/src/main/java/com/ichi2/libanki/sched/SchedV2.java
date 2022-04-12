@@ -866,7 +866,7 @@ public class SchedV2 extends AbstractSched {
                      * front of the queue contains distinct card.
                  */
                     // fill the queue with the current did
-                for (long cid : mCol.getDb().queryLongList("SELECT id FROM cards WHERE did = ? AND queue = " + Consts.QUEUE_TYPE_NEW + " AND " + idName + "!= ? ORDER BY due - mod, ord LIMIT ?", did, id, lim)) {
+                for (long cid : mCol.getDb().queryLongList("SELECT id FROM cards WHERE did = ? AND queue = " + Consts.QUEUE_TYPE_NEW + " AND " + idName + "!= ? ORDER BY due, ord LIMIT ?", did, id, lim)) {
                     mNewQueue.add(cid);
                 }
                 if (!mNewQueue.isEmpty()) {
