@@ -1,18 +1,19 @@
-/***************************************************************************************
- * Copyright (c) 2015 Timothy Rae <perceptualchaos2@gmail.com>                          *
- *                                                                                      *
- * This program is free software; you can redistribute it and/or modify it under        *
- * the terms of the GNU General Public License as published by the Free Software        *
- * Foundation; either version 3 of the License, or (at your option) any later           *
- * version.                                                                             *
- *                                                                                      *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
- *                                                                                      *
- * You should have received a copy of the GNU General Public License along with         *
- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+/*
+ * Copyright (c) 2015 Timothy Rae <perceptualchaos2@gmail.com>
+ * Copyright (c) 2022 Arthur Milchior <arthur@milchior.fr>
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.ichi2.compat;
 
@@ -30,8 +31,7 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.widget.TimePicker;
 
-import com.ichi2.async.ProgressSenderAndCancelListener;
-import com.ichi2.utils.FileUtil;
+import com.ichi2.utils.KotlinCleanup;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,10 +43,10 @@ import java.io.OutputStream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
 import timber.log.Timber;
 
 /** Baseline implementation of {@link Compat}. Check  {@link Compat}'s for more detail. */
+@KotlinCleanup("add extension method logging file.delete() failure")
 public class CompatV21 implements Compat {
 
     // Update to PendingIntent.FLAG_MUTABLE once available (API 31)
@@ -61,7 +61,7 @@ public class CompatV21 implements Compat {
 
     // Until API 23 the methods have "current" in the name
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public void setTime(TimePicker picker, int hour, int minute) {
         picker.setCurrentHour(hour);
         picker.setCurrentMinute(minute);
@@ -69,7 +69,7 @@ public class CompatV21 implements Compat {
 
     // Until API 26 just specify time, after that specify effect also
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public void vibrate(Context context, long durationMillis) {
         Vibrator vibratorManager = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibratorManager != null) {
@@ -79,14 +79,14 @@ public class CompatV21 implements Compat {
 
     // Until API31 the MediaRecorder constructor was default, ignoring the Context
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public MediaRecorder getMediaRecorder(Context context) {
         return new MediaRecorder();
     }
 
     // Until API 26 do the copy using streams
     public void copyFile(@NonNull String source, @NonNull String target) throws IOException {
-        try (InputStream fileInputStream = new FileInputStream(new File(source))) {
+        try (InputStream fileInputStream = new FileInputStream(source)) {
             copyFile(fileInputStream, target);
         } catch (IOException e) {
             Timber.e(e, "copyFile() error copying source %s", source);
@@ -98,7 +98,7 @@ public class CompatV21 implements Compat {
     public long copyFile(@NonNull String source, @NonNull OutputStream target) throws IOException {
         long count;
 
-        try (InputStream fileInputStream = new FileInputStream(new File(source))) {
+        try (InputStream fileInputStream = new FileInputStream(source)) {
             count = copyFile(fileInputStream, target);
         } catch (IOException e) {
             Timber.e(e, "copyFile() error copying source %s", source);
@@ -136,84 +136,49 @@ public class CompatV21 implements Compat {
         return count;
     }
 
-    // Explores the source directory tree recursively and copies each directory and each file inside each directory
     @Override
-    public void copyDirectory(@NonNull File srcDir, @NonNull File destDir, @NonNull ProgressSenderAndCancelListener<Integer> ioTask, boolean deleteAfterCopy) throws IOException {
-        // If destDir exists, it must be a directory. If not, create it
-        FileUtil.ensureFileIsDirectory(destDir);
-
-        final File[] srcFiles = FileUtil.listFiles(srcDir);
-
-        // Copy the contents of srcDir to destDir
-        for (final File srcFile : srcFiles) {
-            final File destFile = new File(destDir, srcFile.getName());
-            if (srcFile.isDirectory()) {
-                copyDirectory(srcFile, destFile, ioTask, deleteAfterCopy);
-            } else if (srcFile.length() != destFile.length()) {
-                OutputStream out = new FileOutputStream(destFile, false);
-                ioTask.doProgress((int) copyFile(srcFile.getAbsolutePath(), out) / 1024);
-                out.close();
+    public void deleteFile(@NonNull File file) throws IOException {
+        if (!file.delete()) {
+            if (!file.exists()) {
+                throw new FileNotFoundException(file.getCanonicalPath());
             }
-            if (deleteAfterCopy) {
-                srcFile.delete();
-            }
-        }
-
-        if (deleteAfterCopy) {
-            srcDir.delete();
+            throw new IOException("Unable to delete: " + file.getCanonicalPath());
         }
     }
 
-    // Attempts to first rename the contents of the directory. This operation is instant, but it fails if the
-    // source and destination paths are not on the same storage partition.
-    // In case rename fails, it explores the directory tree recursively and copies, then deletes every directory & every
-    // file inside each directory.
+
     @Override
-    public void moveDirectory(@NonNull final File srcDir, @NonNull final File destDir, @NonNull ProgressSenderAndCancelListener<Integer> ioTask) throws IOException {
-        // If destDir exists, attempt to move the contents of srcDir by renaming
-        // Otherwise, attempt to rename srcDir to destDir
-        boolean renameSuccessful = true;
-        if (destDir.exists()) {
-            final File[] srcFiles = FileUtil.listFiles(srcDir);
-
-            for (final File srcFile : srcFiles) {
-                final File destFile = new File(destDir, srcFile.getName());
-                if (!srcFile.renameTo(destFile)) {
-                    renameSuccessful = false;
-                    break;
-                }
+    public void createDirectories(@NonNull File directory) throws IOException {
+        if (directory.exists()) {
+            if (!directory.isDirectory()) {
+                throw new IOException(directory + " is not a directory");
             }
-            if (renameSuccessful) {
-                srcDir.delete();
-            }
-        } else {
-            renameSuccessful = srcDir.renameTo(destDir);
+            return;
         }
-
-        // If srcDir couldn't be moved by renaming, do a copy and delete
-        if (!renameSuccessful) {
-            copyDirectory(srcDir, destDir, ioTask, true);
+        if (!directory.mkdirs()) {
+            throw new IOException("Failed to create " + directory);
         }
     }
+
 
     // Until API 23 the methods have "current" in the name
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public int getHour(TimePicker picker) { return picker.getCurrentHour(); }
 
     // Until API 23 the methods have "current" in the name
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public int getMinute(TimePicker picker) { return picker.getCurrentMinute(); }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public boolean hasVideoThumbnail(@NonNull String path) {
         return ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND) != null;
     }
     
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public void requestAudioFocus(AudioManager audioManager, AudioManager.OnAudioFocusChangeListener audioFocusChangeListener,
                                   @Nullable AudioFocusRequest audioFocusRequest) {
         audioManager.requestAudioFocus(audioFocusChangeListener, AudioManager.STREAM_MUSIC,
@@ -221,7 +186,7 @@ public class CompatV21 implements Compat {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public void abandonAudioFocus(AudioManager audioManager, AudioManager.OnAudioFocusChangeListener audioFocusChangeListener,
                                   @Nullable AudioFocusRequest audioFocusRequest) {
         audioManager.abandonAudioFocus(audioFocusChangeListener);
@@ -243,13 +208,46 @@ public class CompatV21 implements Compat {
     @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public Uri saveImage(Context context, Bitmap bitmap, String baseFileName, String extension, Bitmap.CompressFormat format, int quality) throws FileNotFoundException {
         File pictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File ankiDroidFolder = new File(pictures, "AnkiDroid");
-        if (!ankiDroidFolder.exists()) {
+        File ankiDroidDirectory = new File(pictures, "AnkiDroid");
+        if (!ankiDroidDirectory.exists()) {
             //noinspection ResultOfMethodCallIgnored
-            ankiDroidFolder.mkdirs();
+            ankiDroidDirectory.mkdirs();
         }
-        File imageFile = new File(ankiDroidFolder, baseFileName + "." + extension);
+        File imageFile = new File(ankiDroidDirectory, baseFileName + "." + extension);
         bitmap.compress(format, quality, new FileOutputStream(imageFile));
         return Uri.fromFile(imageFile);
+    }
+
+    /* This method actually read the full content of the directory.
+    * It is linear in time and space in the number of file and directory in the directory.
+    * However, hasNext and next should be constant in time and space. */
+    @Override
+    public @NonNull FileStream contentOfDirectory(@NonNull File directory) throws IOException {
+        File[] paths = directory.listFiles();
+        if (paths == null) {
+            if (!directory.exists()) {
+                throw new FileNotFoundException(directory.getPath());
+            }
+            throw new IOException("Directory " + directory.getPath() + "'s file can not be listed. Probable cause are that it's not a directory (which violate the method's assumption) or a permission issue.");
+        }
+        int length = paths.length;
+        return new FileStream() {
+            @Override
+            public void close() {
+                // No op. Nothing to close here.
+            }
+
+
+            private int mOrd = 0;
+            @Override
+            public boolean hasNext() {
+                return mOrd < length;
+            }
+
+            @Override
+            public File next() {
+                return paths[mOrd++];
+            }
+        };
     }
 }

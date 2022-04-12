@@ -18,7 +18,6 @@ package com.ichi2.anki.dialogs
 import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Parcel
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +35,9 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.ichi2.anki.R
 import com.ichi2.anki.UIUtils.showThemedToast
 import com.ichi2.anki.analytics.AnalyticsDialogFragment
+import com.ichi2.anki.dialogs.DeckSelectionDialog.DecksArrayAdapter.DecksFilter
+import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck
+import com.ichi2.annotations.NeedsTest
 import com.ichi2.libanki.Collection
 import com.ichi2.libanki.CollectionGetter
 import com.ichi2.libanki.Deck
@@ -43,17 +45,26 @@ import com.ichi2.libanki.DeckManager
 import com.ichi2.libanki.backend.exception.DeckRenameException
 import com.ichi2.libanki.stats.Stats
 import com.ichi2.utils.DeckNameComparator
-import com.ichi2.utils.FilterResultsUtils
 import com.ichi2.utils.FunctionalInterfaces
 import com.ichi2.utils.KotlinCleanup
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import java.util.*
 import java.util.Objects.requireNonNull
 
 /**
- * The dialog which allow to select a deck. It is opened when the user click on a deck name in stats, browser or note editor.
- * It allows to filter decks by typing part of its name.
+ * "Deck Search": A dialog allowing the user to select a deck from a list of decks.
+ *
+ * * Allows filtering of visible decks based on name (searching): [DecksFilter]
+ * * Allows adding a new deck: [showDeckDialog]
+ * * Allows adding a subdeck via long-pressing a deck: [showSubDeckDialog]
+ *
+ * It is opened when the user wants a deck in stats, browser or note editor.
+ *
+ * @see SelectableDeck The data that is displayed
  */
+@NeedsTest("simulate 'don't keep activities'")
 open class DeckSelectionDialog : AnalyticsDialogFragment() {
     private var mDialog: MaterialDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -180,11 +191,15 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
      * @param deck deck sent to the listener.
      */
     protected fun onDeckSelected(deck: SelectableDeck?) {
-        deckSelectionListener.onDeckSelected(deck)
+        deckSelectionListener!!.onDeckSelected(deck)
     }
 
-    private val deckSelectionListener: DeckSelectionListener
+    @KotlinCleanup("Use a factory here")
+    var deckSelectionListener: DeckSelectionListener? = null
         get() {
+            if (field != null) {
+                return field
+            }
             val activity: Activity = requireActivity()
             if (activity is DeckSelectionListener) {
                 return activity
@@ -210,17 +225,19 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
 
     open inner class DecksArrayAdapter(deckNames: List<SelectableDeck>) : RecyclerView.Adapter<DecksArrayAdapter.ViewHolder>(), Filterable {
         inner class ViewHolder(val deckTextView: TextView) : RecyclerView.ViewHolder(deckTextView) {
+            var deckName: String = ""
+
             fun setDeck(deck: SelectableDeck) {
-                deckTextView.text = deck.name
+                deckName = deck.name
+                deckTextView.text = deck.displayName
             }
 
             init {
                 deckTextView.setOnClickListener {
-                    val deckName = deckTextView.text.toString()
                     selectDeckByNameAndClose(deckName)
                 }
                 deckTextView.setOnLongClickListener { // creating sub deck with parent deck path
-                    showSubDeckDialog(deckTextView.text.toString())
+                    showSubDeckDialog(deckName)
                     true
                 }
             }
@@ -273,7 +290,7 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
                         }
                     }
                 }
-                return FilterResultsUtils.fromCollection(mFilteredDecks)
+                return FilterResults()
             }
 
             override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
@@ -291,28 +308,26 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
             mCurrentlyDisplayedDecks.sort()
         }
     }
-    @KotlinCleanup("auto parcel is needed")
-    open class SelectableDeck : Comparable<SelectableDeck>, Parcelable {
-        /**
-         * Either a deck id or ALL_DECKS_ID
-         */
-        val deckId: Long
 
+    /**
+     * @param deckId Either a deck id or ALL_DECKS_ID
+     * @param name Name of the deck, or localization of "all decks"
+     */
+    @Parcelize
+    class SelectableDeck(val deckId: Long, val name: String) : Comparable<SelectableDeck>, Parcelable {
         /**
-         * Name of the deck, or localization of "all decks"
+         * The name to be displayed to the user. Contains
+         * only the sub-deck name with proper indentation
+         * rather than the entire deck name.
+         * Eg: foo::bar -> \t\tbar
          */
-        val name: String
-
-        constructor(deckId: Long, name: String) {
-            this.deckId = deckId
-            this.name = name
+        @IgnoredOnParcel
+        val displayName: String by lazy {
+            val nameArr = name.split("::")
+            "\t\t".repeat(nameArr.size - 1) + nameArr[nameArr.size - 1]
         }
 
-        protected constructor(d: Deck) : this(d.getLong("id"), d.getString("name"))
-        protected constructor(`in`: Parcel) {
-            deckId = `in`.readLong()
-            name = `in`.readString()!!
-        }
+        constructor(d: Deck) : this(d.getLong("id"), d.getString("name"))
 
         /** "All decks" comes first. Then usual deck name order.  */
         override fun compareTo(other: SelectableDeck): Int {
@@ -324,15 +339,6 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
             return if (other.deckId == Stats.ALL_DECKS_ID) {
                 1
             } else DeckNameComparator.INSTANCE.compare(name, other.name)
-        }
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        override fun writeToParcel(dest: Parcel, flags: Int) {
-            dest.writeLong(deckId)
-            dest.writeString(name)
         }
 
         companion object {
@@ -352,16 +358,6 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
                     ret.add(SelectableDeck(d))
                 }
                 return ret
-            }
-
-            val CREATOR: Parcelable.Creator<SelectableDeck?> = object : Parcelable.Creator<SelectableDeck?> {
-                override fun createFromParcel(`in`: Parcel): SelectableDeck {
-                    return SelectableDeck(`in`)
-                }
-
-                override fun newArray(size: Int): Array<SelectableDeck?> {
-                    return arrayOfNulls(size)
-                }
             }
         }
     }

@@ -151,7 +151,7 @@ public abstract class AbstractDeckTreeNode<T extends AbstractDeckTreeNode<T>> im
     }
 
     public void setChildren(@NonNull List<T> children, boolean addRev) {
-        // addRev present here because it needs to be overriden
+        // addRev present here because it needs to be overridden
         mChildren = children;
     }
 
@@ -208,5 +208,5 @@ public abstract class AbstractDeckTreeNode<T extends AbstractDeckTreeNode<T>> im
     }
 
 
-    public abstract T withChildren(List<T> children);
+    public abstract T withChildren(@NonNull List<T> children);
 }

@@ -44,7 +44,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-/** A non-parmaterized ReviewerTest - we should probably rename ReviewerTest in future */
+/** A non-parameterized ReviewerTest - we should probably rename ReviewerTest in future */
 @RunWith(AndroidJUnit4.class)
 public class ReviewerNoParamTest extends RobolectricTest {
     public static final int DEFAULT_LIGHT_PEN_COLOR = Color.BLACK;
@@ -78,9 +78,8 @@ public class ReviewerNoParamTest extends RobolectricTest {
     @Test
     public void whiteboardDarkModeColorIsUsed() {
         storeDarkModeColor(555);
-        enableDarkMode();
 
-        Whiteboard whiteboard = startReviewerForWhiteboard();
+        Whiteboard whiteboard = startReviewerForWhiteboardInDarkMode();
 
         assertThat("Pen color defaults to black", whiteboard.getPenColor(), is(555));
     }
@@ -98,9 +97,7 @@ public class ReviewerNoParamTest extends RobolectricTest {
 
     @Test
     public void whiteboardPenColorChangeChangesDatabaseDark() {
-        enableDarkMode();
-
-        Whiteboard whiteboard = startReviewerForWhiteboard();
+        Whiteboard whiteboard = startReviewerForWhiteboardInDarkMode();
 
         whiteboard.setPenColor(ARBITRARY_PEN_COLOR_VALUE);
 
@@ -288,7 +285,7 @@ public class ReviewerNoParamTest extends RobolectricTest {
 
     private void setGestureSetting(boolean value) {
         Editor settings = AnkiDroidApp.getSharedPrefs(getTargetContext()).edit();
-        settings.putBoolean("gestures", value);
+        settings.putBoolean(GestureProcessor.PREF_KEY, value);
         settings.apply();
     }
 
@@ -355,6 +352,22 @@ public class ReviewerNoParamTest extends RobolectricTest {
 
         Reviewer reviewer = startReviewer();
 
+        reviewer.toggleWhiteboard();
+
+        Whiteboard whiteboard = reviewer.getWhiteboard();
+        if (whiteboard == null) {
+            throw new IllegalStateException("Could not get whiteboard");
+        }
+        return whiteboard;
+    }
+
+    @CheckResult
+    @NonNull
+    protected Whiteboard startReviewerForWhiteboardInDarkMode() {
+        addNoteUsingBasicModel("Hello", "World");
+
+        Reviewer reviewer = startReviewer();
+        enableDarkMode();
         reviewer.toggleWhiteboard();
 
         Whiteboard whiteboard = reviewer.getWhiteboard();

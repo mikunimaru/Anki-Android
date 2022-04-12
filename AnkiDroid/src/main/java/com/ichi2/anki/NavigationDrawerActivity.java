@@ -68,17 +68,15 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
     protected CharSequence mTitle;
     protected Boolean mFragmented = false;
     private boolean mNavButtonGoesBack = false;
-    private int mOldTheme;
+    private String mOldTheme;
     // Navigation drawer list item entries
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private SwitchCompat mNightModeSwitch;
     // Intent request codes
     public static final int REQUEST_PREFERENCES_UPDATE = 100;
     public static final int REQUEST_BROWSE_CARDS = 101;
     public static final int REQUEST_STATISTICS = 102;
-    private static final String NIGHT_MODE_PREFERENCE = "invertedColors";
     public static final String FULL_SCREEN_NAVIGATION_DRAWER = "gestureFullScreenNavigationDrawer";
 
     /**
@@ -139,12 +137,6 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
             // Decide which action to take when the navigation button is tapped.
             toolbar.setNavigationOnClickListener(v -> onNavigationPressed());
         }
-        // Configure night-mode switch
-        final SharedPreferences preferences = getPreferences();
-        View actionLayout = mNavigationView.getMenu().findItem(R.id.nav_night_mode).getActionView();
-        mNightModeSwitch = actionLayout.findViewById(R.id.switch_compat);
-        mNightModeSwitch.setChecked(preferences.getBoolean(NIGHT_MODE_PREFERENCE, false));
-        mNightModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> applyNightMode(isChecked));
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 0, 0) {
@@ -196,8 +188,8 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
         intentReviewCards.setAction(Intent.ACTION_VIEW);
         intentReviewCards.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         ShortcutInfo reviewCardsShortcut = new ShortcutInfo.Builder(context, "reviewCardsShortcutId")
-                .setShortLabel(context.getString(R.string.card_info_reviews))
-                .setLongLabel(context.getString(R.string.card_info_reviews))
+                .setShortLabel(context.getString(R.string.studyoptions_start))
+                .setLongLabel(context.getString(R.string.studyoptions_start))
                 .setIcon(Icon.createWithResource(context, R.drawable.ankidroid_logo))
                 .setIntent(intentReviewCards)
                 .build();
@@ -279,13 +271,6 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
 
     private SharedPreferences getPreferences() {
         return AnkiDroidApp.getSharedPrefs(NavigationDrawerActivity.this);
-    }
-
-    private void applyNightMode(boolean setToNightMode) {
-        final SharedPreferences preferences = getPreferences();
-        Timber.i("Night mode was %s", setToNightMode ? "enabled" : "disabled");
-        preferences.edit().putBoolean(NIGHT_MODE_PREFERENCE, setToNightMode).apply();
-        restartActivityInvalidateBackstack(NavigationDrawerActivity.this);
     }
 
     @Override
@@ -374,6 +359,7 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
     public boolean onNavigationItemSelected(final MenuItem item) {
         // Don't do anything if user selects already selected position
         if (item.isChecked()) {
+            closeDrawer();
             return true;
         }
 
@@ -397,9 +383,6 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
                 Timber.i("Navigating to stats");
                 Intent intent = new Intent(NavigationDrawerActivity.this, Statistics.class);
                 startActivityForResultWithAnimation(intent, REQUEST_STATISTICS, START);
-            } else if (itemId == R.id.nav_night_mode) {
-                Timber.i("Toggling Night Mode");
-                mNightModeSwitch.performClick();
             } else if (itemId == R.id.nav_settings) {
                 Timber.i("Navigating to settings");
                 // Remember the theme we started with so we can restart the Activity if it changes

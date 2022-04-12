@@ -56,7 +56,7 @@ import static com.ichi2.anki.AbstractFlashcardViewer.RESULT_DEFAULT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -117,6 +117,19 @@ public class ReviewerTest extends RobolectricTest {
     }
 
     @Test
+    public void noErrorShouldOccurIfSoundFileNotPresent() {
+        Note firstNote = addNoteUsingBasicModel("[[sound:not_on_file_system.mp3]]", "World");
+        moveToReviewQueue(firstNote.firstCard());
+
+        Reviewer reviewer = startReviewer();
+        reviewer.generateQuestionSoundList();
+        reviewer.displayCardQuestion();
+
+        assertThat("If the sound file with given name is not present, then no error occurs", true);
+    }
+
+
+    @Test
     public void jsTime4ShouldBeBlankIfButtonUnavailable() {
         // #6623 - easy should be blank when displaying a card with 3 buttons (after displaying a review)
         Note firstNote = addNoteUsingBasicModel("Hello", "World");
@@ -133,7 +146,7 @@ public class ReviewerTest extends RobolectricTest {
         assertThat("4 buttons should be displayed", reviewer.getAnswerButtonCount(), is(4));
 
         String nextTime = javaScriptFunction.ankiGetNextTime4();
-        assertThat(nextTime, not(isEmptyString()));
+        assertThat(nextTime, not(emptyString()));
 
         // Display the next answer
         reviewer.answerCard(Consts.BUTTON_FOUR);
@@ -143,7 +156,7 @@ public class ReviewerTest extends RobolectricTest {
         if (schedVersion == 1) {
             assertThat("The 4th button should not be visible", reviewer.getAnswerButtonCount(), is(3));
             String learnTime = javaScriptFunction.ankiGetNextTime4();
-            assertThat("If the 4th button is not visible, there should be no time4 in JS", learnTime, isEmptyString());
+            assertThat("If the 4th button is not visible, there should be no time4 in JS", learnTime, emptyString());
         }
     }
 
@@ -325,12 +338,12 @@ public class ReviewerTest extends RobolectricTest {
         countList.add(jsApi.ankiGetLrnCardCount());
         countList.add(jsApi.ankiGetRevCardCount());
 
-        List<Integer> expexted = new ArrayList<>();
-        expexted.add(newCount);
-        expexted.add(stepCount);
-        expexted.add(revCount);
+        List<Integer> expected = new ArrayList<>();
+        expected.add(newCount);
+        expected.add(stepCount);
+        expected.add(revCount);
 
-        assertThat(countList.toString(), is(expexted.toString())); // We use toString as hamcrest does not print the whole array and stops at [0].
+        assertThat(countList.toString(), is(expected.toString())); // We use toString as hamcrest does not print the whole array and stops at [0].
     }
 
 

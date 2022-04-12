@@ -77,7 +77,7 @@ fun <E> MutableList<E>.toJsonArray(): JSONArray {
     return array
 }
 
-fun <K, V> Map<K, V>.getOptional(k: K): Optional<V> {
+fun <K, V : Any> Map<K, V>.getOptional(k: K): Optional<V> {
     if (!this.containsKey(k)) {
         return Optional.empty()
     }
@@ -94,7 +94,7 @@ fun JSONArray.remove(jsonObject: JSONObject) {
 
 fun JSONArray.index(jsonObject: JSONObject): Optional<Int> {
     this.jsonObjectIterable().forEachIndexed {
-        i, value ->
+            i, value ->
         run {
             if (jsonObject == value) {
                 return Optional.of(i)

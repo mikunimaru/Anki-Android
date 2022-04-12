@@ -86,7 +86,7 @@ public class Decks extends DeckManager {
                 + "\"conf\": 1,"
                 + "\"usn\": 0,"
                 + "\"desc\": \"\","
-                + "\"dyn\": 0," // anki uses int/bool interchangably here
+                + "\"dyn\": 0," // anki uses int/bool interchangeably here
                 + "\"collapsed\": false,"
                 + "\"browserCollapsed\": false,"
                 // added in beta11
@@ -932,10 +932,10 @@ public class Decks extends DeckManager {
     }
 
     private void _checkDeckTree() {
-        List<Deck> decks = allSorted();
-        Map<String, Deck> names = HashUtil.HashMapInit(decks.size());
+        List<Deck> sortedDecks = allSorted();
+        Map<String, Deck> names = HashUtil.HashMapInit(sortedDecks.size());
 
-        for (Deck deck: decks) {
+        for (Deck deck: sortedDecks) {
             String deckName = deck.getString("name");
 
             /* With 2.1.28, anki started strips whitespace of deck name.  This method paragraph is here for

@@ -25,16 +25,6 @@
     <!-- Text to be shown in preference summary -->
     <string name="preference_summary_literal">XXX</string>
     <!-- Used in deck preferences -->
-    <string-array name="dictionary_labels">
-        <item>None</item>
-        <item>Aedict</item>
-        <item>Eijiro (Web)</item>
-        <item>Leo.org (Web)</item>
-        <item>Leo.org (App)</item>
-        <item>ColorDict/GoldenDict</item>
-        <item>Fora</item>
-        <item>Nciku (Web)</item>
-    </string-array>
     <string-array name="custom_button_labels">
         <item>@string/custom_buttons_setting_always_show</item>
         <item>@string/custom_buttons_setting_if_room</item>
@@ -44,16 +34,6 @@
     <string-array name="custom_button_labels_menu_and_disabled">
         <item>@string/custom_buttons_setting_menu_only</item>
         <item>@string/disabled</item>
-    </string-array>
-    <string-array name="dictionary_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
     </string-array>
     <string-array name="error_reporting_choice_values">
         <item>0</item>
@@ -99,7 +79,6 @@
         <item>@string/card_info_title</item>
         <item>@string/gesture_tag_note</item>
         <item>@string/menu_mark_note</item>
-        <item>@string/gesture_lookup</item>
         <item>@string/menu_bury_card</item>
         <item>@string/menu_suspend_card</item>
         <item>@string/menu_delete_note</item>
@@ -121,6 +100,8 @@
         <item>@string/record_voice</item>
         <item>@string/replay_voice</item>
         <item>@string/gesture_toggle_whiteboard</item>
+        <item>@string/gesture_show_hint</item>
+        <item>@string/gesture_show_all_hints</item>
     </string-array>
     <string-array name="gestures_values">
         <item>0</item>
@@ -136,7 +117,7 @@
         <item>33</item> <!-- Card Info -->
         <item>32</item> <!-- Tag Note -->
         <item>10</item>
-        <item>11</item>
+        <!--11 was deleted: Lookup Dictionary-->
         <item>12</item>
         <item>13</item>
         <item>14</item>
@@ -159,6 +140,8 @@
         <item>35</item> <!-- Record voice -->
         <item>36</item> <!-- Replay voice -->
         <item>37</item> <!-- Toggle whiteboard -->
+        <item>41</item> <!-- Show hint -->
+        <item>42</item> <!-- Show all hints -->
     </string-array>
     <string-array name="custom_button_values">
         <item>2</item>
@@ -170,6 +153,62 @@
         <item>0</item>
         <item>3</item>
     </string-array>
+
+    <string-array name="error_reporting_choice_labels">
+        <item>@string/error_reporting_choice_always_report</item>
+        <item>@string/error_reporting_choice_never_report</item>
+        <item>@string/error_reporting_choice_ask_user</item>
+    </string-array>
+    <string-array name="leech_action_labels">
+        <item>@string/menu_suspend_card</item>
+        <item>@string/leech_action_tag_only</item>
+    </string-array>
+    <string-array name="new_order_labels">
+        <item>@string/new_order_random</item>
+        <item>@string/new_order_order_added</item>
+    </string-array>
+    <string-array name="cram_deck_conf_order_labels">
+        <item>@string/cram_deck_conf_order_oldest_seen_first</item>
+        <item>@string/cram_deck_conf_order_random</item>
+        <item>@string/cram_deck_conf_order_increasing_intervals</item>
+        <item>@string/cram_deck_conf_order_decreasing_intervals</item>
+        <item>@string/cram_deck_conf_order_most_lapsed</item>
+        <item>@string/cram_deck_conf_order_order_added</item>
+        <item>@string/cram_deck_conf_order_order_due</item>
+        <item>@string/cram_deck_conf_order_latest_added_first</item>
+        <item>@string/cram_deck_conf_order_relative_overdueness</item>
+    </string-array>
+    <string-array name="add_to_cur_labels">
+        <item>@string/add_to_deck_use_current_deck</item>
+        <item>@string/add_to_deck_decide_by_note_type</item>
+    </string-array>
+    <string-array name="new_spread_labels">
+        <item>@string/new_spread_mix_new_and_review</item>
+        <item>@string/new_spread_new_after_review</item>
+        <item>@string/new_spread_new_before_review</item>
+    </string-array>
+    <string-array name="override_font_labels">
+        <item>@string/override_font_if_missing</item>
+        <item>@string/override_font_always</item>
+    </string-array>
+    <string-array name="day_theme_labels">
+        <item>@string/day_theme_light</item>
+        <item>@string/day_theme_plain</item>
+    </string-array>
+    <string-array name="night_theme_labels">
+        <item>@string/night_theme_black</item>
+        <item>@string/night_theme_dark</item>
+    </string-array>
+    <string-array name="html_size_code_labels">
+        <item>@string/html_size_code_xx_small</item>
+        <item>@string/html_size_code_x_small</item>
+        <item>@string/html_size_code_small</item>
+        <item>@string/html_size_code_medium</item>
+        <item>@string/html_size_code_large</item>
+        <item>@string/html_size_code_x_large</item>
+        <item>@string/html_size_code_xx_large</item>
+    </string-array>
+
     <string name="link_anki">https://ankisrs.net</string>
     <string name="link_anki_manual">https://docs.ankiweb.net/#/</string>
     <string name="link_anki_forum">https://forums.ankiweb.net/</string>
@@ -178,10 +217,9 @@
     <string name="link_issue_tracker">https://github.com/ankidroid/Anki-Android/issues</string>
     <string name="licence_wiki">http://www.gnu.org/licenses/gpl.html</string>
     <string name="link_source">https://github.com/ankidroid/Anki-Android</string>
-    <string name="link_donation">https://ankisrs.net/support</string>
     <string name="link_market">market://details?id=com.ichi2.anki</string>
     <string name="link_market_kindle">http://www.amazon.com/gp/mas/dl/android?p=com.ichi2.anki</string>
-    <string name="link_translation">http://crowdin.net/project/ankidroid</string>
+    <string name="link_translation">https://crowdin.net/project/ankidroid</string>
     <string name="link_wikipedia_open_source">http://en.wikipedia.org/wiki/Open_source_software</string>
     <string name="link_contribution">https://github.com/ankidroid/Anki-Android/wiki/Contributing</string>
     <string name="link_help">https://docs.ankidroid.org/help.html</string>
@@ -216,6 +254,7 @@
     <string name="link_ankiweb_docs_cloze_deletion">https://docs.ankiweb.net/editing.html#cloze-deletion</string>
     <string name="link_distributions">https://apps.ankiweb.net/#download</string>
     <string name="link_ankiweb_lost_email_instructions">https://github.com/ankidroid/Anki-Android/wiki/FAQ#forgotten-ankiweb-email-instructions</string>
+    <string name="link_scoped_storage_faq">https://github.com/ankidroid/Anki-Android/wiki/Storage-Migration-FAQ</string>
 
     <string-array name="leech_action_values">
         <item>0</item>
@@ -275,7 +314,21 @@
         <item>@string/full_screen_system</item>
         <item>@string/full_screen_complete</item>
     </string-array>
-
+    <!-- Themes -->
+    <string-array name="app_theme_labels">
+        <item>@string/theme_follow_system</item>
+        <item>@string/day_theme_light</item>
+        <item>@string/day_theme_plain</item>
+        <item>@string/night_theme_black</item>
+        <item>@string/night_theme_dark</item>
+    </string-array>
+    <string-array name="app_theme_values">
+        <item>0</item> <!-- Follow system -->
+        <item>1</item> <!-- Light -->
+        <item>2</item> <!-- Plain -->
+        <item>3</item> <!-- Black -->
+        <item>4</item> <!-- Dark -->
+    </string-array>
     <string-array name="day_theme_values">
         <item>0</item>
         <item>1</item>
@@ -289,6 +342,7 @@
     <string-array name="answer_buttons_position" translatable="false">
         <item>top</item>
         <item>bottom</item>
+        <item>none</item>
     </string-array>
     <string-array name="html_size_codes">
         <item>xx-small</item>
@@ -305,4 +359,14 @@
     <string name="show_onboarding" maxLength="41">Show onboarding walkthrough</string>
     <string name="show_onboarding_desc">Display feature tutorial to learn more about the app</string>
     <string name="reset_onboarding_desc">Show all tutorials again</string>
+
+    <!-- Stats -->
+    <string-array name="stats_default_deck_labels">
+        <item>@string/stats_default_deck_current</item>
+        <item>@string/stats_default_deck_all</item>
+    </string-array>
+    <string-array name="stats_default_deck_values">
+        <item>current</item>
+        <item>all</item>
+    </string-array>
 </resources>

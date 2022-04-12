@@ -28,15 +28,11 @@ import android.os.Build
 import android.provider.Settings
 import com.ichi2.anki.AnkiDroidApp
 import timber.log.Timber
-import java.lang.Exception
 import java.util.*
 
 object AdaptionUtil {
-    private var sHasRunRestrictedLearningDeviceCheck = false
-    private var sIsRestrictedLearningDevice = false
     private var sHasRunWebBrowserCheck = false
     private var sHasWebBrowser = true
-    private var sIsRunningMiUI: Boolean? = null
     @JvmStatic
     fun hasWebBrowser(context: Context): Boolean {
         if (sHasRunWebBrowserCheck) {
@@ -117,41 +113,28 @@ object AdaptionUtil {
     }
 
     @JvmStatic
-    val isRestrictedLearningDevice: Boolean
-        get() {
-            if (!sHasRunRestrictedLearningDeviceCheck) {
-                sIsRestrictedLearningDevice = "Xiaomi".equals(Build.MANUFACTURER, ignoreCase = true) &&
-                    ("Archytas".equals(Build.PRODUCT, ignoreCase = true) || "Archimedes".equals(Build.PRODUCT, ignoreCase = true))
-                sHasRunRestrictedLearningDeviceCheck = true
-            }
-            return sIsRestrictedLearningDevice
-        }
+    val isRestrictedLearningDevice by lazy {
+        "Xiaomi".equals(Build.MANUFACTURER, ignoreCase = true) &&
+            ("Archytas".equals(Build.PRODUCT, ignoreCase = true) || "Archimedes".equals(Build.PRODUCT, ignoreCase = true))
+    }
 
     fun canUseContextMenu(): Boolean {
         return !isRunningMiui
     }
 
-    private val isRunningMiui: Boolean
-        get() {
-            if (sIsRunningMiUI == null) {
-                sIsRunningMiUI = queryIsMiui()
-            }
-            return sIsRunningMiUI!!
-        }
-
-    // https://stackoverflow.com/questions/47610456/how-to-detect-miui-rom-programmatically-in-android
-    private fun isIntentResolved(ctx: Context, intent: Intent?): Boolean {
-        return intent != null && ctx.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null
-    }
-
-    private fun queryIsMiui(): Boolean {
+    private val isRunningMiui by lazy {
         val ctx: Context = AnkiDroidApp.getInstance()
-        return (
+        (
             isIntentResolved(ctx, Intent("miui.intent.action.OP_AUTO_START").addCategory(Intent.CATEGORY_DEFAULT)) ||
                 isIntentResolved(ctx, Intent().setComponent(ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"))) ||
                 isIntentResolved(ctx, Intent("miui.intent.action.POWER_HIDE_MODE_APP_LIST").addCategory(Intent.CATEGORY_DEFAULT)) ||
                 isIntentResolved(ctx, Intent().setComponent(ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings")))
             )
+    }
+
+    // https://stackoverflow.com/questions/47610456/how-to-detect-miui-rom-programmatically-in-android
+    private fun isIntentResolved(ctx: Context, intent: Intent): Boolean {
+        return ctx.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null
     }
 
     /** See: https://en.wikipedia.org/wiki/Vivo_(technology_company)  */
@@ -160,5 +143,23 @@ object AdaptionUtil {
         get() {
             val manufacturer = Build.MANUFACTURER ?: return false
             return manufacturer.lowercase(Locale.ROOT) == "vivo"
+        }
+
+    /** make default HTML / JS debugging true for debug build and disable for unit/android tests
+     * isRunningAsUnitTest checks if we are in debug or testing environment by checking if org.junit.Test class
+     * is imported.
+     * https://stackoverflow.com/questions/28550370/how-to-detect-whether-android-app-is-running-ui-test-with-espresso
+     */
+    @JvmStatic
+    val isRunningAsUnitTest: Boolean
+        get() {
+            try {
+                Class.forName("org.junit.Test")
+            } catch (ignored: ClassNotFoundException) {
+                Timber.d("isRunningAsUnitTest: %b", false)
+                return false
+            }
+            Timber.d("isRunningAsUnitTest: %b", true)
+            return true
         }
 }

@@ -75,7 +75,7 @@ import com.ichi2.anki.dialogs.tags.TagsDialogListener;
 import com.ichi2.anki.exception.ConfirmModSchemaException;
 import com.ichi2.anki.multimediacard.IMultimediaEditableNote;
 import com.ichi2.anki.multimediacard.activity.MultimediaEditFieldActivity;
-import com.ichi2.anki.multimediacard.fields.AudioClipField;
+import com.ichi2.anki.multimediacard.fields.MediaClipField;
 import com.ichi2.anki.multimediacard.fields.AudioRecordingField;
 import com.ichi2.anki.multimediacard.fields.EFieldType;
 import com.ichi2.anki.multimediacard.fields.IField;
@@ -657,7 +657,7 @@ public class NoteEditor extends AnkiActivity implements
         String selectedText = text.substring(start, end);
         String afterText = text.substring(end);
 
-        Toolbar.TextWrapper.StringFormat formatResult = formatter.format(selectedText);
+        Toolbar.StringFormat formatResult = formatter.format(selectedText);
         String newText = formatResult.result;
 
         // Update text field with updated text and selection
@@ -665,8 +665,8 @@ public class NoteEditor extends AnkiActivity implements
         StringBuilder newFieldContent = new StringBuilder(length).append(beforeText).append(newText).append(afterText);
         textBox.setText(newFieldContent);
 
-        int newStart = formatResult.start;
-        int newEnd = formatResult.end;
+        int newStart = formatResult.selectionStart;
+        int newEnd = formatResult.selectionEnd;
         textBox.setSelection(start + newStart, start + newEnd);
     }
 
@@ -701,8 +701,8 @@ public class NoteEditor extends AnkiActivity implements
 
             case KeyEvent.KEYCODE_D:
                 //null check in case Spinner is moved into options menu in the future
-                if (event.isCtrlPressed() && (mDeckSpinnerSelection.hasSpinner())) {
-                    mDeckSpinnerSelection.displayDeckOverrideDialog(getCol());
+                if (event.isCtrlPressed()) {
+                    mDeckSpinnerSelection.displayDeckSelectionDialog(getCol());
                 }
                 break;
 
@@ -1352,6 +1352,10 @@ public class NoteEditor extends AnkiActivity implements
                     MultimediaEditableNote note = getCurrentMultimediaEditableNote(col);
                     note.setField(index, field);
                     FieldEditText fieldEditText = mEditFields.get(index);
+                    // Import field media
+                    // This goes before setting formattedValue to update
+                    // media paths with the checksum when they have the same name
+                    NoteService.importMediaToDirectory(col, field);
                     // Completely replace text for text fields (because current text was passed in)
                     String formattedValue = field.getFormattedValue();
                     if (field.getType() == EFieldType.TEXT) {
@@ -1361,8 +1365,6 @@ public class NoteEditor extends AnkiActivity implements
                     else if (fieldEditText.getText() != null) {
                         insertStringInField(fieldEditText, formattedValue);
                     }
-                    //DA - I think we only want to save the field here, not the note.
-                    NoteService.saveMedia(col, note);
                     mChanged = true;
                 }
                 break;
@@ -1459,15 +1461,15 @@ public class NoteEditor extends AnkiActivity implements
         for (int i = 0; i < editLines.size(); i++) {
             FieldEditLine edit_line_view = editLines.get(i);
             mCustomViewIds.add(edit_line_view.getId());
-            FieldEditText newTextbox = edit_line_view.getEditText();
-            newTextbox.setImagePasteListener(this::onImagePaste);
+            FieldEditText newEditText = edit_line_view.getEditText();
+            newEditText.setImagePasteListener(this::onImagePaste);
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 if (i == 0) {
-                    findViewById(R.id.note_deck_spinner).setNextFocusForwardId(newTextbox.getId());
+                    findViewById(R.id.note_deck_spinner).setNextFocusForwardId(newEditText.getId());
                 }
                 if (previous != null) {
-                    previous.getLastViewInTabOrder().setNextFocusForwardId(newTextbox.getId());
+                    previous.getLastViewInTabOrder().setNextFocusForwardId(newEditText.getId());
                 }
             }
             previous = edit_line_view;
@@ -1478,19 +1480,19 @@ public class NoteEditor extends AnkiActivity implements
             if (CompatHelper.getSdkVersion() >= Build.VERSION_CODES.M) {
                 // Use custom implementation of ActionMode.Callback customize selection and insert menus
                 Field f = new Field(getFieldByIndex(i), getCol());
-                ActionModeCallback actionModeCallback = new ActionModeCallback(newTextbox, f);
+                ActionModeCallback actionModeCallback = new ActionModeCallback(newEditText, f);
                 edit_line_view.setActionModeCallbacks(actionModeCallback);
             }
 
             edit_line_view.setTypeface(customTypeface);
             edit_line_view.setHintLocale(getHintLocaleForField(edit_line_view.getName()));
-            initFieldEditText(newTextbox, i, !editModelMode);
-            mEditFields.add(newTextbox);
+            initFieldEditText(newEditText, i, !editModelMode);
+            mEditFields.add(newEditText);
             SharedPreferences prefs = AnkiDroidApp.getSharedPrefs(this);
             if (prefs.getInt("note_editor_font_size", -1) > 0) {
-                newTextbox.setTextSize(prefs.getInt("note_editor_font_size", -1));
+                newEditText.setTextSize(prefs.getInt("note_editor_font_size", -1));
             }
-            newTextbox.setCapitalize(prefs.getBoolean("note_editor_capitalize", true));
+            newEditText.setCapitalize(prefs.getBoolean("note_editor_capitalize", true));
 
             ImageButton mediaButton = edit_line_view.getMediaButton();
             ImageButton toggleStickyButton = edit_line_view.getToggleSticky();
@@ -1555,9 +1557,9 @@ public class NoteEditor extends AnkiActivity implements
                         Timber.i("NoteEditor:: Record audio button pressed");
                         startMultimediaFieldEditorForField(index, new AudioRecordingField());
                         return true;
-                    } else if (itemId == R.id.menu_multimedia_audio_clip) {
+                    } else if (itemId == R.id.menu_multimedia_audio_clip || itemId == R.id.menu_multimedia_video_clip) {
                         Timber.i("NoteEditor:: Add audio clip button pressed");
-                        startMultimediaFieldEditorForField(index, new AudioClipField());
+                        startMultimediaFieldEditorForField(index, new MediaClipField());
                         return true;
                     } else if (itemId == R.id.menu_multimedia_photo) {
                         Timber.i("NoteEditor:: Add image button pressed");
@@ -1817,7 +1819,7 @@ public class NoteEditor extends AnkiActivity implements
             return;
         }
         if (note == null || mAddNote || mCurrentEditedCard == null) {
-            JSONObject model = getCol().getModels().current();
+            Model model = getCol().getModels().current();
             if (getCol().get_config("addToCur", true)) {
                 mCurrentDid = getCol().get_config_long(CURRENT_DECK);
                 if (getCol().getDecks().isDyn(mCurrentDid)) {
@@ -1829,7 +1831,7 @@ public class NoteEditor extends AnkiActivity implements
                     mCurrentDid = 1;
                 }
             } else {
-                mCurrentDid = model.getLong("did");
+                mCurrentDid = model.getDid();
             }
         } else {
             mCurrentDid = mCurrentEditedCard.getDid();
@@ -1889,15 +1891,15 @@ public class NoteEditor extends AnkiActivity implements
         View clozeIcon = mToolbar.getClozeIcon();
         if (mEditorNote.model().isCloze()) {
             Toolbar.TextFormatter clozeFormatter = s -> {
-                Toolbar.TextWrapper.StringFormat stringFormat = new Toolbar.TextWrapper.StringFormat();
+                Toolbar.StringFormat stringFormat = new Toolbar.StringFormat();
                 String prefix = "{{c" + getNextClozeIndex() + "::";
                 stringFormat.result = prefix + s + "}}";
                 if (s.length() == 0) {
-                    stringFormat.start = prefix.length();
-                    stringFormat.end = prefix.length();
+                    stringFormat.selectionStart = prefix.length();
+                    stringFormat.selectionEnd = prefix.length();
                 } else {
-                    stringFormat.start = 0;
-                    stringFormat.end = stringFormat.result.length();
+                    stringFormat.selectionStart = 0;
+                    stringFormat.selectionEnd = stringFormat.result.length();
                 }
                 return stringFormat;
             };
@@ -1914,6 +1916,11 @@ public class NoteEditor extends AnkiActivity implements
             // 0th button shows as '1' and is Ctrl + 1
             int visualIndex = b.getIndex() + 1;
             String text = Integer.toString(visualIndex);
+
+            if (!b.getButtonText().isEmpty()) {
+                text = b.getButtonText();
+            }
+
             Drawable bmp = mToolbar.createDrawableForString(text);
 
             View v = mToolbar.insertItem(0, bmp, b.toFormatter());
@@ -1922,7 +1929,7 @@ public class NoteEditor extends AnkiActivity implements
             v.setTag(Integer.toString(visualIndex % 10));
 
             v.setOnLongClickListener(discard -> {
-                suggestRemoveButton(b);
+                displayEditToolbarDialog(b);
                 return true;
             });
         }
@@ -1946,26 +1953,44 @@ public class NoteEditor extends AnkiActivity implements
                 .apply();
     }
 
-    private void addToolbarButton(String prefix, String suffix) {
+    private void addToolbarButton(String buttonText, String prefix, String suffix) {
         if (TextUtils.isEmpty(prefix) && TextUtils.isEmpty(suffix)) {
             return;
         }
 
         ArrayList<CustomToolbarButton> toolbarButtons = getToolbarButtons();
 
-        toolbarButtons.add(new CustomToolbarButton(toolbarButtons.size(), prefix, suffix));
+        toolbarButtons.add(new CustomToolbarButton(toolbarButtons.size(), buttonText, prefix, suffix));
         saveToolbarButtons(toolbarButtons);
 
         updateToolbar();
     }
 
+    private void editToolbarButton(String buttonText, String prefix, String suffix, CustomToolbarButton currentButton) {
 
-    private void suggestRemoveButton(CustomToolbarButton button) {
+        buttonText = TextUtils.isEmpty(buttonText)? currentButton.getButtonText() : buttonText;
+        prefix = TextUtils.isEmpty(prefix)? currentButton.getPrefix() : prefix;
+        suffix = TextUtils.isEmpty(suffix)? currentButton.getSuffix() : suffix;
+
+        ArrayList<CustomToolbarButton> toolbarButtons = getToolbarButtons();
+
+        int index = currentButton.getIndex();
+
+        toolbarButtons.set(index, new CustomToolbarButton(index, buttonText, prefix, suffix));
+        saveToolbarButtons(toolbarButtons);
+
+        updateToolbar();
+    }
+
+    private void suggestRemoveButton(CustomToolbarButton button, MaterialDialog editToolbarItemDialog) {
         new MaterialDialog.Builder(this)
                 .title(R.string.remove_toolbar_item)
                 .positiveText(R.string.dialog_positive_delete)
                 .negativeText(R.string.dialog_cancel)
-                .onPositive((dialog, action) -> removeButton(button))
+                .onPositive((dialog, action) -> {
+                    editToolbarItemDialog.dismiss();
+                    removeButton(button);
+                })
                 .show();
     }
 
@@ -1978,22 +2003,49 @@ public class NoteEditor extends AnkiActivity implements
         updateToolbar();
     }
 
+    private MaterialDialog.Builder getToolbarDialogBuilder() {
+        return new MaterialDialog.Builder(this)
+                .neutralText(R.string.help)
+                .negativeText(R.string.dialog_cancel)
+                .onNeutral((m, v) -> openUrl(Uri.parse(getString(R.string.link_manual_note_format_toolbar))));
+    }
+
     private void displayAddToolbarDialog() {
-        new MaterialDialog.Builder(this)
+        getToolbarDialogBuilder()
                 .title(R.string.add_toolbar_item)
                 .customView(R.layout.note_editor_toolbar_add_custom_item, true)
                 .positiveText(R.string.dialog_positive_create)
-                .neutralText(R.string.help)
-                .negativeText(R.string.dialog_cancel)
-                .onNeutral((m, v) -> openUrl(Uri.parse(getString(R.string.link_manual_note_format_toolbar))))
                 .onPositive((m, v) -> {
                     View view = m.getView();
+                    EditText etIcon =  view.findViewById(R.id.note_editor_toolbar_item_icon);
                     EditText et =  view.findViewById(R.id.note_editor_toolbar_before);
                     EditText et2 = view.findViewById(R.id.note_editor_toolbar_after);
 
-                    addToolbarButton(et.getText().toString(), et2.getText().toString());
+                    addToolbarButton(etIcon.getText().toString(), et.getText().toString(), et2.getText().toString());
                 })
                 .show();
+    }
+
+    private void displayEditToolbarDialog(CustomToolbarButton currentButton) {
+
+        View view = getLayoutInflater().inflate(R.layout.note_editor_toolbar_edit_custom_item, null);
+        final EditText etIcon =  view.findViewById(R.id.note_editor_toolbar_item_icon);
+        final EditText et =  view.findViewById(R.id.note_editor_toolbar_before);
+        final EditText et2 = view.findViewById(R.id.note_editor_toolbar_after);
+        final ImageButton btnDelete = view.findViewById(R.id.note_editor_toolbar_btn_delete);
+
+        etIcon.setText(currentButton.getButtonText());
+        et.setText(currentButton.getPrefix());
+        et2.setText(currentButton.getSuffix());
+
+        MaterialDialog toolbarDialog = getToolbarDialogBuilder()
+                .customView(view, true)
+                .positiveText(R.string.save)
+                .onPositive((m, v) -> editToolbarButton(etIcon.getText().toString(), et.getText().toString(), et2.getText().toString(), currentButton)).build();
+
+        btnDelete.setOnClickListener(view1 -> suggestRemoveButton(currentButton, toolbarDialog));
+
+        toolbarDialog.show();
     }
 
 
@@ -2221,7 +2273,8 @@ public class NoteEditor extends AnkiActivity implements
             int initialSize = menu.size();
 
             if (isClozeType()) {
-                menu.add(Menu.NONE, mClozeMenuId, 0, R.string.multimedia_editor_popup_cloze);
+                // 10644: Do not pass in a R.string as the final parameter as MIUI on Android 12 crashes.
+                menu.add(Menu.NONE, mClozeMenuId, 0, getString(R.string.multimedia_editor_popup_cloze));
             }
 
             return initialSize != menu.size();

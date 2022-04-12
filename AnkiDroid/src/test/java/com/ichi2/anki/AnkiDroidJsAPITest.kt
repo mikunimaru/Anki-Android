@@ -30,7 +30,6 @@ class AnkiDroidJsAPITest : RobolectricTest() {
 
     @Test
     fun initTest() {
-        val col = col
         val models = col.models
         val decks = col.decks
         val didA = addDeck("Test")
@@ -55,7 +54,6 @@ class AnkiDroidJsAPITest : RobolectricTest() {
 
     @Test
     fun ankiGetNextTimeTest() {
-        val col = col
         val models = col.models
         val decks = col.decks
         val didA = addDeck("Test")
@@ -79,7 +77,6 @@ class AnkiDroidJsAPITest : RobolectricTest() {
 
     @Test
     fun ankiTestCurrentCard() {
-        val col = col
         val models = col.models
         val decks = col.decks
         val didA = addDeck("Test")
@@ -94,7 +91,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
 
         waitForAsyncTasksToComplete()
 
-        val currentCard = reviewer.currentCard
+        val currentCard = reviewer.currentCard!!
 
         // Card Did
         assertThat(javaScriptFunction.ankiGetCardDid(), equalTo(currentCard.did))
@@ -127,18 +124,17 @@ class AnkiDroidJsAPITest : RobolectricTest() {
 
         // Card Flag
         assertThat(javaScriptFunction.ankiGetCardFlag(), equalTo(0))
-        reviewer.currentCard.setFlag(1)
+        reviewer.currentCard!!.setFlag(1)
         assertThat(javaScriptFunction.ankiGetCardFlag(), equalTo(1))
 
         // Card Mark
         assertThat(javaScriptFunction.ankiGetCardMark(), equalTo(false))
-        reviewer.currentCard.note().addTag("marked")
+        reviewer.currentCard!!.note().addTag("marked")
         assertThat(javaScriptFunction.ankiGetCardMark(), equalTo(true))
     }
 
     @Test
     fun ankiJsUiTest() {
-        val col = col
         val models = col.models
         val decks = col.decks
         val didA = addDeck("Test")
@@ -160,7 +156,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
         // Full Screen
         assertThat(javaScriptFunction.ankiIsInFullscreen(), equalTo(reviewer.isFullscreen))
         // Top bar
-        assertThat(javaScriptFunction.ankiIsTopbarShown(), equalTo(reviewer.mPrefShowTopbar))
+        assertThat(javaScriptFunction.ankiIsTopbarShown(), equalTo(reviewer.prefShowTopbar))
         // Night Mode
         assertThat(javaScriptFunction.ankiIsInNightMode(), equalTo(reviewer.isInNightMode))
     }
@@ -168,7 +164,6 @@ class AnkiDroidJsAPITest : RobolectricTest() {
     @Test
     fun ankiMarkAndFlagCardTest() {
         // js api test for marking and flagging card
-        val col = col
         val models = col.models
         val decks = col.decks
         val didA = addDeck("Test")
@@ -204,7 +199,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
         markCardJs += "AnkiDroidJS.ankiGetCardMark();\n" +
             "})();"
 
-        reviewer.webView.evaluateJavascript(markCardJs) { s -> assertThat(s, equalTo(true)) }
+        reviewer.webView!!.evaluateJavascript(markCardJs) { s -> assertThat(s, equalTo(true)) }
 
         // ---------------
         // Card flag test
@@ -228,7 +223,7 @@ class AnkiDroidJsAPITest : RobolectricTest() {
         flagCardJs += "AnkiDroidJS.ankiGetCardFlag();\n" +
             "})();"
 
-        reviewer.webView.evaluateJavascript(flagCardJs) { s -> assertThat(s, equalTo(1)) }
+        reviewer.webView!!.evaluateJavascript(flagCardJs) { s -> assertThat(s, equalTo(1)) }
     }
 
     fun ankiBurySuspendTest() {
@@ -236,7 +231,6 @@ class AnkiDroidJsAPITest : RobolectricTest() {
         // add five notes, four will be buried and suspended
         // count number of notes, if buried or suspended then
         // in scheduling the count will be less than previous scheduling
-        val col = col
         val models = col.models
         val decks = col.decks
         val didA = addDeck("Test")
@@ -258,40 +252,40 @@ class AnkiDroidJsAPITest : RobolectricTest() {
         // ----------
         var jsScript = createTestScript("AnkiDroidJS.ankiBuryCard();")
         // call script to bury current card
-        reviewer.webView.evaluateJavascript(jsScript) { s -> assertThat(s, equalTo(true)) }
+        reviewer.webView!!.evaluateJavascript(jsScript) { s -> assertThat(s, equalTo(true)) }
 
         // count number of notes
-        assertThat(reviewer.mSched.cardCount(), equalTo(4))
+        assertThat(reviewer.sched!!.cardCount(), equalTo(4))
 
         // ----------
         // Bury Note
         // ----------
         jsScript = createTestScript("AnkiDroidJS.ankiBuryNote();")
         // call script to bury current note
-        reviewer.webView.evaluateJavascript(jsScript) { s -> assertThat(s, equalTo(true)) }
+        reviewer.webView!!.evaluateJavascript(jsScript) { s -> assertThat(s, equalTo(true)) }
 
         // count number of notes
-        assertThat(reviewer.mSched.cardCount(), equalTo(3))
+        assertThat(reviewer.sched!!.cardCount(), equalTo(3))
 
         // -------------
         // Suspend Card
         // -------------
         jsScript = createTestScript("AnkiDroidJS.ankiSuspendCard();")
         // call script to suspend current card
-        reviewer.webView.evaluateJavascript(jsScript) { s -> assertThat(s, equalTo(true)) }
+        reviewer.webView!!.evaluateJavascript(jsScript) { s -> assertThat(s, equalTo(true)) }
 
         // count number of notes
-        assertThat(reviewer.mSched.cardCount(), equalTo(2))
+        assertThat(reviewer.sched!!.cardCount(), equalTo(2))
 
         // -------------
         // Suspend Note
         // -------------
         jsScript = createTestScript("AnkiDroidJS.ankiSuspendNote();")
         // call script to suspend current note
-        reviewer.webView.evaluateJavascript(jsScript) { s -> assertThat(s, equalTo(true)) }
+        reviewer.webView!!.evaluateJavascript(jsScript) { s -> assertThat(s, equalTo(true)) }
 
         // count number of notes
-        assertThat(reviewer.mSched.cardCount(), equalTo(1))
+        assertThat(reviewer.sched!!.cardCount(), equalTo(1))
     }
 
     private fun createTestScript(apiName: String): String {

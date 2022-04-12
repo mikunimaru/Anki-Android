@@ -19,6 +19,7 @@ package com.ichi2.anki.cardviewer
 import android.content.Context
 import com.ichi2.anki.R
 import com.ichi2.anki.TtsParser
+import com.ichi2.anki.cardviewer.CardAppearance.Companion.hasUserDefinedNightMode
 import com.ichi2.libanki.*
 import com.ichi2.libanki.template.MathJax
 import com.ichi2.themes.HtmlColors
@@ -129,7 +130,7 @@ class CardHtml(
         fun createInstance(card: Card, reload: Boolean, side: Side, context: HtmlGenerator): CardHtml {
             val content = displayString(card, reload, side, context)
 
-            val nightModeInversion = context.cardAppearance.isNightMode && !context.cardAppearance.hasUserDefinedNightMode(card)
+            val nightModeInversion = context.cardAppearance.isNightMode && !hasUserDefinedNightMode(card)
 
             val renderOutput = card.render_output()
             val questionAv = renderOutput.question_av_tags
@@ -159,25 +160,18 @@ class CardHtml(
             content = Media.escapeImages(content)
             content = context.filterTypeAnswer(content, side)
             Timber.v("question: '%s'", content)
-            return enrichWithQADiv(content, side)
+            return enrichWithQADiv(content)
         }
 
         /**
          * Adds a div html tag around the contents to have an indication, where answer/question is displayed
          *
          * @param content The content to surround with tags.
-         * @param side whether the class attribute is set to "answer" or "question".
          * @return The enriched content
          */
-        fun enrichWithQADiv(content: String?, side: Side): String {
+        fun enrichWithQADiv(content: String?): String {
             val sb = StringBuilder()
-            sb.append("<div class=")
-            if (side == Side.BACK) {
-                sb.append(CardAppearance.ANSWER_CLASS)
-            } else {
-                sb.append(CardAppearance.QUESTION_CLASS)
-            }
-            sb.append(" id=\"qa\">")
+            sb.append("<div id=\"qa\">")
             sb.append(content)
             sb.append("</div>")
             return sb.toString()

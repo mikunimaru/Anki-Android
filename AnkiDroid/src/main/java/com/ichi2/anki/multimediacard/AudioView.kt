@@ -322,7 +322,7 @@ class AudioView private constructor(context: Context, resPlay: Int, resPause: In
     }
 
     interface OnRecordingFinishEventListener {
-        fun onRecordingFinish(v: View?)
+        fun onRecordingFinish(v: View)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)

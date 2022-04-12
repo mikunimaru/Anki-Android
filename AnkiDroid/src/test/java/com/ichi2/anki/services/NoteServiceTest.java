@@ -18,14 +18,12 @@ package com.ichi2.anki.services;
 
 import com.ichi2.anki.RobolectricTest;
 import com.ichi2.anki.multimediacard.IMultimediaEditableNote;
-import com.ichi2.anki.multimediacard.fields.AudioClipField;
+import com.ichi2.anki.multimediacard.fields.MediaClipField;
 import com.ichi2.anki.multimediacard.fields.ImageField;
-import com.ichi2.anki.multimediacard.impl.MultimediaEditableNote;
 import com.ichi2.anki.servicelayer.NoteService;
 import com.ichi2.libanki.Collection;
 import com.ichi2.libanki.Model;
 import com.ichi2.libanki.Note;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,8 +36,14 @@ import java.io.IOException;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.io.FileMatchers.aFileWithAbsolutePath;
+import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static com.ichi2.testutils.FileSystemUtilsKt.createTransientFile;
 
 @RunWith(AndroidJUnit4.class)
 public class NoteServiceTest extends RobolectricTest {
@@ -50,9 +54,11 @@ public class NoteServiceTest extends RobolectricTest {
         mTestCol = getCol();
     }
 
-    //temporary folder to test importMediaToDirectory function
+    //temporary directory to test importMediaToDirectory function
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public TemporaryFolder directory = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder directory2 = new TemporaryFolder();
 
     //tests if the text fields of the notes are the same after calling updateJsonNoteFromMultimediaNote
     @Test
@@ -91,52 +97,162 @@ public class NoteServiceTest extends RobolectricTest {
     @Test
     public void importAudioClipToDirectoryTest() throws IOException {
 
-        File fileAudio = folder.newFile("testaudio.wav");
+        File fileAudio = directory.newFile("testaudio.wav");
 
-        //writes a line in the file so the file's length isn't 0
-        try(FileWriter fileWriter = new FileWriter(fileAudio)) {
+        // writes a line in the file so the file's length isn't 0
+        try (FileWriter fileWriter = new FileWriter(fileAudio)) {
             fileWriter.write("line1");
         }
 
-        MultimediaEditableNote testAudioClip = new MultimediaEditableNote();
-        testAudioClip.setNumFields(1);
-
-        AudioClipField audioField = new AudioClipField();
+        MediaClipField audioField = new MediaClipField();
         audioField.setAudioPath(fileAudio.getAbsolutePath());
-        testAudioClip.setField(0, audioField);
 
-        NoteService.saveMedia(mTestCol, testAudioClip);
+        NoteService.importMediaToDirectory(mTestCol, audioField);
 
         File outFile = new File(mTestCol.getMedia().dir(), fileAudio.getName());
 
-        assertEquals("path should be equal to the new file made in NoteService.saveMedia", outFile.getAbsolutePath(), audioField.getAudioPath());
+        assertThat("path should be equal to new file made in NoteService.importMediaToDirectory", outFile, aFileWithAbsolutePath(equalTo(audioField.getAudioPath())));
 
     }
 
-    //similar test like above, but with an imagefield instead of an audioclipfield
+    // Similar test like above, but with an ImageField instead of a MediaClipField
     @Test
     public void importImageToDirectoryTest() throws IOException {
 
-        File fileImage = folder.newFile("testimage.png");
+        File fileImage = directory.newFile("testimage.png");
 
-        //writes a line in the file so the file's length isn't 0
-        try(FileWriter fileWriter = new FileWriter(fileImage)) {
+        // writes a line in the file so the file's length isn't 0
+        try (FileWriter fileWriter = new FileWriter(fileImage)) {
             fileWriter.write("line1");
         }
 
-        MultimediaEditableNote testImage = new MultimediaEditableNote();
-        testImage.setNumFields(1);
-
         ImageField imgField = new ImageField();
         imgField.setImagePath(fileImage.getAbsolutePath());
-        testImage.setField(0, imgField);
 
-        NoteService.saveMedia(mTestCol, testImage);
+        NoteService.importMediaToDirectory(mTestCol, imgField);
 
         File outFile = new File(mTestCol.getMedia().dir(), fileImage.getName());
 
-        assertEquals("path should be equal to the new file made in NoteService.saveMedia", outFile.getAbsolutePath(), imgField.getImagePath());
+        assertThat("path should be equal to new file made in NoteService.importMediaToDirectory", outFile, aFileWithAbsolutePath(equalTo(imgField.getImagePath())));
     }
 
+
+    /**
+     * Tests if after importing:
+     *
+     * * New file keeps its name
+     * * File with same name, but different content, has its name changed
+     * * File with same name and content don't have its name changed
+     *
+     * @throws IOException if new created files already exist on temp directory
+     */
+    @Test
+    public void importAudioWithSameNameTest() throws IOException {
+        File f1 = directory.newFile("audio.mp3");
+        File f2 = directory2.newFile("audio.mp3");
+
+        // write a line in the file so the file's length isn't 0
+        try (FileWriter fileWriter = new FileWriter(f1)) {
+            fileWriter.write("1");
+        }
+        // do the same to the second file, but with different data
+        try (FileWriter fileWriter = new FileWriter(f2)) {
+            fileWriter.write("2");
+        }
+
+        MediaClipField fld1 = new MediaClipField();
+        fld1.setAudioPath(f1.getAbsolutePath());
+
+        MediaClipField fld2 = new MediaClipField();
+        fld2.setAudioPath(f2.getAbsolutePath());
+
+        // third field to test if name is kept after reimporting the same file
+        MediaClipField fld3 = new MediaClipField();
+        fld3.setAudioPath(f1.getAbsolutePath());
+
+        NoteService.importMediaToDirectory(mTestCol, fld1);
+        File o1 = new File(mTestCol.getMedia().dir(), f1.getName());
+
+        NoteService.importMediaToDirectory(mTestCol, fld2);
+        File o2 = new File(mTestCol.getMedia().dir(), f2.getName());
+
+        NoteService.importMediaToDirectory(mTestCol, fld3);
+        // creating a third outfile isn't necessary because it should be equal to the first one
+
+        assertThat("path should be equal to new file made in NoteService.importMediaToDirectory", o1, aFileWithAbsolutePath(equalTo(fld1.getAudioPath())));
+        assertThat("path should be different to new file made in NoteService.importMediaToDirectory", o2, aFileWithAbsolutePath(not(fld2.getAudioPath())));
+        assertThat("path should be equal to new file made in NoteService.importMediaToDirectory", o1, aFileWithAbsolutePath(equalTo(fld3.getAudioPath())));
+    }
+
+    // Similar test like above, but with an ImageField instead of a MediaClipField
+    @Test
+    public void importImageWithSameNameTest() throws IOException {
+        File f1 = directory.newFile("img.png");
+        File f2 = directory2.newFile("img.png");
+
+        // write a line in the file so the file's length isn't 0
+        try (FileWriter fileWriter = new FileWriter(f1)) {
+            fileWriter.write("1");
+        }
+        // do the same to the second file, but with different data
+        try (FileWriter fileWriter = new FileWriter(f2)) {
+            fileWriter.write("2");
+        }
+
+        ImageField fld1 = new ImageField();
+        fld1.setImagePath(f1.getAbsolutePath());
+
+        ImageField fld2 = new ImageField();
+        fld2.setImagePath(f2.getAbsolutePath());
+
+        // third field to test if name is kept after reimporting the same file
+        ImageField fld3 = new ImageField();
+        fld3.setImagePath(f1.getAbsolutePath());
+
+        NoteService.importMediaToDirectory(mTestCol, fld1);
+        File o1 = new File(mTestCol.getMedia().dir(), f1.getName());
+
+        NoteService.importMediaToDirectory(mTestCol, fld2);
+        File o2 = new File(mTestCol.getMedia().dir(), f2.getName());
+
+        NoteService.importMediaToDirectory(mTestCol, fld3);
+        // creating a third outfile isn't necessary because it should be equal to the first one
+
+        assertThat("path should be equal to new file made in NoteService.importMediaToDirectory", o1, aFileWithAbsolutePath(equalTo(fld1.getImagePath())));
+        assertThat("path should be different to new file made in NoteService.importMediaToDirectory", o2, aFileWithAbsolutePath(not(fld2.getImagePath())));
+        assertThat("path should be equal to new file made in NoteService.importMediaToDirectory", o1, aFileWithAbsolutePath(equalTo(fld3.getImagePath())));
+    }
+
+    /**
+     * Sometimes media files cannot be imported directly to the media directory,
+     * so they are copied to cache then imported and deleted.
+     * This tests if cached media are properly deleted after import.
+     */
+    @Test
+    public void tempAudioIsDeletedAfterImport() {
+        File file = createTransientFile("foo");
+
+        MediaClipField field = new MediaClipField();
+        field.setAudioPath(file.getAbsolutePath());
+        field.setHasTemporaryMedia(true);
+
+        NoteService.importMediaToDirectory(mTestCol, field);
+
+        assertThat("Audio temporary file should have been deleted after importing", file, not(anExistingFile()));
+    }
+
+    // Similar test like above, but with an ImageField instead of a MediaClipField
+    @Test
+    public void tempImageIsDeletedAfterImport() {
+        File file = createTransientFile("foo");
+
+        ImageField field = new ImageField();
+        field.setImagePath(file.getAbsolutePath());
+        field.setHasTemporaryMedia(true);
+
+        NoteService.importMediaToDirectory(mTestCol, field);
+
+        assertThat("Image temporary file should have been deleted after importing", file, not(anExistingFile()));
+    }
 
 }

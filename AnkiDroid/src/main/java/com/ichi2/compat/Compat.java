@@ -1,5 +1,6 @@
 /****************************************************************************************
  * Copyright (c) 2011 Flavio Lerda <flerda@gmail.com>                                   *
+ * Copyright (c) 2022 Arthur Milchior <arthur@milchior.fr>                              *
  *                                                                                      *
  * This program is free software; you can redistribute it and/or modify it under        *
  * the terms of the GNU General Public License as published by the Free Software        *
@@ -26,8 +27,6 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.widget.TimePicker;
 
-import com.ichi2.async.ProgressSenderAndCancelListener;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,6 +34,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -86,62 +87,37 @@ public interface Compat {
     long copyFile(InputStream source, String target) throws IOException;
 
     /**
-     * Copies the directory represented by srcDir to the directory represented by destDir, and optionally makes a
-     * best-effort to delete srcDir if the deleteAfterCopy param is set to <code>true</code>. The source must be a
-     * directory. If the destination exists, it must be a directory. If it doesn't exist, then the destination directory
-     * and any necessary parent directories are created recursively (see {@link File#mkdirs()} for details).
-     * It is assumed that srcDir and destDir contain no symbolic links.
-     * <p><br>
-     * For instance, if the source directory, sdcard/AnkiDroid directory, contains 3 files, and
-     * com.ichi2.Anki/files is the destination directory, the 3 files will be copied inside the com.ichi2.Anki/files
-     * directory.
-     * <p><br>
-     * The destination may be empty or it may contain (partially or completely) content that is <em>probably</em> the
-     * same as the source. A file isn't copied to the destination if it already exists at the destination according to a
-     * simple heuristic.
-     * <p><br>
-     * This operation takes linear time - is proportional to the number of files in srcDir and its subdirectories
-     * @param srcDir Abstract representation of source file/directory
-     * @param destDir Abstract representation of destination directory
-     * @param ioTask Listener used to send how many kilobytes of data have been copied since the last update
-     * @param deleteAfterCopy If set to <code>true</code>, makes a best-effort to delete srcDir after it has been copied
-     * @throws IOException if an error occurs
+     * Deletes a provided file/directory. If the file is a directory then the directory must be empty
+     * @see File#delete()
+     * @see java.nio.file.Files#delete(Path)
+     *
+     * @throws FileNotFoundException If the file does not exist
+     * @throws IOException If the file failed to be deleted
      */
-    void copyDirectory(File srcDir, File destDir, ProgressSenderAndCancelListener<Integer> ioTask, boolean deleteAfterCopy) throws IOException;
+    void deleteFile(@NonNull File file) throws IOException;
 
     /**
-     * Moves the directory represented by source to the directory represented by destination.
-     * After completion, destDir will exist and will contain the contents of srcDir, and srcDir will not exist since it
-     * will have been moved.
-     * <p><br>
-     * srcDir must be a directory. If destDir exists, it must be a directory. If it doesn't exist, then the destination
-     * directory and any necessary parent directories are created recursively (see {@link File#mkdirs()} for details).
-     * It is assumed that srcDir and destDir contain no symbolic links.
-     * <p><br>
-     * For instance, if the source directory, sdcard/AnkiDroid directory, contains 3 files, and com.ichi2.Anki/files is
-     * the destination directory, the 3 files will be moved inside the com.ichi2.Anki/files directory.
-     * The source directory, sdcard/AnkiDroid will often be deleted after a successful operation.
-     * However, this method provides no guarantee that the entire srcDir will be deleted.
-     * <p><br>
-     * In case this operation is interrupted, srDir & destDir should satisfy the following properties:
-     * <ul>
-     *     <li>A subset of the srcDir files and directories have been moved to destDir</li>
-     *     <li>All the files/directories that have been moved to destDir have been deleted,
-     *     except for at most one file</li>
-     * </ul>
-     * The destination may be empty or it may contain (partially or completely) content that is <em>probably</em> the
-     * same as the source. A file isn't moved to the destination if it already exists at the destination according to a
-     * simple heuristic.
-     * <p><br>
-     * This operation takes constant time if srcDir and destDir are on the same partition. If not, it takes linear time
-     *  - is proportional to the number of files in srcDir and its subdirectories.
-     * @param srcDir Abstract representation of source file/directory
-     * @param destDir Abstract representation of destination directory
-     * @param ioTask Listener used to send how many kilobytes of data have been moved since the last update
-     * @throws IOException if an error occurs
+     * Whether a directory has at least one files
+     * @return Whether the directory has file.
+     * @throws SecurityException If a security manager exists and its SecurityManager.checkRead(String)
+     * method denies read access to the directory
+     * @throws FileNotFoundException if the file do not exists
+     * @throws NotDirectoryException if the file could not otherwise be opened because it is not
+     * a directory (optional specific exception), (starting at API 26)
+     * @throws IOException – if an I/O error occurs
      */
-    void moveDirectory(File srcDir, File destDir, ProgressSenderAndCancelListener<Integer> ioTask) throws IOException;
+    default boolean hasFiles(@NonNull File directory) throws IOException {
+        try(FileStream stream = contentOfDirectory(directory)) {
+            return stream.hasNext();
+        }
+    }
 
+    /**
+     * Same as [File::createDirectories]. Does not throw if directory already exists
+     * @param directory a directory to create. Create parents if necessary
+     * @throws IOException
+     */
+    void createDirectories(@NonNull File directory) throws IOException;
     boolean hasVideoThumbnail(@NonNull String path);
     void requestAudioFocus(AudioManager audioManager, AudioManager.OnAudioFocusChangeListener audioFocusChangeListener, @Nullable AudioFocusRequest audioFocusRequest);
     void abandonAudioFocus(AudioManager audioManager, AudioManager.OnAudioFocusChangeListener audioFocusChangeListener, @Nullable AudioFocusRequest audioFocusRequest);
@@ -222,7 +198,7 @@ public interface Compat {
     PendingIntent getImmutableBroadcastIntent(Context context, int requestCode, Intent intent, @PendingIntentFlags int flags);
 
     /**
-     * Writes an image represented by bitmap to the Pictures/AnkiDroid folder under the primary
+     * Writes an image represented by bitmap to the Pictures/AnkiDroid directory under the primary
      * external storage directory. Requires the WRITE_EXTERNAL_STORAGE permission to be obtained on devices running
      * API <= 28. If this condition isn't satisfied, this method will throw a {@link FileNotFoundException}.
      *
@@ -237,5 +213,18 @@ public interface Compat {
      * WRITE_EXTERNAL_STORAGE permission
      */
     Uri saveImage(Context context, Bitmap bitmap, String baseFileName, String extension, Bitmap.CompressFormat format, int quality) throws FileNotFoundException;
+
+    /**
+     *
+     * @param directory A directory.
+     * @return a FileStream over file and directory of this directory.
+     *         null in case of trouble. This stream must be closed explicitly when done with it.
+     * @throws NotDirectoryException if the file exists and is not a directory (starting at API 26)
+     * @throws FileNotFoundException if the file do not exists
+     * @throws IOException if files can not be listed. On non existing or non-directory file up to API 25. This also occurred on an existing directory because of permission issue
+     * that we could not reproduce. See https://github.com/ankidroid/Anki-Android/issues/10358
+     * @throws SecurityException – If a security manager exists and its SecurityManager.checkRead(String) method denies read access to the directory
+     */
+    @NonNull FileStream contentOfDirectory(File directory) throws IOException  ;
 }
 
