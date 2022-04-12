@@ -105,7 +105,18 @@ open class RobolectricTest : CollectionGetter {
             RustBackendLoader.loadRsdroid(backendPath)
         } else {
             // default (no env variable): Extract the backend testing lib from the jar
-            RustBackendLoader.init()
+            try {
+                RustBackendLoader.init()
+            } catch (e: UnsatisfiedLinkError) {
+                if (e.message.toString().contains("arm64e")) {
+                    // Giving the commands to user to add the required env variables
+                    val exception = "Please download the arm64 dylib file from https://github.com/ankidroid/Anki-Android-Backend/releases/tag/${BuildConfig.BACKEND_VERSION} and add the following environment variables to your device by using following commands: \n" +
+                        "export ANKIDROID_BACKEND_PATH=\"{Path to the dylib file}\"\n" +
+                        "export ANKIDROID_BACKEND_VERSION=\"${BuildConfig.BACKEND_VERSION}\""
+                    throw IllegalStateException(exception, e)
+                }
+                throw e
+            }
         }
 
         // If you want to see the Android logging (from Timber), you need to set it up here
@@ -161,7 +172,7 @@ open class RobolectricTest : CollectionGetter {
                 CollectionHelper.getInstance().getCol(targetContext).getBackend().debugEnsureNoOpenPointers()
             }
             // If you don't tear down the database you'll get unexpected IllegalStateExceptions related to connections
-            CollectionHelper.getInstance().closeCollection(false, "RoboelectricTest: End")
+            CollectionHelper.getInstance().closeCollection(false, "RobolectricTest: End")
         } catch (ex: BackendException) {
             if ("CollectionNotOpen".equals(ex.message)) {
                 Timber.w(ex, "Collection was already disposed - may have been a problem")
@@ -432,7 +443,7 @@ open class RobolectricTest : CollectionGetter {
 
     @Synchronized
     @Throws(InterruptedException::class)
-    protected fun <Progress, Result : Computation<*>?> waitFortask(task: TaskDelegate<Progress, Result>, timeoutMs: Int) {
+    protected fun <Progress, Result : Computation<*>?> waitForTask(task: TaskDelegate<Progress, Result>, timeoutMs: Int) {
         val completed = booleanArrayOf(false)
         val listener: TaskListener<Progress, Result> = object : TaskListener<Progress, Result>() {
             override fun onPreExecute() {}
