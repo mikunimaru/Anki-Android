@@ -59,13 +59,6 @@
     <string name="initializing_tts">正在初始化 TTS&#8230;</string>
     <string name="tts_no_tts">不要發音</string>
     <string name="unused_strings">\n\nUnused files:\n</string>
-    <string-array name="about_content">
-        <item><![CDATA[<h2>%1$s:<br/>給 Android 的單字卡</h2>AnkiDroid 是完全相容桌面版本的單字卡應用程式 <a href=\"%2$s\">Anki</a>。 你可以任意在 AnkiDroid 或是桌面版 Anki 上新增、下載和學習東西，並使用 AnkiWeb 輕鬆同步這些記錄。]]></item>
-        <item><![CDATA[為了協助我們讓 AnkiDroid 更好，請到 <a href=\"%1$s\">Issue Tracker</a> 回報錯誤; 任何有關新功能的點子也歡迎。在 <a href=\"%2$s\">Wiki</a> 尋找答案或是在<a href=\"%3$s\">論壇</a>參與討論。]]></item>
-        <item><![CDATA[AnkiDroid 是<a href=\"%1$s\">自由軟體<a/>，所以我們鼓勵任何人<a href=\"%2$s\">成爲貢獻者</a> :-)]]></item>
-        <item><![CDATA[非開發者亦可提供幫助。例如，你可以<a href=\"%1$s\">幫助翻譯</a>AnkiDroid、更新wiki、提供螢幕截圖，或撰寫關於 AnkiDroid 的博客。]]></item>
-        <item><![CDATA[AnkiDroid 在 <a href=\"%1$s\">GNU-GPL v3 授權</a> 下釋出，而且你可在 <a href=\"%2$s\">GitHub</a> 上取得其程式碼。]]></item>
-    </string-array>
     <string name="preview_title" comment="Title of the window allowing to preview card(s)">預覽</string>
     <string name="reposition_card_dialog_title">變更新卡片位置</string>
     <string name="reposition_card_dialog_message">開始位置：</string>
@@ -112,18 +105,21 @@
     <string name="import_progress">• 正在匯入筆記: %1$d%%\n• 正在匯入卡片: %2$d%%\n• 正在後期處理: %3$d%%</string>
     <string name="import_update_details">現有筆記%2$d條，已更新%1$d條。</string>
     <string name="import_update_ignored">忽略了某些更新，因為這些筆記的類型已改變</string>
-    <string name="import_complete_count">卡片已匯入：%d</string>
+    <plurals name="import_complete_message">
+        <item quantity="other">Files imported: %1$d\nTotal cards imported: %2$d</item>
+    </plurals>
     <string name="sd_card_full_title">SD 卡空間已滿</string>
     <string name="sd_card_almost_full_title">SD 卡空間快滿</string>
     <string name="no_space_to_downgrade_title">沒有空間</string>
     <string name="no_space_to_downgrade_content">AnkiDroid 需要%s可用儲存空間以繼續。請清除一些空間</string>
     <string name="restore_backup_title">回復備份嗎？</string>
     <string name="restore_backup">你的集合將會被較舊的版本給覆蓋。任何尚未儲存的進度都會遺失。</string>
-    <string name="restore_backup_choose_another">Choose another</string>
+    <string name="restore_backup_choose_another">選擇其他時間</string>
     <string name="dialog_cancel">取消</string>
     <string name="dialog_ok">確定</string>
     <string name="dialog_no">否</string>
     <string name="dialog_continue">繼續</string>
+    <string name="dialog_processing">Processing...</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">新增</string>
     <string name="dialog_positive_delete">刪除</string>
     <!-- Currently unsued, should be useful in the future -->
@@ -184,7 +180,7 @@
     <string name="card_browser_deck_change_error">無法變更牌組</string>
     <!-- AbstractFlashCardViewer -->
     <string name="card_viewer_url_decode_error">解碼卡片中資料時出錯</string>
-    <string name="undo_succeeded">Undone \"%s\"</string>
+    <string name="undo_succeeded">復原 %s</string>
     <!-- Deck Options -->
     <string name="deck_options_corrupt">無法處理牌組選項：%s</string>
     <!-- Database Errors-->
@@ -241,6 +237,7 @@
     <plurals name="sync_automatic_sync_needs_more_time">
         <item quantity="other">%d秒後可執行自動同步</item>
     </plurals>
+    <string name="metered_sync_warning">Your connection is metered. Data transfer may cost money</string>
     <string name="deck_picker_new">此牌組中今天要看的新卡片數</string>
     <string name="deck_picker_rev">詞牌組今天到期的卡片數量</string>
     <string name="deck_picker_lrn">詞牌組中學習中的卡片數</string>
@@ -250,4 +247,7 @@
     <string name="deck_picker_counts">開啟包含今天要查看的卡片數量的牌組概覽頁。</string>
     <string name="import_deck_package">卡包</string>
     <string name="import_collection_package">匯總打包</string>
+    <string name="import_csv">Text file (.txt, .csv)</string>
+    <!-- Deck selection dialog -->
+    <string name="cannot_create_subdeck_for_all_decks">You cannot create a subdeck for all decks</string>
 </resources>

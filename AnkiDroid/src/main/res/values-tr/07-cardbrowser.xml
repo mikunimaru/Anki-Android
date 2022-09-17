@@ -49,6 +49,10 @@
         <item quantity="one">%d kart gösteriliyor</item>
         <item quantity="other">%d kart gösteriliyor</item>
     </plurals>
+    <plurals name="card_browser_subtitle_notes_mode">
+        <item quantity="one">%d note shown</item>
+        <item quantity="other">%d notes shown</item>
+    </plurals>
     <string name="card_browser_all_decks">Bütün desteler</string>
     <string name="card_browser_delete_card">Notları sil</string>
     <string name="card_browser_suspend_card">Kartları askıya al</string>
@@ -94,6 +98,7 @@
     <string name="card_browser_no_cards_in_deck">%s\'de hiçbir kart bulunamadı</string>
     <string name="card_browser_search_all_decks">Tüm desteleri ara</string>
     <string name="card_browser_unknown_deck_name">Bilinmeyen</string>
+    <string name="card_browser_truncate" comment="allows users to show less of a field value">İçeriği kırp</string>
     <plurals name="card_browser_cards_deleted">
         <item quantity="one">%d kartı silindi</item>
         <item quantity="other">%d kartları silindi</item>

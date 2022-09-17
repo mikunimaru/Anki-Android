@@ -15,6 +15,7 @@
  *  this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("UnstableApiUsage")
 package com.ichi2.anki.lint.rules
 
 import com.android.tools.lint.detector.api.*
@@ -22,15 +23,12 @@ import com.google.common.annotations.Beta
 import com.google.common.annotations.VisibleForTesting
 import com.ichi2.anki.lint.utils.Constants
 import org.jetbrains.uast.UClass
-import org.jetbrains.uast.UElement
 import java.util.*
 import java.util.regex.Pattern
 
 @Beta
 class KotlinMigrationFixLineBreaks : Detector(), SourceCodeScanner {
-    override fun getApplicableUastTypes(): List<Class<out UElement?>>? {
-        return listOf(UClass::class.java)
-    }
+    override fun getApplicableUastTypes() = listOf(UClass::class.java)
 
     override fun afterCheckFile(context: Context) {
         val contents = context.getContents()
@@ -69,7 +67,6 @@ class KotlinMigrationFixLineBreaks : Detector(), SourceCodeScanner {
             "Please check the relevant piece of code.\n" +
             "And change instances of <br></br> to a newline: Kotlin supports Markdown formatting."
         private val implementation = Implementation(KotlinMigrationFixLineBreaks::class.java, EnumSet.of(Scope.JAVA_FILE, Scope.TEST_SOURCES))
-        @JvmField
         val ISSUE: Issue = Issue.create(
             ID,
             DESCRIPTION,

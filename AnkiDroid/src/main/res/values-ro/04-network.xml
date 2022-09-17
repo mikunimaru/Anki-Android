@@ -48,13 +48,13 @@
     <string name="youre_offline">Ești deconectat</string>
     <string name="sync_even_if_offline">Try Anyway</string>
     <string name="sync_error">Eroare de sincronizare</string>
-    <string name="vague_error">Error</string>
+    <string name="vague_error" comment="Network error dialog title">Error</string>
     <string name="retry">Reincearca</string>
     <string name="menu_get_shared_decks">Obţinerea punţilor comune</string>
     <string name="connection_error_message">A network error has ocurred.</string>
     <string name="not_logged_in_title">Conectaţi-vă la AnkiWeb</string>
     <string name="login_create_account_message">Trebuie să va conectaţi la un terţ contul pentru a utiliza serviciul de sincronizare nor. Puteţi crea unul în pasul următor.</string>
-    <!-- MyAccount.java -->
+    <!-- MyAccount.kt -->
     <string name="username">Adresa de e-mail</string>
     <string name="password">Parolă</string>
     <string name="log_in">Logare</string>
@@ -68,7 +68,6 @@
     <string name="reset_password">Resetare parolă</string>
     <string name="lost_mail_instructions">Forgot Email?</string>
     <!-- AndroidManifest.xml -->
-    <string name="preferences_title">Preferinţe</string>
     <string name="deckpreferences_title">Opţiuni pentru XXX</string>
     <string name="sync_prepare_syncing">Pregăteste sincronizarea&#8230;</string>
     <string name="sync_preparing_full_sync_message">Pregătire completă pentru sincronizare&#8230;</string>
@@ -117,6 +116,7 @@
     <string name="sync_sanity_remote">Remote</string>
     <string name="force_full_sync_title">Force full sync</string>
     <string name="force_full_sync_summary">On next sync, force changes in one direction</string>
+    <string name="force_full_sync_confirmation">Forced full sync</string>
     <string name="full_sync_confirmation">The requested change will require a full upload of the database when you next synchronize your collection. If you have reviews or other changes waiting on another device that haven’t been synchronized here yet, they will be lost. Continue?</string>
     <string name="full_sync_confirmation_upgrade">Due to a bug in the previously installed version of AnkiDroid, it’s recommended to force a full sync.</string>
     <string name="sync_error_407_proxy_required">Proxy authentication required.</string>

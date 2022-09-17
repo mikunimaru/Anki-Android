@@ -48,13 +48,13 @@
     <string name="youre_offline">Brak dostępu do sieci</string>
     <string name="sync_even_if_offline">Spróbuj mimo to</string>
     <string name="sync_error">Błąd synchronizacji</string>
-    <string name="vague_error">Błąd</string>
+    <string name="vague_error" comment="Network error dialog title">Błąd</string>
     <string name="retry">Próbuj ponownie</string>
     <string name="menu_get_shared_decks">Pobierz udostępniane talie</string>
     <string name="connection_error_message">Wystąpił błąd sieciowy.</string>
     <string name="not_logged_in_title">Zaloguj się do AnkiWeb</string>
     <string name="login_create_account_message">Musisz zalogować się na konto zewnętrznego serwisu aby korzystać z usługi synchronizacji w chmurze. Możesz utworzyć nowe konto w następnym kroku.</string>
-    <!-- MyAccount.java -->
+    <!-- MyAccount.kt -->
     <string name="username">Adres e-mail</string>
     <string name="password">Hasło</string>
     <string name="log_in">Zaloguj się</string>
@@ -68,7 +68,6 @@
     <string name="reset_password">Resetuj hasło</string>
     <string name="lost_mail_instructions">Zapomniałeś adres e-mail?</string>
     <!-- AndroidManifest.xml -->
-    <string name="preferences_title">Ustawienia</string>
     <string name="deckpreferences_title">Opcje dla XXX</string>
     <string name="sync_prepare_syncing">Przygotowywanie synchronizacji...</string>
     <string name="sync_preparing_full_sync_message">Przygotowanie pełnej synchronizacji...</string>
@@ -103,7 +102,7 @@
     <string name="sync_media_find">Wyszukiwanie zmienionych mediów...</string>
     <string name="sync_media_no_changes">Brak zmian w plikach mediów.</string>
     <string name="sync_media_success">Media zsynchronizowane.</string>
-    <string name="sync_media_partial_updated">Media sync partially completed:\n%1$d media files downloaded.\n%2$d media files uploaded.</string>
+    <string name="sync_media_partial_updated">Synchronizacja mediów częściowo zakończona:\n%1$d pobranych plików.\n%2$d przesłanych plików.</string>
     <string name="sync_media_changes_count">%d zmian mediów do wysłania</string>
     <string name="sync_media_downloaded_count">Pobrane %d plików mediów</string>
     <string name="sync_sanity_failed">Po synchronizacji kolekcja była niespójna. Aby to naprawić AnkiDroid wymusi pełną synchronizację. Wybierz którą wersję chcesz zatrzymać (lokalną czy z serwera) lub anuluj, jeśli chcesz synchronizować później.</string>
@@ -117,6 +116,7 @@
     <string name="sync_sanity_remote">Zdalne</string>
     <string name="force_full_sync_title">Wymuś pełną synchronizację</string>
     <string name="force_full_sync_summary">Przy następnej synchronizacji wymuś zmiany tylko w jednym kierunku</string>
+    <string name="force_full_sync_confirmation">Wymuszono pełną synchronizację</string>
     <string name="full_sync_confirmation">Żądana zmiana wymagać będzie pełnego wysłania bazy danych przy następnej synchronizacji Twojej kolekcji. Jeżeli posiadasz powtórki lub inne oczekujące zmiany na innym urządzeniu, które nie zostały jeszcze zsynchronizowane, zostaną one utracone. Czy kontynuować?</string>
     <string name="full_sync_confirmation_upgrade">Z powodu błędu w poprzednio zainstalowanej wersji AnkiDroid zalecane jest wymuszenie pełnej synchronizacji.</string>
     <string name="sync_error_407_proxy_required">Wymagane uwierzytelnienie serwera proxy.</string>

@@ -22,12 +22,10 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 
 object Permissions {
-    @JvmStatic
     fun canUseCamera(context: Context): Boolean {
         return hasPermission(context, Manifest.permission.CAMERA)
     }
 
-    @JvmStatic
     fun canRecordAudio(context: Context): Boolean {
         return hasPermission(context, Manifest.permission.RECORD_AUDIO)
     }
@@ -37,16 +35,35 @@ object Permissions {
     }
 
     /**
-     * Check if we have permission to access the external storage
+     * Check if we have write access permission to the external storage
      * @param context
      * @return
      */
-    @JvmStatic
-    fun hasStorageAccessPermission(context: Context): Boolean {
+    @JvmStatic // unit tests were flaky - maybe remove later
+    private fun hasStorageWriteAccessPermission(context: Context): Boolean {
         return hasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
-    @JvmStatic
+    /**
+     * Check if we have read access permission to the external storage
+     * @param context
+     * @return
+     */
+    @JvmStatic // unit tests were flaky - maybe remove later
+    private fun hasStorageReadAccessPermission(context: Context): Boolean {
+        return hasPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+    /**
+     * Check if we have read and write access permission to the external storage
+     * @param context
+     * @return
+     */
+    @JvmStatic // unit tests were flaky - maybe remove later
+    fun hasStorageAccessPermission(context: Context): Boolean {
+        return hasStorageReadAccessPermission(context) && hasStorageWriteAccessPermission(context)
+    }
+
     fun canUseWakeLock(context: Context): Boolean {
         return hasPermission(context, Manifest.permission.WAKE_LOCK)
     }

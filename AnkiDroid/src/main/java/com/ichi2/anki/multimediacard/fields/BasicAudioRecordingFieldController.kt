@@ -30,7 +30,6 @@ import com.ichi2.anki.multimediacard.AudioView.Companion.createRecorderInstance
 import com.ichi2.anki.multimediacard.AudioView.Companion.generateTempAudioFile
 import com.ichi2.anki.multimediacard.AudioView.OnRecordingFinishEventListener
 import com.ichi2.ui.FixedTextView
-import com.ichi2.utils.KotlinCleanup
 import com.ichi2.utils.UiUtil.makeBold
 import java.io.File
 
@@ -39,12 +38,10 @@ import java.io.File
  */
 class BasicAudioRecordingFieldController : FieldControllerBase(), IFieldController {
 
-    @KotlinCleanup("nun-null & lateinit")
     private var mTempAudioPath: String? = null
-    @KotlinCleanup("nun-null & lateinit")
     private var mAudioView: AudioView? = null
 
-    override fun createUI(context: Context, layout: LinearLayout?) {
+    override fun createUI(context: Context, layout: LinearLayout) {
         val origAudioPath = mField.audioPath
         var bExist = false
         if (origAudioPath != null) {
@@ -76,7 +73,7 @@ class BasicAudioRecordingFieldController : FieldControllerBase(), IFieldControll
                 mField.setHasTemporaryMedia(true)
             }
         })
-        layout!!.addView(mAudioView, LinearLayout.LayoutParams.MATCH_PARENT)
+        layout.addView(mAudioView, LinearLayout.LayoutParams.MATCH_PARENT)
 
         context.apply {
             // add preview of the field data to provide context to the user

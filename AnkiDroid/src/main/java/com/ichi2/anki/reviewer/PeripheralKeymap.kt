@@ -31,7 +31,7 @@ class PeripheralKeymap(reviewerUi: ReviewerUi, commandProcessor: ViewerCommand.C
     private val mKeyMap: KeyMap
     private var mHasSetup = false
     fun setup() {
-        val preferences = AnkiDroidApp.getSharedPrefs(AnkiDroidApp.getInstance())
+        val preferences = AnkiDroidApp.getSharedPrefs(AnkiDroidApp.instance)
         setup(preferences)
     }
 
@@ -74,7 +74,7 @@ class PeripheralKeymap(reviewerUi: ReviewerUi, commandProcessor: ViewerCommand.C
             for (b in bindings) {
                 val binding = MappableBinding(b, MappableBinding.Screen.Reviewer(side))
                 val command = mBindingMap[binding] ?: continue
-                ret = ret or processor.executeCommand(command)
+                ret = ret or processor.executeCommand(command, fromGesture = null)
             }
             return ret
         }

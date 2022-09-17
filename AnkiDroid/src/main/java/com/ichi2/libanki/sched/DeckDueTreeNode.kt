@@ -16,8 +16,10 @@
 package com.ichi2.libanki.sched
 
 import com.ichi2.libanki.Collection
+import com.ichi2.libanki.DeckId
 import com.ichi2.libanki.Decks
 import com.ichi2.utils.KotlinCleanup
+import net.ankiweb.rsdroid.RustCleanup
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -33,40 +35,37 @@ import kotlin.math.min
  * this field and use getNamePart(0) for those cases.
  */
 @KotlinCleanup("maybe possible to remove gettres for revCount/lrnCount")
-class DeckDueTreeNode(col: Collection?, name: String?, did: Long, private var revCount: Int, private var lrnCount: Int, private var newCount: Int) : AbstractDeckTreeNode<DeckDueTreeNode?>(col, name, did) {
+@KotlinCleanup("rename name -> fullDeckName")
+@RustCleanup("after migration, consider dropping this and using backend tree structure directly")
+class DeckDueTreeNode(
+    name: String,
+    did: DeckId,
+    override var revCount: Int,
+    override var lrnCount: Int,
+    override var newCount: Int,
+    // only set when defaultLegacySchema is false
+    override var collapsed: Boolean = false,
+    override var filtered: Boolean = false
+) : AbstractDeckTreeNode(name, did, collapsed, filtered) {
     override fun toString(): String {
         return String.format(
-            Locale.US, "%s, %d, %d, %d, %d, %s",
-            fullDeckName, did, revCount, lrnCount, newCount, children
+            Locale.US, "%s, %d, %d, %d, %d",
+            fullDeckName, did, revCount, lrnCount, newCount
         )
-    }
-
-    override fun getRevCount(): Int {
-        return revCount
     }
 
     private fun limitRevCount(limit: Int) {
         revCount = max(0, min(revCount, limit))
     }
 
-    override fun getNewCount(): Int {
-        return newCount
-    }
-
     private fun limitNewCount(limit: Int) {
         newCount = max(0, min(newCount, limit))
     }
 
-    override fun getLrnCount(): Int {
-        return lrnCount
-    }
-
-    @KotlinCleanup("non-null")
-    override fun setChildren(children: MutableList<DeckDueTreeNode?>, addRev: Boolean) {
-        super.setChildren(children, addRev)
+    override fun processChildren(col: Collection, children: List<AbstractDeckTreeNode>, addRev: Boolean) {
         // tally up children counts
         for (ch in children) {
-            lrnCount += ch!!.lrnCount
+            lrnCount += ch.lrnCount
             newCount += ch.newCount
             if (addRev) {
                 revCount += ch.revCount
@@ -84,8 +83,7 @@ class DeckDueTreeNode(col: Collection?, name: String?, did: Long, private var re
     }
 
     override fun hashCode(): Int {
-        val childrenHash = if (children == null) 0 else children.hashCode()
-        return fullDeckName.hashCode() + revCount + lrnCount + newCount + childrenHash
+        return fullDeckName.hashCode() + revCount + lrnCount + newCount
     }
 
     /**
@@ -100,11 +98,7 @@ class DeckDueTreeNode(col: Collection?, name: String?, did: Long, private var re
         return Decks.equalName(fullDeckName, other.fullDeckName) &&
             revCount == other.revCount &&
             lrnCount == other.lrnCount &&
-            newCount == other.newCount &&
-            (
-                children == other.children || // Would be the case if both are null, or the same pointer
-                    children.equals(other.children)
-                )
+            newCount == other.newCount
     }
 
     /** Line representing this string without its children. Used in timbers only.  */
@@ -122,17 +116,19 @@ class DeckDueTreeNode(col: Collection?, name: String?, did: Long, private var re
     override fun knownToHaveRep(): Boolean {
         return revCount > 0 || newCount > 0 || lrnCount > 0
     }
+}
 
-    private fun setChildrenSuper(children: MutableList<DeckDueTreeNode?>) {
-        super.setChildren(children, false)
+/** Locate node with a given deck ID in a list of nodes.
+ *
+ * This could be converted into a method if AnkiDroid returned a top-level
+ * node instead of a list of nodes.
+ */
+fun findInDeckTree(nodes: List<TreeNode<DeckDueTreeNode>>, deckId: Long): DeckDueTreeNode? {
+    for (node in nodes) {
+        if (node.value.did == deckId) {
+            return node.value
+        }
+        return findInDeckTree(node.children, deckId) ?: continue
     }
-
-    override fun withChildren(children: MutableList<DeckDueTreeNode?>): DeckDueTreeNode {
-        val name = fullDeckName
-        val did = did
-        val node = DeckDueTreeNode(col, name, did, revCount, lrnCount, newCount)
-        // We've already calculated the counts, don't bother doing it again, just set the variable.
-        node.setChildrenSuper(children)
-        return node
-    }
+    return null
 }

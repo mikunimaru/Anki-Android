@@ -48,13 +48,13 @@
     <string name="youre_offline">ᱟᱢ ᱫᱚ ᱚᱯᱷᱞᱟᱭᱤᱱ ᱨᱮ</string>
     <string name="sync_even_if_offline">ᱡᱮᱞᱠᱟᱭ ᱢᱮ</string>
     <string name="sync_error">ᱟᱹᱭᱩᱨ ᱢᱤᱫ ᱵᱷᱩᱞ </string>
-    <string name="vague_error">ᱵᱷᱩᱞ</string>
+    <string name="vague_error" comment="Network error dialog title">ᱵᱷᱩᱞ</string>
     <string name="retry">ᱫᱼᱪᱮᱥᱴᱟ </string>
     <string name="menu_get_shared_decks">ᱥᱟᱡᱟᱣᱟ ᱠᱟᱱ ᱰᱮᱠ ᱠᱚ ᱧᱟᱢ ᱢᱮ </string>
     <string name="connection_error_message">ᱱᱮᱴᱣᱟᱨᱠ ᱦᱩᱰᱟᱹᱜ ᱦᱩᱭ ᱮᱱᱟ</string>
     <string name="not_logged_in_title">AnkiWeb ᱛᱮ ᱵᱷᱤᱛᱤᱨ ᱵᱚᱞᱚ</string>
     <string name="login_create_account_message">cloud ᱟᱹᱭᱩᱨ ᱢᱤᱫ ᱠᱟᱹᱢᱤ ᱨᱮ ᱵᱷᱤᱛᱤᱨ ᱵᱚᱞᱚ ᱞᱟᱹᱜᱤᱫ third party ᱠᱷᱟᱛᱟ ᱫᱚᱨᱠᱟᱨ ᱾ ᱱᱟᱶᱟ ᱛᱮᱭᱟᱨ ᱞᱟᱹᱜᱤᱫ ᱤᱱᱟ ᱛᱟᱭᱚᱢ ᱡᱷᱟᱸᱯ ᱠᱚ ᱧᱮᱞ ᱢᱮ ᱾ </string>
-    <!-- MyAccount.java -->
+    <!-- MyAccount.kt -->
     <string name="username">ᱤ-ᱢᱮᱞ ᱴᱷᱤᱠᱟᱹᱱᱟ</string>
     <string name="password">ᱫᱟᱱᱟᱝ ᱥᱟᱵᱟᱫᱽ</string>
     <string name="log_in">ᱞᱚᱜᱤᱱ</string>
@@ -68,7 +68,6 @@
     <string name="reset_password">ᱫᱚᱦᱲᱟ ᱫᱟᱱᱟᱝ ᱥᱟᱵᱟᱫᱽ</string>
     <string name="lost_mail_instructions">Forgot Email?</string>
     <!-- AndroidManifest.xml -->
-    <string name="preferences_title">ᱟᱹᱲᱤ ᱠᱩᱥᱤᱭᱟᱠ</string>
     <string name="deckpreferences_title">XXX ᱞᱟᱹᱜᱤᱫ ᱟᱯᱟᱱᱟᱨ ᱢᱚᱱᱮᱛᱮᱭᱟᱜ</string>
     <string name="sync_prepare_syncing">ᱟᱹᱭᱩᱨᱚᱜ ᱥᱚᱡᱚᱜ ᱠᱟᱱᱟ&#8230;</string>
     <string name="sync_preparing_full_sync_message">ᱯᱩᱨᱟ ᱟᱹᱭᱩᱨᱚᱜ ᱥᱚᱡᱚᱜ ᱠᱟᱱᱟ&#8230;</string>
@@ -117,6 +116,7 @@
     <string name="sync_sanity_remote">ᱥᱟᱝᱜᱤᱧ ᱨᱮᱭᱟᱜ</string>
     <string name="force_full_sync_title">ᱫᱟᱲᱮ ᱛᱮ ᱟᱹᱭᱩᱨ ᱢᱤᱫ</string>
     <string name="force_full_sync_summary">ᱤᱱᱟᱹ ᱛᱟᱭᱚᱢ ᱟᱹᱭᱩᱨ ᱢᱤᱫ, ᱢᱤᱫ ᱱᱟᱜᱷᱟ ᱨᱮ ᱫᱚᱲᱮ ᱵᱚᱫᱚᱞᱮᱱᱟ </string>
+    <string name="force_full_sync_confirmation">Forced full sync</string>
     <string name="full_sync_confirmation">ᱵᱚᱫᱚᱞᱠᱟᱱ ᱫᱚᱨᱠᱷᱥᱛᱚ ᱟᱢᱟᱜ ᱴᱩᱢᱟᱹᱞ ᱛᱮ ᱟᱹᱭᱩᱨ ᱢᱤᱫ ᱞᱟᱹᱜᱤᱫ ᱯᱩᱨᱟ ᱞᱟᱫᱮ ᱫᱚᱨᱠᱟᱨ ᱠᱟᱱᱟ ᱾  ᱚᱞᱜᱟ ᱰᱤᱵᱷᱟᱤᱥ ᱵᱟᱭ ᱟᱹᱭᱩᱨ ᱢᱤᱫ ᱠᱚᱜ ᱠᱷᱟᱱ ᱰᱟᱴᱟ ᱟᱫᱚᱜ ᱛᱟᱢᱮ, ᱞᱮᱛᱟᱲ ᱟᱢ?</string>
     <string name="full_sync_confirmation_upgrade">AnkiDroid ᱨᱮᱭᱟᱜ ᱢᱟᱲᱟᱝ ᱵᱷᱚᱨᱥᱚᱱ ᱨᱮ ᱰᱤᱜᱟᱹᱣ ᱧᱟᱢ ᱮᱱᱟ , ᱡᱩᱨ ᱟᱹᱭᱩᱨ ᱢᱤᱫ ᱫᱚᱨᱠᱟᱨ ᱠᱟᱱᱟ</string>
     <string name="sync_error_407_proxy_required">Proxy authentication ᱫᱚᱨᱠᱟᱨ ᱾</string>

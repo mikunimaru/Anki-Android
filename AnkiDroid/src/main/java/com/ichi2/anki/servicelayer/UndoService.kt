@@ -16,7 +16,7 @@
 
 package com.ichi2.anki.servicelayer
 
-import com.ichi2.anki.AnkiDroidApp
+import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.servicelayer.SchedulerService.NextCard
 import com.ichi2.async.CollectionTask
 import com.ichi2.utils.Computation
@@ -25,15 +25,15 @@ import timber.log.Timber
 class UndoService {
     class Undo : ActionAndNextCard() {
         override fun execute(): ComputeResult {
-            try {
-                val card = col.db.executeInTransactionReturn {
-                    return@executeInTransactionReturn CollectionTask.nonTaskUndo(col)
+            return try {
+                val card = col.db.executeInTransaction {
+                    CollectionTask.nonTaskUndo(col)
                 }
-                return Computation.ok(NextCard.withNoResult(card))
+                Computation.ok(NextCard.withNoResult(card))
             } catch (e: RuntimeException) {
                 Timber.e(e, "doInBackgroundUndo - RuntimeException on undoing")
-                AnkiDroidApp.sendExceptionReport(e, "doInBackgroundUndo")
-                return Computation.err()
+                CrashReportService.sendExceptionReport(e, "doInBackgroundUndo")
+                Computation.err()
             }
         }
     }

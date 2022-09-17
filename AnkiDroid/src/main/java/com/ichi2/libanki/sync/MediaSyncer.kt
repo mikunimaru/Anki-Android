@@ -40,7 +40,7 @@ import java.util.*
  *
  * A note about differences to the original python version of this class. We found that:
  * 1 - There is no reliable way to detect changes to the media directory on Android due to the
- * file systems used (mainly FAT32 for sdcards) and the utilities available to probe them.
+ * file systems used (mainly FAT32 for SD Cards) and the utilities available to probe them.
  * 2 - Scanning for media changes can take a very long time with thousands of files.
  *
  * Given these two points, we have decided to avoid the call to findChanges() on every sync and
@@ -97,7 +97,7 @@ class MediaSyncer(
         mDownloadCount = 0
         while (true) {
             // Allow cancellation (note: media sync has no finish command, so just throw)
-            if (Connection.getIsCancelled()) {
+            if (Connection.isCancelled) {
                 Timber.i("Sync was cancelled")
                 throw RuntimeException(ConnectionResultType.USER_ABORTED_SYNC.toString())
             }
@@ -110,7 +110,7 @@ class MediaSyncer(
             lastUsn = data.getJSONArray(data.length() - 1).getInt(1)
             for (i in 0 until data.length()) {
                 // Allow cancellation (note: media sync has no finish command, so just throw)
-                if (Connection.getIsCancelled()) {
+                if (Connection.isCancelled) {
                     Timber.i("Sync was cancelled")
                     throw RuntimeException(ConnectionResultType.USER_ABORTED_SYNC.toString())
                 }
@@ -129,7 +129,7 @@ class MediaSyncer(
                     String.format(
                         Locale.US,
                         "check: lsum=%s rsum=%s ldirty=%d rusn=%d fname=%s",
-                        if (TextUtils.isEmpty(lsum)) "" else lsum.subSequence(0, 4),
+                        if (TextUtils.isEmpty(lsum)) "" else lsum!!.subSequence(0, 4),
                         if (TextUtils.isEmpty(rsum)) "" else rsum!!.subSequence(0, 4),
                         ldirty,
                         rusn,
@@ -180,7 +180,7 @@ class MediaSyncer(
                 }
                 con.publishProgress(
                     String.format(
-                        AnkiDroidApp.getAppResources().getString(R.string.sync_media_changes_count), toSend
+                        AnkiDroidApp.appResources.getString(R.string.sync_media_changes_count), toSend
                     )
                 )
                 val changes = server.uploadChanges(zip)
@@ -202,7 +202,7 @@ class MediaSyncer(
                 } else {
                     col.log("concurrent update, skipping usn update")
                     // commit for markClean
-                    col.media.db.commit()
+                    col.media.db!!.commit()
                     updateConflict = true
                 }
                 toSend -= processedCnt
@@ -245,7 +245,7 @@ class MediaSyncer(
                 }
                 con.publishProgress(
                     String.format(
-                        AnkiDroidApp.getAppResources().getString(R.string.sync_media_downloaded_count), mDownloadCount
+                        AnkiDroidApp.appResources.getString(R.string.sync_media_downloaded_count), mDownloadCount
                     )
                 )
             } catch (e: IOException) {

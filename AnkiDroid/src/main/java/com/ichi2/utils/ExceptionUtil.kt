@@ -17,14 +17,13 @@ package com.ichi2.utils
 
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.ichi2.anki.AnkiDroidApp
+import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.R
 import com.ichi2.anki.UIUtils
 import java.io.PrintWriter
 import java.io.StringWriter
 
 object ExceptionUtil {
-    @JvmStatic
     fun containsMessage(e: Throwable?, needle: String?): Boolean {
         if (e == null) {
             return false
@@ -37,7 +36,6 @@ object ExceptionUtil {
     }
 
     @CheckResult
-    @JvmStatic
     fun getExceptionMessage(e: Throwable?): String {
         return getExceptionMessage(e, "\n")
     }
@@ -59,7 +57,7 @@ object ExceptionUtil {
     }
 
     /** Whether the exception is, or contains a cause of a given type  */
-    @JvmStatic
+    @KotlinCleanup("convert to containsCause<T>(ex)")
     fun <T> containsCause(ex: Throwable, clazz: Class<T>): Boolean {
         if (clazz.isInstance(ex)) {
             return true
@@ -68,7 +66,6 @@ object ExceptionUtil {
         return containsCause(cause, clazz)
     }
 
-    @JvmStatic
     fun getFullStackTrace(ex: Throwable): String {
         val sw = StringWriter()
         ex.printStackTrace(PrintWriter(sw))
@@ -80,7 +77,7 @@ object ExceptionUtil {
         try {
             runnable.invoke()
         } catch (e: Exception) {
-            AnkiDroidApp.sendExceptionReport(e, origin)
+            CrashReportService.sendExceptionReport(e, origin)
             UIUtils.showThemedToast(
                 context, context.getString(R.string.multimedia_editor_something_wrong), true
             )

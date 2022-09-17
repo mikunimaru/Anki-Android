@@ -23,12 +23,14 @@ import androidx.annotation.VisibleForTesting
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.CollectionHelper
 import com.ichi2.anki.R
+import com.ichi2.anki.servicelayer.NoteService.avgEase
 import com.ichi2.async.CancelListener
 import com.ichi2.libanki.Consts.CARD_QUEUE
 import com.ichi2.libanki.Consts.CARD_TYPE
 import com.ichi2.libanki.TemplateManager.TemplateRenderContext.TemplateRenderOutput
 import com.ichi2.libanki.stats.Stats
 import com.ichi2.libanki.template.TemplateError
+import com.ichi2.libanki.utils.TimeManager
 import com.ichi2.utils.Assert
 import com.ichi2.utils.JSONObject
 import com.ichi2.utils.LanguageUtil
@@ -78,8 +80,8 @@ open class Card : Cloneable {
     // BEGIN SQL table entries
     @set:VisibleForTesting
     var id: Long
-    var nid: Long = 0
-    var did: Long = 0
+    var nid: NoteId = 0
+    var did: DeckId = 0
     var ord = 0
     var mod: Long = 0
     var usn = 0
@@ -99,9 +101,9 @@ open class Card : Cloneable {
     var lapses = 0
     var left = 0
     var oDue: Long = 0
-    var oDid: Long = 0
+    var oDid: DeckId = 0
     private var flags = 0
-    private var data: String? = null
+    private lateinit var data: String
 
     // END SQL table entries
     @set:JvmName("setRenderOutput")
@@ -121,7 +123,7 @@ open class Card : Cloneable {
         render_output = null
         note = null
         // to flush, set nid, ord, and due
-        this.id = this.col.time.timestampID(this.col.db, "cards")
+        this.id = TimeManager.time.timestampID(this.col.db, "cards")
         did = 1
         this.type = Consts.CARD_TYPE_NEW
         queue = Consts.QUEUE_TYPE_NEW
@@ -173,10 +175,9 @@ open class Card : Cloneable {
         note = null
     }
 
-    @JvmOverloads
     fun flush(changeModUsn: Boolean = true) {
         if (changeModUsn) {
-            mod = col.time.intTime()
+            mod = TimeManager.time.intTime()
             usn = col.usn()
         }
         assert(due < "4294967296".toLong())
@@ -206,7 +207,7 @@ open class Card : Cloneable {
     }
 
     fun flushSched() {
-        mod = col.time.intTime()
+        mod = TimeManager.time.intTime()
         usn = col.usn()
         assert(due < "4294967296".toLong())
         val values = ContentValues()
@@ -228,7 +229,6 @@ open class Card : Cloneable {
         col.log(this)
     }
 
-    @JvmOverloads
     fun q(reload: Boolean = false, browser: Boolean = false): String {
         return render_output(reload, browser).question_and_style()
     }
@@ -242,10 +242,17 @@ open class Card : Cloneable {
         return "<style>${render_output().css}</style>"
     }
 
+    fun questionAvTags(): List<AvTag> {
+        return render_output().question_av_tags
+    }
+
+    fun answerAvTags(): List<AvTag> {
+        return render_output().answer_av_tags
+    }
+
     /**
      * @throws net.ankiweb.rsdroid.exceptions.BackendInvalidInputException: If the card does not exist
      */
-    @JvmOverloads
     @RustCleanup("move col.render_output back to Card once the java collection is removed")
     open fun render_output(reload: Boolean = false, browser: Boolean = false): TemplateRenderOutput {
         if (render_output == null || reload) {
@@ -280,7 +287,7 @@ open class Card : Cloneable {
     }
 
     fun startTimer() {
-        timerStarted = col.time.intTimeMS()
+        timerStarted = TimeManager.time.intTimeMS()
     }
 
     /**
@@ -296,7 +303,7 @@ open class Card : Cloneable {
      */
     fun timeTaken(): Int {
         // Indeed an int. Difference between two big numbers is still small.
-        val total = (col.time.intTimeMS() - timerStarted).toInt()
+        val total = (TimeManager.time.intTimeMS() - timerStarted).toInt()
         return Math.min(total, timeLimit())
     }
 
@@ -323,11 +330,13 @@ open class Card : Cloneable {
     val pureAnswer: String
         get() {
             val s = render_output(false).answer_text
-            val target = "<hr id=answer>"
-            val pos = s.indexOf(target)
-            return if (pos == -1) {
-                s
-            } else s.substring(pos + target.length).trim { it <= ' ' }
+            for (target in arrayOf("<hr id=answer>", "<hr id=\"answer\">")) {
+                val pos = s.indexOf(target)
+                if (pos == -1) continue
+                return s.substring(pos + target.length).trim { it <= ' ' }
+            }
+            // neither found
+            return s
         }
 
     /**
@@ -337,7 +346,7 @@ open class Card : Cloneable {
      * method when the session resumes to start counting review time again.
      */
     fun stopTimer() {
-        elapsedTime = col.time.intTimeMS() - timerStarted
+        elapsedTime = TimeManager.time.intTimeMS() - timerStarted
     }
 
     /**
@@ -349,7 +358,7 @@ open class Card : Cloneable {
      * or the result of timeTaken() will be wrong.
      */
     fun resumeTimer() {
-        timerStarted = col.time.intTimeMS() - elapsedTime
+        timerStarted = TimeManager.time.intTimeMS() - elapsedTime
     }
 
     @VisibleForTesting
@@ -436,13 +445,13 @@ open class Card : Cloneable {
         val date: Long
         val due = due
         date = if (isInDynamicDeck) {
-            return AnkiDroidApp.getAppResources().getString(R.string.card_browser_due_filtered_card)
+            return AnkiDroidApp.appResources.getString(R.string.card_browser_due_filtered_card)
         } else if (queue == Consts.QUEUE_TYPE_LRN) {
             due
         } else if (queue == Consts.QUEUE_TYPE_NEW || type == Consts.CARD_TYPE_NEW) {
             return java.lang.Long.valueOf(due).toString()
         } else if (queue == Consts.QUEUE_TYPE_REV || queue == Consts.QUEUE_TYPE_DAY_LEARN_RELEARN || type == Consts.CARD_TYPE_REV && queue < 0) {
-            val time = col.time.intTime()
+            val time = TimeManager.time.intTime()
             val nbDaySinceCreation = due - col.sched.today
             time + nbDaySinceCreation * Stats.SECONDS_PER_DAY
         } else {
@@ -450,6 +459,8 @@ open class Card : Cloneable {
         }
         return LanguageUtil.getShortDateFormatFromS(date)
     } // In Anki Desktop, a card with oDue <> 0 && oDid == 0 is not marked as dynamic.
+
+    fun avgEaseOfNote() = avgEase(note())
 
     /** Non libAnki  */
     val isInDynamicDeck: Boolean
@@ -578,7 +589,7 @@ open class Card : Cloneable {
 
         @Throws(CancellationException::class)
         fun deepCopyCardArray(originals: Array<Card>, cancelListener: CancelListener): Array<Card> {
-            val col = CollectionHelper.getInstance().getCol(AnkiDroidApp.getInstance())
+            val col = CollectionHelper.instance.getCol(AnkiDroidApp.instance)!!
             val copies = mutableListOf<Card>()
             for (i in originals.indices) {
                 if (cancelListener.isCancelled()) {

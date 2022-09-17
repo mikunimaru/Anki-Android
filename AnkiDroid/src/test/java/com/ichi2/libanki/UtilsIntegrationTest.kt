@@ -18,7 +18,7 @@ package com.ichi2.libanki
 import androidx.annotation.CheckResult
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ichi2.anki.RobolectricTest
-import com.ichi2.testutils.NullApplication
+import com.ichi2.testutils.EmptyApplication
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Test
@@ -26,41 +26,41 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
-@Config(application = NullApplication::class, qualifiers = "en")
+@Config(application = EmptyApplication::class, qualifiers = "en")
 class UtilsIntegrationTest : RobolectricTest() {
     @Test
     fun deckPickerTimeOneAndHalfHours() {
         val oneAndAHalfHours = 60 * 90
         val actual = deckPickerTime(oneAndAHalfHours.toLong())
-        MatcherAssert.assertThat(actual, Matchers.`is`("1 h 30 m"))
+        MatcherAssert.assertThat(actual, Matchers.equalTo("1 h 30 m"))
     }
 
     @Test
     fun deckPickerTimeOneHour() {
         val oneAndAHalfHours = 60 * 60
         val actual = deckPickerTime(oneAndAHalfHours.toLong())
-        MatcherAssert.assertThat(actual, Matchers.`is`("1 h 0 m"))
+        MatcherAssert.assertThat(actual, Matchers.equalTo("1 h 0 m"))
     }
 
     @Test
     fun deckPickerTime60Seconds() {
         val oneAndAHalfHours = 60
         val actual = deckPickerTime(oneAndAHalfHours.toLong())
-        MatcherAssert.assertThat(actual, Matchers.`is`("1 min"))
+        MatcherAssert.assertThat(actual, Matchers.equalTo("1 min"))
     }
 
     @Test
     fun deckPickerTimeOneAndAHalfDays() {
         val oneAndAHalfHours = 60 * 60 * 36
         val actual = deckPickerTime(oneAndAHalfHours.toLong())
-        MatcherAssert.assertThat(actual, Matchers.`is`("1 d 12 h"))
+        MatcherAssert.assertThat(actual, Matchers.equalTo("1 d 12 h"))
     }
 
     @Test
     @Config(qualifiers = "en")
     fun timeQuantityMonths() {
         // Anki Desktop 2.1.30: '\u206810.8\u2069 months'
-        MatcherAssert.assertThat(timeQuantityNextInterval(28080000), Matchers.`is`("10.8 mo"))
+        MatcherAssert.assertThat(timeQuantityNextInterval(28080000), Matchers.equalTo("10.8 mo"))
     }
 
     private fun timeQuantityNextInterval(time_s: Int): String {

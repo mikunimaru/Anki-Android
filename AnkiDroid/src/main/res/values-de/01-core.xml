@@ -58,7 +58,7 @@
     <string name="studyoptions_total_cards">Karten gesamt:</string>
     <string name="studyoptions_eta">Geschätzte Zeit (min):</string>
     <string name="studyoptions_start">Lernen</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">Ausklappen</string>
     <string name="collapse">Einklappen</string>
     <string name="study_more">Weiter lernen</string>
@@ -70,13 +70,13 @@
         <item quantity="one">noch %d Minute</item>
         <item quantity="other">noch %d Minuten</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="one">%d Stunde %d übrig</item>
-        <item quantity="other">%d Stunden %d verbleiben</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="one">%1$d Stunde %2$d übrig</item>
+        <item quantity="other">%1$d Stunden %2$d verbleiben</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="one">%d Tag %d verbleibt</item>
-        <item quantity="other">%d Tage %d verbleiben</item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="one">%1$d Tag %2$d verbleibend</item>
+        <item quantity="other">%1$d Tage %2$d verbleibend</item>
     </plurals>
     <string name="no_cards_placeholder_title">Sammlung ist leer</string>
     <string name="no_cards_placeholder_description">Fügen Sie Karten \nmit dem + -Symbol hinzu.</string>
@@ -103,7 +103,7 @@
     <string name="rename_deck">Stapel umbenennen</string>
     <string name="create_shortcut">Verknüpfung erstellen</string>
     <string name="browse_cards">Karten durchsuchen</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Hinzufügen</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">Hinzufügen</string>
     <string name="menu_add_note">Notiz hinzufügen</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">Synchronisierungskonto</string>
     <string name="menu_dismiss_note">Aussetzen / Löschen</string>
@@ -129,7 +129,7 @@
     <string name="menu_search">In %1$s nachschlagen</string>
     <string name="menu_mark_note">Notiz markieren</string>
     <string name="menu_unmark_note">Markierung entfernen</string>
-    <string name="menu_toggle_mic_tool_bar">Ausprache überprüfen</string>
+    <string name="menu_toggle_mic_tool_bar">Aussprache überprüfen</string>
     <string name="new_deck">Stapel erstellen</string>
     <string name="new_dynamic_deck">Gefilterten Stapel erstellen</string>
     <string name="directory_inaccessible">Auf das AnkiDroid-Verzeichnis kann nicht zugegriffen werden</string>
@@ -176,7 +176,7 @@
     <string name="studyoptions_no_cards_due">Es sind noch keine Karten fällig</string>
     <string name="sd_card_not_mounted">Gerätespeicher nicht eingebunden</string>
     <string name="empty_cloze_warning">Bearbeiten Sie diese Notiz und fügen Sie einige Auslassungen hinzu. (%1$s)</string>
-    <string name="button_sync">Synchronisieren</string>
+    <string name="button_sync" comment="Text of the sync button">Synchronisieren</string>
     <string name="cancel_sync_confirm">Wollen Sie die Synchronisation abbrechen?</string>
     <string name="continue_sync">Synchronisierung fortsetzen</string>
     <string name="sync_cancelled">Synchronisation abgebrochen</string>

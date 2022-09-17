@@ -58,7 +58,7 @@
     <string name="studyoptions_total_cards">Total cartes :</string>
     <string name="studyoptions_eta">Temps estimé (min):</string>
     <string name="studyoptions_start">Réviser</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">Développer</string>
     <string name="collapse">Regrouper</string>
     <string name="study_more">Réviser davantage</string>
@@ -70,13 +70,13 @@
         <item quantity="one">%d minute restante</item>
         <item quantity="other">%d minutes restantes</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="one">%d heure %d restante</item>
-        <item quantity="other">%d heures %d restantes</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="one">%1$d heure %2$d restant</item>
+        <item quantity="other">%1$d heures %2$d restantes</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="one">%d jour %d restant</item>
-        <item quantity="other">%d jours %d restants</item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="one">%1$d jour %2$d restant</item>
+        <item quantity="other">%1$d jours %2$d restants</item>
     </plurals>
     <string name="no_cards_placeholder_title">La collection est vide</string>
     <string name="no_cards_placeholder_description">Ajoutez de nouvelles cartes\nen utilisant l\'icône +</string>
@@ -103,7 +103,7 @@
     <string name="rename_deck">Renommer le paquet</string>
     <string name="create_shortcut">Créer un raccourci</string>
     <string name="browse_cards">Parcourir les cartes</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Ajouter</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">Ajouter</string>
     <string name="menu_add_note">Ajouter une note</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">Compte de synchronisation</string>
     <string name="menu_dismiss_note">Masquer / Supprimer</string>
@@ -155,7 +155,7 @@
     <string name="time_quantity_years">%.1f a</string>
     <!-- or "%.1f a" -->
     <string name="rebuild_filtered_deck">Reconstruction du paquet filtré&#8230;</string>
-    <string name="rebuild_cram_label">Réparer</string>
+    <string name="rebuild_cram_label">Reconstruire</string>
     <string name="empty_cram_label">Vide</string>
     <string name="create_subdeck">Créer un sous-paquet</string>
     <string name="empty_filtered_deck">Vidage du paquet filtré&#8230;</string>
@@ -163,7 +163,7 @@
     <string name="custom_study_deck_exists">Merci de renommer d\'abord le paquet d\'étude personnalisée.</string>
     <string name="empty_deck">Ce paquet est vide</string>
     <string name="search_deck" comment="Deck search for selecting it">Recherche de paquet</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Deck Search</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Chercher un deck</string>
     <string name="empty_deck_add_note">Ajouter une carte</string>
     <string name="invalid_deck_name">Nom de paquet invalide</string>
     <string name="studyoptions_empty">Ce paquet est vide. Appuyez sur le bouton + pour ajouter du contenu.</string>
@@ -176,7 +176,7 @@
     <string name="studyoptions_no_cards_due">Aucune carte due actuellement</string>
     <string name="sd_card_not_mounted">Aucune carte SD</string>
     <string name="empty_cloze_warning">Modifier cette note et ajouter quelques textes à trous. (%1$s)</string>
-    <string name="button_sync">Synchroniser</string>
+    <string name="button_sync" comment="Text of the sync button">Synchroniser</string>
     <string name="cancel_sync_confirm">Voulez-vous annuler la synchronisation ?</string>
     <string name="continue_sync">Continuer la synchronisation</string>
     <string name="sync_cancelled">Synchronisation annulée</string>

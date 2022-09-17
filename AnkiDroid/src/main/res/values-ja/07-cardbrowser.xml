@@ -48,6 +48,9 @@
     <plurals name="card_browser_subtitle">
         <item quantity="other">%d枚のカード</item>
     </plurals>
+    <plurals name="card_browser_subtitle_notes_mode">
+        <item quantity="other">%d notes shown</item>
+    </plurals>
     <string name="card_browser_all_decks">全てのデッキ</string>
     <string name="card_browser_delete_card">ノートを削除</string>
     <string name="card_browser_suspend_card">カードを保留</string>
@@ -93,6 +96,7 @@
     <string name="card_browser_no_cards_in_deck">%s のデッキにカードが見つかりませんでした</string>
     <string name="card_browser_search_all_decks">全デッキで検索</string>
     <string name="card_browser_unknown_deck_name">不明</string>
+    <string name="card_browser_truncate" comment="allows users to show less of a field value">長文は先頭部分のみ表示</string>
     <plurals name="card_browser_cards_deleted">
         <item quantity="other">%d 枚のカードが削除されました</item>
     </plurals>

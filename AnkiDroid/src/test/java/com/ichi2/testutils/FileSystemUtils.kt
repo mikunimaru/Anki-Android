@@ -109,9 +109,12 @@ fun createTransientDirectory(prefix: String? = null): File =
         return@let file
     }
 
-/** Returns a temp file with [content]. The file is deleted on exit. */
-fun createTransientFile(content: String = ""): File =
-    File(kotlin.io.path.createTempFile().pathString).also {
+/**
+ * Returns a temp file with [content]. The file is deleted on exit.
+ * @param extension The file extension. Do not include a "."
+ */
+fun createTransientFile(content: String = "", extension: String? = null): File =
+    File(kotlin.io.path.createTempFile(suffix = if (extension == null) null else ".$extension").pathString).also {
         it.deleteOnExit()
         IOUtils.writeStringToFile(it, content)
     }

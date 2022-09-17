@@ -48,13 +48,13 @@
     <string name="youre_offline">目前是離線狀態</string>
     <string name="sync_even_if_offline">強制嘗試</string>
     <string name="sync_error">同步錯誤</string>
-    <string name="vague_error">錯誤</string>
+    <string name="vague_error" comment="Network error dialog title">錯誤</string>
     <string name="retry">重試</string>
     <string name="menu_get_shared_decks">取得共享的牌組</string>
     <string name="connection_error_message">網路出了點問題。</string>
     <string name="not_logged_in_title">登入 AnkiWeb</string>
     <string name="login_create_account_message">您必須登入到第三方帳號以使用云端同步服務。您可以在下一步建立一個帳號。</string>
-    <!-- MyAccount.java -->
+    <!-- MyAccount.kt -->
     <string name="username">電子郵件地址</string>
     <string name="password">密碼</string>
     <string name="log_in">登入</string>
@@ -68,7 +68,6 @@
     <string name="reset_password">忘記密碼</string>
     <string name="lost_mail_instructions">忘記了電郵地址？</string>
     <!-- AndroidManifest.xml -->
-    <string name="preferences_title">偏好設定</string>
     <string name="deckpreferences_title">XXX 的選項</string>
     <string name="sync_prepare_syncing">正在準備同步...</string>
     <string name="sync_preparing_full_sync_message">正在準備完整同步...</string>
@@ -117,6 +116,7 @@
     <string name="sync_sanity_remote">遠端</string>
     <string name="force_full_sync_title">強制完整同步</string>
     <string name="force_full_sync_summary">下一次同步時，強制單方面的修改</string>
+    <string name="force_full_sync_confirmation">Forced full sync</string>
     <string name="full_sync_confirmation">此變動會使你下一次同步你的集合時，需要完整上傳你的資料庫。如果同步的話，你其他的裝置上尚未同步的複習卡片或其他變動的部分將會遺失，你是否要繼續？</string>
     <string name="full_sync_confirmation_upgrade">由於先前安裝的 AnkiDroid 版本的程式錯誤，我們建議你強制完整同步一次。</string>
     <string name="sync_error_407_proxy_required">Proxy 要求認證。</string>

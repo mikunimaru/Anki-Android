@@ -48,13 +48,13 @@
     <string name="youre_offline">Vi estas eksterrete</string>
     <string name="sync_even_if_offline">Provi malgraŭ tio</string>
     <string name="sync_error">Eraro dum samtempigado</string>
-    <string name="vague_error">Eraro</string>
+    <string name="vague_error" comment="Network error dialog title">Eraro</string>
     <string name="retry">Reprovi</string>
     <string name="menu_get_shared_decks">Elŝuti publikajn kartarojn</string>
     <string name="connection_error_message">Reta eraro okazis</string>
     <string name="not_logged_in_title">Ensalutu en AnkiWeb</string>
     <string name="login_create_account_message">Ensalutu uzante konton de ekstera liveranto por uzi la samtempigan servon. Via povas krei konton je la venonta etapo.</string>
-    <!-- MyAccount.java -->
+    <!-- MyAccount.kt -->
     <string name="username">Retpoŝta adreso</string>
     <string name="password">Pasvorto</string>
     <string name="log_in">Ensaluti</string>
@@ -68,7 +68,6 @@
     <string name="reset_password">Restarigi pasvorton</string>
     <string name="lost_mail_instructions">Ĉu vi forgesis la retpoŝtadreson?</string>
     <!-- AndroidManifest.xml -->
-    <string name="preferences_title">Agordoj</string>
     <string name="deckpreferences_title">Agordoj por XXX</string>
     <string name="sync_prepare_syncing">Preparado de samtempigo&#8230;</string>
     <string name="sync_preparing_full_sync_message">Preparado de tuta samtempigo&#8230;</string>
@@ -117,6 +116,7 @@
     <string name="sync_sanity_remote">Fora</string>
     <string name="force_full_sync_title">Devigi plenan samtempigadon</string>
     <string name="force_full_sync_summary">Dum la sekva semtempigado devigi ŝanĝojn nur al unu direkto</string>
+    <string name="force_full_sync_confirmation">Forced full sync</string>
     <string name="full_sync_confirmation">La petita ŝanĝo postulos plenan alŝuton de la datumbazo dum la sekva samtempigado de via kolekto. Se vi havas ripetojn aŭ aliajn ŝanĝojn atendantajn ĉe alia aparato, kiuj jam ne estas samtempigitajn tie ĉi, ili perdiĝos. Ĉu pluigi?</string>
     <string name="full_sync_confirmation_upgrade">Pro la eraro en antaŭe instalita versio de AnkiDroid, estas konsilinde devigi plenan samtempigadon.</string>
     <string name="sync_error_407_proxy_required">Fiaskis aŭtentigi retperanton.</string>
