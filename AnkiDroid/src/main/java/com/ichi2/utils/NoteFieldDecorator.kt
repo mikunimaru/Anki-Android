@@ -57,10 +57,11 @@ object NoteFieldDecorator {
         "qzvgel-gvzbsrri",
         "inabfgra",
         "unacvatpuvarfr",
-        "jro5atnl"
+        "jro5atnl",
+        "FuevquneTbry",
+        "Nxfunl0701",
     )
 
-    @JvmStatic
     fun aplicaHuevo(fieldText: String?): String? {
         val revuelto = huevoRevuelto(fieldText)
         for (huevo in huevoOpciones) {

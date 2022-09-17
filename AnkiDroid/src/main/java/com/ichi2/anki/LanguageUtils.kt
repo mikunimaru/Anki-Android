@@ -28,7 +28,6 @@ object LanguageUtils {
      * Returns a Locale object constructed from an empty string if the input string is null, empty
      * or contains more than 3 fields separated by underscores.
      */
-    @JvmStatic
     fun localeFromStringIgnoringScriptAndExtensions(localeCodeStr: String): Locale {
         val localeCode = stripScriptAndExtensions(localeCodeStr)
         val fields = localeCode.split("_".toRegex()).toTypedArray()
@@ -38,6 +37,14 @@ object LanguageUtils {
             3 -> Locale(fields[0], fields[1], fields[2])
             else -> Locale("")
         }
+    }
+
+    /**
+     * @return if app is using a RTL language
+     */
+    fun appLanguageIsRTL(): Boolean {
+        val directionality = Character.getDirectionality(Locale.getDefault().displayName[0])
+        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT || directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC
     }
 
     private fun stripScriptAndExtensions(localeCodeStr: String): String {

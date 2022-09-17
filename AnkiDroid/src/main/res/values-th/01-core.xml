@@ -58,7 +58,7 @@
     <string name="studyoptions_total_cards">การ์ดทั้งหมด:</string>
     <string name="studyoptions_eta">เวลาโดยประมาณ (นาที) :</string>
     <string name="studyoptions_start">เริ่มเรียน</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">ขยาย</string>
     <string name="collapse">ซ่อน</string>
     <string name="study_more">เรียนเพิ่ม</string>
@@ -69,11 +69,11 @@
     <plurals name="reviewer_window_title">
         <item quantity="other">เหลืออีก %d นาที</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="other">เหลืออีก %d ชั่วโมง %d</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="other">%1$d hours %2$d left</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="other">เหลืออีก %d day %d </item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="other">%1$d days %2$d left</item>
     </plurals>
     <string name="no_cards_placeholder_title">Collection is empty</string>
     <string name="no_cards_placeholder_description">Start adding cards\nusing the + icon.</string>
@@ -99,7 +99,7 @@
     <string name="rename_deck">เปลี่ยนชื่อสำรับ</string>
     <string name="create_shortcut">Create shortcut</string>
     <string name="browse_cards">Browse cards</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">เพิ่ม</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">เพิ่ม</string>
     <string name="menu_add_note">เพิ่มโน้ต</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">เชื่อมบัญชีผู้ใช้</string>
     <string name="menu_dismiss_note">ซ่อน / ลบ</string>
@@ -172,7 +172,7 @@
     <string name="studyoptions_no_cards_due">No cards are due yet</string>
     <string name="sd_card_not_mounted">Device storage not mounted</string>
     <string name="empty_cloze_warning">Edit this note and add some cloze deletions. (%1$s)</string>
-    <string name="button_sync">Sync</string>
+    <string name="button_sync" comment="Text of the sync button">Sync</string>
     <string name="cancel_sync_confirm">Do you want to cancel the sync?</string>
     <string name="continue_sync">Continue sync</string>
     <string name="sync_cancelled">Sync cancelled</string>

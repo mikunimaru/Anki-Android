@@ -58,7 +58,7 @@
     <string name="studyoptions_total_cards">Łącznie kart:</string>
     <string name="studyoptions_eta">Szacowany czas (min):</string>
     <string name="studyoptions_start">Ucz się teraz</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">Rozwiń</string>
     <string name="collapse">Zwiń</string>
     <string name="study_more">Studiuj więcej</string>
@@ -74,17 +74,17 @@
         <item quantity="many">Zostało %d minut</item>
         <item quantity="other">Zostało %d minut</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="one">Została %d godzina %d</item>
-        <item quantity="few">Zostały %d godziny %d</item>
-        <item quantity="many">Zostało %d godzin %d</item>
-        <item quantity="other">Zostało %d godzin %d</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="one">Pozostała %1$d godzina %2$d</item>
+        <item quantity="few">Pozostały %1$d godziny %2$d</item>
+        <item quantity="many">Pozostało %1$d godzin %2$d</item>
+        <item quantity="other">Pozostało %1$d godzin %2$d</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="one">Został %d dzień %d</item>
-        <item quantity="few">Zostały %d dni %d</item>
-        <item quantity="many">Zostało %d dni %d</item>
-        <item quantity="other">Zostało %d dni %d</item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="one">Pozostał %1$d dzień %2$d</item>
+        <item quantity="few">Pozostały %1$d dni %2$d</item>
+        <item quantity="many">Pozostało %1$d dni %2$d</item>
+        <item quantity="other">Pozostało %1$d dni %2$d</item>
     </plurals>
     <string name="no_cards_placeholder_title">Kolekcja jest pusta</string>
     <string name="no_cards_placeholder_description">Zacznij dodawać karty używając przycisku +</string>
@@ -113,7 +113,7 @@
     <string name="rename_deck">Zmień nazwę talii</string>
     <string name="create_shortcut">Utwórz skrót</string>
     <string name="browse_cards">Przeglądaj karty</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Dodaj</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">Dodaj</string>
     <string name="menu_add_note">Dodaj notatkę</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">Synchronizacja konta</string>
     <string name="menu_dismiss_note">Ukryj / Usuń</string>
@@ -186,7 +186,7 @@
     <string name="studyoptions_no_cards_due">Nie ma żadnych kart do przejrzenia.</string>
     <string name="sd_card_not_mounted">Urządzenie pamięci masowej nie zostało zamontowane</string>
     <string name="empty_cloze_warning">Edytuj notatkę i dodaj luki w tekście. (%1$s)</string>
-    <string name="button_sync">Synchronizuj</string>
+    <string name="button_sync" comment="Text of the sync button">Synchronizuj</string>
     <string name="cancel_sync_confirm">Chcesz przerwać synchronizację?</string>
     <string name="continue_sync">Kontynuuj synchronizację</string>
     <string name="sync_cancelled">Synchronizacja przerwana</string>

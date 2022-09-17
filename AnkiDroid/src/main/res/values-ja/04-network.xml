@@ -48,13 +48,13 @@
     <string name="youre_offline">オフラインです</string>
     <string name="sync_even_if_offline">再試行してください</string>
     <string name="sync_error">同期エラー</string>
-    <string name="vague_error">エラー</string>
+    <string name="vague_error" comment="Network error dialog title">エラー</string>
     <string name="retry">再実行</string>
     <string name="menu_get_shared_decks">共有デッキをダウンロード</string>
     <string name="connection_error_message">ネットワークエラーが発生しました</string>
     <string name="not_logged_in_title">AnkiWebへのログイン</string>
     <string name="login_create_account_message">サードパーティーのクラウド同期サービスを使用するため、このサービスのアカウントにログインする必要があります。（アカウントをお持ちでない場合は、ログイン画面の下部から新規登録の手続きが行えます。）</string>
-    <!-- MyAccount.java -->
+    <!-- MyAccount.kt -->
     <string name="username">登録済みアカウントのメールアドレス</string>
     <string name="password">パスワード</string>
     <string name="log_in">ログイン</string>
@@ -68,7 +68,6 @@
     <string name="reset_password">パスワードを再設定</string>
     <string name="lost_mail_instructions">メールアドレスを忘れましたか？</string>
     <!-- AndroidManifest.xml -->
-    <string name="preferences_title">設定</string>
     <string name="deckpreferences_title">XXX のオプション</string>
     <string name="sync_prepare_syncing">同期の準備中...</string>
     <string name="sync_preparing_full_sync_message">完全同期の準備をしています&#8230;</string>
@@ -117,6 +116,7 @@
     <string name="sync_sanity_remote">クラウド</string>
     <string name="force_full_sync_title">完全同期を強制する</string>
     <string name="force_full_sync_summary">次回の同期で、一方向の変更を強制実行します</string>
+    <string name="force_full_sync_confirmation">完全同期を強制する</string>
     <string name="full_sync_confirmation">要求した変更を行うには、次回のコレクションの同期の際にデータベースの完全なアップロードが必要です。他の端末で復習やその他の変更を行ってまだ同期が済んでいない場合、それらの変更は失われます。処理を続けますか？</string>
     <string name="full_sync_confirmation_upgrade">以前のバージョンのバグの修正を反映させるため、完全な同期をお勧めします。</string>
     <string name="sync_error_407_proxy_required">プロキシ認証が必要です</string>
@@ -129,5 +129,5 @@
     <!-- Deck Picker Sync Icon -->
     <string name="sync_menu_title_full_sync">同期 (完全同期)</string>
     <string name="sync_menu_title_no_account">同期 (ログイン)</string>
-    <string name="sync_error_unknown_host_readable">Could not connect to AnkiWeb. Is your internet working?\n\n%s</string>
+    <string name="sync_error_unknown_host_readable">AnkiWebに接続できませんでした。インターネットに接続できていますか？\n\n%s</string>
 </resources>

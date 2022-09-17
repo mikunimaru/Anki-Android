@@ -73,7 +73,7 @@
     <string name="override_font_if_missing">Bilgi kartlarında font belirtilmediği zaman</string>
     <string name="override_font_always">Her zaman</string>
     <!-- theme labels -->
-    <string name="theme_follow_system">Follow system</string>
+    <string name="theme_follow_system">Sistemi izle</string>
     <!-- day_theme_labels -->
     <string name="day_theme_light">Açık</string>
     <string name="day_theme_plain">Düz</string>
@@ -89,14 +89,12 @@
     <string name="html_size_code_x_large">çok büyük</string>
     <string name="html_size_code_xx_large">çok çok büyük</string>
     <!-- gestures_labels -->
-    <string name="gesture_no_action">Eylem yok</string>
     <string name="gesture_answer_1">Cevap butonu 1</string>
     <string name="gesture_answer_2">Cevap butonu 2</string>
     <string name="gesture_answer_3">Cevap butonu 3</string>
     <string name="gesture_answer_4">Cevap butonu 4</string>
     <string name="gesture_answer_green">Önerilen cevabı (yeşil) ver</string>
     <string name="gesture_answer_better_recommended">Önerilenden daha iyi cevap ver</string>
-    <string name="gesture_tag_note">Notu etiketlendir</string>
     <string name="gesture_play">Medyayı oynat</string>
     <string name="gesture_abort_learning">Öğrenmeyi durdur</string>
     <string name="gesture_flag_red">Kırmızı bayrağı etkinleştir</string>
@@ -111,8 +109,8 @@
     <string name="gesture_page_down">Aşağı</string>
     <string name="gesture_abort_sync">Öğrenmeyi ve senkronizasyonu iptal et</string>
     <string name="gesture_toggle_whiteboard">Yazı tahtasını etkinleştir</string>
-    <string name="gesture_show_hint">Show Hint</string>
-    <string name="gesture_show_all_hints">Show All Hints</string>
+    <string name="gesture_show_hint">İpucu Göster</string>
+    <string name="gesture_show_all_hints">Tüm İpuçlarını Göster</string>
     <string name="record_voice">Ses kaydet</string>
     <string name="replay_voice">Sesi tekrar oynat</string>
     <string name="automatic_answer_option_2">Zor (mevcut değilse iyi)</string>

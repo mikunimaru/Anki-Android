@@ -58,7 +58,7 @@
     <string name="studyoptions_total_cards">Kartoj tute:</string>
     <string name="studyoptions_eta">Proksimuma tempo (min):</string>
     <string name="studyoptions_start">Lerni</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">Etendi</string>
     <string name="collapse">Maletendi</string>
     <string name="study_more">Lerni pli</string>
@@ -70,13 +70,13 @@
         <item quantity="one">ankoraŭ %d minuto</item>
         <item quantity="other">ankoraŭ %d minutoj</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="one">ankoraŭ %d horo %d</item>
-        <item quantity="other">ankoraŭ %d horoj %d</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="one">%1$d hour %2$d left</item>
+        <item quantity="other">%1$d hours %2$d left</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="one">ankoraŭ %d tago %d</item>
-        <item quantity="other">ankoraŭ %d tagoj %d</item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="one">%1$d day %2$d left</item>
+        <item quantity="other">%1$d days %2$d left</item>
     </plurals>
     <string name="no_cards_placeholder_title">Kolekto estas malplena</string>
     <string name="no_cards_placeholder_description">Komencu aldoni kartojn\nper la butono “+”</string>
@@ -103,7 +103,7 @@
     <string name="rename_deck">Renomi kartaron</string>
     <string name="create_shortcut">Krei simbolan ligilon</string>
     <string name="browse_cards">Foliumi kartojn</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Aldoni</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">Aldoni</string>
     <string name="menu_add_note">Aldoni noton</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">Samtempigo-konton</string>
     <string name="menu_dismiss_note">Kaŝi / forigi</string>
@@ -176,7 +176,7 @@
     <string name="studyoptions_no_cards_due">Neniu karto por ripeti</string>
     <string name="sd_card_not_mounted">Aparata konservejo ne muntita</string>
     <string name="empty_cloze_warning">Redaktu tiun ĉi noton kaj aldonu kelkajn malplenejojn. (%1$s)</string>
-    <string name="button_sync">Samtempigi</string>
+    <string name="button_sync" comment="Text of the sync button">Samtempigi</string>
     <string name="cancel_sync_confirm">Ĉu vi volas ĉesigi samtempigadon?</string>
     <string name="continue_sync">Pluigi samtempigadon</string>
     <string name="sync_cancelled">Samtempigado nuligita</string>

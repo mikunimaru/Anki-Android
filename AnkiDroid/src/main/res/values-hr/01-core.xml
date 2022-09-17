@@ -58,7 +58,7 @@
     <string name="studyoptions_total_cards">Ukupan broj kartica:</string>
     <string name="studyoptions_eta">Približno vrijeme (minute):</string>
     <string name="studyoptions_start">Uči</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">Proširi</string>
     <string name="collapse">Sažmi</string>
     <string name="study_more">Uči više</string>
@@ -72,15 +72,15 @@
         <item quantity="few">%d minute preostale</item>
         <item quantity="other">%d minuta preostalo</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="one">%d sat %d preostalo</item>
-        <item quantity="few">%d sati %d preostalo</item>
-        <item quantity="other">%d sati %d preostalo</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="one">%1$d hour %2$d left</item>
+        <item quantity="few">%1$d hours %2$d left</item>
+        <item quantity="other">%1$d hours %2$d left</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="one">%d dan %d preostalo</item>
-        <item quantity="few">%d dana %d preostalo</item>
-        <item quantity="other">%d dana %d preostalo</item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="one">%1$d day %2$d left</item>
+        <item quantity="few">%1$d days %2$d left</item>
+        <item quantity="other">%1$d days %2$d left</item>
     </plurals>
     <string name="no_cards_placeholder_title">Collection is empty</string>
     <string name="no_cards_placeholder_description">Start adding cards\nusing the + icon.</string>
@@ -108,7 +108,7 @@
     <string name="rename_deck">Preimenuj skupinu</string>
     <string name="create_shortcut">Create shortcut</string>
     <string name="browse_cards">Browse cards</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Dodaj</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">Dodaj</string>
     <string name="menu_add_note">Dodaj bilješku</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">Sinkroniziraj račun</string>
     <string name="menu_dismiss_note">Sakrij / izbriši</string>
@@ -181,7 +181,7 @@
     <string name="studyoptions_no_cards_due">Još nije potrebno dovršiti ni jednu karticu</string>
     <string name="sd_card_not_mounted">Pohrana uređaja nije montirana</string>
     <string name="empty_cloze_warning">Uredi bilješku i dodaj cloze brisanja (%1$s)</string>
-    <string name="button_sync">Sinkroniziraj</string>
+    <string name="button_sync" comment="Text of the sync button">Sinkroniziraj</string>
     <string name="cancel_sync_confirm">Želite li prekinuti sinkronizaciju?</string>
     <string name="continue_sync">Nastavi sinkronizaciju</string>
     <string name="sync_cancelled">Sinkronizacija je otkazana</string>

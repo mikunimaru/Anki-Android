@@ -60,13 +60,6 @@
     <string name="initializing_tts">Lanĉado de parol-sintezilo&#8230;</string>
     <string name="tts_no_tts">ne paroli</string>
     <string name="unused_strings">\n\nNeuzataj dosieroj:\n</string>
-    <string-array name="about_content">
-        <item><![CDATA[<h2>%1$s:<br/>fulmokartoj por Androido</h2>AnkiDroid estas aplikaĵo por lerni per kartoj. Ĝi estas plene kongrua kun skribotabla programo <a href=\"%2$s\">Anki</a>. Vi povas krei kaj elŝuti lernilojn ambaŭ ĉe komputilo kaj poŝtelefono kaj samtempigi ilin per la servo AnkiWeb.]]></item>
-        <item><![CDATA[Por helpi al ni igi AnkiDroid pli bona, bonvolu raporti erarojn per la <a href=\"%1$s\">erar-spurilo</a>, ideoj pri novaj eblaĵoj ankaŭ estas laŭdindaj. En kaze de problemoj, vi trovos solvojn ĉe la <a href=\"%2$s\">vikio</a> (malesperante) aŭ pridiskutu ilin ĉe la <a href=\"%3$s\">forumo</a>.]]></item>
-        <item><![CDATA[AnkiDroid estas <a href=\"%1$s\">malfermkoda programo<a/>, do ĉiu povas <a href=\"%2$s\">al ĝi kontribui</a> :-)]]></item>
-        <item><![CDATA[Neprogramistoj ankaŭ povas helpi. Ekzemple vi povas <a href=\"%1$s\">helpi traduki</a> la aplikaĵon, aktualigi la vikion, aldoni ekranokopiojn aŭ afiŝi sur via ret-taglibro pri AnkiDroid.]]></item>
-        <item><![CDATA[AnkiDroid estas eldonita laŭ la <a href=\"%1$s\">permesilo GNU-GPL v3</a> kaj ĝia fontkodo estas disponebla ĉe <a href=\"%2$s\">GitHub</a>.]]></item>
-    </string-array>
     <string name="preview_title" comment="Title of the window allowing to preview card(s)">Antaŭrigardo</string>
     <string name="reposition_card_dialog_title">Repozicii novan karton</string>
     <string name="reposition_card_dialog_message">Komenca pozicio:</string>
@@ -118,7 +111,10 @@
     <string name="import_progress">• Enportado de notoj: %1$d%%\n• Enportado de kartoj: %2$d%%\n• Prilaborado: %3$d%%</string>
     <string name="import_update_details">Aktualigis %1$d el %2$d ekzistajn notojn.</string>
     <string name="import_update_ignored">Ignoris kelkajn aktualigojn pro ŝanĝo de tipo de noto</string>
-    <string name="import_complete_count">Enportis kartojn: %d</string>
+    <plurals name="import_complete_message">
+        <item quantity="one">Cards imported: %2$d</item>
+        <item quantity="other">Files imported: %1$d\nTotal cards imported: %2$d</item>
+    </plurals>
     <string name="sd_card_full_title">SD-karto estas plena</string>
     <string name="sd_card_almost_full_title">SD-karto estas preskaŭ plena</string>
     <string name="no_space_to_downgrade_title">Mankas spaco</string>
@@ -130,6 +126,7 @@
     <string name="dialog_ok">Bone</string>
     <string name="dialog_no">Ne</string>
     <string name="dialog_continue">Pluigi</string>
+    <string name="dialog_processing">Processing...</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Krei</string>
     <string name="dialog_positive_delete">Forigi</string>
     <!-- Currently unsued, should be useful in the future -->
@@ -177,7 +174,7 @@
     <string name="multimedia_editor_audio_permission_denied">Permeso al registri sonon rifuzita</string>
     <!-- Initial collection load -->
     <string name="collection_load_welcome_request_permissions_title">Bonvenon al AnkiDroid!</string>
-    <string name="collection_load_welcome_request_permissions_details">AnkiDroid bezonas aliron al la konservejo, kiu estos uzata nur por konservi viajn kolektojn, aŭdvidaĵojn de kartaroj kaj sekurkopiojn. La fontkodo de la aplikaĵo AnkiDroid estas malferma, kreata de volontuloj kaj konfidata de milionoj.\n\nSe vi havas iujn demandojn, bonvolu legi la enaplikaĵan manlibron aŭ vizitu niajn forumojn.\n\nDankon por provi AnkiDroid!\n–AnkiDroid-teamo</string>
+    <string name="collection_load_welcome_request_permissions_details">AnkiDroid bezonas aliron al la konservejo, kiu estos uzata nur por konservi viajn kolektojn, aŭdvidaĵojn de kartaroj kaj sekurkopiojn. La fontkodo de la aplikaĵo AnkiDroid estas malferma, kreata de volontuloj kaj konfidata de milionoj.\n\nSe vi havas iun demandon, bonvolu legi la enaplikaĵan manlibron aŭ vizitu niajn forumojn.\n\nDankon pro provi AnkiDroid!\n–AnkiDroid-teamo</string>
     <string name="mutimedia_editor_assertion_failed">Nekonata eraro okazis dum montri la altnivelan redaktilon</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid aktualigita</string>
@@ -249,6 +246,7 @@
         <item quantity="one">Aŭtomata samtempigo povas startigi post %d sekundo</item>
         <item quantity="other">Aŭtomata samtempigo povas startigi post %d sekundoj</item>
     </plurals>
+    <string name="metered_sync_warning">Your connection is metered. Data transfer may cost money</string>
     <string name="deck_picker_new">Nombro de novaj hodiaŭaj kartoj por montri en tiu ĉi kartaro.</string>
     <string name="deck_picker_rev">Nombro de hodiaŭaj lernendaj kartoj en tiu ĉi kartaro.</string>
     <string name="deck_picker_lrn">Nombro de lernataj kortoj en tiu ĉi kartaro.</string>
@@ -258,4 +256,7 @@
     <string name="deck_picker_counts">Malfermu la kartaran sumigon enhavantan nombron de kartoj por montri hodiaŭ.</string>
     <string name="import_deck_package">Kartaro (.apkg)</string>
     <string name="import_collection_package">Kolekto (.colpkg)</string>
+    <string name="import_csv">Text file (.txt, .csv)</string>
+    <!-- Deck selection dialog -->
+    <string name="cannot_create_subdeck_for_all_decks">You cannot create a subdeck for all decks</string>
 </resources>

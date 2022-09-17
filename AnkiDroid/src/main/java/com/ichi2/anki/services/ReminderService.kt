@@ -28,6 +28,7 @@ import com.ichi2.anki.NotificationChannels
 import com.ichi2.anki.R
 import com.ichi2.compat.CompatHelper
 import com.ichi2.libanki.Collection
+import com.ichi2.libanki.DeckId
 import com.ichi2.libanki.sched.DeckDueTreeNode
 import com.ichi2.utils.JSONObject
 import timber.log.Timber
@@ -62,7 +63,7 @@ class ReminderService : BroadcastReceiver() {
         val colHelper: CollectionHelper
         val col: Collection?
         try {
-            colHelper = CollectionHelper.getInstance()
+            colHelper = CollectionHelper.instance
             col = colHelper.getCol(context)
         } catch (t: Throwable) {
             Timber.w(t, "onReceive - unexpectedly unable to get collection. Returning.")
@@ -136,12 +137,12 @@ class ReminderService : BroadcastReceiver() {
 
         // Avoid crashes if the deck option group is deleted while we
         // are working
-        if (col.db == null || col.decks.getConf(dConfId) == null) {
+        if (col.dbClosed || col.decks.getConf(dConfId) == null) {
             Timber.d("Deck option %s became unavailable while ReminderService was working. Ignoring", dConfId)
             return null
         }
         try {
-            val dues = col.sched.deckDueTree()
+            val dues = col.sched.deckDueTree().map { it.value }
             val decks: MutableList<DeckDueTreeNode> = ArrayList(dues.size)
             // This loop over top level deck only. No notification will ever occur for subdecks.
             for (node in dues) {
@@ -173,8 +174,7 @@ class ReminderService : BroadcastReceiver() {
         const val EXTRA_DECK_OPTION_ID = "EXTRA_DECK_OPTION_ID"
         const val EXTRA_DECK_ID = "EXTRA_DECK_ID"
 
-        @JvmStatic
-        fun getReviewDeckIntent(context: Context, deckId: Long): Intent {
+        fun getReviewDeckIntent(context: Context, deckId: DeckId): Intent {
             return Intent(context, IntentHandler::class.java).putExtra(EXTRA_DECK_ID, deckId)
         }
     }

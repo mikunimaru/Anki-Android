@@ -85,6 +85,7 @@ class SharedDecksDownloadFragment : Fragment() {
         const val DOWNLOAD_COMPLETED_PROGRESS_PERCENTAGE = "100"
     }
 
+    @Suppress("deprecation") // getSerializable
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -93,6 +94,7 @@ class SharedDecksDownloadFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_shared_decks_download, container, false)
     }
 
+    @Suppress("deprecation") // getSerializable
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -183,7 +185,7 @@ class SharedDecksDownloadFragment : Fragment() {
             fun verifyDeckIsImportable() {
                 if (mFileName == null) {
                     // Send ACRA report
-                    AnkiDroidApp.sendExceptionReport(
+                    CrashReportService.sendExceptionReport(
                         "File name is null",
                         "SharedDecksDownloadFragment::verifyDeckIsImportable"
                     )
@@ -198,7 +200,7 @@ class SharedDecksDownloadFragment : Fragment() {
                             "Deck download might still be going on, when it completes then the method would be called again."
                     )
                     // Send ACRA report
-                    AnkiDroidApp.sendExceptionReport(
+                    CrashReportService.sendExceptionReport(
                         "Download ID does not match with the ID of the completed download",
                         "SharedDecksDownloadFragment::verifyDeckIsImportable"
                     )
@@ -400,6 +402,7 @@ class SharedDecksDownloadFragment : Fragment() {
      * If there are any pending downloads, continue with them.
      * Else, set mIsPreviousDownloadOngoing as false and unregister mOnComplete broadcast receiver.
      */
+    @Suppress("deprecation") // onBackPressed
     private fun checkDownloadStatusAndUnregisterReceiver(isSuccessful: Boolean, isInvalidDeckFile: Boolean = false) {
         if (isVisible && !isSuccessful) {
             if (isInvalidDeckFile) {
@@ -425,22 +428,21 @@ class SharedDecksDownloadFragment : Fragment() {
         removeCancelConfirmationDialog()
     }
 
+    @Suppress("deprecation") // onBackPressed
     fun showCancelConfirmationDialog() {
         mDownloadCancelConfirmationDialog = context?.let {
-            MaterialDialog.Builder(it)
-                .title(R.string.cancel_download_question_title)
-                .positiveText(R.string.dialog_cancel)
-                .negativeText(R.string.dialog_continue)
-                .onPositive { _, _ ->
+            MaterialDialog(it).show {
+                title(R.string.cancel_download_question_title)
+                positiveButton(R.string.dialog_cancel) {
                     mDownloadManager.remove(mDownloadId)
                     unregisterReceiver()
                     isDownloadInProgress = false
                     activity?.onBackPressed()
                 }
-                .onNegative { dialog, _ ->
-                    dialog.dismiss()
+                negativeButton(R.string.dialog_continue) {
+                    dismiss()
                 }
-                .show()
+            }
         }
     }
 

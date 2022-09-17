@@ -16,7 +16,7 @@
 
 package com.ichi2.libanki
 
-import com.ichi2.anki.AnkiDroidApp
+import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.exception.ConfirmModSchemaException
 import com.ichi2.utils.Assert
 import com.ichi2.utils.JSONObject
@@ -72,6 +72,9 @@ abstract class ModelManager(protected val col: Collection) {
     abstract fun get(id: Long): Model?
     /** get all models  */
     abstract fun all(): List<Model>
+
+    /** get the names of all models */
+    abstract fun allNames(): List<String>
 
     /** get model with NAME.  */
     abstract fun byName(name: String): Model?
@@ -180,7 +183,7 @@ abstract class ModelManager(protected val col: Collection) {
      * @throws ConfirmModSchemaException
      */
     @Throws(ConfirmModSchemaException::class)
-    abstract fun change(m: Model, nid: Long, newModel: Model, fmap: Map<Int, Int>?, cmap: Map<Int, Int>?)
+    abstract fun change(m: Model, nid: NoteId, newModel: Model, fmap: Map<Int, Int?>, cmap: Map<Int, Int?>)
 
     /*
       Schema hash ***********************************************************************************************
@@ -255,9 +258,9 @@ abstract class ModelManager(protected val col: Collection) {
      * @param ords array of ints, each one is the ordinal a the card template in the given model
      * @return null if deleting ords would orphan notes, long[] of related card ids to delete if it is safe
      */
-    open fun getCardIdsForModel(modelId: Long, ords: IntArray): List<Long?>? {
+    open fun getCardIdsForModel(modelId: NoteTypeId, ords: IntArray): List<Long>? {
         val cardIdsToDeleteSql = "select c2.id from cards c2, notes n2 where c2.nid=n2.id and n2.mid = ? and c2.ord  in " + Utils.ids2str(ords)
-        val cids: List<Long?> = col.db.queryLongList(cardIdsToDeleteSql, modelId)
+        val cids: List<Long> = col.db.queryLongList(cardIdsToDeleteSql, modelId)
         // Timber.d("cardIdsToDeleteSql was ' %s' and got %s", cardIdsToDeleteSql, Utils.ids2str(cids));
         Timber.d("getCardIdsForModel found %s cards to delete for model %s and ords %s", cids.size, modelId, Utils.ids2str(ords))
 
@@ -290,7 +293,7 @@ abstract class ModelManager(protected val col: Collection) {
             _addField(m, field)
         } catch (e: ConfirmModSchemaException) {
             Timber.w(e, "Unexpected mod schema")
-            AnkiDroidApp.sendExceptionReport(e, "addFieldInNewModel: Unexpected mod schema")
+            CrashReportService.sendExceptionReport(e, "addFieldInNewModel: Unexpected mod schema")
             throw IllegalStateException("ConfirmModSchemaException should not be thrown", e)
         }
     }
@@ -304,7 +307,7 @@ abstract class ModelManager(protected val col: Collection) {
             _addTemplate(m, template)
         } catch (e: ConfirmModSchemaException) {
             Timber.w(e, "Unexpected mod schema")
-            AnkiDroidApp.sendExceptionReport(e, "addTemplateInNewModel: Unexpected mod schema")
+            CrashReportService.sendExceptionReport(e, "addTemplateInNewModel: Unexpected mod schema")
             throw IllegalStateException("ConfirmModSchemaException should not be thrown", e)
         }
     }

@@ -26,6 +26,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.ichi2.anki.AnkiDroidApp
+import com.ichi2.anki.CrashReportService
 import com.ichi2.anki.R
 import com.ichi2.anki.UIUtils.showThemedToast
 import com.ichi2.compat.CompatHelper
@@ -40,7 +41,7 @@ class BasicMediaClipFieldController : FieldControllerBase(), IFieldController {
 
     private lateinit var tvAudioClip: FixedTextView
 
-    override fun createUI(context: Context, layout: LinearLayout?) {
+    override fun createUI(context: Context, layout: LinearLayout) {
         ankiCacheDirectory = context.externalCacheDir?.absolutePath
         // #9639: .opus is application/octet-stream in API 26,
         // requires a workaround as we don't want to enable application/octet-stream by default
@@ -54,7 +55,7 @@ class BasicMediaClipFieldController : FieldControllerBase(), IFieldController {
                 ACTIVITY_SELECT_AUDIO_CLIP
             )
         }
-        layout!!.addView(btnLibrary, ViewGroup.LayoutParams.MATCH_PARENT)
+        layout.addView(btnLibrary, ViewGroup.LayoutParams.MATCH_PARENT)
         val btnVideo = Button(mActivity).apply {
             text = mActivity.getText(R.string.multimedia_editor_import_video)
             setOnClickListener {
@@ -116,8 +117,8 @@ class BasicMediaClipFieldController : FieldControllerBase(), IFieldController {
         mActivity.contentResolver.query(selectedClip!!, queryColumns, null, null, null).use { cursor ->
             if (cursor == null) {
                 showThemedToast(
-                    AnkiDroidApp.getInstance().applicationContext,
-                    AnkiDroidApp.getInstance().getString(R.string.multimedia_editor_something_wrong), true
+                    AnkiDroidApp.instance.applicationContext,
+                    AnkiDroidApp.instance.getString(R.string.multimedia_editor_something_wrong), true
                 )
                 return
             }
@@ -133,10 +134,10 @@ class BasicMediaClipFieldController : FieldControllerBase(), IFieldController {
                     // This code is difficult to stabilize - it is not clear how to handle files with no extension
                     // and apparently we may fail to get MIME_TYPE information - in that case we will gather information
                     // about what people are experiencing in the real world and decide later, but without crashing at least
-                    AnkiDroidApp.sendExceptionReport(e, "Media Clip addition failed. Name " + mediaClipFullName + " / cursor mime type column type " + cursor.getType(2))
+                    CrashReportService.sendExceptionReport(e, "Media Clip addition failed. Name " + mediaClipFullName + " / cursor mime type column type " + cursor.getType(2))
                     showThemedToast(
-                        AnkiDroidApp.getInstance().applicationContext,
-                        AnkiDroidApp.getInstance().getString(R.string.multimedia_editor_something_wrong), true
+                        AnkiDroidApp.instance.applicationContext,
+                        AnkiDroidApp.instance.getString(R.string.multimedia_editor_something_wrong), true
                     )
                     return
                 }
@@ -150,10 +151,10 @@ class BasicMediaClipFieldController : FieldControllerBase(), IFieldController {
             Timber.d("media clip picker file path is: %s", clipCopy.absolutePath)
         } catch (e: Exception) {
             Timber.e(e, "Could not create temporary media file. ")
-            AnkiDroidApp.sendExceptionReport(e, "handleMediaSelection:tempFile")
+            CrashReportService.sendExceptionReport(e, "handleMediaSelection:tempFile")
             showThemedToast(
-                AnkiDroidApp.getInstance().applicationContext,
-                AnkiDroidApp.getInstance().getString(R.string.multimedia_editor_something_wrong), true
+                AnkiDroidApp.instance.applicationContext,
+                AnkiDroidApp.instance.getString(R.string.multimedia_editor_something_wrong), true
             )
             return
         }
@@ -161,7 +162,7 @@ class BasicMediaClipFieldController : FieldControllerBase(), IFieldController {
         // Copy file contents into new temp file. Possibly check file size first and warn if large?
         try {
             mActivity.contentResolver.openInputStream(selectedClip).use { inputStream ->
-                CompatHelper.compat.copyFile(inputStream, clipCopy.absolutePath)
+                CompatHelper.compat.copyFile(inputStream!!, clipCopy.absolutePath)
 
                 // If everything worked, hand off the information
                 mField.setHasTemporaryMedia(true)
@@ -171,10 +172,10 @@ class BasicMediaClipFieldController : FieldControllerBase(), IFieldController {
             }
         } catch (e: Exception) {
             Timber.e(e, "Unable to copy media file from ContentProvider")
-            AnkiDroidApp.sendExceptionReport(e, "handleMediaSelection:copyFromProvider")
+            CrashReportService.sendExceptionReport(e, "handleMediaSelection:copyFromProvider")
             showThemedToast(
-                AnkiDroidApp.getInstance().applicationContext,
-                AnkiDroidApp.getInstance().getString(R.string.multimedia_editor_something_wrong), true
+                AnkiDroidApp.instance.applicationContext,
+                AnkiDroidApp.instance.getString(R.string.multimedia_editor_something_wrong), true
             )
         }
     }

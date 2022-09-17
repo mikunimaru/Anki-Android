@@ -18,6 +18,7 @@ package com.ichi2.anki
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Spannable
 import android.text.SpannableString
 import android.view.Gravity
@@ -29,6 +30,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
+import com.ichi2.anim.ActivityTransitionAnimation
 import com.ichi2.anki.UIUtils.showThemedToast
 import com.ichi2.libanki.*
 import com.ichi2.libanki.Collection
@@ -36,16 +38,18 @@ import com.ichi2.libanki.stats.Stats
 import com.ichi2.ui.FixedTextView
 import com.ichi2.utils.LanguageUtil
 import com.ichi2.utils.UiUtil.makeColored
+import net.ankiweb.rsdroid.RustCleanup
 import timber.log.Timber
 import java.text.DateFormat
 import java.util.*
 import java.util.function.Function
 
+@RustCleanup("Remove this whole activity and use the new Anki page once the new backend is the default")
 class CardInfo : AnkiActivity() {
     @get:VisibleForTesting(otherwise = VisibleForTesting.NONE)
     var model: CardInfoModel? = null
         private set
-    private var mCardId: Long = 0
+    private var mCardId: CardId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         if (showedActivityFailedScreen(savedInstanceState)) {
             return
@@ -103,6 +107,21 @@ class CardInfo : AnkiActivity() {
         this.model = model
     }
 
+    @Suppress("deprecation") // getParcelableExtra
+    override fun finish() {
+        val animation: Parcelable? = intent.getParcelableExtra(FINISH_ANIMATION_EXTRA)
+        if (animation is ActivityTransitionAnimation.Direction) {
+            finishWithAnimation(animation)
+        } else {
+            super.finish()
+        }
+    }
+
+    override fun onActionBarBackPressed(): Boolean {
+        finish()
+        return true
+    }
+
     private fun addWithText(row: TableRow, value: String): FixedTextView {
         return addWithText(row, SpannableString(value))
     }
@@ -148,7 +167,7 @@ class CardInfo : AnkiActivity() {
         return String.format(locale, formatSpecifier, number)
     }
 
-    private val locale: Locale
+    private val locale: Locale?
         get() = LanguageUtil.getLocaleCompat(resources)
 
     private fun setText(@IdRes id: Int, text: String?) {
@@ -190,7 +209,7 @@ class CardInfo : AnkiActivity() {
     }
 
     class CardInfoModel(
-        val cardId: Long,
+        val cardId: CardId,
         val firstReviewDate: Long?,
         val latestReviewDate: Long?,
         val dues: String,
@@ -203,7 +222,7 @@ class CardInfo : AnkiActivity() {
         val cardType: String?,
         val noteType: String,
         val deckName: String,
-        val noteId: Long,
+        val noteId: NoteId,
         val entries: List<RevLogEntry>
     ) {
         val due: String
@@ -274,7 +293,6 @@ class CardInfo : AnkiActivity() {
         }
 
         companion object {
-            @JvmStatic
             @CheckResult
             fun create(c: Card, collection: Collection): CardInfoModel {
                 val addedDate = c.id

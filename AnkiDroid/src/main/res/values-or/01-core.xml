@@ -58,10 +58,10 @@
     <string name="studyoptions_total_cards">ସମୁଦାୟ ପତ୍ର:</string>
     <string name="studyoptions_eta">ଆନୁମାନିକ ସମୟ (ମିନିଟ୍):</string>
     <string name="studyoptions_start">ଅଧ୍ୟୟନ</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">ପ୍ରସାରଣ</string>
     <string name="collapse">ସଙ୍କୋଚନ</string>
-    <string name="study_more">ଅଧିକ ଅଧ୍ୟୟନ କରନ୍ତୁ</string>
+    <string name="study_more">ଆହୁରି ଅଧ୍ୟୟନ କରିବେ</string>
     <plurals name="deckpicker_title">
         <item quantity="one">%1$dଟିଏ ପତ୍ର ବାକି (%2$s)</item>
         <item quantity="other">%1$dଟି ପତ୍ର ବାକି (%2$s)</item>
@@ -70,13 +70,13 @@
         <item quantity="one">%d ମିନିଟ୍ ବାକି ଅଛି</item>
         <item quantity="other">%d ମିନିଟ୍ ବାକି ଅଛି</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="one">%d ଘଣ୍ଟା %d ବାକି ଅଛି</item>
-        <item quantity="other">%d ଘଣ୍ଟା %d ବାକି ଅଛି</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="one">%1$d ଘଣ୍ଟା %2$d ବାକି ଅଛି</item>
+        <item quantity="other">%1$d ଘଣ୍ଟା %2$d ବାକି ଅଛି</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="one">%d ଦିନ %d ବାକି ଅଛି</item>
-        <item quantity="other">%d ଦିନ %d ବାକି ଅଛି</item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="one">%1$d ଦିନ %2$d ବାକି ଅଛି</item>
+        <item quantity="other">%1$d ଦିନ %2$d ବାକି ଅଛି</item>
     </plurals>
     <string name="no_cards_placeholder_title">ସଂଗ୍ରହ ଖାଲି ଅଛି</string>
     <string name="no_cards_placeholder_description">+ ଆଇକନ୍ ବ୍ୟବହାର କରି\nପତ୍ର ଯୋଡ଼ିବା ଆରମ୍ଭ କରନ୍ତୁ।</string>
@@ -87,8 +87,8 @@
     </plurals>
     <!-- flashcard_portrait.xml -->
     <string name="type_answer_hint">ଉତ୍ତର ଟାଇପ୍ କରନ୍ତୁ</string>
-    <string name="show_answer">ଉତ୍ତର ଦେଖନ୍ତୁ</string>
-    <string name="hide_answer">ଉତ୍ତର ଲୁଚାନ୍ତୁ</string>
+    <string name="show_answer">ଉତ୍ତର ଦେଖାଅ</string>
+    <string name="hide_answer">ଉତ୍ତର ଲୁଚାଅ</string>
     <string name="ease_button_again">ପୁଣି</string>
     <string name="ease_button_hard">କଠିନ</string>
     <string name="ease_button_good">ଭଲ</string>
@@ -103,7 +103,7 @@
     <string name="rename_deck">ତାସଖଣ୍ଡ ନାମ ବଦଳାନ୍ତୁ</string>
     <string name="create_shortcut">ସର୍ଟକଟ୍‌ ସୃଷ୍ଟି କରନ୍ତୁ</string>
     <string name="browse_cards">ପତ୍ରଗୁଡ଼ିକ ବ୍ରାଉଜ୍ କରନ୍ତୁ</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">ଯୋଡ଼ନ୍ତୁ</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">ଯୋଡ଼ନ୍ତୁ</string>
     <string name="menu_add_note">ନୋଟ୍ ଯୋଡ଼ନ୍ତୁ</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">ସିଙ୍କ୍ ଖାତା</string>
     <string name="menu_dismiss_note">ଲୁଚାନ୍ତୁ / ବିଲୋପ କରନ୍ତୁ</string>
@@ -160,7 +160,7 @@
     <string name="create_subdeck">ଉପତାସଖଣ୍ଡ ନିର୍ମାଣ</string>
     <string name="empty_filtered_deck">ଶୋଧିତ ତାସଖଣ୍ଡ ଖାଲି ହଉଛି&#8230;</string>
     <string name="custom_study_deck_name">କଷ୍ଟମ୍ ଅଧ୍ୟୟନ ଅଧିବେଶନ</string>
-    <string name="custom_study_deck_exists">ପ୍ରଥମେ ବିଦ୍ୟମାନ କଷ୍ଟମ୍ ଅଧ୍ୟୟନ ତାସଖଣ୍ଡ ର ନାମ ବଦଳାନ୍ତୁ</string>
+    <string name="custom_study_deck_exists">ପ୍ରଥମେ ଵିଦ୍ୟମାନ କଷ୍ଟମ୍ ଅଧ୍ୟୟନ ତାସଖଣ୍ଡ ର ନାମ ବଦଳାନ୍ତୁ</string>
     <string name="empty_deck">ତାସଖଣ୍ଡଟି ଖାଲି ଅଛି</string>
     <string name="search_deck" comment="Deck search for selecting it">ତାସଖଣ୍ଡ ସନ୍ଧାନ</string>
     <string name="search_for_download_deck" comment="Deck search value for downloading deck">ତାସଖଣ୍ଡ ସନ୍ଧାନ</string>
@@ -176,7 +176,7 @@
     <string name="studyoptions_no_cards_due">କୌଣସି ପତ୍ର ବାକି ନାହିଁ</string>
     <string name="sd_card_not_mounted">Device storage ଭର୍ତ୍ତି କରାଯାଇ ନାହିଁ</string>
     <string name="empty_cloze_warning">ଏହି ନୋଟ୍ କୁ ସମ୍ପାଦନ କରି କିଛି କ୍ଲୋଜ୍ ବିଲୋପ ଯୋଗ କରନ୍ତୁ। (%1$s)</string>
-    <string name="button_sync">ସିଙ୍କ୍</string>
+    <string name="button_sync" comment="Text of the sync button">ସିଙ୍କ୍</string>
     <string name="cancel_sync_confirm">ଆପଣ ସିଙ୍କ୍ କୁ ବାତିଲ କରିବାକୁ ଚାହୁଁଛନ୍ତି କି?</string>
     <string name="continue_sync">ସିଙ୍କ୍ ଜାରି ରଖନ୍ତୁ</string>
     <string name="sync_cancelled">ସିଙ୍କ୍ ବାତିଲ ହୋଇଛି</string>
@@ -214,7 +214,7 @@
     <string name="card_info_title">ପତ୍ର ସୂଚନା</string>
     <!-- Permissions -->
     <string name="read_write_permission_label">Ankidroid ଡାଟାବେସ୍ କୁ ପଢ଼ିବା ଓ ଲେଖିବା</string>
-    <string name="read_write_permission_description">ବିଦ୍ୟମାନ ନୋଟ୍, ପତ୍ର, ନୋଟ୍ ପ୍ରକାର ଓ ତାସଖଣ୍ଡ ଅଧ୍ୟୟନ କରିବା ବ୍ୟତୀତ ନୂଆରେ ସୃଷ୍ଟି କରନ୍ତୁ</string>
+    <string name="read_write_permission_description">ଵିଦ୍ୟମାନ ନୋଟ୍, ପତ୍ର, ନୋଟ୍ ପ୍ରକାର ଓ ତାସଖଣ୍ଡ ଅଧ୍ୟୟନ କରିବା ଵ୍ୟତୀତ ନୂଆରେ ସୃଷ୍ଟି କରନ୍ତୁ</string>
     <!-- Context Menu -->
     <string name="card_browser_context_menu" comment="The value which appears in the system context menu. Note the casing difference">ପତ୍ର ବ୍ରାଉଜର୍</string>
     <string name="context_menu_anki_card_label">Anki ପତ୍ର</string>

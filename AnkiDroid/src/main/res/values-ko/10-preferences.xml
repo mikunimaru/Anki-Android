@@ -47,29 +47,26 @@
     <!-- generic strings -->
     <string name="disabled">비활성화됨</string>
     <string name="enabled">활성화됨</string>
+    <string name="pref_summary_seconds">%s s</string>
+    <string name="pref_summary_minutes">%s min</string>
+    <string comment="Percentage value of a preference. %s represents the number to be replaced. Use \%% to represent a single percent sign (%)" name="pref_summary_percentage">%s\%%</string>
+    <string name="pref_search_no_results">No results</string>
     <!-- preferences.xml categories-->
-    <string name="pref_cat_general_summ">일반 설정</string>
+    <string name="pref_cat_general" comment="name of the general preference category" maxLength="41">General</string>
+    <string name="pref_cat_studying" maxLength="41">Studying</string>
+    <string name="pref_cat_system_wide" maxLength="41">System-wide</string>
     <string name="pref_cat_reviewing" maxLength="41">복습</string>
-    <string name="pref_cat_reviewing_summ">특정 카드 묶음에 한정되지 않은 복습 설정</string>
-    <string name="pref_cat_reviewer_behaviour" maxLength="41">동작</string>
-    <string name="pref_cat_flashcard" maxLength="41">디스플레이</string>
+    <string name="pref_cat_sync" comment="title of the sync preferences category" maxLength="41">Sync</string>
+    <string name="pref_cat_scheduling" maxLength="41">Scheduling</string>
     <string name="pref_cat_whiteboard" maxLength="41">화이트보드</string>
     <string name="pref_cat_appearance" maxLength="41">외관</string>
-    <string name="pref_cat_appearance_summ">기본 글꼴과 테마 변경</string>
     <string name="pref_cat_themes" maxLength="41">테마</string>
     <string name="pref_cat_fonts" maxLength="41">글꼴</string>
     <string name="pref_cat_gestures" maxLength="41">제스쳐</string>
-    <string name="pref_cat_gestures_summ">버튼 대신 탭과 밀기 사용</string>
-    <string name="pref_cat_actions" maxLength="41">작업</string>
-    <string name="pref_cat_controls" maxLength="41">제어</string>
-    <string name="pref_cat_controls_summ">글쇠와 다른 장치들 설정</string>
+    <string name="pref_cat_controls" maxLength="41">컨트롤</string>
     <string name="pref_cat_advanced" maxLength="41">고급 설정</string>
-    <string name="pref_cat_advanced_summ">최적화 및 실험적 기능</string>
-    <string name="pref_cat_performance" maxLength="41">성능</string>
     <string name="pref_cat_workarounds" maxLength="41">차선책</string>
     <string name="pref_cat_plugins" maxLength="41">플러그인</string>
-    <string name="about_title" maxLength="41">AnkiDroid에 대해서</string>
-    <string name="about_version">버전: </string>
     <!-- preferences.xml entries-->
     <string name="whiteboard_stroke_width" maxLength="41">획 두께</string>
     <string name="use_input_tag" maxLength="41">카드에 정답 입력</string>
@@ -82,7 +79,7 @@
     <string name="image_zoom" maxLength="41">이미지 확대</string>
     <string name="button_size" maxLength="41">정답 버튼 크기</string>
     <string name="card_browser_font_size" maxLength="41">카드 탐색기 글꼴 크기 조정</string>
-    <string name="card_browser_hide_media" maxLength="41">카드탐색기서 파일이름 보이기</string>
+    <string name="card_browser_hide_media" maxLength="41">카드 탐색기에서 파일명 보기</string>
     <string name="card_browser_hide_media_summary">Display media filenames in the card browser question/answer fields</string>
     <string name="col_path" maxLength="41">AnkiDroid 디렉토리</string>
     <string name="fullscreen_review" maxLength="41">전체 화면 모드</string>
@@ -98,8 +95,8 @@
     </string-array>
     <string name="gestures" maxLength="41">제스처 사용</string>
     <string name="gestures_summ">응답 및 카드 편집 등의 작업에 제스쳐 할당</string>
-    <string name="gestures_corner_touch" maxLength="41">아홉군데누르기</string>
-    <string name="gestures_corner_touch_summary">화면모퉁이의 누르기짜임새를 허용하기</string>
+    <string name="gestures_corner_touch" maxLength="41">9점 터치</string>
+    <string name="gestures_corner_touch_summary">화면 모서리의 터치 제스쳐 허용</string>
     <string name="gestures_full_screen_nav_drawer" maxLength="41">Full screen navigation drawer</string>
     <string name="gestures_fullscreen_nav_drawer_summary">Open navigation drawer when swiped right from anywhere on the screen</string>
     <string name="gestures_swipe_up" maxLength="41">위로 밀기</string>
@@ -113,13 +110,9 @@
     <string name="gestures_tap_right" maxLength="41">오른쪽 탭하기</string>
     <string name="gestures_tap_bottom" maxLength="41">아래쪽 탭하기</string>
     <string name="gestures_corner_tap_top_left" maxLength="41">Touch top left</string>
-    <string name="gestures_corner_tap_top_center">Touch top center</string>
     <string name="gestures_corner_tap_top_right" maxLength="41">Touch top right</string>
-    <string name="gestures_corner_tap_middle_left">Touch middle left</string>
     <string name="gestures_corner_tap_middle_center" maxLength="41">Touch middle center</string>
-    <string name="gestures_corner_tap_middle_right">Touch middle right</string>
     <string name="gestures_corner_tap_bottom_left" maxLength="41">Touch bottom left</string>
-    <string name="gestures_corner_tap_bottom_center">Touch bottom center</string>
     <string name="gestures_corner_tap_bottom_right" maxLength="41">Touch bottom right</string>
     <string name="more_scrolling_buttons" maxLength="41">e리더</string>
     <string name="more_scrolling_buttons_summ">한자/가타카나, 이모지/카오모지 버튼도 스크롤링에 사용</string>
@@ -130,15 +123,17 @@
     <string name="swipe_sensitivity" maxLength="41">밀기 동작 민감도</string>
     <string name="tts" maxLength="41">TTS</string>
     <string name="tts_summ">질문과 정답에 사운드 파일이 없을 경우 자동으로 읽어주기</string>
+    <!-- Sync -->
     <string name="sync_fetch_missing_media" maxLength="41">동기화할 때 미디어파일 가져오기</string>
     <string name="sync_fetch_missing_media_summ">동기화 할때 누락된 미디어를 자동으로 검색하여 가져오기합니다.</string>
     <string name="sync_account" maxLength="41">AnkiWeb 계정</string>
     <string name="sync_account_summ_logged_out">로그인 하지 않음</string>
-    <string name="sync_account_summ_logged_in" comment="The summary for the account setting when logged in. Parameter is the username (email)">%s</string>
     <string name="automatic_sync_choice" maxLength="41">자동 동기화</string>
     <string name="automatic_sync_choice_summ">마지막 동기화로부터 10분이 넘었을 경우 앱 시작 및 종료시 자동으로 동기화</string>
     <string name="sync_status_badge" maxLength="41">Display synchronization status</string>
     <string name="sync_status_badge_summ">Change the sync icon when changes can be uploaded</string>
+    <string name="metered_sync_title" maxLength="41">Allow sync on metered connections</string>
+    <string name="metered_sync_summary">If disabled, you will be warned if you try to sync on a metered connection</string>
     <string name="app_theme" maxLength="41">Theme</string>
     <string name="day_theme" maxLength="41">주간 테마</string>
     <string name="night_theme" maxLength="41">야간 테마</string>
@@ -186,16 +181,11 @@
     <string name="new_spread" maxLength="41">새 카드 위치</string>
     <string name="learn_cutoff" maxLength="41">미리 학습하기 시간 설정</string>
     <string name="time_limit" maxLength="41">타임박스 시간 설정</string>
-    <string name="time_limit_summ">XXX 분</string>
-    <string name="new_timezone" maxLength="41">새시간대다루기</string>
-    <string name="day_offset_with_description" maxLength="41">다음날의 시작</string>
-    <string name="day_offset_summ">자정으로부터 지난 XXX 시간</string>
-    <string name="xlabel_dayoffset_seekbar" maxLength="41">한밤</string>
+    <string name="new_timezone" maxLength="41">새 시간대 다루기</string>
+    <string name="day_offset_with_description" maxLength="41">다음 날의 시작</string>
+    <string name="day_offset_summary">%s hours past midnight</string>
+    <string name="xlabel_dayoffset_seekbar" maxLength="41">자정</string>
     <string name="ylabel_dayoffset_seekbar" maxLength="41">오후 11시</string>
-    <string name="sched_v2" maxLength="41">브이2일정표</string>
-    <string name="sched_v2_summ">Enable the new scheduler. Forces changes in one direction on next sync</string>
-    <string name="sched_ver_toggle_title">확인</string>
-    <string name="sched_ver_1to2">The experimental scheduler could cause incorrect scheduling. Please ensure you have read the documentation first. Proceed?</string>
     <string name="pref_keep_screen_on" maxLength="41">화면을 켜진 상태로 유지</string>
     <string name="pref_keep_screen_on_summ">화면 꺼짐 시간 비활성화</string>
     <string name="convert_fen_text" maxLength="41">체스 표기법 지원</string>
@@ -208,14 +198,17 @@
     <string name="custom_buttons_setting_if_room">공간이 있는 경우 표시</string>
     <string name="custom_buttons_setting_menu_only">메뉴만</string>
     <string name="reset_custom_buttons" maxLength="41">기본값으로 초기화</string>
-    <string name="thirdparty_apps_title" maxLength="41">바깥응용프로그람접속기어플들</string>
+    <string name="thirdparty_apps_title" maxLength="41">타사 API 앱</string>
     <string name="thirdparty_apps_summary">Ankidroid API를 사용하는 어플 목록 보기 (사전, 편집기 등)</string>
     <string name="html_javascript_debugging" maxLength="41">HTML 자바스크립트 디버깅</string>
-    <string name="html_javascript_debugging_summ">웹보기련결조종을 활성화하고, 카드HTML을 암기드로이드명부에다 갈무리하세요. </string>
+    <string name="html_javascript_debugging_summ">원격 WebView 연결을 활성화하고, 카드 HTML을 AnkiDroid 디렉토리에 저장하기</string>
+    <!-- Appearance settings -->
+    <string name="pref_cat_reviewer" maxLength="41">Reviewer</string>
+    <string name="accessibility" maxLength="41">Accessibility</string>
     <!-- Paste clipboard image as png option -->
-    <string name="paste_as_png" maxLength="41">포착화면을 PNG규격으로 붙여넣기</string>
-    <string name="paste_as_png_summary">기본암기가 포착화면에다 JPG파일로 그림을 붙여넣음으로써 저장공간을 아낍니다. 이 선택지로 PNG그림으로 대신 붙여넣을수도 있습니다. </string>
-    <string name="exit_via_double_tap_back" maxLength="41">뒤로 가거나 나가려면 뒤로가기를 둘이 누르세요.</string>
+    <string name="paste_as_png" maxLength="41">클립보드 이미지를 PNG로 붙여넣기</string>
+    <string name="paste_as_png_summary">기본적으로 Anki는 클립보드의 이미지를 JPG로 저장해 저장 공간을 절약합니다. 이 옵션을 사용해 대신 PNG 이미지를 사용할 수 있습니다.</string>
+    <string name="exit_via_double_tap_back" maxLength="41">뒤로가기 버튼 두번 눌러 돌아가기/나가기</string>
     <string name="exit_via_double_tap_back_summ">To avoid accidentally leaving the reviewer or the app</string>
     <!-- Allow all files in media imports -->
     <string name="media_import_allow_all_files" maxLength="41">Allow all files in media imports</string>
@@ -240,6 +233,8 @@
     <string name="custom_sync_server_media_url_title" maxLength="41">미디어 동기화 URL</string>
     <string name="custom_sync_server_media_url_invalid">Media sync url invalid</string>
     <!-- Key Bindings -->
+    <string name="keyboard">Keyboard</string>
+    <string name="bluetooth">Bluetooth</string>
     <string name="controls_main_category" maxLength="41">Command mapping</string>
     <!-- studyoptions -->
     <string name="deck_conf_group_summ">Changes to deck group options will affect multiple decks. If you wish to change only the current deck, please add a new options group first</string>
@@ -253,7 +248,7 @@
     <string name="deck_conf_new_cards" maxLength="41">새 카드</string>
     <string name="deck_conf_rev_cards" maxLength="41" comment="Name of the deck options submenu for configuring reviews of due cards.">복습 횟수</string>
     <string name="deck_conf_lps_cards" maxLength="41" comment="Label of the submenu stating how lapses cards are treated.">학습경과 시간</string>
-    <string name="deck_conf_general" maxLength="41">일반</string>
+    <string name="deck_conf_general" maxLength="41" comment="Label of the submenu for the general options of new deck">일반</string>
     <string name="deck_conf_reminders" maxLength="41">알림</string>
     <string name="deck_conf_steps" maxLength="41">학습단계(분)</string>
     <string name="deck_conf_order" maxLength="41">순서</string>
@@ -320,10 +315,19 @@
     <string name="no_code_formatting_summ">Fixes ‘􏿾’ appearing in typed answer results</string>
     <string name="type_in_answer_focus" maxLength="41">Focus ‘type in answer’</string>
     <string name="type_in_answer_focus_summ">Automatically focus the ‘type in answer’ field in the reviewer</string>
-    <!-- Open Changelog-->
+    <!-- About -->
     <string name="open_changelog">Open Changelog</string>
+    <string name="pref_cat_about_title" maxLength="41">About</string>
+    <string name="contributors_title">Contributors</string>
+    <string name="about_contributors_description"><![CDATA[These are our awesome <a href=\"%1$s\">contributors</a>. You can help AnkiDroid too by programming, translating, donating and <a href=\"%2$s\">more</a>!]]></string>
+    <string name="license">License</string>
+    <string name="license_description"><![CDATA[AnkiDroid is released under the <a href=\"%1$s\">GPL-3.0</a> and <a href=\"%2$s\">AGPL-3.0</a> licenses, with the source code available <a href=\"%3$s\">on GitHub</a>]]></string>
+    <string name="donate_description"><![CDATA[You can support AnkiDroid\'s development by <a href=\"%1$s\">donating</a>. Any amount is deeply appreciated.]]></string>
+    <!-- Controls -->
     <string name="binding_add_gesture">Add gesture</string>
+    <string name="binding_replace_gesture">Replace gesture</string>
     <string name="binding_add_key">Add key</string>
+    <string name="binding_replace_key">Replace key</string>
     <string name="key_picker_default_press_key">Press a key</string>
     <!-- Select card side -->
     <string name="card_side_selection_title">Select card side</string>
@@ -335,5 +339,18 @@
     <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
     <!-- Binding Preference -->
     <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">Remove ‘%s’</string>
-    <string name="bindings_already_bound">Already bound to %s</string>
+    <string name="bindings_already_bound">Already bound to ‘%s’</string>
+    <!-- Advanced -->
+    <string name="pref_cat_experimental" maxLength="41">Experimental</string>
+    <string name="experimental_pref_confirmation" maxLength="41">Enable ‘%s’</string>
+    <string name="use_rust_backend_title" maxLength="41">Use the new backend</string>
+    <string name="use_rust_backend_summary">Enables newer Anki features, such as the v3 scheduler\nUNSTABLE. Do not use on a collection you care about. NOT reverted on app close</string>
+    <string name="use_rust_backend_warning">There is a chance this could corrupt your installation completely, requiring app uninstall and deletion of the AnkiDroid folder, and has a chance of propagating corruption via sync to AnkiWeb.\n\nWe welcome the testing, but please make sure you have a valid non-AnkiWeb backup.</string>
+    <string name="enable_v3_sched_title" maxLength="41">Use the v3 scheduler</string>
+    <!-- Developer options -->
+    <string name="pref_cat_dev_options" maxLength="41">Developer options</string>
+    <string name="dev_options_enabled_pref" maxLength="41">Enable developer options</string>
+    <string name="disable_dev_options">Disable developer options</string>
+    <string name="dev_options_warning">        Please be sure before enabling developer options. These options are dangerous and could break the app or corrupt your collection.\n\nNote that these options are not suited for most users and therefore are not translated, so they are in English.
+    </string>
 </resources>

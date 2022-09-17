@@ -73,7 +73,7 @@
     <string name="override_font_if_missing">Quando nessun tipo di carattere specificato nelle carte</string>
     <string name="override_font_always">Sempre</string>
     <!-- theme labels -->
-    <string name="theme_follow_system">Follow system</string>
+    <string name="theme_follow_system">Come da sistema</string>
     <!-- day_theme_labels -->
     <string name="day_theme_light">Chiaro</string>
     <string name="day_theme_plain">Semplice</string>
@@ -89,14 +89,12 @@
     <string name="html_size_code_x_large">x-grande</string>
     <string name="html_size_code_xx_large">xx-grande</string>
     <!-- gestures_labels -->
-    <string name="gesture_no_action">Nessuna azione</string>
     <string name="gesture_answer_1">Pulsante risposta 1</string>
     <string name="gesture_answer_2">Pulsante risposta 2</string>
     <string name="gesture_answer_3">Pulsante risposta 3</string>
     <string name="gesture_answer_4">Pulsante risposta 4</string>
     <string name="gesture_answer_green">Risposta raccomandata (verde)</string>
     <string name="gesture_answer_better_recommended">Risposta migliore di quanto raccomandato</string>
-    <string name="gesture_tag_note">Nota di etichetta</string>
     <string name="gesture_play">Riproduci media</string>
     <string name="gesture_abort_learning">Interrompi l\'apprendimento</string>
     <string name="gesture_flag_red">Attiva/disattiva contrassegno rosso</string>

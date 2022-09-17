@@ -66,14 +66,14 @@
     <string name="add_to_deck_use_current_deck">選択中のデッキ</string>
     <string name="add_to_deck_decide_by_note_type">ノートタイプから選択</string>
     <!-- new_spread_labels -->
-    <string name="new_spread_mix_new_and_review">新規カードと復習カードを混ぜる</string>
+    <string name="new_spread_mix_new_and_review">復習カードと混ぜる</string>
     <string name="new_spread_new_after_review">復習カードの後</string>
     <string name="new_spread_new_before_review">復習カードの前</string>
     <!-- override_font_labels -->
     <string name="override_font_if_missing">フォントが指定されていない場合</string>
     <string name="override_font_always">全て</string>
     <!-- theme labels -->
-    <string name="theme_follow_system">システム設定に従う</string>
+    <string name="theme_follow_system">端末の設定に従う</string>
     <!-- day_theme_labels -->
     <string name="day_theme_light">ライトブルー</string>
     <string name="day_theme_plain">プレーン</string>
@@ -89,14 +89,12 @@
     <string name="html_size_code_x_large">XL</string>
     <string name="html_size_code_xx_large">XXL</string>
     <!-- gestures_labels -->
-    <string name="gesture_no_action">何もしない</string>
     <string name="gesture_answer_1">回答ボタン１</string>
     <string name="gesture_answer_2">回答ボタン２</string>
     <string name="gesture_answer_3">回答ボタン３</string>
     <string name="gesture_answer_4">回答ボタン４</string>
     <string name="gesture_answer_green">推奨される回答（緑色）</string>
     <string name="gesture_answer_better_recommended">推奨される回答よりも良い回答</string>
-    <string name="gesture_tag_note">ノートにタグを付ける</string>
     <string name="gesture_play">音声・動画を再生</string>
     <string name="gesture_abort_learning">学習を中断</string>
     <string name="gesture_flag_red">赤フラグを付ける/取り外す</string>

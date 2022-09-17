@@ -58,7 +58,7 @@
     <string name="studyoptions_total_cards">Всього карток:</string>
     <string name="studyoptions_eta">Очікуваний час (хв.):</string>
     <string name="studyoptions_start">Вивчати</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">Розгорнути</string>
     <string name="collapse">Згорнути</string>
     <string name="study_more">Вчити ще</string>
@@ -74,17 +74,17 @@
         <item quantity="many">Залишилося %d хвилин</item>
         <item quantity="other">Залишилося %d хвилини</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="one">залишилася %d година %d</item>
-        <item quantity="few">залишилося %d години %d </item>
-        <item quantity="many">залишилося %d годин %d </item>
-        <item quantity="other">залишилося %d годин %d</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="one">Залишилася %1$d година %2$d</item>
+        <item quantity="few">Залишилося %1$d годин %2$d</item>
+        <item quantity="many">Залишилося %1$d годин %2$d </item>
+        <item quantity="other">Залишилося %1$d годин %2$d</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="one">залишився %d день, %d </item>
-        <item quantity="few">залишилося %d дні %d</item>
-        <item quantity="many">залишилося %d днів %d</item>
-        <item quantity="other">залишилося %d днів %d</item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="one">Залишився %1$d день %2$d</item>
+        <item quantity="few">Залишилося %1$d дні %2$d</item>
+        <item quantity="many">Залишилося %1$d днів %2$d</item>
+        <item quantity="other">Залишилось %1$d днів %2$d</item>
     </plurals>
     <string name="no_cards_placeholder_title">Колекція порожня</string>
     <string name="no_cards_placeholder_description">Почніть додавати картки\nвикористовуючи значок +.</string>
@@ -113,7 +113,7 @@
     <string name="rename_deck">Перейменувати колоду</string>
     <string name="create_shortcut">Створити значок</string>
     <string name="browse_cards">Переглянути картки</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Додати</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">Додати</string>
     <string name="menu_add_note">Додати запис</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">Синхронізувати обліковий запис</string>
     <string name="menu_dismiss_note">Сховати / видалити</string>
@@ -166,11 +166,11 @@
     <!-- or "%.1f a" -->
     <string name="rebuild_filtered_deck">Перебудова фільтрованої колоди&#8230;</string>
     <string name="rebuild_cram_label">Перебудувати</string>
-    <string name="empty_cram_label">Порожньо</string>
+    <string name="empty_cram_label">Спорожнити</string>
     <string name="create_subdeck">Створити підколоду</string>
     <string name="empty_filtered_deck">Очищення фільтрованої колоди&#8230;</string>
-    <string name="custom_study_deck_name">Додаткове навчання</string>
-    <string name="custom_study_deck_exists">Спочатку перейменуйте колоду додаткового навчання</string>
+    <string name="custom_study_deck_name">Сесія індивідуального навчання</string>
+    <string name="custom_study_deck_exists">Спочатку перейменуйте колоду індивідуального навчання</string>
     <string name="empty_deck">Ця колода порожня</string>
     <string name="search_deck" comment="Deck search for selecting it">Пошук колоди</string>
     <string name="search_for_download_deck" comment="Deck search value for downloading deck">Пошук колоди</string>
@@ -182,11 +182,11 @@
     <string name="studyoptions_congrats_finished">Вітаємо! На разі це все.</string>
     <string name="studyoptions_congrats_more_rev">Досягнуто добового ліміту, але ще залишилися картки для повторення. Ви можете збільшити щоденний ліміт у налаштуваннях.</string>
     <string name="studyoptions_congrats_more_new">Досягнуто добового ліміту карток, але ще залишилися нові карточки. Ви можете збільшити ліміт в налаштуваннях, але тоді збільшиться кількість повторень в майбутньому.</string>
-    <string name="studyoptions_congrats_custom">Для додаткового навчання натисніть кнопку «Додаткове навчання»</string>
+    <string name="studyoptions_congrats_custom">Для навчання за межами звичайного графіку натисніть кнопку «Індивідуальне навчання»</string>
     <string name="studyoptions_no_cards_due">Не залишилось карток на перегляд</string>
     <string name="sd_card_not_mounted">Пристрій зберігання не підключено</string>
     <string name="empty_cloze_warning">Будь ласка, відредагуйте цей запис та додайте пропуски. (%1$s)</string>
-    <string name="button_sync">Синхронізувати</string>
+    <string name="button_sync" comment="Text of the sync button">Синхронізувати</string>
     <string name="cancel_sync_confirm">Ви хочете скасувати синхронізацію?</string>
     <string name="continue_sync">Продовжити синхронізацію</string>
     <string name="sync_cancelled">Синхронізацію скасовано</string>

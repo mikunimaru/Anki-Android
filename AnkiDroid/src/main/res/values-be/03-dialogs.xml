@@ -62,13 +62,6 @@
     <string name="initializing_tts">Ініцыялізацыя сінтэзу маўлення...</string>
     <string name="tts_no_tts">Не прамаўляць</string>
     <string name="unused_strings">\n\nНявыкарыстаныя файлы:\n</string>
-    <string-array name="about_content">
-        <item><![CDATA[<h2>%1$s: <br/>Навучальныя карткі для Android</h2>AnkiDroid - гэта праграма навучальных картак, якая цалкам сумяшчальная з версіяй праграмы для настольных камп\'ютараў <a href=\"%2$s\"> Anki</a>. Стварайце, пампуйце і вучыце матэрыял на любой прыладзе, а потым з лёгкасцю сінхранізуйце іх з дапамогай AnkiWeb.]]></item>
-        <item><![CDATA[Для таго, каб дапамагчы зрабіць нам праграму яшчэ лепш, калі ласка, адпраўляйце справаздачы пра памылкі <a href=\"%1$s\">ў цэнтр адсочвання праблем</a>; мы таксама вітаем прапановы новых магчымасцяў у праграме. Шукайце адказы ў <a href=\"%2$s\">Wikipedia</a> або пачніце абмеркаванне на <a href=\"%3$s\">форуме</a>.]]></item>
-        <item><![CDATA[AnkiDroid — гэта <a href=\"%1$s\">праграмнае забеспячэнне з адкрытым зыходным кодам<a/>, таму любы ахвотны можа <a href=\"%2$s\">зрабіць свой унёсак</a> :-)]]></item>
-        <item><![CDATA[Калі вы не з\'яўляецеся распрацоўшчыкам, вы таксама можаце дапамагчы. Напрыклад, можна <a href=\"%1$s\">перакласці AnkiDroid на сваю родную мову</a>, абнавіць інфармацыю ў Wikipedia, зрабіць свае здымкі экрана або распавесці іншым пра AnkiDroid у сваім блогу.]]></item>
-        <item><![CDATA[Усе версіі AnkiDroid выпускаюцца пад <a href=\"%1$s\">ліцэнзіяй GNU-GPL v3</a> і зыходны код даступны <a href=\"%2$s\">на GitHub</a>.]]></item>
-    </string-array>
     <string name="preview_title" comment="Title of the window allowing to preview card(s)">Папярэдні прагляд</string>
     <string name="reposition_card_dialog_title">Перамясціць новую картку</string>
     <string name="reposition_card_dialog_message">Пачатковая пазіцыя:</string>
@@ -130,7 +123,12 @@
     <string name="import_progress">• Імпартаванне запісаў: %1$d%%\n• Імпартаванне картак: %2$d%%\n• Апрацоўка: %3$d%%</string>
     <string name="import_update_details">Абноўлена %1$d з %2$d існуючых нататак.</string>
     <string name="import_update_ignored">Некаторыя абнаўленні былі праігнараваныя з той прычыны, што змяніўся тып запісаў</string>
-    <string name="import_complete_count">Імпартавана картак: %d</string>
+    <plurals name="import_complete_message">
+        <item quantity="one">Картак імпартавана: %2$d</item>
+        <item quantity="few">Файлаў імпартавана: %1$d\nУсяго картак імпартавана: %2$d</item>
+        <item quantity="many">Файлаў імпартавана: %1$d\nУсяго картак імпартавана: %2$d</item>
+        <item quantity="other">Файлаў імпартавана: %1$d\nУсяго картак імпартавана: %2$d</item>
+    </plurals>
     <string name="sd_card_full_title">SD-картка запоўненая</string>
     <string name="sd_card_almost_full_title">SD-картка амаль запоўненая</string>
     <string name="no_space_to_downgrade_title">Памяць запоўненая</string>
@@ -142,6 +140,7 @@
     <string name="dialog_ok">Добра</string>
     <string name="dialog_no">Не</string>
     <string name="dialog_continue">Працягнуць</string>
+    <string name="dialog_processing">Апрацоўка...</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Стварыць</string>
     <string name="dialog_positive_delete">Выдаліць</string>
     <!-- Currently unsued, should be useful in the future -->
@@ -214,14 +213,14 @@
     <string name="incompatible_database_version_title">Несумяшчальная версія базы даных</string>
     <string name="incompatible_database_version_summary">База даных была створана ў больш новай версіі праграмы і ў дадзены час з ёй немагчыма працаваць. Паспрабуйце абнавіць AnkiDroid або панізіць версію базы даных, каб адкрыць яе\n\nВерсія, якая падтрымліваецца: %1$d\nВерсія базы даных:%2$d\n\nНаступныя  параметры аднаўлення перазапішуць вашу бягучую калекцыю, магчыма з сумяшчальнай версіяй базы даных.</string>
     <!-- Deck Picker Background-->
-    <string name="background_image_applied">Фонавая выява ўжыта</string>
-    <string name="background_image_removed">Фонавая выява выдалена</string>
-    <string name="no_image_selected">Ніводная выява не выбрана</string>
-    <string name="error_selecting_image">Памылка выбару выявы. Калі ласка, звярніцеся да даведніка. %s</string>
-    <string name="error_deleting_image">Памылка выдалення выявы</string>
-    <string name="failed_to_apply_background_image">Памылка дастасавання фонавай выявы %s</string>
-    <string name="background_image_too_large">Фонавая выява надта вялікая</string>
-    <string name="image_max_size_allowed">Максімальны памер выявы можа складаць %d МБ</string>
+    <string name="background_image_applied">Фонавы відарыс ужыты</string>
+    <string name="background_image_removed">Фонавы відарыс выдалены</string>
+    <string name="no_image_selected">Ніводны відарыс не выбраны</string>
+    <string name="error_selecting_image">Памылка выбару відарыса. Калі ласка, звярніцеся да даведніка. %s</string>
+    <string name="error_deleting_image">Памылка выдалення відарыса</string>
+    <string name="failed_to_apply_background_image">Памылка ўжывання фонавага відарыса %s</string>
+    <string name="background_image_too_large">Фонавы відарыс надта вялікі</string>
+    <string name="image_max_size_allowed">Максімальны памер відарыса можа складаць %d МБ</string>
     <!-- Global Intent handler -->
     <!-- Also used by Card Browser, not renaming to save translators effort -->
     <string name="intent_handler_failed_no_storage_permission">Няма дазволу на доступ да сховішча. Дайце неабходныя дазволы, а потым паўтарыце дзеянне.</string>
@@ -265,6 +264,7 @@
         <item quantity="many">Аўтаматычная сінхранізацыя можа пачацца праз %d секунд</item>
         <item quantity="other">Аўтаматычная сінхранізацыя можа пачацца праз %d секунды</item>
     </plurals>
+    <string name="metered_sync_warning">Ваша злучэнне тарыфікуецца. За перададзеныя даныя могуць спаганяцца грошы</string>
     <string name="deck_picker_new">Колькасць новых картак, якія можна ўбачыць за сёння ў гэтай калодзе.</string>
     <string name="deck_picker_rev">Колькасць картак на сёння ў гэтай калодзе.</string>
     <string name="deck_picker_lrn">Колькасць картак, якія вывучаюцца ў гэтай калодзе.</string>
@@ -274,4 +274,7 @@
     <string name="deck_picker_counts">Адкрыйце старонку папярэдняга прагляду калоды, якая змяшчае колькасць картак для прагляду на сёння.</string>
     <string name="import_deck_package">Пакет калоды (.apkg)</string>
     <string name="import_collection_package">Пакет калекцыі (.colpkg)</string>
+    <string name="import_csv">Тэкставы файл (.txt, .csv)</string>
+    <!-- Deck selection dialog -->
+    <string name="cannot_create_subdeck_for_all_decks">Вы не можаце ствараць падкалоды для ўсіх калод</string>
 </resources>

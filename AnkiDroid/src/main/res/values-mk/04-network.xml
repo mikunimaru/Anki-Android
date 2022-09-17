@@ -48,13 +48,13 @@
     <string name="youre_offline">Вие сте офлајн</string>
     <string name="sync_even_if_offline">Try Anyway</string>
     <string name="sync_error">Грешка во синхорнизација</string>
-    <string name="vague_error">Грешка</string>
+    <string name="vague_error" comment="Network error dialog title">Грешка</string>
     <string name="retry">Обидете се повторно</string>
     <string name="menu_get_shared_decks">Добијте заеднички decks</string>
     <string name="connection_error_message">Се случи грешка во мрежата</string>
     <string name="not_logged_in_title">Логирај се на AnkiWeb</string>
     <string name="login_create_account_message">Мора да се најавите на сметка на трета страна за да ја користите услугата за синхронизација на облак. Можете да го креирате во следниов чекор.</string>
-    <!-- MyAccount.java -->
+    <!-- MyAccount.kt -->
     <string name="username">Имејл адреса</string>
     <string name="password">Лозинка</string>
     <string name="log_in">Логирај се</string>
@@ -68,7 +68,6 @@
     <string name="reset_password">Ресетирај лозинка</string>
     <string name="lost_mail_instructions">Forgot Email?</string>
     <!-- AndroidManifest.xml -->
-    <string name="preferences_title">Преференции</string>
     <string name="deckpreferences_title">Опции за XXX</string>
     <string name="sync_prepare_syncing">Подготовка на синхронизација&#8230;</string>
     <string name="sync_preparing_full_sync_message">Подготвување на целосна синхронизација&#8230;</string>
@@ -117,6 +116,7 @@
     <string name="sync_sanity_remote">Оддалечено</string>
     <string name="force_full_sync_title">Присилена целосна синхронизација</string>
     <string name="force_full_sync_summary">На наредната синхронизација, сила се менува во една насока</string>
+    <string name="force_full_sync_confirmation">Forced full sync</string>
     <string name="full_sync_confirmation">Бараната промена ќе бара целосно поставување на базата на податоци кога следно ќе ја синхронизирате вашата колекција. Ако имате прегледи или други промени кои чекаат на друг уред што сè уште не се синхронизирани, тие ќе бидат изгубени. Продолжите?</string>
     <string name="full_sync_confirmation_upgrade">Поради грешка во претходно инсталираната верзија на AnkiDroid, се препорачува да се присили целосно синхронизирање.</string>
     <string name="sync_error_407_proxy_required">Proxy authentication required.</string>

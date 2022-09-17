@@ -58,7 +58,7 @@
     <string name="studyoptions_total_cards">Toplam kart:</string>
     <string name="studyoptions_eta">Tahminî süre (dk):</string>
     <string name="studyoptions_start">Çalışmaya Başla</string>
-    <!-- DeckPicker.java -->
+    <!-- DeckPicker.kt -->
     <string name="expand">Genişlet</string>
     <string name="collapse">Daralt</string>
     <string name="study_more">Daha fazla çalış</string>
@@ -70,13 +70,13 @@
         <item quantity="one">%d dakika kaldı</item>
         <item quantity="other">%d dakika kaldı</item>
     </plurals>
-    <plurals name="reviewer_window_title_hours">
-        <item quantity="one">%d saat kaldı</item>
-        <item quantity="other">%d saat kaldı</item>
+    <plurals name="reviewer_window_title_hours_new">
+        <item quantity="one">%1$d saat %2$d kaldı</item>
+        <item quantity="other">%1$d saat %2$d kaldı</item>
     </plurals>
-    <plurals name="reviewer_window_title_days">
-        <item quantity="one">%d gün kaldı</item>
-        <item quantity="other">%d gün kaldı</item>
+    <plurals name="reviewer_window_title_days_new">
+        <item quantity="one">%1$d gün %2$d kaldı</item>
+        <item quantity="other">%1$d gün %2$d kaldı</item>
     </plurals>
     <string name="no_cards_placeholder_title">Bu koleksiyon boş</string>
     <string name="no_cards_placeholder_description">+ ikonuna tıklayarak kart eklemeye başlayın.</string>
@@ -103,7 +103,7 @@
     <string name="rename_deck">Destenin adını değiştir</string>
     <string name="create_shortcut">Kısayol oluştur</string>
     <string name="browse_cards">Turkcha</string>
-    <string name="menu_add" comment="A generic add button - Main Deck Picker and card templates. Please inform us if you need more specific strings">Ekle</string>
+    <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">Ekle</string>
     <string name="menu_add_note">Not ekle</string>
     <string name="menu_my_account" comment="Label of the window in which the user should enter their account. This text can\'t be found in AnkiDroid directly.">Senkronizasyon hesabı</string>
     <string name="menu_dismiss_note">Gizle / Sil</string>
@@ -157,13 +157,13 @@
     <string name="rebuild_filtered_deck">Filtreli deste yeniden oluşturuluyor...</string>
     <string name="rebuild_cram_label">Yeniden Oluştur</string>
     <string name="empty_cram_label">Boş</string>
-    <string name="create_subdeck">Alt deste oluştur</string>
+    <string name="create_subdeck">Altdeste oluştur</string>
     <string name="empty_filtered_deck">Filtreli deste boşaltılıyor...</string>
     <string name="custom_study_deck_name">Kişiselleştirilmiş çalışma oturumu</string>
     <string name="custom_study_deck_exists">Lütfen mevcut özelleştirilmiş çalışma destesini yeniden adlandırın.</string>
     <string name="empty_deck">Bu deste boş</string>
     <string name="search_deck" comment="Deck search for selecting it">Deste Ara</string>
-    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Deck Search</string>
+    <string name="search_for_download_deck" comment="Deck search value for downloading deck">Deste Ara</string>
     <string name="empty_deck_add_note">Kart ekle</string>
     <string name="invalid_deck_name">Geçersiz deste adı</string>
     <string name="studyoptions_empty">Bu deste boş. Yeni içerik eklemek için + düğmesine basın.</string>
@@ -176,7 +176,7 @@
     <string name="studyoptions_no_cards_due">Henüz sırası gelmiş kart yok</string>
     <string name="sd_card_not_mounted">Cihaz hafızası takılı değil</string>
     <string name="empty_cloze_warning">Bu notu düzenleyip doldurulacak boşluklar ekleyin. (%1$s)</string>
-    <string name="button_sync">Senkronize et</string>
+    <string name="button_sync" comment="Text of the sync button">Senkronize et</string>
     <string name="cancel_sync_confirm">Senkronizasyonu iptâl etmek istiyor musunuz?</string>
     <string name="continue_sync">Senkronizasyona devam et</string>
     <string name="sync_cancelled">Senkronizasyon iptâl edildi</string>

@@ -20,7 +20,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ichi2.anki.R
 import com.ichi2.anki.RunInBackground
 import com.ichi2.anki.dialogs.utils.RecursivePictureMenuUtil
-import com.ichi2.utils.ArrayUtil
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Ignore
@@ -32,10 +31,10 @@ class RecursivePictureMenuAndroidTest : RecursivePictureMenuUtilTest() {
     @Test
     @RunInBackground
     fun testNormalStartupSelectingItem() {
-        val linkedItem = getItemLinkingTo(R.string.link_anki)
+        val linkedItem = getItemLinkingTo(R.string.link_manual)
         val v = getRecyclerViewFor(linkedItem)
         clickChildAtIndex(v, 0)
-        MatcherAssert.assertThat(activity!!.lastUrlOpened, Matchers.`is`(getResourceString(R.string.link_anki)))
+        MatcherAssert.assertThat(activity!!.lastUrlOpened, Matchers.equalTo(getResourceString(R.string.link_manual)))
     }
 
     @Test
@@ -47,14 +46,14 @@ class RecursivePictureMenuAndroidTest : RecursivePictureMenuUtilTest() {
         clickChildAtIndex(v, 0)
         val currentMenu = activity!!.lastShownDialogFragment as RecursivePictureMenu
         val rv = RecursivePictureMenuUtil.getRecyclerViewFor(currentMenu)
-        MatcherAssert.assertThat("Unexpected number of items - check the adapter", rv.childCount, Matchers.`is`(numberOfChildItems))
+        MatcherAssert.assertThat("Unexpected number of items - check the adapter", rv.childCount, Matchers.equalTo(numberOfChildItems))
     }
 
     @Test
     @Ignore("Not implemented")
     fun removeFromRoot() {
         val header: RecursivePictureMenu.Item = getHeaderWithSubItems(1)
-        val allItems = ArrayUtil.toArrayList(arrayOf(header))
+        val allItems = arrayListOf(header)
         RecursivePictureMenu.removeFrom(allItems, header)
 
         // Do we return, or check to see if the list is mutated?

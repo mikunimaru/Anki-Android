@@ -22,21 +22,22 @@ import android.os.ParcelFileDescriptor
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.StringRes
 import androidx.core.app.ShareCompat.IntentBuilder
 import androidx.core.content.FileProvider
-import com.ichi2.anki.AnkiActivity
-import com.ichi2.anki.R
-import com.ichi2.anki.UIUtils.showSimpleSnackbar
+import com.google.android.material.snackbar.Snackbar
+import com.ichi2.anki.*
 import com.ichi2.anki.UIUtils.showThemedToast
 import com.ichi2.anki.dialogs.ExportCompleteDialog.ExportCompleteDialogListener
 import com.ichi2.anki.dialogs.ExportDialog.ExportDialogListener
+import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.async.CollectionTask.ExportApkg
 import com.ichi2.async.TaskManager
 import com.ichi2.compat.CompatHelper
 import com.ichi2.libanki.Collection
+import com.ichi2.libanki.DeckId
+import com.ichi2.libanki.utils.TimeManager
 import com.ichi2.libanki.utils.TimeUtils
-import com.ichi2.utils.KotlinCleanup
+import net.ankiweb.rsdroid.BackendFactory
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -54,23 +55,24 @@ import java.util.function.Supplier
 class ActivityExportingDelegate(private val activity: AnkiActivity, private val collectionSupplier: Supplier<Collection>) : ExportDialogListener, ExportCompleteDialogListener {
     private val mDialogsFactory: ExportDialogsFactory
     private val mSaveFileLauncher: ActivityResultLauncher<Intent>
-    private var mExportFileName: String? = null
+    private lateinit var mExportFileName: String
 
-    @KotlinCleanup("make msg non-null")
-    fun showExportDialog(msg: String?) {
-        activity.showDialogFragment(mDialogsFactory.newExportDialog().withArguments(msg!!))
+    fun showExportDialog(msg: String) {
+        activity.showDialogFragment(mDialogsFactory.newExportDialog().withArguments(msg))
     }
 
-    @KotlinCleanup("make msg non-null")
-    fun showExportDialog(msg: String?, did: Long) {
-        activity.showDialogFragment(mDialogsFactory.newExportDialog().withArguments(msg!!, did))
+    fun showExportDialog(msg: String, did: DeckId) {
+        activity.showDialogFragment(mDialogsFactory.newExportDialog().withArguments(msg, did))
     }
 
-    override fun exportApkg(path: String?, did: Long?, includeSched: Boolean, includeMedia: Boolean) {
+    override fun exportApkg(path: String?, did: DeckId?, includeSched: Boolean, includeMedia: Boolean) {
         val exportDir = File(activity.externalCacheDir, "export")
         exportDir.mkdirs()
         val exportPath: File
-        val timeStampSuffix = "-" + TimeUtils.getTimestamp(collectionSupplier.get().time)
+        val timeStampSuffix = "-" + run {
+            collectionSupplier.get()
+            TimeUtils.getTimestamp(TimeManager.time)
+        }
         exportPath = if (path != null) {
             // filename has been explicitly specified
             File(exportDir, path)
@@ -87,18 +89,37 @@ class ActivityExportingDelegate(private val activity: AnkiActivity, private val 
             File(exportDir, newFileName)
         }
         val exportListener = ExportListener(activity, mDialogsFactory)
-        TaskManager.launchCollectionTask(ExportApkg(exportPath.path, did, includeSched, includeMedia), exportListener)
+        if (BackendFactory.defaultLegacySchema) {
+            TaskManager.launchCollectionTask(
+                ExportApkg(
+                    exportPath.path,
+                    did,
+                    includeSched,
+                    includeMedia
+                ),
+                exportListener
+            )
+        } else {
+            activity.launchCatchingTask {
+                if (did == null && includeSched) {
+                    activity.exportColpkg(exportPath.path, includeMedia)
+                } else {
+                    activity.exportApkg(exportPath.path, includeSched, includeMedia, did)
+                }
+                val dialog = mDialogsFactory.newExportCompleteDialog().withArguments(exportPath.path)
+                activity.showAsyncDialogFragment(dialog)
+            }
+        }
     }
 
     override fun dismissAllDialogFragments() {
         activity.dismissAllDialogFragments()
     }
 
-    @KotlinCleanup("make path non-null")
     @SuppressLint("StringFormatInvalid")
-    override fun emailFile(path: String?) {
+    override fun emailFile(path: String) {
         // Make sure the file actually exists
-        val attachment = File(path!!)
+        val attachment = File(path)
         if (!attachment.exists()) {
             Timber.e("Specified apkg file %s does not exist", path)
             showThemedToast(activity, activity.resources.getString(R.string.apk_share_error), false)
@@ -122,18 +143,17 @@ class ActivityExportingDelegate(private val activity: AnkiActivity, private val 
             activity.startActivityWithoutAnimation(shareIntent)
         } else {
             // Try to save it?
-            showSimpleSnackbar(activity, R.string.export_send_no_handlers, false)
+            activity.showSnackbar(R.string.export_send_no_handlers)
             saveExportFile(path)
         }
     }
 
-    @KotlinCleanup("make exportPath non-null")
-    override fun saveExportFile(exportPath: String?) {
+    override fun saveExportFile(exportPath: String) {
         // Make sure the file actually exists
-        val attachment = File(exportPath!!)
+        val attachment = File(exportPath)
         if (!attachment.exists()) {
             Timber.e("saveExportFile() Specified apkg file %s does not exist", exportPath)
-            showSimpleSnackbar(activity, R.string.export_save_apkg_unsuccessful, false)
+            activity.showSnackbar(R.string.export_save_apkg_unsuccessful)
             return
         }
 
@@ -150,14 +170,17 @@ class ActivityExportingDelegate(private val activity: AnkiActivity, private val 
     }
 
     private fun saveFileCallback(result: ActivityResult) {
-        val isSuccessful = exportToProvider(result.data, true)
-        @StringRes val message = if (isSuccessful) R.string.export_save_apkg_successful else R.string.export_save_apkg_unsuccessful
-        showSimpleSnackbar(activity, activity.getString(message), isSuccessful)
+        val isSuccessful = exportToProvider(result.data!!, true)
+
+        if (isSuccessful) {
+            activity.showSnackbar(R.string.export_save_apkg_successful, Snackbar.LENGTH_SHORT)
+        } else {
+            activity.showSnackbar(R.string.export_save_apkg_unsuccessful)
+        }
     }
 
-    @KotlinCleanup("make intent non-null")
-    private fun exportToProvider(intent: Intent?, deleteAfterExport: Boolean): Boolean {
-        if (intent == null || intent.data == null) {
+    private fun exportToProvider(intent: Intent, deleteAfterExport: Boolean): Boolean {
+        if (intent.data == null) {
             Timber.e("exportToProvider() provided with insufficient intent data %s", intent)
             return false
         }
@@ -176,7 +199,7 @@ class ActivityExportingDelegate(private val activity: AnkiActivity, private val 
                 Timber.w("exportToProvider() failed - ContentProvider returned null file descriptor for %s", uri)
                 return false
             }
-            if (deleteAfterExport && !File(mExportFileName!!).delete()) {
+            if (deleteAfterExport && !File(mExportFileName).delete()) {
                 Timber.w("Failed to delete temporary export file %s", mExportFileName)
             }
         } catch (e: Exception) {
