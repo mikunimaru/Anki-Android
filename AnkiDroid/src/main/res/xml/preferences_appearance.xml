@@ -85,6 +85,10 @@
             android:key="@string/show_estimates_preference"
             android:summary="@string/show_estimates_summ"
             android:title="@string/show_estimates" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="alwaysShowOnlyTwoAnswerButtons"
+            android:title="@string/always_show_only_two_answer_buttons" />
         <ListPreference
             android:defaultValue="bottom"
             android:entries="@array/answer_buttons_position_labels"
