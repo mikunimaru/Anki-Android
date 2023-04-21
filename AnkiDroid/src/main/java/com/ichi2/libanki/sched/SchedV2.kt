@@ -51,6 +51,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.lang.ref.WeakReference
+import java.time.Instant
 import java.util.*
 
 @KotlinCleanup("IDE Lint")
@@ -1035,7 +1036,7 @@ open class SchedV2(col: Collection) : AbstractSched(col) {
             .db
             .query(
                 "SELECT due, id, mod FROM cards WHERE did IN " + _deckLimit() + " AND queue IN (" + Consts.QUEUE_TYPE_LRN + ", " + Consts.QUEUE_TYPE_PREVIEW + ") AND due < ?" +
-                    " AND id != ? ORDER BY " + "mod = (SELECT MAX(mod) FROM cards), " + String.valueOf(getTime().intTime()) + " < " + "due" + "  ,due - mod, due LIMIT ?",
+                    " AND id != ? ORDER BY " + "mod = (SELECT MAX(mod) FROM cards), " + Instant.now().toEpochMilli().toString() + " < " + "due" + "  ,due - mod, due LIMIT ?",
                 cutoff,
                 currentCardId(),
                 mReportLimit
