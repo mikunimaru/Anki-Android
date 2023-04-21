@@ -1006,9 +1006,14 @@ open class Reviewer :
         // (which libanki expects ease to be 2 and 3) can either be hard, good, or easy - depending on num buttons shown
         val background = getBackgroundColors(this)
         val textColor = getTextColors(this)
+
         easeButton1!!.setVisibility(View.VISIBLE)
         easeButton1!!.setColor(background[0])
         easeButton4!!.setColor(background[3])
+
+        val alwaysShowOnlyTwoAnswerButtons = AnkiDroidApp.getSharedPrefs(this.baseContext)
+            .getBoolean("alwaysShowOnlyTwoAnswerButtons", false)
+
         when (buttonCount) {
             2 -> {
                 // Ease 2 is "good"
@@ -1019,16 +1024,20 @@ open class Reviewer :
                 // Ease 2 is good
                 easeButton2!!.setup(background[2], textColor[2], R.string.ease_button_good)
                 // Ease 3 is easy
-                easeButton3!!.setup(background[3], textColor[3], R.string.ease_button_easy)
-                easeButton2!!.requestFocus()
+                if (!alwaysShowOnlyTwoAnswerButtons) {
+                    easeButton3!!.setup(background[3], textColor[3], R.string.ease_button_easy)
+                    easeButton2!!.requestFocus()
+                }
             }
             else -> {
-                // Ease 2 is "hard"
-                easeButton2!!.setup(background[1], textColor[1], R.string.ease_button_hard)
-                easeButton2!!.requestFocus()
+                if (!alwaysShowOnlyTwoAnswerButtons) {
+                    // Ease 2 is "hard"
+                    easeButton2!!.setup(background[1], textColor[1], R.string.ease_button_hard)
+                    easeButton2!!.requestFocus()
+                    easeButton4!!.setVisibility(View.VISIBLE)
+                }
                 // Ease 3 is good
                 easeButton3!!.setup(background[2], textColor[2], R.string.ease_button_good)
-                easeButton4!!.setVisibility(View.VISIBLE)
                 easeButton3!!.requestFocus()
             }
         }
