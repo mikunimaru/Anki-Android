@@ -1,19 +1,21 @@
 import org.gradle.internal.jvm.Jvm
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilerExecutionStrategy
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
     // The version for the Kotlin plugin and dependencies
-    ext.kotlin_version = '1.7.10'
-    ext.lint_version = '30.3.0'
-    ext.acra_version = '5.7.0'
-    ext.ankidroid_backend_version = '0.1.15-anki2.1.54' // this is parsed in tools/setup-anki-backend.sh
+    ext.kotlin_version = '1.8.20'
+    ext.lint_version = '30.4.2'
+    ext.acra_version = '5.9.7'
+    ext.ankidroid_backend_version = '0.1.21-anki2.1.61'
     ext.hamcrest_version = '2.2'
-    ext.junit_version = '5.9.0'
+    ext.junit_version = '5.9.2'
     ext.coroutines_version = '1.6.4'
-    ext.fragments_version = "1.5.2"
+    ext.fragments_version = "1.5.6"
+    ext.espresso_version = '3.5.1'
+    ext.androidx_test_version = '1.5.0'
+    ext.androidx_test_junit_version = '1.1.5'
+    ext.robolectric_version = '4.9.2'
 
     repositories {
         google()
@@ -22,13 +24,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath "app.brant:amazonappstorepublisher:0.1.0"
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jlleitschuh.gradle:ktlint-gradle:11.0.0"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:11.3.1"
     }
 }
 
@@ -72,25 +74,6 @@ subprojects {
             }
         }
 
-        // Deprecation is an error. Use @SuppressWarnings("deprecation") and justify in the PR if you must
-        project.tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:deprecation" << "-Xlint:fallthrough" << "-Xmaxwarns" << "1000" << "-Werror"
-
-            // https://guides.gradle.org/performance/#compiling_java
-            // 1- fork improves things over time with repeated builds, doesn't harm CI single builds
-            options.fork = true
-            // 2- incremental will be the default in the future and can help now
-            options.incremental = true
-        }
-
-        ktlint {
-            // remove version override when ktlint gradle plugin releases with 0.45+ transitive
-            // check for "ktlint" here:
-            // https://github.com/JLLeitschuh/ktlint-gradle/blob/master/plugin/gradle/libs.versions.toml
-            version = "0.45.2"
-            disabledRules = ["no-wildcard-imports"]
-        }
-
         /**
          Kotlin allows concrete function implementations inside interfaces.
          For those to work when Kotlin compilation targets the JVM backend, you have to enable the interoperability via
@@ -100,11 +83,21 @@ subprojects {
 
          and we used "all" because we don't have downstream consumers
          https://docs.gradle.org/current/userguide/task_configuration_avoidance.html
+
+         Related to ExperimentalCoroutinesApi: this opt-in is added to enable usage of experimental
+            coroutines API, this targets all project modules with the exception of the "api" module,
+            which doesn't use coroutines so the annotation isn't not available. This would normally
+            result in a warning but we treat warnings as errors.
+            (see https://youtrack.jetbrains.com/issue/KT-28777/Using-experimental-coroutines-api-causes-unresolved-dependency)
         */
         tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
             kotlinOptions {
                 allWarningsAsErrors = fatalWarnings
-                freeCompilerArgs = ['-Xjvm-default=all']
+                def compilerArgs = ['-Xjvm-default=all']
+                if (project.name != "api") {
+                    compilerArgs += ['-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi']
+                }
+                freeCompilerArgs = compilerArgs
             }
         }
     }
@@ -113,11 +106,11 @@ subprojects {
 ext {
 
     jvmVersion = Jvm.current().javaVersion.majorVersion
-    if (jvmVersion != "11" && jvmVersion != "14" && jvmVersion != "16") {
+    if (jvmVersion != "11" && jvmVersion != "17" && jvmVersion != "18") {
         println "\n\n\n"
         println "**************************************************************************************************************"
         println "\n\n\n"
-        println "ERROR: AnkiDroid builds with JVM version 11, 14, or 16."
+        println "ERROR: AnkiDroid builds with JVM version 11, 17 or 18."
         println "  Incompatible major version detected: '" + jvmVersion + "'"
         println "\n\n\n"
         println "**************************************************************************************************************"
@@ -144,8 +137,8 @@ ext {
         // the CI machines don't have enough RAM to do that without going in to swap quite a bit
         // so for CI machines only - to improve reliability despite compilation speed hit, compile kotlin in process
         println "CI build detected: setting compiler execution strategy to IN_PROCESS"
-        tasks.withType(KotlinCompile).configureEach {
-            compilerExecutionStrategy.set(KotlinCompilerExecutionStrategy.IN_PROCESS)
+        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            compilerExecutionStrategy.set(org.jetbrains.kotlin.gradle.tasks.KotlinCompilerExecutionStrategy.IN_PROCESS)
         }
     } else {
         // Use 50% of cores to account for SMT which doesn't help this workload

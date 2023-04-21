@@ -39,6 +39,7 @@ import com.ichi2.anki.analytics.AnalyticsDialogFragment
 import com.ichi2.anki.dialogs.DeckSelectionDialog.DecksArrayAdapter.DecksFilter
 import com.ichi2.anki.dialogs.DeckSelectionDialog.SelectableDeck
 import com.ichi2.annotations.NeedsTest
+import com.ichi2.compat.CompatHelper.Companion.getParcelableArrayListCompat
 import com.ichi2.libanki.*
 import com.ichi2.libanki.Collection
 import com.ichi2.libanki.backend.exception.DeckRenameException
@@ -51,7 +52,7 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import java.util.*
-import java.util.Objects.requireNonNull
+import kotlin.collections.ArrayList
 
 /**
  * "Deck Search": A dialog allowing the user to select a deck from a list of decks.
@@ -100,10 +101,10 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
             recyclerView.scrollToPosition(getPositionOfDeck(did, adapter.getCurrentlyDisplayedDecks()))
         }
         mDialog = MaterialDialog(requireActivity())
-            .neutralButton(R.string.dialog_cancel) // Shouldn't it be negative button?
+            .negativeButton(R.string.dialog_cancel)
             .customView(view = dialogView, noVerticalPadding = true)
         if (arguments.getBoolean(KEEP_RESTORE_DEFAULT_BUTTON)) {
-            (mDialog as MaterialDialog).negativeButton(R.string.restore_default) {
+            (mDialog as MaterialDialog).positiveButton(R.string.restore_default) {
                 onDeckSelected(null)
             }
         }
@@ -117,13 +118,11 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
         return arguments.getString(SUMMARY_MESSAGE)
     }
 
-    @Suppress("deprecation") // getParcelableArrayList
-    private fun getDeckNames(arguments: Bundle): ArrayList<SelectableDeck> {
-        return requireNonNull(arguments.getParcelableArrayList<SelectableDeck>(DECK_NAMES)) as ArrayList<SelectableDeck>
-    }
+    private fun getDeckNames(arguments: Bundle): ArrayList<SelectableDeck> =
+        arguments.getParcelableArrayListCompat(DECK_NAMES, SelectableDeck::class.java)!!
 
-    private val title: String?
-        get() = requireNonNull(requireArguments().getString(TITLE))
+    private val title: String
+        get() = requireArguments().getString(TITLE)!!
 
     private fun adjustToolbar(dialogView: View, adapter: DecksArrayAdapter) {
         val toolbar: Toolbar = dialogView.findViewById(R.id.deck_picker_dialog_toolbar)
@@ -177,7 +176,7 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
         createDeckDialog.showDialog()
     }
 
-    protected fun requireCollectionGetter(): CollectionGetter {
+    private fun requireCollectionGetter(): CollectionGetter {
         return requireContext() as CollectionGetter
     }
 
@@ -201,7 +200,7 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
     /**
      * @param deck deck sent to the listener.
      */
-    protected fun onDeckSelected(deck: SelectableDeck?) {
+    private fun onDeckSelected(deck: SelectableDeck?) {
         deckSelectionListener!!.onDeckSelected(deck)
     }
 
@@ -235,9 +234,9 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
     }
 
     open inner class DecksArrayAdapter(deckNames: List<SelectableDeck>) : RecyclerView.Adapter<DecksArrayAdapter.ViewHolder>(), Filterable {
-        inner class ViewHolder(val deckTextView: TextView) : RecyclerView.ViewHolder(deckTextView) {
+        inner class ViewHolder(private val deckTextView: TextView) : RecyclerView.ViewHolder(deckTextView) {
             var deckName: String = ""
-            var deckID: Long = -1L
+            private var deckID: Long = -1L
 
             fun setDeck(deck: SelectableDeck) {
                 deckName = deck.name
@@ -251,7 +250,7 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
                 }
                 deckTextView.setOnLongClickListener { // creating sub deck with parent deck path
                     if (deckID == DeckSpinnerSelection.ALL_DECKS_ID) {
-                        showThemedToast(context, R.string.cannot_create_subdeck_for_all_decks, true)
+                        context?.let { showThemedToast(it, R.string.cannot_create_subdeck_for_all_decks, true) }
                     } else {
                         showSubDeckDialog(deckName)
                     }
@@ -345,11 +344,15 @@ open class DeckSelectionDialog : AnalyticsDialogFragment() {
             if (deckId == Stats.ALL_DECKS_ID) {
                 return if (other.deckId == Stats.ALL_DECKS_ID) {
                     0
-                } else -1
+                } else {
+                    -1
+                }
             }
             return if (other.deckId == Stats.ALL_DECKS_ID) {
                 1
-            } else DeckNameComparator.INSTANCE.compare(name, other.name)
+            } else {
+                DeckNameComparator.INSTANCE.compare(name, other.name)
+            }
         }
 
         companion object {

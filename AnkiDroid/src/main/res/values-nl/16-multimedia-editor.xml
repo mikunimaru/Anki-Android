@@ -47,8 +47,6 @@
     <string name="multimedia_editor_popup_text">Geavanceerde editor</string>
     <string name="multimedia_editor_popup_cloze">Invuloefening</string>
     <string name="multimedia_editor_popup_clear_field">Veld leegmaken</string>
-    <!-- TODO this string should be in dialogs.xml with the other help_item_support_* strings -->
-    <string name="multimedia_editor_trans_translate">Vertaal</string>
     <!-- Pronunciation activity (Beolingus) -->
     <string name="multimedia_editor_pron_load">Laad</string>
     <string name="multimedia_editor_pron_looking_up">Opzoeken van uitspraak</string>
@@ -96,7 +94,7 @@
     <!-- not a good message, when an unexpected error happens -->
     <string name="multimedia_editor_something_wrong">Er is iets fout gegaan</string>
     <string name="multimedia_editor_svg_preview">SVG\'s zijn niet beschikbaar voor voorbeeldweergave</string>
-    <string name="multimedia_editor_png_paste_error">Error converting clipboard image to png: %s</string>
+    <string name="multimedia_editor_png_paste_error">Fout bij het converteren van klembord naar png: %s</string>
     <string name="multimedia_editor_attach_mm_content" comment="used for screen readers. Not visible to the user">Multimedia-inhoud toevoegen aan het %1$s-veld</string>
     <string name="multimedia_editor_attach_media">Voeg media toe</string>
     <!-- Audio view -->

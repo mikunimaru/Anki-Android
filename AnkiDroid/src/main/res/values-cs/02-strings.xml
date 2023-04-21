@@ -61,12 +61,14 @@
     <string name="updated_version">Aktualizováno na verzi %s</string>
     <!-- Reviewer.kt -->
     <string name="save_whiteboard">Uložit tabuli</string>
+    <string name="enable_stylus">Enable stylus mode</string>
+    <string name="disable_stylus">Disable stylus mode</string>
     <string name="enable_whiteboard">Povolit tabuli</string>
     <string name="disable_whiteboard">Zakázat tabuli</string>
     <string name="show_whiteboard">Zobrazit tabuli</string>
     <string name="hide_whiteboard">Skrýt tabuli</string>
     <string name="clear_whiteboard">Smazat tabuli</string>
-    <string name="replay_audio">Přehrát audio</string>
+    <string name="replay_audio">Přehrát zvuk</string>
     <string name="leech_suspend_notification">Karta označena jako pijavice a vyřazena</string>
     <string name="leech_notification">Karta byla označena jako pijavice</string>
     <string name="corrupt_font">Poškozený soubor písma %s</string>
@@ -123,7 +125,6 @@
     <string name="save">Uložit</string>
     <string name="close">Zavřít</string>
     <string name="select">Vybrat</string>
-    <string name="saving_changes">Ukládají se změny&#8230;</string>
     <string name="reordering_cards">Mění se pořadí karet&#8230;</string>
     <string name="field_remapping">%1$s (z \'%2$s\')</string>
     <string name="confirm_map_cards_to_nothing">Karty mapované na prázdný cíl budou odstraněny. Nezbývají-li už v poznámce žádné karty, bude poznámka ztracena. Opravdu chcete pokračovat?</string>
@@ -164,7 +165,6 @@
     <string name="empty_card_warning">Tato karta je prázdná. Použijte možnost \"Prázdné karty\" z menu na obrazovce seznamu balíčků.</string>
     <string name="unknown_type_field_warning">Zápis odpovědi: neznámé pole %s</string>
     <string name="delete_deck">Odstraňuje se balíček&#8230;</string>
-    <string name="show_hint">Zobrazit %s</string>
     <string name="info_rate">Ohodnotit AnkiDroid</string>
     <string name="import_title">Importuje se</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">Přidat</string>
@@ -198,14 +198,25 @@
     <string name="export_include_media">Zahrnout multimédia</string>
     <string name="confirm_apkg_export">Exportovat kolekci jako Anki balíček?</string>
     <string name="confirm_apkg_export_deck">Exportovat „%s“ jako apkg soubor?</string>
+    <plurals name="confirm_apkg_export_selected_cards">
+        <item quantity="one">Exportovat vybranou kartu jako soubor apkg?</item>
+        <item quantity="few">Exportovat %d vybrané karty jako soubor apkg?</item>
+        <item quantity="many">Exportovat %d vybrané karty jako soubor apkg?</item>
+        <item quantity="other">Exportovat %d vybraných karet jako soubor apkg?</item>
+    </plurals>
+    <plurals name="confirm_apkg_export_selected_notes">
+        <item quantity="one">Exportovat vybranou poznámku jako soubor apkg?</item>
+        <item quantity="few">Exportovat %d vybrané poznámky jako soubor apkg?</item>
+        <item quantity="many">Exportovat %d vybrané poznámky jako soubor apkg?</item>
+        <item quantity="other">Exportovat %d vybraných poznámek jako soubor apkg?</item>
+    </plurals>
     <string name="export_in_progress">Exportuje se Anki balíček&#8230;</string>
-    <string name="export_successful_title">Odeslat Anki balíček?</string>
-    <string name="export_send_button">Odeslat</string>
-    <string name="export_save_button">Uložit do souboru</string>
+    <string name="export_success_title">Kolekce úspěšně exportována</string>
     <string name="export_send_no_handlers">Nenalezena žádná aplikace pro zpracování apkg. Ukládá se...</string>
     <string name="export_save_apkg_successful">Anki balíček úspěšně uložen</string>
     <string name="export_save_apkg_unsuccessful">Nepodařilo se uložit Anki balíček</string>
-    <string name="export_successful">Soubor „%s“ byl exportován. Chcete jej poslat pomocí jiné aplikace?</string>
+    <string name="export_success_message">Můžete zvolit umístění, kam se soubor uloží, nebo jej sdílet jinou aplikací.</string>
+    <string name="export_share_title">Odeslat Anki balíček pomocí</string>
     <string name="export_email_subject">AnkiDroid exportované kartičky: %s</string>
     <string name="export_email_text"><![CDATA[        Ahoj!
         <br/><br/>
@@ -214,12 +225,13 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_unsuccessful">Chyba při exportu apkg souboru</string>
+    <string name="export_select_save_app">Vyberte, kam uložit soubor</string>
+    <string name="export_select_share_app">Vyberte aplikaci pro sdílení</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Možnosti</string>
     <string name="menu__deck_options">Nastavení balíčku</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Možnosti studia</string>
-    <string name="select_tts">Nastavit jazyk pro převod textu na řeč</string>
-    <string name="custom_study">Vlastní učení</string>
+    <string name="select_tts">Nastavit jazyk TTS</string>
+    <string name="custom_study">Vlastní studium</string>
     <string name="more_options">Více</string>
     <string name="dyn_deck_desc">Toto je speciální balíček pro studium mimo normální plán. Karty se po opakování automaticky vrátí do svých původních balíčků. Odstraněním tohoto balíčku ze seznamu se všechny zbývající karty vrátí do svých původních balíčků.</string>
     <string name="steps_error">Kroky musí být čísla větší než 0</string>
@@ -228,7 +240,7 @@
     <string name="sched_unbury_action">Pro jejich zobrazení stiskněte v menu položku „Zrušit přeskočení“.</string>
     <string name="sched_has_buried">Některé související nebo přeskočené karty byly přesunuty na zítra.</string>
     <string name="tag_editor_add_feedback">Klepněte na „%2$s“, abyste potvrdili přidání „%1$s“</string>
-    <string name="tag_editor_add_feedback_existing">Vybrán štítek “%1$s”</string>
+    <string name="tag_editor_add_feedback_existing">Vybrán stávající štítek „%1$s“</string>
     <!-- Time spans -->
     <plurals name="time_span_seconds">
         <item quantity="one">%s sekunda</item>
@@ -321,7 +333,7 @@
     <string name="reviewer_invalid_api_version_visit_documentation">Zobrazit</string>
     <string name="anki_js_error_code">(Kód chyby: %d)</string>
     <!-- About AnkiDroid screen -->
-    <string name="about_ankidroid_successfully_copied_debug">Ladicí informace zkopírovány do schránky</string>
+    <string name="about_ankidroid_successfully_copied_debug_info">Zkopírováno do schránky</string>
     <string name="about_ankidroid_error_copy_debug_info">Chyba při kopírování ladicích informací do schránky</string>
     <!-- Card Viewer -->
     <string name="card_viewer_could_not_find_image">Chyba obsahu karty: Nepodařilo se načíst „%s“</string>
@@ -378,34 +390,35 @@
     <string name="check_network">Zkontrolujte prosím připojení k síti</string>
     <string name="search_using_deck_name">Hledat pomocí názvu balíčku</string>
     <string name="home">Domů</string>
-    <!-- Reviewer actions -->
-    <string name="buried_card">Karta přeskočena</string>
-    <string name="buried_note">Poznámka přeskočena</string>
-    <string name="deleted_note">Poznámka odstraněna</string>
-    <string name="suspended_card">Karta vyřazena</string>
-    <string name="suspended_note">Poznámka vyřazena</string>
+    <!-- Reviewer actions 
+    Each of these strings ends with a period, following the notation of Anki Desktop -->
+    <string name="card_buried">Karta přeskočena.</string>
+    <plurals name="note_suspended">
+        <item quantity="one">%d karta vyřazena.</item>
+        <item quantity="few">%d karty vyřazeny.</item>
+        <item quantity="many">%d karty vyřazeno.</item>
+        <item quantity="other">%d karet vyřazeno.</item>
+    </plurals>
     <!--  Note Editor Toggle Sticky  -->
     <string name="note_editor_toggle_sticky">Pamatovat si obsah pole %s</string>
     <!-- Scoped Storage Migration -->
     <string name="scoped_storage_title">Přesun úložiště</string>
-    <string name="scoped_storage_initial_message">AnkiDroid musí přesunout svá data, aby splňoval nová pravidla ochrany osobních údajů Android
-\n\nPokud před migrací odinstalujete AnkiDroid, vaše data budou ztracena
-\n\nProsím proveďte migraci co nejdříve</string>
-    <string name="scoped_storage_terms_message">Migrace bude probíhat na pozadí. Během migrace nebudete moci synchronizovat\n\nPředpokládaná doba trvání: %s</string>
-    <string name="scoped_storage_term_1">Zálohoval jsem svá data</string>
-    <string name="scoped_storage_term_1_ankiweb">Nedávno jsem synchronizoval s AnkiWeb</string>
-    <string name="scoped_storage_term_2">Během přesunu dat neodinstaluji aplikaci</string>
-    <string name="scoped_storage_select_all_terms">Abyste mohli pokračovat, prosím přijměte všechny body</string>
     <string name="scoped_storage_learn_more">Zjistit více</string>
     <string name="scoped_storage_postpone">Odložit</string>
-    <string name="scoped_storage_migrate">Migrovat</string>
+    <string name="scoped_storage_migrate">Přesunout</string>
     <string name="search_card_js_api_no_results">Hledání nevrátilo žádné výsledky</string>
+    <string name="sync_impossible_during_migration">Synchronizace je zakázána, dokud nebude dokončen přesun dat.\n
+        %1$d multimediálních souborů zbývá přesunout.</string>
+    <string name="migration_update_request_requires_media_sync" commnet="use HTML linebreaks in this string">AnkiDroid potřebuje přesunout své úložiště, aby splňoval zásady zabezpečení Androidu 10.\n\nTo zlepší výkon synchronizace multimédií.&lt;br&gt;&lt;br&gt;Během přesunu dat nebudete moci synchronizovat a některá nastavení budou zakázána. Před spuštěním přesunu dat dojde k synchronizaci multimédií, aby byla vaše data v bezpečí.&lt;br&gt;&lt;br&gt;Během tohoto procesu je bezpečné používat AnkiDroid nebo ho zavřít.</string>
+    <string name="start_migration_progress_message">Začíná přesun úložiště. Brzy můžete pokračovat v používání AnkiDroid.</string>
+    <string name="migration_part_1_done_resume">Můžete pokračovat v používání AnkiDroid.
+\nPřesun úložiště bude pokračovat na pozadí.</string>
     <!--  JS Addons  -->
     <string name="not_valid_js_addon">%s není platný balíček javascript doplňku</string>
     <string name="could_not_create_dir">Nepodařilo se vytvořit adresář %s</string>
     <string name="malicious_archive_entry_outside">Škodlivý archiv. Obsahuje záznam mimo cílový adresář: %s</string>
     <string name="malicious_archive_exceeds_limit">Škodlivý archiv. Velikost přesahuje %1$s nebo obsahuje více než %2$d souborů</string>
-    <string name="file_extract_exceeds_storage_space">Rozbalený soubor je větší, než úložiště</string>
+    <string name="file_extract_exceeds_storage_space">Rozbalený soubor je větší, než místo v úložišti</string>
     <!--  Hierarchical Tags  -->
     <string name="expand_tag">Rozbalit štítek „%s“</string>
     <!-- Manage note types -->
@@ -421,11 +434,18 @@
     <string name="validation_deck_already_exists">Balíček existuje</string>
     <string name="deck_created">Balíček vytvořen</string>
     <string name="deck_renamed">Balíček přejmenován</string>
+    <!-- Deck Deletion -->
+    <string name="deck_shortcut_doesnt_exist">Balíček smazán. Prosím odstraňte zástupce</string>
     <!-- Browser Options Dialog -->
-    <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Cards</string>
-    <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">Notes</string>
-    <string name="toggle_cards_notes">Toggle Cards/Notes</string>
-    <string name="toggle_browser_mode_help">Toggle Showing cards or notes in the browser</string>
-    <string name="truncate_content_help">Truncate the height of each row of the Browser to show only first 3 lines of content</string>
-    <string name="browser_options_dialog_heading">Browser Options</string>
+    <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Karty</string>
+    <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">Poznámky</string>
+    <string name="toggle_cards_notes">Přepnout karty/poznámky</string>
+    <string name="toggle_browser_mode_help">Přepnout zobrazení karet nebo poznámek v prohlížeči</string>
+    <string name="truncate_content_help">Zkrátit výšku každého řádku prohlížeče, aby se zobrazily pouze první 3 řádky obsahu</string>
+    <string name="browser_options_dialog_heading">Možnosti prohlížeče</string>
+    <string name="functionality_disabled_during_storage_migration" comment="Displayed when trying to access functionality which cannot be run while storage is being moved to a new location">        Tato funkcionalita není k dispozici během přesunu úložiště
+    </string>
+    <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">Klepnutím spustíte přesun úložiště</string>
+    <string name="media_sync_required_title">Je vyžadována synchronizace multimédií</string>
+    <string name="media_sync_unavailable_message">Synchronizace multimédií je zakázána v nastavení. Před pokračováním prosím synchronizujte a zazálohujte multimédia, která nebyla synchronizována</string>
 </resources>

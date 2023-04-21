@@ -17,23 +17,21 @@
 package com.ichi2.anki.dialogs
 
 import android.os.Bundle
-import com.afollestad.materialdialogs.MaterialDialog
+import androidx.appcompat.app.AlertDialog
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.R
-import com.ichi2.utils.contentNullable
 
 class SimpleMessageDialog : AsyncDialogFragment() {
     interface SimpleMessageDialogListener {
         fun dismissSimpleMessageDialog(reload: Boolean)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): MaterialDialog {
-        // FIXME this should be super.onCreateDialog(Bundle), no?
-        super.onCreate(savedInstanceState)
-        return MaterialDialog(requireActivity()).show {
-            title(text = notificationTitle)
-            contentNullable(notificationMessage)
-            positiveButton(R.string.dialog_ok) {
+    override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
+        super.onCreateDialog(savedInstanceState)
+        return AlertDialog.Builder(requireContext()).apply {
+            setTitle(notificationTitle)
+            setMessage(notificationMessage)
+            setPositiveButton(R.string.dialog_ok) { _, _ ->
                 (activity as SimpleMessageDialogListener?)
                     ?.dismissSimpleMessageDialog(
                         requireArguments().getBoolean(
@@ -41,7 +39,7 @@ class SimpleMessageDialog : AsyncDialogFragment() {
                         )
                     )
             }
-        }
+        }.create()
     }
 
     override val notificationTitle: String
@@ -62,8 +60,10 @@ class SimpleMessageDialog : AsyncDialogFragment() {
     companion object {
         /** The title of the notification/dialog */
         private const val ARGS_TITLE = "title"
+
         /** The content of the notification/dialog */
         private const val ARGS_MESSAGE = "message"
+
         /**
          * If the calling activity should be reloaded when 'OK' is pressed.
          * @see SimpleMessageDialogListener.dismissSimpleMessageDialog

@@ -45,7 +45,7 @@ object ContentResolverUtil {
         if (filename != null) {
             return filename
         }
-        throw IllegalStateException(String.format("Unable to obtain valid filename from uri: %s", uri))
+        throw IllegalStateException("Unable to obtain valid filename from uri: $uri")
     }
 
     @CheckResult
@@ -67,7 +67,9 @@ object ContentResolverUtil {
         }
         return if (extension == null) {
             null
-        } else "image.$extension"
+        } else {
+            "image.$extension"
+        }
     }
 
     @CheckResult

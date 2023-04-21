@@ -16,7 +16,6 @@
 package com.ichi2.libanki.template
 
 import android.content.Context
-import android.util.Pair
 import androidx.annotation.VisibleForTesting
 import com.ichi2.anki.R
 import com.ichi2.libanki.Utils
@@ -39,7 +38,7 @@ abstract class ParsedNode {
     // Used only fot testing
     @VisibleForTesting
     fun template_is_empty(vararg nonempty_fields: String?): Boolean {
-        return template_is_empty(HashSet(Arrays.asList(*nonempty_fields)))
+        return template_is_empty(nonempty_fields.map { it!! }.toSet())
     }
 
     @Throws(TemplateError::class)
@@ -57,9 +56,13 @@ abstract class ParsedNode {
         } catch (er: TemplateError) {
             Timber.w(er)
             val side =
-                if (question) context.getString(R.string.card_template_editor_front) else context.getString(
-                    R.string.card_template_editor_back
-                )
+                if (question) {
+                    context.getString(R.string.card_template_editor_front)
+                } else {
+                    context.getString(
+                        R.string.card_template_editor_back
+                    )
+                }
             val explanation = context.getString(R.string.has_a_problem, side, er.message(context))
             val more_explanation =
                 "<a href=\"" + TEMPLATE_ERROR_LINK + "\">" + context.getString(R.string.more_information) + "</a>"

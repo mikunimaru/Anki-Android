@@ -17,12 +17,14 @@
 package com.ichi2.anki
 
 import android.content.Context
+import android.content.DialogInterface.*
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Looper
 import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.fragment.app.DialogFragment
 import androidx.sqlite.db.SupportSQLiteOpenHelper
@@ -42,12 +44,9 @@ import com.ichi2.libanki.backend.exception.DeckRenameException
 import com.ichi2.libanki.sched.Sched
 import com.ichi2.libanki.sched.SchedV2
 import com.ichi2.libanki.utils.TimeManager
-import com.ichi2.testutils.MockTime
-import com.ichi2.testutils.TaskSchedulerRule
+import com.ichi2.testutils.*
 import com.ichi2.utils.Computation
 import com.ichi2.utils.InMemorySQLiteOpenHelperFactory
-import com.ichi2.utils.JSONException
-import com.ichi2.utils.KotlinCleanup
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.*
 import net.ankiweb.rsdroid.BackendException
@@ -55,19 +54,22 @@ import net.ankiweb.rsdroid.testing.RustBackendLoader
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
+import org.json.JSONException
 import org.junit.*
 import org.robolectric.Robolectric
 import org.robolectric.Shadows
 import org.robolectric.android.controller.ActivityController
 import org.robolectric.shadows.ShadowDialog
 import org.robolectric.shadows.ShadowLog
+import org.robolectric.shadows.ShadowLooper
+import org.robolectric.shadows.ShadowMediaPlayer
 import timber.log.Timber
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-open class RobolectricTest : CollectionGetter {
+open class RobolectricTest : CollectionGetter, AndroidTest {
 
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     private fun Any.wait(timeMs: Long) = (this as Object).wait(timeMs)
@@ -84,6 +86,10 @@ open class RobolectricTest : CollectionGetter {
 
     @get:Rule
     val mTaskScheduler = TaskSchedulerRule()
+
+    /** Allows [com.ichi2.testutils.Flaky] to annotate tests in subclasses */
+    @get:Rule
+    val ignoreFlakyTests = IgnoreFlakyTestsInCIRule()
 
     @Before
     @CallSuper
@@ -122,19 +128,17 @@ open class RobolectricTest : CollectionGetter {
         return false
     }
 
-    protected fun getHelperFactory(): SupportSQLiteOpenHelper.Factory {
+    protected fun getHelperFactory(): SupportSQLiteOpenHelper.Factory =
         if (useInMemoryDatabase()) {
             Timber.w("Using in-memory database for test. Collection should not be re-opened")
-            return InMemorySQLiteOpenHelperFactory()
+            InMemorySQLiteOpenHelperFactory()
         } else {
-            return FrameworkSQLiteOpenHelperFactory()
+            FrameworkSQLiteOpenHelperFactory()
         }
-    }
 
     @After
     @CallSuper
     open fun tearDown() {
-
         // If you don't clean up your ActivityControllers you will get OOM errors
         for (controller in mControllersForCleanup) {
             Timber.d("Calling destroy on controller %s", controller.get().toString())
@@ -154,7 +158,7 @@ open class RobolectricTest : CollectionGetter {
             // If you don't tear down the database you'll get unexpected IllegalStateExceptions related to connections
             CollectionHelper.instance.closeCollection(false, "RobolectricTest: End")
         } catch (ex: BackendException) {
-            if ("CollectionNotOpen".equals(ex.message)) {
+            if ("CollectionNotOpen" == ex.message) {
                 Timber.w(ex, "Collection was already disposed - may have been a problem")
             } else {
                 throw ex
@@ -176,6 +180,7 @@ open class RobolectricTest : CollectionGetter {
      * Ensure that each task in backgrounds are executed immediately instead of being queued.
      * This may help debugging test without requiring to guess where `advanceRobolectricLooper` are needed.
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun runTasksInForeground() {
         TaskManager.setTaskManager(ForegroundTaskManager(this))
         mBackground = false
@@ -189,9 +194,24 @@ open class RobolectricTest : CollectionGetter {
         mBackground = true
     }
 
-    protected fun clickDialogButton(button: WhichButton?, checkDismissed: Boolean) {
+    protected fun clickMaterialDialogButton(button: WhichButton, @Suppress("SameParameterValue") checkDismissed: Boolean) {
         val dialog = ShadowDialog.getLatestDialog() as MaterialDialog
-        dialog.getActionButton(button!!).performClick()
+        dialog.getActionButton(button).performClick()
+        if (checkDismissed) {
+            Assert.assertTrue("Dialog not dismissed?", Shadows.shadowOf(dialog).hasBeenDismissed())
+        }
+    }
+
+    /**
+     * Click on a dialog button for an AlertDialog dialog box. Replaces the above helper.
+     */
+    protected fun clickAlertDialogButton(button: Int, @Suppress("SameParameterValue") checkDismissed: Boolean) {
+        val dialog = ShadowDialog.getLatestDialog() as AlertDialog
+
+        dialog.getButton(button).performClick()
+        // Need to run UI thread tasks to actually run the onClickHandler
+        ShadowLooper.runUiThreadTasks()
+
         if (checkDismissed) {
             Assert.assertTrue("Dialog not dismissed?", Shadows.shadowOf(dialog).hasBeenDismissed())
         }
@@ -202,13 +222,32 @@ open class RobolectricTest : CollectionGetter {
      *
      * @param checkDismissed true if you want to check for dismissed, will return null even if dialog exists but has been dismissed
      */
-    protected fun getDialogText(checkDismissed: Boolean): String? {
+    protected fun getMaterialDialogText(@Suppress("SameParameterValue") checkDismissed: Boolean): String? {
         val dialog: MaterialDialog = ShadowDialog.getLatestDialog() as MaterialDialog
         if (checkDismissed && Shadows.shadowOf(dialog).hasBeenDismissed()) {
             Timber.e("The latest dialog has already been dismissed.")
             return null
         }
         return dialog.view.contentLayout.findViewById<TextView>(R.id.md_text_message).text.toString()
+    }
+
+    /**
+     * Get the current dialog text for AlertDialogs (which are replacing MaterialDialogs). Will return null if no dialog visible
+     * *or* if you check for dismissed and it has been dismissed
+     *
+     * @param checkDismissed true if you want to check for dismissed, will return null even if dialog exists but has been dismissed
+     * TODO: Rename to getDialogText when all MaterialDialogs are changed to AlertDialogs
+     */
+    protected fun getAlertDialogText(@Suppress("SameParameterValue") checkDismissed: Boolean): String? {
+        val dialog = ShadowDialog.getLatestDialog() as AlertDialog
+        if (checkDismissed && Shadows.shadowOf(dialog).hasBeenDismissed()) {
+            Timber.e("The latest dialog has already been dismissed.")
+            return null
+        }
+        val messageViewWithinDialog = dialog.findViewById<TextView>(android.R.id.message)
+        Assert.assertFalse(messageViewWithinDialog == null)
+
+        return messageViewWithinDialog?.text?.toString()
     }
 
     // Robolectric needs a manual advance with the new PAUSED looper mode
@@ -263,6 +302,13 @@ open class RobolectricTest : CollectionGetter {
 
         @JvmStatic // Using protected members which are not @JvmStatic in the superclass companion is unsupported yet
         protected fun <T : AnkiActivity?> startActivityNormallyOpenCollectionWithIntent(testClass: RobolectricTest, clazz: Class<T>?, i: Intent?): T {
+            if (AbstractFlashcardViewer::class.java.isAssignableFrom(clazz!!)) {
+                // fixes 'Don't know what to do with dataSource...' inside Sounds.kt
+                // solution from https://github.com/robolectric/robolectric/issues/4673
+                ShadowMediaPlayer.setMediaInfoProvider {
+                    ShadowMediaPlayer.MediaInfo(1, 0)
+                }
+            }
             val controller = Robolectric.buildActivity(clazz, i)
                 .create().start().resume().visible()
             advanceRobolectricLooperWithSleep()
@@ -279,7 +325,7 @@ open class RobolectricTest : CollectionGetter {
             } catch (e: IllegalStateException) {
                 if (e.message != null && e.message!!.startsWith("No instrumentation registered!")) {
                     // Explicitly ignore the inner exception - generates line noise
-                    throw IllegalStateException("Annotate class: '" + javaClass.simpleName + "' with '@RunWith(AndroidJUnit4.class)'")
+                    throw IllegalStateException("Annotate class: '${javaClass.simpleName}' with '@RunWith(AndroidJUnit4.class)'")
                 }
                 throw e
             }
@@ -289,7 +335,7 @@ open class RobolectricTest : CollectionGetter {
      * Returns an instance of [SharedPreferences] using the test context
      * @see [editPreferences] for editing
      */
-    protected fun getPreferences(): SharedPreferences {
+    fun getPreferences(): SharedPreferences {
         return AnkiDroidApp.getSharedPrefs(targetContext)
     }
 
@@ -297,7 +343,7 @@ open class RobolectricTest : CollectionGetter {
         return targetContext.getString(res)
     }
 
-    protected fun getQuantityString(res: Int, quantity: Int, vararg formatArgs: Any?): String {
+    protected fun getQuantityString(res: Int, quantity: Int, vararg formatArgs: Any): String {
         return targetContext.resources.getQuantityString(res, quantity, *formatArgs)
     }
 
@@ -331,9 +377,9 @@ open class RobolectricTest : CollectionGetter {
     }
 
     @Throws(JSONException::class)
-    protected fun getCurrentDatabaseModelCopy(modelName: String?): Model {
+    protected fun getCurrentDatabaseModelCopy(modelName: String): Model {
         val collectionModels = col.models
-        return Model(collectionModels.byName(modelName!!).toString().trim { it <= ' ' })
+        return Model(collectionModels.byName(modelName).toString().trim { it <= ' ' })
     }
 
     protected fun <T : AnkiActivity?> startActivityNormallyOpenCollectionWithIntent(clazz: Class<T>?, i: Intent?): T {
@@ -352,7 +398,7 @@ open class RobolectricTest : CollectionGetter {
         return addNoteUsingModelName("Basic", front, back)
     }
 
-    protected fun addRevNoteUsingBasicModelDueToday(front: String, back: String): Note {
+    protected fun addRevNoteUsingBasicModelDueToday(@Suppress("SameParameterValue") front: String, @Suppress("SameParameterValue") back: String): Note {
         val note = addNoteUsingBasicModel(front, back)
         val card = note.firstCard()
         card.queue = Consts.QUEUE_TYPE_REV
@@ -365,20 +411,20 @@ open class RobolectricTest : CollectionGetter {
         return addNoteUsingModelName("Basic (and reversed card)", front, back)
     }
 
-    protected fun addNoteUsingBasicTypedModel(front: String, back: String): Note {
+    protected fun addNoteUsingBasicTypedModel(@Suppress("SameParameterValue") front: String, @Suppress("SameParameterValue") back: String): Note {
         return addNoteUsingModelName("Basic (type in the answer)", front, back)
     }
 
     protected fun addNoteUsingModelName(name: String?, vararg fields: String): Note {
         val model = col.models.byName((name)!!)
-            ?: throw IllegalArgumentException(String.format("Could not find model '%s'", name))
+            ?: throw IllegalArgumentException("Could not find model '$name'")
         // PERF: if we modify newNote(), we can return the card and return a Pair<Note, Card> here.
         // Saves a database trip afterwards.
         val n = col.newNote(model)
         for ((i, field) in fields.withIndex()) {
             n.setField(i, field)
         }
-        check(col.addNote(n) != 0) { String.format("Could not add note: {%s}", fields.joinToString(separator = ", ")) }
+        check(col.addNote(n) != 0) { "Could not add note: {${fields.joinToString(separator = ", ")}}" }
         return n
     }
 
@@ -445,9 +491,9 @@ open class RobolectricTest : CollectionGetter {
             override fun onPostExecute(result: Result?) {
                 require(!(result == null || !result.succeeded())) { "Task failed" }
                 completed[0] = true
-                val RobolectricTest = ReentrantLock()
-                val condition = RobolectricTest.newCondition()
-                RobolectricTest.withLock { condition.signal() }
+                val robolectricTest = ReentrantLock()
+                val condition = robolectricTest.newCondition()
+                robolectricTest.withLock { condition.signal() }
                 // synchronized(this@RobolectricTest) { this@RobolectricTest.notify() }
             }
         }
@@ -455,7 +501,7 @@ open class RobolectricTest : CollectionGetter {
         advanceRobolectricLooper()
         wait(timeoutMs.toLong())
         advanceRobolectricLooper()
-        if (!completed[0]) { throw IllegalStateException(String.format("Task %s didn't finish in %d ms", task.javaClass, timeoutMs)) }
+        if (!completed[0]) { throw IllegalStateException("Task ${task.javaClass} didn't finish in $timeoutMs ms") }
     }
 
     /**
@@ -519,7 +565,6 @@ open class RobolectricTest : CollectionGetter {
     }
 
     @CheckResult
-    @KotlinCleanup("scope function")
     protected fun openDialogFragmentUsingActivity(menu: DialogFragment): FragmentTestActivity {
         val startActivityIntent = Intent(targetContext, FragmentTestActivity::class.java)
         val activity = startActivityNormallyOpenCollectionWithIntent(FragmentTestActivity::class.java, startActivityIntent)
@@ -541,6 +586,7 @@ open class RobolectricTest : CollectionGetter {
      * editPreferences { putString("key", value) }
      * ```
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun editPreferences(action: SharedPreferences.Editor.() -> Unit) =
         getPreferences().edit(action = action)
 
@@ -554,42 +600,12 @@ open class RobolectricTest : CollectionGetter {
             println("not annotated with junit, not setting up backend")
             return
         }
-        // Allow an override for the testing library (allowing Robolectric to access the Rust backend)
-        // This allows M1 macs to access a .dylib built for arm64, despite it not existing in the .jar
-        val backendPath = System.getenv("ANKIDROID_BACKEND_PATH")
-        val localBackendVersion = System.getenv("ANKIDROID_BACKEND_VERSION")
-        val supportedBackendVersion = BuildConfig.BACKEND_VERSION
-        if (backendPath != null) {
-            if (BuildConfig.BACKEND_VERSION != localBackendVersion) {
-                throw java.lang.IllegalStateException(
-                    """
-                        AnkiDroid backend testing library requires an update.
-                        Please update the library at '$backendPath' from https://github.com/ankidroid/Anki-Android-Backend/releases/ (v$localBackendVersion)
-                        And then set $\0ANKIDROID_BACKEND_VERSION to $supportedBackendVersion
-                        Or to update you can just run the script: sh tools/setup-anki-backend.sh
-                        For more details see, https://github.com/ankidroid/Anki-Android/wiki/Development-Guide#note-for-apple-silicon-users
-                        Error: $\0ANKIDROID_BACKEND_VERSION: expected '$supportedBackendVersion', got '$localBackendVersion
-                    """.trimIndent()
-                )
-            }
-            // we're the right version, load the library from $ANKIDROID_BACKEND_PATH
-            try {
-                RustBackendLoader.ensureSetup(backendPath)
-            } catch (e: UnsatisfiedLinkError) {
-                // java.lang.UnsatisfiedLinkError: /Users/davidallison/StudioProjects/librsdroid-0-1-11.dylib:
-                // dlopen(/Users/davidallison/StudioProjects/librsdroid-0-1-11.dylib, 0x0001):
-                // tried: '/Users/davidallison/StudioProjects/librsdroid-0-1-11.dylib'
-                // (code signature in <3C55B9B3-1E8A-33F4-A43E-173BDB074DC5>
-                // '/Users/davidallison/StudioProjects/librsdroid-0-1-11.dylib'
-                // not valid for use in process: library load disallowed by system policy)
-
-                // Dialog with message:
-                // “librsdroid-0-1-11.dylib” can’t be opened because Apple cannot check it for malicious software.
-                // This software needs to be updated. Contact the developer for more information.
-                // [Show in Finder] [OK]
-                if (e.message.toString().contains("library load disallowed by system policy")) {
-                    throw IllegalStateException(
-                        """library load disallowed by system policy.
+        try {
+            RustBackendLoader.ensureSetup()
+        } catch (e: UnsatisfiedLinkError) {
+            if (e.message.toString().contains("library load disallowed by system policy")) {
+                throw IllegalStateException(
+                    """library load disallowed by system policy.
 "To fix:
 * Run the test such that the "developer cannot be verified" message appears
 * Press "OK" on the "Apple cannot check it for malicious software" prompt
@@ -598,29 +614,9 @@ open class RobolectricTest : CollectionGetter {
     Button is underneath the text: "librsdroid.dylib was blocked from use because it is not from an identified developer"
 * Press "OK" on the "Apple cannot check it for malicious software" prompt
 * Test should execute correctly"""
-                    )
-                }
-                throw e
+                )
             }
-        } else {
-            // default (no env variable): Extract the backend testing lib from the jar
-            try {
-                RustBackendLoader.ensureSetup(null)
-            } catch (e: UnsatisfiedLinkError) {
-                if (e.message.toString().contains("arm64e")) {
-                    // Giving the commands to user to add the required env variables
-                    val exception =
-                        """
-                            Please download the arm64 dylib file from https://github.com/ankidroid/Anki-Android-Backend/releases/tag/$supportedBackendVersion and add the following environment variables to your device by using following commands: 
-                            export ANKIDROID_BACKEND_PATH={Path to the dylib file}
-                            export ANKIDROID_BACKEND_VERSION=$supportedBackendVersion
-                            Or to do setup automatically, run the script: sh tools/setup-anki-backend.sh
-                            For more details see, https://github.com/ankidroid/Anki-Android/wiki/Development-Guide#note-for-apple-silicon-users
-                        """.trimIndent()
-                    throw IllegalStateException(exception, e)
-                }
-                throw e
-            }
+            throw e
         }
     }
 
@@ -644,7 +640,7 @@ open class RobolectricTest : CollectionGetter {
         context: CoroutineContext = EmptyCoroutineContext,
         dispatchTimeoutMs: Long = 60_000L,
         testBody: suspend TestScope.() -> Unit
-    ): TestResult {
+    ) {
         kotlinx.coroutines.test.runTest(context, dispatchTimeoutMs) {
             CollectionManager.setTestDispatcher(UnconfinedTestDispatcher(testScheduler))
             testBody()

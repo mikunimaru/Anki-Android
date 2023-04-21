@@ -47,8 +47,6 @@
     <string name="multimedia_editor_popup_text">Расширенный редактор</string>
     <string name="multimedia_editor_popup_cloze">Задание с пропусками</string>
     <string name="multimedia_editor_popup_clear_field">Очистить поле</string>
-    <!-- TODO this string should be in dialogs.xml with the other help_item_support_* strings -->
-    <string name="multimedia_editor_trans_translate">Перевести</string>
     <!-- Pronunciation activity (Beolingus) -->
     <string name="multimedia_editor_pron_load">Загрузить</string>
     <string name="multimedia_editor_pron_looking_up">Искать произношение</string>
@@ -80,7 +78,7 @@
     <!-- for buttons -->
     <string name="multimedia_editor_image_field_editing_galery">Галерея</string>
     <string name="multimedia_editor_image_field_editing_photo">Камера</string>
-    <string name="multimedia_editor_import_audio">Звук</string>
+    <string name="multimedia_editor_import_audio">Аудио</string>
     <string name="multimedia_editor_import_video">Видео</string>
     <!-- General -->
     <!-- message on the progress dialog for the user to wait, means process -->

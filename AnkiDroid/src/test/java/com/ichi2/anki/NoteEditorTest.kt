@@ -35,7 +35,6 @@ import com.ichi2.libanki.Note
 import com.ichi2.testutils.AnkiAssert.assertDoesNotThrow
 import com.ichi2.utils.KotlinCleanup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import net.ankiweb.rsdroid.BackendFactory
 import net.ankiweb.rsdroid.RustCleanup
 import org.hamcrest.MatcherAssert.assertThat
@@ -88,7 +87,7 @@ class NoteEditorTest : RobolectricTest() {
         // Assert
         val intent = shadowOf(n).nextStartedActivityForResult
         val actualField = MultimediaEditFieldActivity.getFieldFromIntent(intent.intent)!!
-        assertThat("Provided value should be the updated value", actualField.formattedValue, equalTo("Good Afternoon"))
+        assertThat("Provided value should be the updated value", actualField.second.formattedValue, equalTo("Good Afternoon"))
     }
 
     @Test
@@ -191,7 +190,7 @@ class NoteEditorTest : RobolectricTest() {
     @Test
     fun verifyStartupAndCloseWithNoCollectionDoesNotCrash() {
         enableNullCollection()
-        ActivityScenario.launch(NoteEditor::class.java).use { scenario ->
+        ActivityScenario.launchActivityForResult(NoteEditor::class.java).use { scenario ->
             scenario.onActivity { noteEditor: NoteEditor ->
                 noteEditor.onBackPressed()
                 assertThat("Pressing back should finish the activity", noteEditor.isFinishing)
@@ -328,7 +327,7 @@ class NoteEditorTest : RobolectricTest() {
         val editor = getNoteEditorAddingNote(DECK_LIST, NoteEditor::class.java)
         editor.setCurrentlySelectedModel(col.models.byName("Basic")!!.getLong("id"))
         val field = editor.getFieldForTest(0)
-        field.clipboard!!.setPrimaryClip(ClipData.newHtmlText("text", "text", "<span style=\"color: red\">text</span>"))
+        field.clipboard!!.setPrimaryClip(ClipData.newHtmlText("text", "text", """<span style="color: red">text</span>"""))
         assertTrue(field.clipboard!!.hasPrimaryClip())
         assertNotNull(field.clipboard!!.primaryClip)
 

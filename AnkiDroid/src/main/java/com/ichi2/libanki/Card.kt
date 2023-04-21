@@ -18,7 +18,6 @@
 package com.ichi2.libanki
 
 import android.content.ContentValues
-import android.text.TextUtils
 import androidx.annotation.VisibleForTesting
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.CollectionHelper
@@ -32,9 +31,9 @@ import com.ichi2.libanki.stats.Stats
 import com.ichi2.libanki.template.TemplateError
 import com.ichi2.libanki.utils.TimeManager
 import com.ichi2.utils.Assert
-import com.ichi2.utils.JSONObject
 import com.ichi2.utils.LanguageUtil
 import net.ankiweb.rsdroid.RustCleanup
+import org.json.JSONObject
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.CancellationException
@@ -392,20 +391,22 @@ open class Card : Cloneable {
                 if (SKIP_PRINT.contains(f.name)) {
                     continue
                 }
-                members.add(String.format("'%s': %s", f.name, f[this]))
+                members.add("'${f.name}': ${f[this]}")
             } catch (e: IllegalAccessException) {
-                members.add(String.format("'%s': %s", f.name, "N/A"))
+                members.add("'${f.name}': N/A")
             } catch (e: IllegalArgumentException) {
-                members.add(String.format("'%s': %s", f.name, "N/A"))
+                members.add("'${f.name}': N/A")
             }
         }
-        return TextUtils.join(",  ", members)
+        return members.joinToString(",  ")
     }
 
     override fun equals(other: Any?): Boolean {
         return if (other is Card) {
             this.id == other.id
-        } else super.equals(other)
+        } else {
+            super.equals(other)
+        }
     }
 
     override fun hashCode(): Int {
@@ -553,7 +554,9 @@ open class Card : Cloneable {
         override fun equals(other: Any?): Boolean {
             return if (other !is Cache) {
                 false
-            } else this.id == other.id
+            } else {
+                this.id == other.id
+            }
         }
 
         fun loadQA(reload: Boolean, browser: Boolean) {
@@ -566,7 +569,7 @@ open class Card : Cloneable {
 
         // A list of class members to skip in the toString() representation
         val SKIP_PRINT: Set<String> = HashSet(
-            Arrays.asList(
+            listOf(
                 "SKIP_PRINT", "\$assertionsDisabled", "TYPE_LRN",
                 "TYPE_NEW", "TYPE_REV", "mNote", "mQA", "mCol", "mTimerStarted", "mTimerStopped"
             )

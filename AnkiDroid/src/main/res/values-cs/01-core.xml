@@ -44,7 +44,6 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="yes">ano</string>
     <!-- Navigation drawer items-->
     <string name="decks">Balíčky</string>
     <string name="card_browser" comment="The usage of card browser inside the app (note the casing)">Prohlížeč karet</string>
@@ -53,7 +52,7 @@
     <string name="help">Nápověda</string>
     <string name="drawing">Kreslení</string>
     <string name="send_feedback">Odeslat zpětnou vazbu</string>
-    <string name="studyoptions_due_today">Dnes k zopakování:</string>
+    <string name="studyoptions_due_today">Dnes ke zkoušení:</string>
     <string name="studyoptions_new_total">Celkem nových karet:</string>
     <string name="studyoptions_total_cards">Celkem karet:</string>
     <string name="studyoptions_eta">Odhadovaný čas (min):</string>
@@ -61,7 +60,7 @@
     <!-- DeckPicker.kt -->
     <string name="expand">Rozbalit</string>
     <string name="collapse">Sbalit</string>
-    <string name="study_more">Vlastní studium</string>
+    <string name="study_more">Studovat více</string>
     <plurals name="deckpicker_title">
         <item quantity="one">%1$d karta ke zkoušení (%2$s)</item>
         <item quantity="few">%1$d karty ke zkoušení (%2$s)</item>
@@ -108,6 +107,7 @@
     <string name="undo">Vrátit zpět</string>
     <string name="undo_action_review">poslední opakování</string>
     <string name="undo_action_change_deck_multi">změnit balíčky</string>
+    <string name="undo_action_whiteboard_last_stroke" comment="One of the display patterns of \'Undo\' item on the action menu in Reviewer. It is shown as the title of the item when the whiteboard (handwriting) feature is enabled and visible and has any strokes (handwritten lines)">Zrušit čáru</string>
     <string name="move_all_to_deck">Přesunout vše do balíčku</string>
     <string name="unbury">Zrušit přeskočení</string>
     <string name="rename_deck">Přejmenovat balíček</string>
@@ -148,6 +148,7 @@
     grant AnkiDroid the \'Storage\' permission. This needs to be a fairly generic message as implementations
     of the permissions/app info screen will differ between devices. -->
     <string name="startup_no_storage_permission">Abyste mohli pokračovat, prosím udělte AnkiDroid oprávnění k „úložišti“</string>
+    <string name="startup_all_files_access_permission">Abyste mohli pokračovat, prosím udělte AnkiDroidu oprávnění „přístup ke všem souborům“</string>
     <!--
         The time_quantities are units of time. They are used without
         plurals or dots.
@@ -170,11 +171,10 @@
     <string name="create_subdeck">Vytvořit podřízený balíček</string>
     <string name="empty_filtered_deck">Vyprazdňuje se filtrovaný balíček&#8230;</string>
     <string name="custom_study_deck_name">Dodatečné procvičování</string>
-    <string name="custom_study_deck_exists">Nejdříve přejmenujte stávající balíček vlastního učení</string>
+    <string name="custom_study_deck_exists">Nejdříve přejmenujte stávající balíček vlastního studia</string>
     <string name="empty_deck">Tento balíček je prázdný</string>
     <string name="search_deck" comment="Deck search for selecting it">Hledat balíček</string>
     <string name="search_for_download_deck" comment="Deck search value for downloading deck">Hledat balíček</string>
-    <string name="empty_deck_add_note">Přidat kartu</string>
     <string name="invalid_deck_name">Neplatný název balíčku</string>
     <string name="studyoptions_empty">Tento balíček je prázdný. Stiskněte tlačítko +, abyste přidali nový obsah.</string>
     <string name="studyoptions_limit_reached">Denní limit studia dosažen</string>
@@ -182,11 +182,13 @@
     <string name="studyoptions_congrats_finished">Blahopřejeme! Prozatím máte hotovo</string>
     <string name="studyoptions_congrats_more_rev">Bylo dosaženo limitu dnešního opakování, ale stále existují karty pro přezkoušení. Pro optimální zapamatování zvažte zvýšení denního limitu v možnostech.</string>
     <string name="studyoptions_congrats_more_new">Dnešní limit byl dosažen. K dispozici je více nových karet, v možnostech můžete zvýšit limit, ale to zvýší vaše krátkodobé vytížení.</string>
-    <string name="studyoptions_congrats_custom">Jestliže chcete studovat mimo normální plán, klepněte na tlačítko „Vlastní učení“.</string>
+    <string name="studyoptions_congrats_custom">Jestliže chcete studovat mimo normální plán, klepněte na tlačítko „Vlastní studium“.</string>
     <string name="studyoptions_no_cards_due">Žádné karty ještě nejsou ke zkoušení</string>
     <string name="sd_card_not_mounted">Zařízení úložiště není připojeno</string>
     <string name="empty_cloze_warning">Upravte tuto poznámku a přidejte nějaké doplňovačky. (%1$s)</string>
     <string name="button_sync" comment="Text of the sync button">Synchronizovat</string>
+    <string name="button_sync_disabled" comment="Text of the sync button when disabled">Synchronizace dočasně zakázána</string>
+    <string name="button_upgrade" comment="Text of the sync button">Přesunout do vyhrazeného úložiště</string>
     <string name="cancel_sync_confirm">Přejete si přerušit synchronizaci?</string>
     <string name="continue_sync">Pokračovat v synchronizaci</string>
     <string name="sync_cancelled">Synchronizace přrušena</string>
@@ -255,4 +257,19 @@
         <item quantity="other">%1$d karet (0 ke zkoušení)</item>
     </plurals>
     <string name="copy_note_type_name" comment="The new name of a copied note type">%s kopie</string>
+    <!-- Generic errors -->
+    <string name="error__etc__cannot_write_to_or_create_file">Nelze zapisovat do souboru %s nebo jej vytvořit</string>
+    <!-- Scoped Storage Migration -->
+    <string name="migrating_data_message">Vaše data se přesouvají</string>
+    <string name="migration_successful_message">Přesun dat byl úspěšný</string>
+    <string name="migration_failed_message">Přesun dat se nezdařil</string>
+    <string name="migration_transferred_size">Přesunuto %1$.0f MB z %2$.0f MB</string>
+    <string name="directory_inaccessible_after_uninstall" comment="Dialog title if AnkiDroid can\'t access the collection once the app is installed">Nepřístupná kolekce</string>
+    <string name="directory_inaccessible_after_uninstall_summary" comment="the parameter is the path to the AnkiDroid folder. Typically /storage/emulated/0/AnkiDroid">Po odinstalování AnkiDroidu nelze otevřít vaši sbírku z důvodu změny zásad obchodu Play\n\nVaše data jsou v bezpečí a mohou být obnovena. Jsou umístěna v\n%s\n\nVyberte možnost níže, pokus je chcete obnovit:</string>
+    <string name="restore_data_from_ankiweb">Obnovit z AnkiWeb (doporučeno)</string>
+    <string name="install_non_play_store_ankidroid_recommended">Obnovit přístup ke složce (doporučeno)</string>
+    <string name="install_non_play_store_ankidroid">Obnovit přístup ke složce (pro pokročilé)</string>
+    <string name="restore_data_from_backup">Obnovit ze zálohy .colpkg (pro pokročilé)</string>
+    <string name="create_new_collection">Vytvořit novou kolekci</string>
+    <string name="new_unsafe_collection">Nová kolekce bude odstraněna z vašeho telefonu, pokud odinstalujete AnkiDroid</string>
 </resources>

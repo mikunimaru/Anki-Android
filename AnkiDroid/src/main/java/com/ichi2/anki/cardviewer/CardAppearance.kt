@@ -28,12 +28,12 @@ class CardAppearance(private val customFonts: ReviewerCustomFonts, private val c
     fun appendCssStyle(style: StringBuilder) {
         // Zoom cards
         if (cardZoom != 100) {
-            style.append(String.format("body { zoom: %s }\n", cardZoom / 100.0))
+            style.append("body { zoom: ${cardZoom / 100.0} }\n")
         }
 
         // Zoom images
         if (imageZoom != 100) {
-            style.append(String.format("img { zoom: %s }\n", imageZoom / 100.0))
+            style.append("img { zoom: ${imageZoom / 100.0} }\n")
         }
     }
 
@@ -69,9 +69,7 @@ class CardAppearance(private val customFonts: ReviewerCustomFonts, private val c
         }
 
     fun getCardClass(oneBasedCardOrdinal: Int): String {
-        var cardClass = "card card$oneBasedCardOrdinal"
-        cardClass += getCssClasses()
-        return cardClass
+        return "card card$oneBasedCardOrdinal" + getCssClasses()
     }
 
     companion object {
@@ -89,6 +87,7 @@ class CardAppearance(private val customFonts: ReviewerCustomFonts, private val c
             // font-weight to 700
             return content.replace("font-weight:600;", "font-weight:700;")
         }
+
         /**
          * hasUserDefinedNightMode finds out if the user has included class .night_mode in card's stylesheet
          */

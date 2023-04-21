@@ -61,6 +61,8 @@
     <string name="updated_version">Mis à jour à la version %s</string>
     <!-- Reviewer.kt -->
     <string name="save_whiteboard">Enregistrer le tableau blanc</string>
+    <string name="enable_stylus">Enable stylus mode</string>
+    <string name="disable_stylus">Disable stylus mode</string>
     <string name="enable_whiteboard">Activer le tableau blanc</string>
     <string name="disable_whiteboard">Désactiver le tableau blanc</string>
     <string name="show_whiteboard">Afficher le tableau blanc</string>
@@ -123,7 +125,6 @@
     <string name="save">Enregistrer</string>
     <string name="close">Fermer</string>
     <string name="select">Sélectionner</string>
-    <string name="saving_changes">Enregistrement des modifications&#8230;</string>
     <string name="reordering_cards">Tri des cartes...</string>
     <string name="field_remapping">%1$s (de « %2$s »)</string>
     <string name="confirm_map_cards_to_nothing">Toute carte sans connexion sera effacée. Si une note n’a aucune carte restante, elle sera perdue. Êtes-vous sûr de vouloir continuer ?</string>
@@ -158,7 +159,6 @@
     <string name="empty_card_warning">Cette carte est vide. Utilisez l\'option \"cartes vides\" du menu sur l\'écran de la liste de paquets.</string>
     <string name="unknown_type_field_warning">Taper la réponse : champ inconnu %s</string>
     <string name="delete_deck">Suppression du paquet&#8230;</string>
-    <string name="show_hint">Afficher %s</string>
     <string name="info_rate">Noter AnkiDroid</string>
     <string name="import_title">Importation en cours</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">Ajouter</string>
@@ -190,14 +190,21 @@
     <string name="export_include_media">Inclure les médias</string>
     <string name="confirm_apkg_export">Exporter la collection sous forme de paquet Anki ?</string>
     <string name="confirm_apkg_export_deck">Exporter \"%s\" au format apkg ?</string>
+    <plurals name="confirm_apkg_export_selected_cards">
+        <item quantity="one">Exporter les cartes sélectionnées au format .apkg ?</item>
+        <item quantity="other">Exporter les %d cartes sélectionnées au format .apkg ?</item>
+    </plurals>
+    <plurals name="confirm_apkg_export_selected_notes">
+        <item quantity="one">Exporter les notes sélectionnées au format .apkg ?</item>
+        <item quantity="other">Exporter les %d notes sélectionnées au format .apkg ?</item>
+    </plurals>
     <string name="export_in_progress">Exportation du fichier Anki&#8230;</string>
-    <string name="export_successful_title">Envoyer le paquet Anki ?</string>
-    <string name="export_send_button">Envoyer</string>
-    <string name="export_save_button">Enregistrer sous...</string>
+    <string name="export_success_title">Collection exportée avec succès</string>
     <string name="export_send_no_handlers">Aucune application disponible pour ouvrir le fichier APKG. Sauvegarde...</string>
     <string name="export_save_apkg_successful">Paquet Anki sauvegardé avec succès</string>
     <string name="export_save_apkg_unsuccessful">Échec de la sauvegarde du paquet Anki</string>
-    <string name="export_successful">Le fichier « %s » a été exporté. Voulez-vous le partager à l\'aide d\'une autre app ?</string>
+    <string name="export_success_message">Vous devez choisir un emplacement de fichier pour le sauvegarder, ou le partager avec une autre application.</string>
+    <string name="export_share_title">Envoyer le paquet Anki ?</string>
     <string name="export_email_subject">AnkiDroid a exporté %s cartes</string>
     <string name="export_email_text"><![CDATA[        Bonjour !
         <br/><br/>
@@ -206,7 +213,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_unsuccessful">Erreur lors de l\'exportation du fichier apkg</string>
+    <string name="export_select_save_app">Sélectionner où sauvegarder le fichier</string>
+    <string name="export_select_share_app">Sélectionner l\'application pour le partage</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Options</string>
     <string name="menu__deck_options">Options du deck</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Options de révision</string>
@@ -299,7 +307,7 @@
     <string name="reviewer_invalid_api_version_visit_documentation">Voir</string>
     <string name="anki_js_error_code">(Code d\'erreur : %d)</string>
     <!-- About AnkiDroid screen -->
-    <string name="about_ankidroid_successfully_copied_debug">Informations de débogage copiées dans le presse-papiers</string>
+    <string name="about_ankidroid_successfully_copied_debug_info">Copied to clipboard</string>
     <string name="about_ankidroid_error_copy_debug_info">Erreur lors de la copie des informations de débogage dans le presse-papiers</string>
     <!-- Card Viewer -->
     <string name="card_viewer_could_not_find_image">Impossible de charger « %s »</string>
@@ -356,26 +364,27 @@
     <string name="check_network">Veuillez vérifier votre connexion réseau</string>
     <string name="search_using_deck_name">Chercher en utilisant le nom du paquet</string>
     <string name="home">Accueil</string>
-    <!-- Reviewer actions -->
-    <string name="buried_card">Carte enterrée</string>
-    <string name="buried_note">Note enterrée</string>
-    <string name="deleted_note">Note supprimée</string>
-    <string name="suspended_card">Carte suspendus</string>
-    <string name="suspended_note">Note suspendue</string>
+    <!-- Reviewer actions 
+    Each of these strings ends with a period, following the notation of Anki Desktop -->
+    <string name="card_buried">Card buried.</string>
+    <plurals name="note_suspended">
+        <item quantity="one">%d card suspended.</item>
+        <item quantity="other">%d cards suspended.</item>
+    </plurals>
     <!--  Note Editor Toggle Sticky  -->
     <string name="note_editor_toggle_sticky">Rendre le champ %s collant</string>
     <!-- Scoped Storage Migration -->
     <string name="scoped_storage_title">Transfert du stockage</string>
-    <string name="scoped_storage_initial_message">AnkiDroid doit dépacer ses données pour être conforme aux nouvelles règles de confidentialité d\'Android\n\nSi vous désinstallez AnkiDroid avant le transfert, vos données seront perdu\n\nVeuillez réaliser le transfert de vos données dès que possible</string>
-    <string name="scoped_storage_terms_message">Le transfert va se dérouler en arrière-plan. Vous ne pourrez pas vous synchronisez pendant ce temps\n\nTemps estimé : %s</string>
-    <string name="scoped_storage_term_1">J\'ai fait une sauvegarde de mes données</string>
-    <string name="scoped_storage_term_1_ankiweb">J\'ai récemment synchronisé avec AnkiWeb </string>
-    <string name="scoped_storage_term_2">Je ne vais pas désinstaller l\'application pendant le transfert des données</string>
-    <string name="scoped_storage_select_all_terms">Veuillez accepter tous les éléments pour continuer</string>
     <string name="scoped_storage_learn_more">En savoir plus</string>
     <string name="scoped_storage_postpone">Reporter</string>
     <string name="scoped_storage_migrate">Transférer</string>
     <string name="search_card_js_api_no_results">La recherche n\'a pas donné de résultats</string>
+    <string name="sync_impossible_during_migration">La synchronisation est désactivée jusqu\'à ce que la migration soit terminée.\n
+        %1$d fichiers multimédia restants à migrer.</string>
+    <string name="migration_update_request_requires_media_sync" commnet="use HTML linebreaks in this string">AnkiDroid needs to migrate its storage to comply with Android 10 security policy.\n\nThis will improve media sync performance.&lt;br&gt;&lt;br&gt;During the migration you will be unable to sync and some settings will be disabled. A media sync will occur before the migration starts to keep your data safe.&lt;br&gt;&lt;br&gt;It is safe to use or close AnkiDroid during this process.</string>
+    <string name="start_migration_progress_message">Démarrage de la migration du stockage. Vous pouvez reprendre votre utilisation d\'AnkiDroid sous peu.</string>
+    <string name="migration_part_1_done_resume">Vous pouvez continuer à utiliser AnkiDroid.
+\nLa migration du stockage continuera en arrière-plan.</string>
     <!--  JS Addons  -->
     <string name="not_valid_js_addon">%s n\'est pas un package d\'extension javascript valide</string>
     <string name="could_not_create_dir">Impossible de créer le répertoire %s</string>
@@ -397,11 +406,18 @@
     <string name="validation_deck_already_exists">Le paquet existe déjà</string>
     <string name="deck_created">Paquet créé</string>
     <string name="deck_renamed">Paquet renommé</string>
+    <!-- Deck Deletion -->
+    <string name="deck_shortcut_doesnt_exist">Paquet supprimé. Veuillez retirer le raccourci</string>
     <!-- Browser Options Dialog -->
-    <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Cards</string>
+    <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Cartes</string>
     <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">Notes</string>
-    <string name="toggle_cards_notes">Toggle Cards/Notes</string>
-    <string name="toggle_browser_mode_help">Toggle Showing cards or notes in the browser</string>
-    <string name="truncate_content_help">Truncate the height of each row of the Browser to show only first 3 lines of content</string>
-    <string name="browser_options_dialog_heading">Browser Options</string>
+    <string name="toggle_cards_notes">Activer/Désactiver les Cartes/Notes</string>
+    <string name="toggle_browser_mode_help">Activer/désactiver l\'affichage des cartes ou des notes dans le navigateur</string>
+    <string name="truncate_content_help">Tronquer la hauteur de chaque ligne du navigateur pour ne montrer que les 3 premières lignes de contenu</string>
+    <string name="browser_options_dialog_heading">Options du navigateur</string>
+    <string name="functionality_disabled_during_storage_migration" comment="Displayed when trying to access functionality which cannot be run while storage is being moved to a new location">        This functionality is unavailable during a storage migration
+    </string>
+    <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">Tap to start storage migration</string>
+    <string name="media_sync_required_title">Media Sync Required</string>
+    <string name="media_sync_unavailable_message">Media sync is disabled in the settings. Please sync and backup any media which hasn\'t been synced before continuing</string>
 </resources>

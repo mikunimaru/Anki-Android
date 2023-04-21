@@ -17,8 +17,6 @@
 package com.ichi2.anki.widgets
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -38,11 +36,14 @@ import com.ichi2.libanki.sched.TreeNode
 import com.ichi2.utils.KotlinCleanup
 import com.ichi2.utils.TypedFilter
 import net.ankiweb.rsdroid.BackendFactory
+import net.ankiweb.rsdroid.RustCleanup
 import java.util.*
 
 @KotlinCleanup("lots to do")
+@RustCleanup("synchronous col access")
 class DeckAdapter(private val layoutInflater: LayoutInflater, context: Context) : RecyclerView.Adapter<DeckAdapter.ViewHolder>(), Filterable {
     private val mDeckList: MutableList<TreeNode<AbstractDeckTreeNode>>
+
     /** A subset of mDeckList (currently displayed)  */
     private val mCurrentDeckList: MutableList<TreeNode<AbstractDeckTreeNode>> = ArrayList()
     private val mZeroCountColor: Int
@@ -54,7 +55,6 @@ class DeckAdapter(private val layoutInflater: LayoutInflater, context: Context) 
     private val mDeckNameDynColor: Int
     private val mExpandImage: Drawable?
     private val mCollapseImage: Drawable?
-    private val mNoExpander: Drawable = ColorDrawable(Color.TRANSPARENT)
     private var currentDeckId: DeckId = 0
 
     // Listeners
@@ -253,7 +253,7 @@ class DeckAdapter(private val layoutInflater: LayoutInflater, context: Context) 
                 expander.contentDescription = expander.context.getString(R.string.collapse)
             }
         } else {
-            expander.setImageDrawable(mNoExpander)
+            expander.visibility = View.INVISIBLE
             expander.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         }
         // Add some indenting for each nested level
@@ -359,7 +359,6 @@ class DeckAdapter(private val layoutInflater: LayoutInflater, context: Context) 
         }
 
         private fun filterDeckInternal(filterPattern: String, root: TreeNode<AbstractDeckTreeNode>): TreeNode<AbstractDeckTreeNode>? {
-
             // If a deck contains the string, then all its children are valid
             if (containsFilterString(filterPattern, root.value)) {
                 return root

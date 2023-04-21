@@ -34,9 +34,9 @@ import com.ichi2.libanki.Note
 import com.ichi2.libanki.NoteTypeId
 import com.ichi2.libanki.exception.EmptyMediaException
 import com.ichi2.utils.CollectionUtils.average
-import com.ichi2.utils.JSONException
-import com.ichi2.utils.JSONObject
 import net.ankiweb.rsdroid.BackendFactory
+import org.json.JSONException
+import org.json.JSONObject
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
@@ -75,8 +75,7 @@ object NoteService {
     fun updateMultimediaNoteFromFields(col: com.ichi2.libanki.Collection, fields: Array<String>, modelId: NoteTypeId, mmNote: MultimediaEditableNote) {
         for (i in fields.indices) {
             val value = fields[i]
-            var field: IField?
-            field = if (value.startsWith("<img")) {
+            val field: IField = if (value.startsWith("<img")) {
                 ImageField()
             } else if (value.startsWith("[sound:") && value.contains("rec")) {
                 AudioRecordingField()
@@ -102,13 +101,12 @@ object NoteService {
      */
     fun updateJsonNoteFromMultimediaNote(noteSrc: IMultimediaEditableNote?, editorNoteDst: Note) {
         if (noteSrc is MultimediaEditableNote) {
-            val mmNote = noteSrc
-            if (mmNote.modelId != editorNoteDst.mid) {
+            if (noteSrc.modelId != editorNoteDst.mid) {
                 throw RuntimeException("Source and Destination Note ID do not match.")
             }
-            val totalFields: Int = mmNote.numberOfFields
+            val totalFields: Int = noteSrc.numberOfFields
             for (i in 0 until totalFields) {
-                editorNoteDst.values()[i] = mmNote.getField(i)!!.formattedValue!!
+                editorNoteDst.values()[i] = noteSrc.getField(i)!!.formattedValue!!
             }
         }
     }
@@ -132,7 +130,7 @@ object NoteService {
                 if (inFile.exists() && inFile.length() > 0) {
                     val fname = col.media.addFile(inFile)
                     val outFile = File(col.media.dir(), fname)
-                    if (field.hasTemporaryMedia() && outFile.absolutePath != tmpMediaPath) {
+                    if (field.hasTemporaryMedia && outFile.absolutePath != tmpMediaPath) {
                         // Delete original
                         inFile.delete()
                     }
@@ -166,11 +164,11 @@ object NoteService {
             return fields
         }
         for (e in editFields) {
-            if (e == null || e.fieldText == null) {
+            if (e?.fieldText == null) {
                 continue
             }
             val fieldValue = convertToHtmlNewline(e.fieldText!!, replaceNewlines)
-            fields.putString(Integer.toString(e.ord), fieldValue)
+            fields.putString(e.ord.toString(), fieldValue)
         }
         return fields
     }
@@ -178,7 +176,9 @@ object NoteService {
     fun convertToHtmlNewline(fieldData: String, replaceNewlines: Boolean): String {
         return if (!replaceNewlines) {
             fieldData
-        } else fieldData.replace(FieldEditText.NEW_LINE, "<br>")
+        } else {
+            fieldData.replace(FieldEditText.NEW_LINE, "<br>")
+        }
     }
 
     suspend fun toggleMark(note: Note) {

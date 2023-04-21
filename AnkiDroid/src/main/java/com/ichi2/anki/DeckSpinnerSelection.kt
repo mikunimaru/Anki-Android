@@ -57,7 +57,7 @@ class DeckSpinnerSelection(
     private val spinner: Spinner,
     private val showAllDecks: Boolean,
     private val alwaysShowDefault: Boolean,
-    private val showFilteredDecks: Boolean,
+    private val showFilteredDecks: Boolean
 ) {
     /**
      * All of the decks shown to the user.
@@ -112,7 +112,6 @@ class DeckSpinnerSelection(
         }
         val noteDeckAdapter: ArrayAdapter<String?> = object : ArrayAdapter<String?>(context, R.layout.multiline_spinner_item, deckNames as List<String?>) {
             override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-
                 // Cast the drop down items (popup items) as text view
                 val tv = super.getDropDownView(position, convertView, parent) as TextView
 
@@ -133,7 +132,7 @@ class DeckSpinnerSelection(
     /**
      * @return All decks, except maybe default if it should be hidden.
      */
-    private fun computeDropDownDecks(): List<Deck> {
+    fun computeDropDownDecks(): List<Deck> {
         val sortedDecks = collection.decks.allSorted().toMutableList()
         if (shouldHideDefaultDeck()) {
             sortedDecks.removeIf { x: Deck -> x.getLong("id") == Consts.DEFAULT_DECK_ID }
@@ -189,7 +188,9 @@ class DeckSpinnerSelection(
     fun selectDeckById(deckId: DeckId, setAsCurrentDeck: Boolean): Boolean {
         return if (deckId == ALL_DECKS_ID) {
             selectAllDecks()
-        } else selectDeck(deckId, setAsCurrentDeck)
+        } else {
+            selectDeck(deckId, setAsCurrentDeck)
+        }
     }
 
     /**

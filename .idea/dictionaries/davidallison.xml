@@ -3,12 +3,14 @@
     <words>
       <w>Aedict</w>
       <w>Affero</w>
+      <w>Awaitable</w>
       <w>Beolingus</w>
       <w>CROWDIN</w>
       <w>CrowdIn</w>
       <w>DOWNGRADABLE</w>
       <w>Glosbe</w>
       <w>NONINFRINGEMENT</w>
+      <w>Notetypes</w>
       <w>Pictogrammers</w>
       <w>SuperMemo</w>
       <w>Unbury</w>
@@ -50,6 +52,7 @@
       <w>freqs</w>
       <w>furigana</w>
       <w>gamepad</w>
+      <w>generifies</w>
       <w>glosbe</w>
       <w>helloworld</w>
       <w>ifnull</w>
@@ -68,6 +71,7 @@
       <w>misclicks</w>
       <w>munge</w>
       <w>mutliselect</w>
+      <w>notetypes</w>
       <w>numpad</w>
       <w>onboarding</w>
       <w>optin</w>

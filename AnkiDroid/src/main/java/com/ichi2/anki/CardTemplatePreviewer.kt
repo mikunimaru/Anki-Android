@@ -27,8 +27,8 @@ import com.ichi2.libanki.*
 import com.ichi2.libanki.Collection
 import com.ichi2.libanki.TemplateManager.TemplateRenderContext.TemplateRenderOutput
 import com.ichi2.libanki.utils.NoteUtils
-import com.ichi2.utils.JSONObject
 import net.ankiweb.rsdroid.BackendFactory
+import org.json.JSONObject
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
@@ -140,6 +140,7 @@ open class CardTemplatePreviewer : AbstractFlashcardViewer() {
         super.initLayout()
         topBarLayout!!.visibility = View.GONE
         findViewById<View>(R.id.answer_options_layout).visibility = View.GONE
+        findViewById<View>(R.id.bottom_area_layout).visibility = View.VISIBLE
         previewLayout = createAndDisplay(this, mToggleAnswerHandler)
         previewLayout!!.setOnPreviousCard { onPreviousTemplate() }
         previewLayout!!.setOnNextCard { onNextTemplate() }
@@ -385,7 +386,9 @@ open class CardTemplatePreviewer : AbstractFlashcardViewer() {
         override val isEmpty: Boolean
             get() = if (mNote != null) {
                 false
-            } else super.isEmpty
+            } else {
+                super.isEmpty
+            }
 
         /** Override the method that fetches the model so we can render unsaved models  */
         override fun model(): Model {

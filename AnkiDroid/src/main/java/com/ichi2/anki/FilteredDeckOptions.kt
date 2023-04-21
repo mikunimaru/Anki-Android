@@ -18,7 +18,6 @@ package com.ichi2.anki
  ****************************************************************************************/
 
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
 import android.preference.*
 import com.ichi2.anim.ActivityTransitionAnimation
@@ -29,14 +28,11 @@ import com.ichi2.libanki.Collection
 import com.ichi2.preferences.StepsPreference.Companion.convertFromJSON
 import com.ichi2.preferences.StepsPreference.Companion.convertToJSON
 import com.ichi2.themes.Themes
-import com.ichi2.themes.Themes.setThemeLegacy
-import com.ichi2.themes.Themes.themeFollowsSystem
-import com.ichi2.themes.Themes.updateCurrentTheme
 import com.ichi2.ui.AppCompatPreferenceActivity
-import com.ichi2.utils.JSONArray
-import com.ichi2.utils.JSONException
-import com.ichi2.utils.JSONObject
-import com.ichi2.utils.KotlinCleanup
+import com.ichi2.utils.stringIterable
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import timber.log.Timber
 
 @NeedsTest("construction + onCreate - do this after converting to fragment-based preferences.")
@@ -189,7 +185,8 @@ class FilteredDeckOptions :
     @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setThemeLegacy(this)
+        Themes.setTheme(this)
+        Themes.setLegacyActionBar(this)
         super.onCreate(savedInstanceState)
         UsageAnalytics.sendAnalyticsScreenView(this)
         if (!isColInitialized()) {
@@ -229,20 +226,6 @@ class FilteredDeckOptions :
         // Add a home button to the actionbar
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    @KotlinCleanup("Remove this once FilteredDeckOptions is an AnkiActivity")
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val newNightModeStatus = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-        // Check if theme should change
-        if (Themes.systemIsInNightMode != newNightModeStatus) {
-            Themes.systemIsInNightMode = newNightModeStatus
-            if (themeFollowsSystem()) {
-                updateCurrentTheme()
-                recreate()
-            }
-        }
     }
 
     @Suppress("deprecation") // Tracked as #5019 on github: addPreferencesFromResource
