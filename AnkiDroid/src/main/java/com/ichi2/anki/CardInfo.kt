@@ -18,7 +18,6 @@ package com.ichi2.anki
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.text.Spannable
 import android.text.SpannableString
 import android.view.Gravity
@@ -32,6 +31,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
 import com.ichi2.anim.ActivityTransitionAnimation
 import com.ichi2.anki.UIUtils.showThemedToast
+import com.ichi2.compat.CompatHelper.Companion.getParcelableExtraCompat
 import com.ichi2.libanki.*
 import com.ichi2.libanki.Collection
 import com.ichi2.libanki.stats.Stats
@@ -107,10 +107,9 @@ class CardInfo : AnkiActivity() {
         this.model = model
     }
 
-    @Suppress("deprecation") // getParcelableExtra
     override fun finish() {
-        val animation: Parcelable? = intent.getParcelableExtra(FINISH_ANIMATION_EXTRA)
-        if (animation is ActivityTransitionAnimation.Direction) {
+        val animation = intent.getParcelableExtraCompat<ActivityTransitionAnimation.Direction>(FINISH_ANIMATION_EXTRA)
+        if (animation != null) {
             finishWithAnimation(animation)
         } else {
             super.finish()
@@ -268,7 +267,9 @@ class CardInfo : AnkiActivity() {
             fun intervalAsTimeSeconds(): Long {
                 return if (ivl < 0) {
                     -ivl
-                } else ivl * Stats.SECONDS_PER_DAY
+                } else {
+                    ivl * Stats.SECONDS_PER_DAY
+                }
             }
 
             // saves space if we just use seconds rather than a "s" suffix
@@ -357,9 +358,10 @@ class CardInfo : AnkiActivity() {
 
             protected fun getCardType(c: Card, model: Model?): String? {
                 return try {
-                    var ord = c.ord
-                    if (c.model().isCloze) {
-                        ord = 0
+                    val ord = if (c.model().isCloze) {
+                        0
+                    } else {
+                        c.ord
                     }
                     model!!.getJSONArray("tmpls").getJSONObject(ord).getString("name")
                 } catch (e: Exception) {

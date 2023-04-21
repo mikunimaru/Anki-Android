@@ -22,7 +22,6 @@
 package com.ichi2.libanki
 
 import android.content.ContentValues
-import android.text.TextUtils
 import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
 import com.ichi2.anki.CrashReportService
@@ -31,10 +30,11 @@ import com.ichi2.libanki.Consts.DECK_STD
 import com.ichi2.libanki.backend.exception.DeckRenameException
 import com.ichi2.libanki.utils.TimeManager.time
 import com.ichi2.utils.*
-import com.ichi2.utils.CollectionUtils.addAll
 import com.ichi2.utils.HashUtil.HashMapInit
 import net.ankiweb.rsdroid.RustCleanup
 import org.intellij.lang.annotations.Language
+import org.json.JSONArray
+import org.json.JSONObject
 import timber.log.Timber
 import java.text.Normalizer
 import java.util.*
@@ -563,7 +563,7 @@ class Decks(private val col: Collection) : DeckManager() {
             if ("" == p) {
                 p = "blank"
             }
-            s += if (TextUtils.isEmpty(s)) {
+            s += if (s.isEmpty()) {
                 p
             } else {
                 "::$p"
@@ -594,7 +594,7 @@ class Decks(private val col: Collection) : DeckManager() {
         }
         for (i in 0 until path.size - 1) {
             val p = path[i]
-            s += if (TextUtils.isEmpty(s)) {
+            s += if (s.isEmpty()) {
                 p
             } else {
                 "::$p"
@@ -623,15 +623,15 @@ class Decks(private val col: Collection) : DeckManager() {
         return ArrayList(mDconf!!.values)
     }
 
-    @KotlinCleanup("scope function")
     override fun confForDid(did: Long): DeckConfig {
         val deck = get(did, false)!!
         if (deck.has("conf")) {
-            @KotlinCleanup("Clarify comment. It doesn't make sense when using :?")
             // fall back on default
+            @KotlinCleanup("Clarify comment. It doesn't make sense when using :?")
             val conf = getConf(deck.getLong("conf")) ?: getConf(1L)!!
-            conf.put("dyn", DECK_STD)
-            return conf
+            return conf.apply {
+                put("dyn", DECK_STD)
+            }
         }
         // dynamic decks have embedded conf
         return DeckConfig(deck, DeckConfig.Source.DECK_EMBEDDED)
@@ -831,7 +831,7 @@ class Decks(private val col: Collection) : DeckManager() {
     override fun active(): LinkedList<Long> {
         val activeDecks = col.get_config_array(ACTIVE_DECKS)
         val result = LinkedList<Long>()
-        addAll(result, activeDecks.longIterable())
+        result.addAll(activeDecks.longIterable())
         return result
     }
 
@@ -903,9 +903,9 @@ class Decks(private val col: Collection) : DeckManager() {
         for (deck in decks) {
             val node = Node()
             childMap[deck.getLong("id")] = node
-            val parts = Arrays.asList(*path(deck.getString("name")))
+            val parts = listOf(*path(deck.getString("name")))
             if (parts.size > 1) {
-                val immediateParent = TextUtils.join("::", parts.subList(0, parts.size - 1))
+                val immediateParent = parts.subList(0, parts.size - 1).joinToString("::")
                 val pid = byName(immediateParent)!!.getLong("id")
                 childMap[pid]!![deck.getLong("id")] = node
             }
@@ -959,6 +959,7 @@ class Decks(private val col: Collection) : DeckManager() {
             save()
         }
     }
+
     /*
       Dynamic decks
      */
@@ -992,6 +993,7 @@ class Decks(private val col: Collection) : DeckManager() {
 
         // not in libAnki
         const val DECK_SEPARATOR = "::"
+
         @KotlinCleanup("Maybe use triple quotes and @language? for these properties")
         const val DEFAULT_DECK = (
             "" +
@@ -1079,6 +1081,7 @@ class Decks(private val col: Collection) : DeckManager() {
         }
 
         private val spaceAroundSeparator = Pattern.compile("\\s*::\\s*")
+
         @Suppress("NAME_SHADOWING")
         @VisibleForTesting
         fun strip(deckName: String): String {
@@ -1097,6 +1100,7 @@ class Decks(private val col: Collection) : DeckManager() {
      * **************************************
      */
         private val normalized = HashMap<String?, String>()
+
         @KotlinCleanup("nullability")
         fun normalizeName(name: String?): String? {
             if (!normalized.containsKey(name)) {
@@ -1124,12 +1128,12 @@ class Decks(private val col: Collection) : DeckManager() {
         fun parent(deckName: String): String? {
             // method parent, from sched's method deckDueList in python
             if (!sParentCache.containsKey(deckName)) {
-                var parts = Arrays.asList(*path(deckName))
+                var parts = listOf(*path(deckName))
                 if (parts.size < 2) {
                     sParentCache[deckName] = null
                 } else {
                     parts = parts.subList(0, parts.size - 1)
-                    val parentName = TextUtils.join("::", parts)
+                    val parentName = parts.joinToString("::")
                     sParentCache[deckName] = parentName
                 }
             }

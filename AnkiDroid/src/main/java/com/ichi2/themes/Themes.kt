@@ -19,12 +19,16 @@
 package com.ichi2.themes
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.R
+import com.ichi2.ui.AppCompatPreferenceActivity
+import timber.log.Timber
 
 /**
  * Helper methods to configure things related to AnkiDroid's themes
@@ -39,20 +43,15 @@ object Themes {
     private const val NIGHT_THEME_KEY = "nightTheme"
 
     var currentTheme: Theme = Theme.fallback
-    var systemIsInNightMode: Boolean = false
 
-    /**
-     * Sets theme to [currentTheme]
-     */
     fun setTheme(context: Context) {
+        updateCurrentTheme(context)
+        Timber.i("Setting theme to %s", currentTheme.name)
         context.setTheme(currentTheme.resId)
     }
 
-    /**
-     * Sets theme to the legacy version of [currentTheme]
-     */
-    fun setThemeLegacy(context: Context) {
-        context.setTheme(currentTheme.legacyResId)
+    fun setLegacyActionBar(context: Context) {
+        context.setTheme(R.style.ThemeOverlay_LegacyActionBar)
     }
 
     /**
@@ -61,11 +60,18 @@ object Themes {
      * on `Day` or `Night` theme according to system's current mode
      * Otherwise, updates to the selected theme.
      */
-    fun updateCurrentTheme() {
-        val prefs = AnkiDroidApp.getSharedPrefs(AnkiDroidApp.instance.applicationContext)
+    fun updateCurrentTheme(context: Context) {
+        // AppCompatPreferenceActivity's sharedPreferences is initialized
+        // after the time when the theme should be set
+        // TODO (#5019): always use the context as the parameter for getSharedPrefs
+        val prefs = if (context is AppCompatPreferenceActivity<*>) {
+            AnkiDroidApp.getSharedPrefs(AnkiDroidApp.instance)
+        } else {
+            AnkiDroidApp.getSharedPrefs(context)
+        }
 
-        currentTheme = if (themeFollowsSystem()) {
-            if (systemIsInNightMode) {
+        currentTheme = if (themeFollowsSystem(prefs)) {
+            if (systemIsInNightMode(context)) {
                 Theme.ofId(prefs.getString(NIGHT_THEME_KEY, Theme.BLACK.id)!!)
             } else {
                 Theme.ofId(prefs.getString(DAY_THEME_KEY, Theme.LIGHT.id)!!)
@@ -126,8 +132,12 @@ object Themes {
     /**
      * @return if current selected theme is `Follow system`
      */
-    fun themeFollowsSystem(): Boolean {
-        val prefs = AnkiDroidApp.getSharedPrefs(AnkiDroidApp.instance.applicationContext)
-        return prefs.getString(APP_THEME_KEY, FOLLOW_SYSTEM_MODE) == FOLLOW_SYSTEM_MODE
+    private fun themeFollowsSystem(sharedPreferences: SharedPreferences): Boolean {
+        return sharedPreferences.getString(APP_THEME_KEY, FOLLOW_SYSTEM_MODE) == FOLLOW_SYSTEM_MODE
+    }
+
+    fun systemIsInNightMode(context: Context): Boolean {
+        return context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+            Configuration.UI_MODE_NIGHT_YES
     }
 }

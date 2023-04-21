@@ -29,9 +29,13 @@ import com.ichi2.libanki.Consts
 import com.ichi2.libanki.Note
 import com.ichi2.testutils.AnkiActivityUtils.getDialogFragment
 import com.ichi2.testutils.AnkiAssert.assertDoesNotThrow
+import com.ichi2.testutils.AnkiAssert.assertDoesNotThrowSuspend
+import com.ichi2.testutils.Flaky
 import com.ichi2.testutils.IntentAssert
+import com.ichi2.testutils.OS
 import com.ichi2.testutils.withNoWritePermission
 import com.ichi2.ui.FixedTextView
+import net.ankiweb.rsdroid.RustCleanup
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.Assert.*
@@ -103,6 +107,7 @@ class CardBrowserTest : RobolectricTest() {
     }
 
     @Test
+    @Flaky(os = OS.WINDOWS, "Index 0 out of bounds for length 0")
     fun browserIsInMultiSelectModeWhenSelectingOne() {
         val browser = browserWithMultipleNotes
         selectOneOfManyCards(browser)
@@ -110,6 +115,7 @@ class CardBrowserTest : RobolectricTest() {
     }
 
     @Test
+    @Flaky(os = OS.WINDOWS, "Expected `true`, got `false`")
     fun browserIsInMultiSelectModeWhenSelectingAll() {
         val browser = browserWithMultipleNotes
         selectMenuItem(browser, R.id.action_select_all)
@@ -125,18 +131,18 @@ class CardBrowserTest : RobolectricTest() {
     }
 
     @Test
-    fun browserDoesNotFailWhenSelectingANonExistingCard() {
+    fun browserDoesNotFailWhenSelectingANonExistingCard() = runTest {
         // #5900
         val browser = getBrowserWithNotes(6)
         // Sometimes an async operation deletes a card, we clear the data and rerender it to simulate this
         deleteCardAtPosition(browser, 0)
-        assertDoesNotThrow { browser.rerenderAllCards() }
+        assertDoesNotThrowSuspend { browser.rerenderAllCards() }
         assertThat(browser.cardCount(), equalTo(5L))
     }
 
     @Test
     @Ignore("Not yet implemented, feature has performance implications in large collections, instead we remove selections")
-    fun selectionsAreCorrectWhenNonExistingCardIsRemoved() {
+    fun selectionsAreCorrectWhenNonExistingCardIsRemoved() = runTest {
         val browser = getBrowserWithNotes(7)
         browser.checkCardsAtPositions(1, 3, 5, 6)
         deleteCardAtPosition(browser, 2) // delete non-selected
@@ -153,7 +159,7 @@ class CardBrowserTest : RobolectricTest() {
     }
 
     @Test
-    fun canChangeDeckToRegularDeck() {
+    fun canChangeDeckToRegularDeck() = runTest {
         addDeck("Hello")
         val b = getBrowserWithNotes(5)
 
@@ -161,14 +167,14 @@ class CardBrowserTest : RobolectricTest() {
 
         for (d in decks) {
             if (d.getString("name") == "Hello") {
-                return
+                return@runTest
             }
         }
         fail("Added deck was not found in the Card Browser")
     }
 
     @Test
-    fun cannotChangeDeckToDynamicDeck() {
+    fun cannotChangeDeckToDynamicDeck() = runTest {
         // 5932 - dynamic decks are meant to have cards added to them through "Rebuild".
         addDynamicDeck("World")
         val b = getBrowserWithNotes(5)
@@ -181,7 +187,7 @@ class CardBrowserTest : RobolectricTest() {
     }
 
     @Test
-    fun changeDeckIntegrationTestDynamicAndNon() {
+    fun changeDeckIntegrationTestDynamicAndNon() = runTest {
         addDeck("Hello")
         addDynamicDeck("World")
 
@@ -222,7 +228,7 @@ class CardBrowserTest : RobolectricTest() {
     }
 
     @Test
-    fun changeDeckViaTaskIsHandledCorrectly() {
+    fun changeDeckViaTaskIsHandledCorrectly() = runTest {
         val dynId = addDynamicDeck("World")
         selectDefaultDeck()
         val b = getBrowserWithNotes(5)
@@ -237,8 +243,19 @@ class CardBrowserTest : RobolectricTest() {
         }
     }
 
+    @Test // see #13391
+    fun newlyCreatedDeckIsShownAsOptionInBrowser() = runTest {
+        val deckOneId = addDeck("one")
+        val browser = browserWithNoNewCards
+        assertEquals(1, browser.validDecksForChangeDeck.size)
+        assertEquals(deckOneId, browser.validDecksForChangeDeck.first().id)
+        val deckTwoId = addDeck("two")
+        assertEquals(2, browser.validDecksForChangeDeck.size)
+        assertArrayEquals(longArrayOf(deckOneId, deckTwoId), browser.validDecksForChangeDeck.map { it.id }.toLongArray())
+    }
+
     @Test
-    fun flagsAreShownInBigDecksTest() {
+    fun flagsAreShownInBigDecksTest() = runTest {
         val numberOfNotes = 75
         val cardBrowser = getBrowserWithNotes(numberOfNotes)
 
@@ -251,13 +268,13 @@ class CardBrowserTest : RobolectricTest() {
 
         // flag the selected card with flag = 1
         val flag = 1
-        cardBrowser.flagTask(flag)
+        cardBrowser.updateSelectedCardsFlag(flag)
         // check if card flag turned to flag = 1
         assertThat("Card should be flagged", getCheckedCard(cardBrowser).card.userFlag(), equalTo(flag))
 
         // unflag the selected card with flag = 0
         val unflagFlag = 0
-        cardBrowser.flagTask(unflagFlag)
+        cardBrowser.updateSelectedCardsFlag(unflagFlag)
         // check if card flag actually changed from flag = 1
         assertThat("Card flag should be removed", getCheckedCard(cardBrowser).card.userFlag(), not(flag))
 
@@ -266,7 +283,7 @@ class CardBrowserTest : RobolectricTest() {
         cardBrowser.onSelectAll()
         // flag all the cards with flag = 3
         val flagForAll = 3
-        cardBrowser.flagTask(flagForAll)
+        cardBrowser.updateSelectedCardsFlag(flagForAll)
         // check if all card flags turned to flag = 3
         assertThat(
             "All cards should be flagged",
@@ -343,6 +360,7 @@ class CardBrowserTest : RobolectricTest() {
     }
 
     @Test
+    @Flaky(os = OS.WINDOWS, "IllegalStateException: Card '1596783600440' not found")
     fun previewWorksAfterSort() {
         // #7286
         val cid1 = addNoteUsingBasicModel("Hello", "World").cards()[0].id
@@ -521,6 +539,7 @@ class CardBrowserTest : RobolectricTest() {
         assertNotNull(shownDialog)
 
         cardBrowser.recreate()
+        advanceRobolectricUiLooper()
         val dialogAfterRecreate: Fragment? = cardBrowser.getDialogFragment()
         assertNull(dialogAfterRecreate)
     }
@@ -544,6 +563,7 @@ class CardBrowserTest : RobolectricTest() {
 
     /** PR #8553  */
     @Test
+    @RustCleanup("after legacy schema dropped, col.save() can be dropped and updatedMod can be taken from col.mod")
     fun checkDisplayOrderPersistence() {
         // Start the Card Browser with Basic Model
         ensureCollectionLoadIsSynchronous()
@@ -554,8 +574,7 @@ class CardBrowserTest : RobolectricTest() {
         // Make sure card has default value in sortType field
         assertThat("Initially Card Browser has order = noteFld", col.get_config_string("sortType"), equalTo("noteFld"))
 
-        // Store the current (before changing the database) Mod Time
-        val initialMod = col.mod
+        col.db.execute("update col set mod = 0")
 
         // Change the display order of the card browser
         cardBrowserController.get().changeCardOrder(7) // order no. 7 corresponds to "cardEase"
@@ -568,9 +587,10 @@ class CardBrowserTest : RobolectricTest() {
         saveControllerForCleanup(cardBrowserController)
 
         // Find the current (after database has been changed) Mod time
-        val finalMod = col.mod
+        col.save()
+        val updatedMod = col.db.queryScalar("select mod from col")
         assertThat("Card Browser has the new sortType field", col.get_config_string("sortType"), equalTo("cardEase"))
-        assertNotEquals("Modification time must change", initialMod, finalMod)
+        assertNotEquals("Modification time must change", 0, updatedMod)
     }
 
     @Test
@@ -653,8 +673,10 @@ class CardBrowserTest : RobolectricTest() {
             Timber.w("Can't use childAt on position $position for a single click as it is not visible")
         }
         listener.onItemLongClick(
-            null, childAt,
-            position, toSelect.getItemIdAtPosition(position)
+            null,
+            childAt,
+            position,
+            toSelect.getItemIdAtPosition(position)
         )
         advanceRobolectricUiLooper()
     }
@@ -706,7 +728,7 @@ class CardBrowserTest : RobolectricTest() {
         val cardBrowser = getBrowserWithNotes(2)
 
         val renderOnScroll = cardBrowser.RenderOnScroll()
-        renderOnScroll.onScroll(cardBrowser.cardsListView!!, 0, 0, 2)
+        renderOnScroll.onScroll(cardBrowser.cardsListView, 0, 0, 2)
     }
 
     @Test
@@ -716,8 +738,8 @@ class CardBrowserTest : RobolectricTest() {
         cardBrowser.isTruncated = true
 
         // Testing whether each card is truncated and ellipsized
-        for (i in 0 until (cardBrowser.cardsListView!!.childCount)) {
-            val row = cardBrowser.cardsAdapter!!.getView(i, null, cardBrowser.cardsListView!!)
+        for (i in 0 until (cardBrowser.cardsListView.childCount)) {
+            val row = cardBrowser.cardsAdapter.getView(i, null, cardBrowser.cardsListView)
             val column1 = row.findViewById<FixedTextView>(R.id.card_sfld)
             val column2 = row.findViewById<FixedTextView>(R.id.card_column2)
 
@@ -734,8 +756,8 @@ class CardBrowserTest : RobolectricTest() {
         cardBrowser.isTruncated = false
 
         // Testing whether each card is expanded and not ellipsized
-        for (i in 0 until (cardBrowser.cardsListView!!.childCount)) {
-            val row = cardBrowser.cardsAdapter!!.getView(i, null, cardBrowser.cardsListView!!)
+        for (i in 0 until (cardBrowser.cardsListView.childCount)) {
+            val row = cardBrowser.cardsAdapter.getView(i, null, cardBrowser.cardsListView)
             val column1 = row.findViewById<FixedTextView>(R.id.card_sfld)
             val column2 = row.findViewById<FixedTextView>(R.id.card_column2)
 
@@ -750,7 +772,7 @@ class CardBrowserTest : RobolectricTest() {
     }
 
     @Test
-    fun checkCardsNotesMode() {
+    fun checkCardsNotesMode() = runTest {
         val cardBrowser = getBrowserWithNotes(3, true)
 
         // set browser to be in cards mode

@@ -61,6 +61,8 @@
     <string name="updated_version">更新到%s版本</string>
     <!-- Reviewer.kt -->
     <string name="save_whiteboard">保存白板</string>
+    <string name="enable_stylus">启用光笔模式</string>
+    <string name="disable_stylus">禁用光笔模式</string>
     <string name="enable_whiteboard">启用白板</string>
     <string name="disable_whiteboard">禁用白板</string>
     <string name="show_whiteboard">显示白板</string>
@@ -123,7 +125,6 @@
     <string name="save">保存</string>
     <string name="close">关闭</string>
     <string name="select">选择</string>
-    <string name="saving_changes">正在保存设置&#8230;</string>
     <string name="reordering_cards">重新排列卡片中...</string>
     <string name="field_remapping">%1$s （从“%2$s”）</string>
     <string name="confirm_map_cards_to_nothing">在笔记类型中没有相应模板的卡片将被删除。如果该笔记没有生成其他的卡片，则该笔记将会丢失。你确定要继续吗？</string>
@@ -155,7 +156,6 @@
     <string name="empty_card_warning">这张卡片是空的。请使用牌组列表界面右上角菜单中的“空白卡片”选项来查找空白卡片。</string>
     <string name="unknown_type_field_warning">输入答案：未知字段 %s</string>
     <string name="delete_deck">删除牌组\n请稍等&#8230;&#8230;</string>
-    <string name="show_hint">显示%s</string>
     <string name="info_rate">给AnkiDroid评分</string>
     <string name="import_title">正在导入……</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">添加</string>
@@ -186,14 +186,19 @@
     <string name="export_include_media">包括媒体文件</string>
     <string name="confirm_apkg_export">要将记忆库集合导出为 Anki 包吗？</string>
     <string name="confirm_apkg_export_deck">将“%s”导出为akpg文件？</string>
+    <plurals name="confirm_apkg_export_selected_cards">
+        <item quantity="other">导出 %d 张选定卡片为 apkg 文件？</item>
+    </plurals>
+    <plurals name="confirm_apkg_export_selected_notes">
+        <item quantity="other">导出 %d 个选定笔记为 apkg 文件？</item>
+    </plurals>
     <string name="export_in_progress">正在导出 Anki 软件包文件&#8230;</string>
-    <string name="export_successful_title">发送 Anki 包？</string>
-    <string name="export_send_button">发送</string>
-    <string name="export_save_button">保存到文件</string>
+    <string name="export_success_title">成功导出牌组集</string>
     <string name="export_send_no_handlers">没有可用处理 apkg 的应用程序。正在保存...</string>
     <string name="export_save_apkg_successful">已成功保存 Anki 包</string>
     <string name="export_save_apkg_unsuccessful">保存 Anki 包失败</string>
-    <string name="export_successful">文件 “%s” 导出完毕，您想用其他 app 发送它吗？</string>
+    <string name="export_success_message">您可以选择一个文件位置来保存它，或者与其他应用共享。</string>
+    <string name="export_share_title">选择如何发送 Anki 软件包</string>
     <string name="export_email_subject">AnkiDroid 导出卡片： %s</string>
     <string name="export_email_text"><![CDATA[        嗨！
         <br/><br/>
@@ -202,7 +207,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_unsuccessful">导出apkg文件时出错</string>
+    <string name="export_select_save_app">选择文件保存位置</string>
+    <string name="export_select_share_app">选择分享应用</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">选项</string>
     <string name="menu__deck_options">牌组选项</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">学习选项</string>
@@ -288,7 +294,7 @@
     <string name="reviewer_invalid_api_version_visit_documentation">查看</string>
     <string name="anki_js_error_code">（错误代码：%d）</string>
     <!-- About AnkiDroid screen -->
-    <string name="about_ankidroid_successfully_copied_debug">已复制调试信息到剪贴板</string>
+    <string name="about_ankidroid_successfully_copied_debug_info">已复制到剪贴板</string>
     <string name="about_ankidroid_error_copy_debug_info">复制调试信息到剪贴板时出错</string>
     <!-- Card Viewer -->
     <string name="card_viewer_could_not_find_image">加载“%s”失败</string>
@@ -345,28 +351,26 @@
     <string name="check_network">请检查您的网络连接。</string>
     <string name="search_using_deck_name">使用牌组名称搜索</string>
     <string name="home">主页</string>
-    <!-- Reviewer actions -->
-    <string name="buried_card">搁置的卡片</string>
-    <string name="buried_note">隐藏的笔记</string>
-    <string name="deleted_note">删除的笔记</string>
-    <string name="suspended_card">搁置的卡牌</string>
-    <string name="suspended_note">搁置的笔记</string>
+    <!-- Reviewer actions 
+    Each of these strings ends with a period, following the notation of Anki Desktop -->
+    <string name="card_buried">已销毁卡片</string>
+    <plurals name="note_suspended">
+        <item quantity="other">%d 张卡片已暂停。</item>
+    </plurals>
     <!--  Note Editor Toggle Sticky  -->
     <string name="note_editor_toggle_sticky">固定字段 %s</string>
     <!-- Scoped Storage Migration -->
     <string name="scoped_storage_title">存储迁移</string>
-    <string name="scoped_storage_initial_message">AnkiDroid 必须移动其数据以符合新的 Android 隐私规则
-\n\n如果您在迁移前卸载 AnkiDroid，您的数据将丢失
-\n\n请尽快执行迁移。</string>
-    <string name="scoped_storage_terms_message">迁移将发生在后台。迁移时您将无法同步\n\n预计持续时间: %s </string>
-    <string name="scoped_storage_term_1">我已备份我的数据</string>
-    <string name="scoped_storage_term_1_ankiweb">我最近已与 AnkiWeb 同步</string>
-    <string name="scoped_storage_term_2">移动数据时我不会卸载应用</string>
-    <string name="scoped_storage_select_all_terms">请接受所有项目以继续</string>
     <string name="scoped_storage_learn_more">了解更多</string>
     <string name="scoped_storage_postpone">推迟</string>
     <string name="scoped_storage_migrate">迁移</string>
     <string name="search_card_js_api_no_results">搜索未返回任何结果</string>
+    <string name="sync_impossible_during_migration">同步功能被禁用，直到迁移完成。\n
+        %1$d 个媒体文件留待迁移。</string>
+    <string name="migration_update_request_requires_media_sync" commnet="use HTML linebreaks in this string">AnkiDroid 需要迁移其存储空间以遵守 Android 10 安全政策。\n\n这将提高媒体同步性能。&lt;br&gt;&lt;br&gt;迁移过程中，您将无法同步，一些设置将被禁用。 迁移开始前为了保护您的数据安全，将会发生媒体同步。&lt;br&gt;&lt;br&gt;在此过程中使用或关闭 AnkiDroid 是安全的。</string>
+    <string name="start_migration_progress_message">开始存储迁移。不久后您就可以继续使用 AnkiDroid 啦。</string>
+    <string name="migration_part_1_done_resume">您可以继续使用 AnkiDroid 了。
+\n存储迁移将在后台继续。</string>
     <!--  JS Addons  -->
     <string name="not_valid_js_addon">%s 不是一个有效的 javascript 附加组件包</string>
     <string name="could_not_create_dir">无法创建目录 %s</string>
@@ -388,11 +392,18 @@
     <string name="validation_deck_already_exists">牌组已存在</string>
     <string name="deck_created">已创建牌组</string>
     <string name="deck_renamed">重命名牌组</string>
+    <!-- Deck Deletion -->
+    <string name="deck_shortcut_doesnt_exist">牌组已删除。请删除快捷方式</string>
     <!-- Browser Options Dialog -->
-    <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">Cards</string>
-    <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">Notes</string>
-    <string name="toggle_cards_notes">Toggle Cards/Notes</string>
-    <string name="toggle_browser_mode_help">Toggle Showing cards or notes in the browser</string>
-    <string name="truncate_content_help">Truncate the height of each row of the Browser to show only first 3 lines of content</string>
-    <string name="browser_options_dialog_heading">Browser Options</string>
+    <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">卡片</string>
+    <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">笔记</string>
+    <string name="toggle_cards_notes">切换卡片/笔记</string>
+    <string name="toggle_browser_mode_help">在浏览器中切换显示卡片或笔记</string>
+    <string name="truncate_content_help">截断浏览器每行高度仅显示内容前三行</string>
+    <string name="browser_options_dialog_heading">浏览器选项</string>
+    <string name="functionality_disabled_during_storage_migration" comment="Displayed when trying to access functionality which cannot be run while storage is being moved to a new location">        此功能在存储迁移期间不可用
+    </string>
+    <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">轻按开始存储迁移</string>
+    <string name="media_sync_required_title">需要进行媒体同步</string>
+    <string name="media_sync_unavailable_message">媒体同步在设置中被禁用。请同步并备份任何尚未同步的媒体，然后继续</string>
 </resources>

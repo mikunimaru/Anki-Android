@@ -22,12 +22,13 @@ import com.ichi2.anki.CollectionHelper
 import com.ichi2.anki.R
 import com.ichi2.anki.exception.ImportExportException
 import com.ichi2.annotations.NeedsTest
-import com.ichi2.utils.CollectionUtils.addAll
-import com.ichi2.utils.JSONException
-import com.ichi2.utils.JSONObject
 import com.ichi2.utils.KotlinCleanup
+import com.ichi2.utils.jsonObjectIterable
+import com.ichi2.utils.stringIterable
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+import org.json.JSONException
+import org.json.JSONObject
 import timber.log.Timber
 import java.io.*
 
@@ -55,9 +56,9 @@ open class Exporter(protected val col: Collection, protected val did: DeckId?) {
     fun cardIds(): Array<Long> {
         val cids: Array<Long>
         cids = if (did == null) {
-            Utils.list2ObjectArray(col.db.queryLongList("select id from cards"))
+            col.db.queryLongList("select id from cards").toTypedArray()
         } else {
-            Utils.list2ObjectArray(col.decks.cids(did, true))
+            col.decks.cids(did, true).toTypedArray()
         }
         count = cids.size
         return cids
@@ -269,7 +270,7 @@ open class AnkiExporter(col: Collection, did: DeckId?, val includeSched: Boolean
         val keys = media.names()
         if (keys != null) {
             mMediaFiles.ensureCapacity(keys.length())
-            addAll(mMediaFiles, keys.stringIterable())
+            mMediaFiles.addAll(keys.stringIterable())
         }
         Timber.d("Cleanup")
         dst.crt = col.crt
@@ -485,6 +486,7 @@ class AnkiPackageExporter : AnkiExporter {
  */
 internal class ZipFile(path: String?) {
     private val mZos: ZipArchiveOutputStream
+
     @Throws(IOException::class)
     fun write(path: String?, entry: String?) {
         val bis = BufferedInputStream(FileInputStream(path), BUFFER_SIZE)

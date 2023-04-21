@@ -19,6 +19,7 @@
  ****************************************************************************************/
 package com.ichi2.anki.multimediacard.fields
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
@@ -35,7 +36,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.text.TextUtils
 import android.text.format.Formatter
 import android.util.DisplayMetrics
 import android.view.Gravity
@@ -48,10 +48,10 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentResolverCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.getSystemService
-import com.afollestad.materialdialogs.MaterialDialog
 import com.canhub.cropper.*
 import com.ichi2.anki.AnkiDroidApp
 import com.ichi2.anki.CrashReportService
@@ -61,12 +61,10 @@ import com.ichi2.anki.UIUtils
 import com.ichi2.anki.multimediacard.activity.MultimediaEditFieldActivity
 import com.ichi2.annotations.NeedsTest
 import com.ichi2.compat.CompatHelper
+import com.ichi2.compat.CompatHelper.Companion.getParcelableCompat
 import com.ichi2.ui.FixedEditText
-import com.ichi2.utils.BitmapUtil
-import com.ichi2.utils.ExifUtil
-import com.ichi2.utils.FileUtil
-import com.ichi2.utils.KotlinCleanup
-import com.ichi2.utils.Permissions
+import com.ichi2.utils.*
+import com.ichi2.utils.Permissions.arePermissionsDefinedInAnkiDroidManifest
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
@@ -97,10 +95,10 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
             return min(height * 0.4, width * 0.6).toInt()
         }
     private lateinit var cropImageRequest: ActivityResultLauncher<CropImageContractOptions>
+
     @VisibleForTesting
     lateinit var registryToUse: ActivityResultRegistry
 
-    @Suppress("deprecation") // getParcelable
     override fun loadInstanceState(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             Timber.i("loadInstanceState but null so nothing to load")
@@ -110,7 +108,7 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
         Timber.i("loadInstanceState loading saved state...")
         mViewModel = ImageViewModel.fromBundle(savedInstanceState)
         mPreviousImagePath = savedInstanceState.getString("mPreviousImagePath")
-        mPreviousImageUri = savedInstanceState.getParcelable("mPreviousImageUri")
+        mPreviousImageUri = savedInstanceState.getParcelableCompat<Uri>("mPreviousImageUri")
     }
 
     override fun saveInstanceState(): Bundle {
@@ -188,7 +186,7 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             layout.addView(btnDraw, ViewGroup.LayoutParams.MATCH_PARENT)
         }
-        if (com.ichi2.utils.CheckCameraPermission.manifestContainsPermission(context)) {
+        if (context.arePermissionsDefinedInAnkiDroidManifest(Manifest.permission.CAMERA)) {
             layout.addView(btnCamera, ViewGroup.LayoutParams.MATCH_PARENT)
         }
         layout.addView(mCropButton, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -206,13 +204,18 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
                 }
                 setPreviewImage(mViewModel.imagePath, maxImageSize)
             } else {
-                if (!TextUtils.isEmpty(mPreviousImagePath)) {
+                if (!mPreviousImagePath.isNullOrEmpty()) {
                     revertToPreviousImage()
                 }
                 // cropImage can give us more information. Not sure it is actionable so for now just log it.
                 val error: String = cropResult.error?.toString() ?: "Error info not available"
                 Timber.w(error, "cropImage threw an error")
-                CrashReportService.sendExceptionReport(error, "cropImage threw an error")
+                // condition can be removed if #12768 get fixed by Canhub
+                if (cropResult.error is CropException.Cancellation) {
+                    Timber.i("CropException caught, seemingly nothing to do ", error)
+                } else {
+                    CrashReportService.sendExceptionReport(error, "cropImage threw an error")
+                }
             }
         }
     }
@@ -351,7 +354,6 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
         }
     }
 
-    @Suppress("deprecation") // get
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         // All image modification methods come through here - this ensures that the state is consistent
 
@@ -361,7 +363,7 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
             // Restore the old version of the image if the user cancelled
             when (requestCode) {
                 ACTIVITY_TAKE_PICTURE ->
-                    if (!TextUtils.isEmpty(mPreviousImagePath)) {
+                    if (!mPreviousImagePath.isNullOrEmpty()) {
                         revertToPreviousImage()
                     }
                 else -> {}
@@ -390,7 +392,7 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
             ACTIVITY_TAKE_PICTURE -> handleTakePictureResult()
             ACTIVITY_DRAWING -> {
                 // receive image from drawing activity
-                val savedImagePath = data!!.extras!![DrawingActivity.EXTRA_RESULT_WHITEBOARD] as Uri?
+                val savedImagePath = data!!.extras!!.getParcelableCompat<Uri>(DrawingActivity.EXTRA_RESULT_WHITEBOARD)
                 handleDrawingResult(savedImagePath)
             }
             else -> {
@@ -410,7 +412,12 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
     }
 
     private fun showSomethingWentWrong() {
-        UIUtils.showThemedToast(mActivity, mActivity.resources.getString(R.string.multimedia_editor_something_wrong), false)
+        try {
+            UIUtils.showThemedToast(mActivity, mActivity.resources.getString(R.string.multimedia_editor_something_wrong), false)
+        } catch (e: Exception) {
+            // ignore. A NullPointerException may occur in Robolectric
+            Timber.w(e, "Failed to display toast")
+        }
     }
 
     private fun showSVGPreviewToast() {
@@ -427,7 +434,7 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
         Timber.i(
             "handleSelectImageIntent() Intent: %s. extras: %s",
             data,
-            if (data.extras == null) "null" else TextUtils.join(", ", data.extras!!.keySet())
+            if (data.extras == null) "null" else data.extras!!.keySet().joinToString(", ")
         )
 
         val selectedImage = getImageUri(mActivity, data)
@@ -650,7 +657,7 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
     private fun setTemporaryMedia(imagePath: String) {
         mField.apply {
             this.imagePath = imagePath
-            setHasTemporaryMedia(true)
+            hasTemporaryMedia = true
         }
     }
 
@@ -659,16 +666,16 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
             Timber.w("showCropDialog called with null URI or Path")
             return
         }
-        val dialog = MaterialDialog(mActivity)
-            .message(text = content)
-            .positiveButton(R.string.dialog_ok) {
+
+        AlertDialog.Builder(mActivity).show {
+            message(text = content)
+            positiveButton(R.string.dialog_ok) {
                 mViewModel = requestCrop(mViewModel)
             }
-            .negativeButton(R.string.dialog_no) {
+            negativeButton(R.string.dialog_no) {
                 negativeCallback?.invoke() // Using invoke since negativeCallback is nullable
             }
-
-        dialog.show()
+        }
     }
 
     private fun handleCropResult(result: CropImageView.CropResult) {
@@ -689,7 +696,7 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
             showSomethingWentWrong()
             return false
         }
-        mField.setHasTemporaryMedia(true)
+        mField.hasTemporaryMedia = true
         return true
     }
 
@@ -816,10 +823,9 @@ class BasicImageFieldController : FieldControllerBase(), IFieldController {
         }
 
         companion object {
-            @Suppress("deprecation") // getParcelable
             fun fromBundle(savedInstanceState: Bundle): ImageViewModel {
                 val imagePath = savedInstanceState.getString("mImagePath")
-                val imageUri = savedInstanceState.getParcelable<Uri>("mImageUri")
+                val imageUri = savedInstanceState.getParcelableCompat<Uri>("mImageUri")
                 return ImageViewModel(imagePath, imageUri)
             }
         }

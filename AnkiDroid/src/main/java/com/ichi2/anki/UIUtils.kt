@@ -6,23 +6,19 @@ import android.content.Context
 import android.util.DisplayMetrics
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.ichi2.async.CollectionTask.SaveCollection
-import com.ichi2.async.TaskListener
-import com.ichi2.async.TaskManager
 import com.ichi2.libanki.utils.Time
-import timber.log.Timber
 import java.util.*
 
 object UIUtils {
-    fun showThemedToast(context: Context?, text: String?, shortLength: Boolean) {
+    fun showThemedToast(context: Context, text: String, shortLength: Boolean) {
         Toast.makeText(context, text, if (shortLength) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
     }
 
-    fun showThemedToast(context: Context?, text: CharSequence?, shortLength: Boolean) {
+    fun showThemedToast(context: Context, text: CharSequence, shortLength: Boolean) {
         showThemedToast(context, text.toString(), shortLength)
     }
 
-    fun showThemedToast(context: Context?, @StringRes textResource: Int, shortLength: Boolean) {
+    fun showThemedToast(context: Context, @StringRes textResource: Int, shortLength: Boolean) {
         Toast.makeText(context, textResource, if (shortLength) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
     }
 
@@ -40,21 +36,6 @@ object UIUtils {
         cal[Calendar.SECOND] = 0
         cal[Calendar.MILLISECOND] = 0
         return cal.timeInMillis
-    }
-
-    fun saveCollectionInBackground(syncIgnoresDatabaseModification: Boolean = false) {
-        if (CollectionHelper.instance.colIsOpen()) {
-            val listener: TaskListener<Void?, Void?> = object : TaskListener<Void?, Void?>() {
-                override fun onPreExecute() {
-                    Timber.d("saveCollectionInBackground: start")
-                }
-
-                override fun onPostExecute(result: Void?) {
-                    Timber.d("saveCollectionInBackground: finished")
-                }
-            }
-            TaskManager.launchCollectionTask(SaveCollection(syncIgnoresDatabaseModification), listener)
-        }
     }
 
     /**

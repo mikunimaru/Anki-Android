@@ -16,7 +16,6 @@
 package com.ichi2.anki.dialogs.tags
 
 import com.ichi2.testutils.assertFalse
-import com.ichi2.utils.KotlinCleanup
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Ignore
@@ -25,11 +24,10 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import java.util.*
 
-// suppressed to have a symmetry in all tests, Arrays.asList(...) should be all you need.
-@KotlinCleanup("Use kotlin functions instead of Arrays.asList")
 class TagsListTest {
     lateinit var tagsList: TagsList
     lateinit var tagsListWithIndeterminate: TagsList
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -39,8 +37,8 @@ class TagsListTest {
 
     @Test
     fun test_constructor_will_remove_dups() {
-        val allTags = Arrays.asList("a", "b", "a")
-        val checkedTags = Arrays.asList("b", "b", "b")
+        val allTags = listOf("a", "b", "a")
+        val checkedTags = listOf("b", "b", "b")
         val list = TagsList(
             allTags,
             checkedTags
@@ -48,19 +46,21 @@ class TagsListTest {
 
         assertEquals(
             "All tags list should not contain any duplicates",
-            Arrays.asList("a", "b"), list.copyOfAllTagList()
+            listOf("a", "b"),
+            list.copyOfAllTagList()
         )
         assertEquals(
             "Checked tags list should not contain any duplicates",
-            Arrays.asList("b"), list.copyOfCheckedTagList()
+            listOf("b"),
+            list.copyOfCheckedTagList()
         )
     }
 
     @Test
     fun test_constructor_will_remove_dups_unchecked() {
-        val allTags = Arrays.asList("a", "b", "a", "c", "c", "d")
-        val checkedTags = Arrays.asList("b", "b", "b")
-        val uncheckedTags = Arrays.asList("c", "c", "d")
+        val allTags = listOf("a", "b", "a", "c", "c", "d")
+        val checkedTags = listOf("b", "b", "b")
+        val uncheckedTags = listOf("c", "c", "d")
         val list = TagsList(
             allTags,
             checkedTags,
@@ -69,22 +69,25 @@ class TagsListTest {
 
         assertEquals(
             "All tags list should not contain any duplicates",
-            Arrays.asList("a", "b", "c", "d"), list.copyOfAllTagList()
+            listOf("a", "b", "c", "d"),
+            list.copyOfAllTagList()
         )
         assertEquals(
             "Checked tags list should not contain any duplicates",
-            Arrays.asList("b"), list.copyOfCheckedTagList()
+            listOf("b"),
+            list.copyOfCheckedTagList()
         )
         assertEquals(
             "indeterminate tags list should be empty",
-            Arrays.asList<Any>(), list.copyOfIndeterminateTagList()
+            listOf<Any>(),
+            list.copyOfIndeterminateTagList()
         )
     }
 
     @Test
     fun test_constructor_will_ignore_casing() {
-        val allTags = Arrays.asList("aA", "bb", "aa")
-        val checkedTags = Arrays.asList("bb", "Bb", "bB")
+        val allTags = listOf("aA", "bb", "aa")
+        val checkedTags = listOf("bb", "Bb", "bB")
         val list = TagsList(
             allTags,
             checkedTags
@@ -92,19 +95,21 @@ class TagsListTest {
 
         assertEquals(
             "All tags list should not contain any duplicates (case insensitive)",
-            Arrays.asList("aA", "bb"), list.copyOfAllTagList()
+            listOf("aA", "bb"),
+            list.copyOfAllTagList()
         )
         assertEquals(
             "Checked tags list should not contain any duplicates  (case insensitive)",
-            Arrays.asList("bb"), list.copyOfCheckedTagList()
+            listOf("bb"),
+            list.copyOfCheckedTagList()
         )
     }
 
     @Test
     fun test_constructor_will_ignore_casing_unchecked() {
-        val allTags = Arrays.asList("aA", "bb", "aa", "cc", "dd")
-        val checkedTags = Arrays.asList("bb", "Bb", "bB", "dd", "ff")
-        val uncheckedTags = Arrays.asList("BB", "cC", "cC", "dD", "CC")
+        val allTags = listOf("aA", "bb", "aa", "cc", "dd")
+        val checkedTags = listOf("bb", "Bb", "bB", "dd", "ff")
+        val uncheckedTags = listOf("BB", "cC", "cC", "dD", "CC")
         val list = TagsList(
             allTags,
             checkedTags,
@@ -113,23 +118,26 @@ class TagsListTest {
 
         assertEquals(
             "All tags list should not contain any duplicates (case insensitive)",
-            Arrays.asList("aA", "bb", "cc", "dd", "ff"), list.copyOfAllTagList()
+            listOf("aA", "bb", "cc", "dd", "ff"),
+            list.copyOfAllTagList()
         )
         assertEquals(
             "Checked tags list should not contain any duplicates  (case insensitive)",
-            Arrays.asList("ff"), list.copyOfCheckedTagList()
+            listOf("ff"),
+            list.copyOfCheckedTagList()
         )
         assertEquals(
             "Checked tags list should not contain any duplicates  (case insensitive)\n" +
                 "and IndeterminateTagList is correct".trimIndent(),
-            Arrays.asList("bb", "dd"), list.copyOfIndeterminateTagList()
+            listOf("bb", "dd"),
+            list.copyOfIndeterminateTagList()
         )
     }
 
     @Test
     fun test_constructor_will_add_checked_to_all() {
-        val allTags = Arrays.asList("aA", "bb", "aa")
-        val checkedTags = Arrays.asList("bb", "Bb", "bB", "cc")
+        val allTags = listOf("aA", "bb", "aa")
+        val checkedTags = listOf("bb", "Bb", "bB", "cc")
         val list = TagsList(
             allTags,
             checkedTags
@@ -137,19 +145,21 @@ class TagsListTest {
 
         assertEquals(
             "Extra tags in checked not found in all tags, must be added to all tags list",
-            Arrays.asList("aA", "bb", "cc"), list.copyOfAllTagList()
+            listOf("aA", "bb", "cc"),
+            list.copyOfAllTagList()
         )
         assertEquals(
             "Extra tags in checked not found in all tags, must be found when retrieving checked tag list",
-            Arrays.asList("bb", "cc"), list.copyOfCheckedTagList()
+            listOf("bb", "cc"),
+            list.copyOfCheckedTagList()
         )
     }
 
     @Test
     fun test_constructor_will_add_checked_and_unchecked_to_all() {
-        val allTags = Arrays.asList("aA", "bb", "aa")
-        val checkedTags = Arrays.asList("bb", "Bb", "bB", "Cc", "zz")
-        val uncheckedTags = Arrays.asList("BB", "cC", "cC", "dD", "CC")
+        val allTags = listOf("aA", "bb", "aa")
+        val checkedTags = listOf("bb", "Bb", "bB", "Cc", "zz")
+        val uncheckedTags = listOf("BB", "cC", "cC", "dD", "CC")
         val list = TagsList(
             allTags,
             checkedTags,
@@ -158,13 +168,15 @@ class TagsListTest {
 
         assertEquals(
             "Extra tags in checked not found in all tags, must be added to all tags list",
-            Arrays.asList("aA", "bb", "Cc", "zz", "dD"), list.copyOfAllTagList()
+            listOf("aA", "bb", "Cc", "zz", "dD"),
+            list.copyOfAllTagList()
         )
         assertEquals(
             "Extra tags in checked not found in all tags, must be found when retrieving checked tag list",
-            Arrays.asList("zz"), list.copyOfCheckedTagList()
+            listOf("zz"),
+            list.copyOfCheckedTagList()
         )
-        assertEquals(Arrays.asList("bb", "Cc"), list.copyOfIndeterminateTagList())
+        assertEquals(listOf("bb", "Cc"), list.copyOfIndeterminateTagList())
     }
 
     @Test
@@ -187,7 +199,8 @@ class TagsListTest {
         assertEquals(listOf("cat1::aa", "cat1::bb", "cat2::bb::aa", "cat2::bb::bb"), list.copyOfCheckedTagList())
         assertEquals(
             "Ancestors of checked tags should be marked as indeterminate",
-            listOf("cat1", "cat2", "cat2::bb"), list.copyOfIndeterminateTagList()
+            listOf("cat1", "cat2", "cat2::bb"),
+            list.copyOfIndeterminateTagList()
         )
     }
 
@@ -254,11 +267,13 @@ class TagsListTest {
         )
         assertEquals(
             "The newly added 'anki' tag should be found when retrieving all tags list",
-            join(TAGS, "anki"), tagsList.copyOfAllTagList()
+            join(TAGS, "anki"),
+            tagsList.copyOfAllTagList()
         )
         assertSameElementsIgnoreOrder(
             "Adding operations should have nothing to do with the checked status of tags",
-            CHECKED_TAGS, tagsList.copyOfCheckedTagList()
+            CHECKED_TAGS,
+            tagsList.copyOfCheckedTagList()
         )
     }
 
@@ -315,11 +330,13 @@ class TagsListTest {
         )
         assertEquals(
             "Changing the status of tags to be checked should have noting to do with all tag list",
-            TAGS, tagsList.copyOfAllTagList()
+            TAGS,
+            tagsList.copyOfAllTagList()
         ) // no change
         assertSameElementsIgnoreOrder(
             "The checked 'flags' tag should be found when retrieving list of checked tag",
-            join(CHECKED_TAGS, "flags"), tagsList.copyOfCheckedTagList()
+            join(CHECKED_TAGS, "flags"),
+            tagsList.copyOfCheckedTagList()
         )
     }
 
@@ -331,7 +348,8 @@ class TagsListTest {
         )
         assertEquals(
             "Changing the status of tags to be checked should have noting to do with all tag list",
-            TAGS, tagsListWithIndeterminate.copyOfAllTagList()
+            TAGS,
+            tagsListWithIndeterminate.copyOfAllTagList()
         )
         assertTrue(
             "The checked 'faces' tag should be found when retrieving list of checked tag",
@@ -359,11 +377,13 @@ class TagsListTest {
         )
         assertEquals(
             "Changing the status of tags to be unchecked should have noting to do with all tag list",
-            TAGS, tagsList.copyOfAllTagList()
+            TAGS,
+            tagsList.copyOfAllTagList()
         ) // no change
         assertSameElementsIgnoreOrder(
             "The unchecked 'colors' tag should be not be found when retrieving list of checked tag",
-            minus(CHECKED_TAGS, "colors"), tagsList.copyOfCheckedTagList()
+            minus(CHECKED_TAGS, "colors"),
+            tagsList.copyOfCheckedTagList()
         )
     }
 
@@ -375,7 +395,8 @@ class TagsListTest {
         )
         assertEquals(
             "Changing the status of tags to be checked should have noting to do with all tag list",
-            TAGS, tagsListWithIndeterminate.copyOfAllTagList()
+            TAGS,
+            tagsListWithIndeterminate.copyOfAllTagList()
         )
         assertFalse(
             "Changing from indeterminate to unchecked should not affect checked tags",
@@ -449,7 +470,8 @@ class TagsListTest {
         tagsList.sort()
         assertEquals(
             "Calling #sort on TagsList should result on sorting all tags",
-            SORTED_TAGS, tagsList.copyOfAllTagList()
+            SORTED_TAGS,
+            tagsList.copyOfAllTagList()
         )
     }
 
@@ -459,7 +481,8 @@ class TagsListTest {
         tagsListWithIndeterminate.sort()
         assertEquals(
             "Calling #sort on TagsList should result on sorting all tags",
-            SORTED_TAGS, tagsListWithIndeterminate.copyOfAllTagList()
+            SORTED_TAGS,
+            tagsListWithIndeterminate.copyOfAllTagList()
         )
     }
 
@@ -475,7 +498,8 @@ class TagsListTest {
             tagsList.sort()
             assertEquals(
                 "Calling #sort on TagsList should result on sorting all tags",
-                SORTED_TAGS, tagsList.copyOfAllTagList()
+                SORTED_TAGS,
+                tagsList.copyOfAllTagList()
             )
 
             MockCollection.verify({ Collections.sort(ArgumentMatchers.any(), ArgumentMatchers.any<Comparator<in Any>>()) }, Mockito.never())
@@ -483,7 +507,7 @@ class TagsListTest {
     }
 
     companion object {
-        val SORTED_TAGS = Arrays.asList(
+        val SORTED_TAGS = listOf(
             "colors",
             "faces",
             "programming",
@@ -495,7 +519,7 @@ class TagsListTest {
             "names",
             "playground"
         )
-        val TAGS = Arrays.asList(
+        val TAGS = listOf(
             "programming",
             "learn",
             "names",
@@ -507,18 +531,18 @@ class TagsListTest {
             "playground",
             "electrical"
         )
-        val CHECKED_TAGS = Arrays.asList(
+        val CHECKED_TAGS = listOf(
             "programming",
             "faces",
             "colors"
         )
-        val UNCHECKED_TAGS = Arrays.asList(
+        val UNCHECKED_TAGS = listOf(
             "electrical",
             "meat",
             "programming",
             "faces"
         )
-        val INDETERMINATE_TAGS = Arrays.asList(
+        val INDETERMINATE_TAGS = listOf(
             "programming",
             "faces"
         )

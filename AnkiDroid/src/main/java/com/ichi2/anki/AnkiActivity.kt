@@ -7,9 +7,7 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.AudioManager
@@ -28,9 +26,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabsIntent.COLOR_SCHEME_DARK
-import androidx.browser.customtabs.CustomTabsIntent.COLOR_SCHEME_LIGHT
-import androidx.browser.customtabs.CustomTabsIntent.COLOR_SCHEME_SYSTEM
+import androidx.browser.customtabs.CustomTabsIntent.*
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -38,6 +34,7 @@ import androidx.fragment.app.FragmentManager
 import com.ichi2.anim.ActivityTransitionAnimation
 import com.ichi2.anim.ActivityTransitionAnimation.Direction
 import com.ichi2.anim.ActivityTransitionAnimation.Direction.*
+import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.UIUtils.showThemedToast
 import com.ichi2.anki.analytics.UsageAnalytics
 import com.ichi2.anki.dialogs.AsyncDialogFragment
@@ -55,11 +52,11 @@ import com.ichi2.compat.customtabs.CustomTabsFallback
 import com.ichi2.compat.customtabs.CustomTabsHelper
 import com.ichi2.libanki.Collection
 import com.ichi2.libanki.CollectionGetter
-import com.ichi2.themes.Theme
 import com.ichi2.themes.Themes
 import com.ichi2.utils.AdaptionUtil
 import com.ichi2.utils.AndroidUiUtils
 import com.ichi2.utils.KotlinCleanup
+import com.ichi2.utils.SyncStatus
 import timber.log.Timber
 
 open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, CollectionGetter {
@@ -67,7 +64,6 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
     /** The name of the parent class (example: 'Reviewer')  */
     private val mActivityName: String
     val dialogHandler = DialogHandler(this)
-    private lateinit var mPreviousTheme: Theme
 
     private val customTabActivityHelper: CustomTabActivityHelper = CustomTabActivityHelper()
 
@@ -87,7 +83,6 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
         // Set the theme
         Themes.setTheme(this)
         Themes.disableXiaomiForceDarkMode(this)
-        mPreviousTheme = Themes.currentTheme
         super.onCreate(savedInstanceState)
         // Disable the notifications bar if running under the test monkey.
         if (AdaptionUtil.isUserATestClient) {
@@ -101,38 +96,16 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
         }
     }
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(AnkiDroidApp.updateContextWithLanguage(base))
-    }
-
     override fun onStart() {
         Timber.i("AnkiActivity::onStart - %s", mActivityName)
         super.onStart()
         customTabActivityHelper.bindCustomTabsService(this)
-        // Reload theme in case it was changed on another activity
-        if (mPreviousTheme != Themes.currentTheme) {
-            recreate()
-        }
     }
 
     override fun onStop() {
         Timber.i("AnkiActivity::onStop - %s", mActivityName)
         super.onStop()
         customTabActivityHelper.unbindCustomTabsService(this)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val newNightModeStatus =
-            newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-        // Check if theme should change
-        if (Themes.systemIsInNightMode != newNightModeStatus) {
-            Themes.systemIsInNightMode = newNightModeStatus
-            if (Themes.themeFollowsSystem()) {
-                Themes.updateCurrentTheme()
-                recreate()
-            }
-        }
     }
 
     override fun onPause() {
@@ -148,7 +121,7 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
             SIMPLE_NOTIFICATION_ID
         )
         // Show any pending dialogs which were stored persistently
-        dialogHandler.readMessage()
+        dialogHandler.executeMessage()
     }
 
     override fun onDestroy() {
@@ -289,7 +262,10 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
         animation: Direction?
     ) {
         try {
-            launcher.launch(intent, ActivityTransitionAnimation.getAnimationOptions(this, animation))
+            launcher.launch(
+                intent,
+                ActivityTransitionAnimation.getAnimationOptions(this, animation)
+            )
         } catch (e: ActivityNotFoundException) {
             Timber.w(e)
             this.showSnackbar(R.string.activity_start_failed)
@@ -476,17 +452,19 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
      * @param newFragment  the DialogFragment you want to show
      */
     open fun showDialogFragment(newFragment: DialogFragment) {
-        showDialogFragment(this, newFragment)
+        runOnUiThread {
+            showDialogFragment(this, newFragment)
+        }
     }
 
     /**
      * Calls [.showAsyncDialogFragment] internally, using the channel
-     * [NotificationChannels.Channel.GENERAL]
+     * [Channel.GENERAL]
      *
      * @param newFragment  the AsyncDialogFragment you want to show
      */
     open fun showAsyncDialogFragment(newFragment: AsyncDialogFragment) {
-        showAsyncDialogFragment(newFragment, NotificationChannels.Channel.GENERAL)
+        showAsyncDialogFragment(newFragment, Channel.GENERAL)
     }
 
     /**
@@ -495,18 +473,18 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
      * AsyncTask completed
      *
      * @param newFragment  the AsyncDialogFragment you want to show
-     * @param channel the NotificationChannels.Channel to use for the notification
+     * @param channel the Channel to use for the notification
      */
     fun showAsyncDialogFragment(
         newFragment: AsyncDialogFragment,
-        channel: NotificationChannels.Channel
+        channel: Channel
     ) {
         try {
             showDialogFragment(newFragment)
         } catch (e: IllegalStateException) {
             Timber.w(e)
             // Store a persistent message to SharedPreferences instructing AnkiDroid to show dialog
-            DialogHandler.storeMessage(newFragment.dialogHandlerMessage)
+            DialogHandler.storeMessage(newFragment.dialogHandlerMessage?.toMessage())
             // Show a basic notification to the user in the notification bar in the meantime
             val title = newFragment.notificationTitle
             val message = newFragment.notificationMessage
@@ -523,16 +501,20 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
      * @param reload flag which forces app to be restarted when true
      */
     @KotlinCleanup("make message non-null")
-    open fun showSimpleMessageDialog(message: String?, title: String = "", reload: Boolean = false) {
-        val newFragment: AsyncDialogFragment = SimpleMessageDialog.newInstance(title, message, reload)
+    open fun showSimpleMessageDialog(
+        message: String?,
+        title: String = "",
+        reload: Boolean = false
+    ) {
+        val newFragment: AsyncDialogFragment =
+            SimpleMessageDialog.newInstance(title, message, reload)
         showAsyncDialogFragment(newFragment)
     }
 
-    @KotlinCleanup("make non-null")
     fun showSimpleNotification(
         title: String,
         message: String?,
-        channel: NotificationChannels.Channel
+        channel: Channel
     ) {
         val prefs = AnkiDroidApp.getSharedPrefs(this)
         // Show a notification unless all notifications have been totally disabled
@@ -540,16 +522,17 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
             .toInt() <= Preferences.PENDING_NOTIFICATIONS_ONLY
         ) {
             // Use the title as the ticker unless the title is simply "AnkiDroid"
-            var ticker: String? = title
-            if (title == resources.getString(R.string.app_name)) {
-                ticker = message
+            val ticker: String? = if (title == resources.getString(R.string.app_name)) {
+                message
+            } else {
+                title
             }
             // Build basic notification
             val builder = NotificationCompat.Builder(
                 this,
-                NotificationChannels.getId(channel)
+                channel.id
             )
-                .setSmallIcon(R.drawable.ic_stat_notify)
+                .setSmallIcon(R.drawable.ic_star_notify)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setColor(ContextCompat.getColor(this, R.color.material_light_blue_500))
@@ -597,17 +580,6 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
         )
     }
 
-    // Restart the activity
-    @KotlinCleanup("suggested by BrayanDSO that this is changed")
-    fun restartActivity() {
-        Timber.i("AnkiActivity -- restartActivity()")
-        val intent = Intent()
-        intent.setClass(this, this.javaClass)
-        intent.putExtras(Bundle())
-        startActivityWithoutAnimation(intent)
-        finishWithoutAnimation()
-    }
-
     /**
      * sets [.getSupportActionBar] and returns the action bar
      * @return The action bar which was created
@@ -640,6 +612,28 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
             savedInstanceState = savedInstanceState,
             activitySuperOnCreate = { state -> super.onCreate(state) }
         )
+
+    fun saveCollectionInBackground(syncIgnoresDatabaseModification: Boolean = false) {
+        if (CollectionHelper.instance.colIsOpen()) {
+            launchCatchingTask {
+                Timber.d("saveCollectionInBackground: start")
+                withCol {
+                    Timber.d("doInBackgroundSaveCollection")
+                    try {
+                        if (syncIgnoresDatabaseModification) {
+                            SyncStatus.ignoreDatabaseModification { col.save() }
+                        } else {
+                            col.save()
+                        }
+                    } catch (e: Exception) {
+                        Timber.e(e, "Error on saving deck in background")
+                        // TODO should this error be reported through our error reporting service?
+                    }
+                }
+                Timber.d("saveCollectionInBackground: finished")
+            }
+        }
+    }
 
     companion object {
         const val REQUEST_REVIEW = 901

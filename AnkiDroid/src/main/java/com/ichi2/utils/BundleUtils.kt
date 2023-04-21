@@ -24,15 +24,16 @@ object BundleUtils {
     /**
      * Retrieves a [Long] value from a [Bundle] using a key, returns null if not found
      *
-     * @param bundle the bundle to look into
      * can be null to support nullable bundles like [androidx.fragment.app.Fragment.getArguments]
      * @param key the key to use
      * @return the long value, or null if not found
      */
-    fun getNullableLong(bundle: Bundle?, key: String): Long? {
-        return if (bundle == null || !bundle.containsKey(key)) {
+    fun Bundle.getNullableLong(key: String): Long? {
+        return if (!containsKey(key)) {
             null
-        } else bundle.getLong(key)
+        } else {
+            getLong(key)
+        }
     }
 
     /**
@@ -47,10 +48,5 @@ object BundleUtils {
             throw IllegalStateException("key: '$key' not found")
         }
         return getLong(key)
-    }
-
-    @Suppress("deprecation") // getSerializable
-    inline fun <reified T> Bundle.getSerializableWithCast(key: String): T {
-        return getSerializable(key) as T
     }
 }

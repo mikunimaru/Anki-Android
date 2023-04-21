@@ -33,7 +33,6 @@ import com.ichi2.anki.cardviewer.Gesture
 import com.ichi2.anki.cardviewer.PreviewLayout
 import com.ichi2.anki.cardviewer.ViewerCommand
 import com.ichi2.libanki.Collection
-import com.ichi2.libanki.Utils
 import timber.log.Timber
 
 /**
@@ -153,6 +152,7 @@ class Previewer : AbstractFlashcardViewer() {
         super.initLayout()
         topBarLayout!!.visibility = View.GONE
         findViewById<View>(R.id.answer_options_layout).visibility = View.GONE
+        findViewById<View>(R.id.bottom_area_layout).visibility = View.VISIBLE
         previewLayout = PreviewLayout.createAndDisplay(this, mToggleAnswerHandler)
         previewLayout!!.setOnNextCard { changePreviewedCard(true) }
         previewLayout!!.setOnPreviousCard { changePreviewedCard(false) }
@@ -225,7 +225,7 @@ class Previewer : AbstractFlashcardViewer() {
             return
         }
         mIndex = getNextIndex(newCardList)
-        mCardList = Utils.collection2Array(newCardList)
+        mCardList = newCardList.toLongArray()
         currentCard = col.getCard(mCardList[mIndex])
         displayCardQuestion()
     }

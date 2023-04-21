@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
-import android.util.Pair
 import com.ichi2.anki.model.WhiteboardPenColor
 import com.ichi2.anki.model.WhiteboardPenColor.Companion.default
 import com.ichi2.libanki.DeckId
@@ -34,7 +33,7 @@ object MetaDB {
     private const val DATABASE_NAME = "ankidroid.db"
 
     /** The Database Version, increase if you want updates to happen on next upgrade.  */
-    private const val DATABASE_VERSION = 6
+    private const val DATABASE_VERSION = 7
     // Possible values for the qa column of the languages table.
     /** The language refers to the question.  */
     const val LANGUAGES_QA_QUESTION = 0
@@ -64,10 +63,11 @@ object MetaDB {
     private fun openDB(context: Context) {
         try {
             mMetaDb = context.openOrCreateDatabase(DATABASE_NAME, 0, null).let {
-                if (it.needUpgrade(DATABASE_VERSION))
+                if (it.needUpgrade(DATABASE_VERSION)) {
                     upgradeDB(it, DATABASE_VERSION)
-                else
+                } else {
                     it
+                }
             }
             Timber.v("Opening MetaDB")
         } catch (e: Exception) {
@@ -106,7 +106,7 @@ object MetaDB {
         if (columnCount <= 0) {
             metaDb.execSQL(
                 "CREATE TABLE IF NOT EXISTS whiteboardState (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "did INTEGER NOT NULL, state INTEGER, visible INTEGER, lightpencolor INTEGER, darkpencolor INTEGER)"
+                    "did INTEGER NOT NULL, state INTEGER, visible INTEGER, lightpencolor INTEGER, darkpencolor INTEGER, stylus INTEGER)"
             )
             return
         }
@@ -120,6 +120,10 @@ object MetaDB {
             Timber.i("Added 'lightpencolor' column to whiteboardState")
             metaDb.execSQL("ALTER TABLE whiteboardState ADD COLUMN darkpencolor INTEGER DEFAULT NULL")
             Timber.i("Added 'darkpencolor' column to whiteboardState")
+        }
+        if (columnCount < 7) {
+            metaDb.execSQL("ALTER TABLE whiteboardState ADD COLUMN stylus INTEGER")
+            Timber.i("Added 'stylus mode' column to whiteboardState")
         }
     }
 
@@ -226,7 +230,10 @@ object MetaDB {
                 mMetaDb!!.execSQL(
                     "INSERT INTO languages (did, ord, qa, language) " + " VALUES (?, ?, ?, ?);",
                     arrayOf<Any>(
-                        did, ord, qa.int, language
+                        did,
+                        ord,
+                        qa.int,
+                        language
                     )
                 )
                 Timber.v("Store language for deck %d", did)
@@ -234,7 +241,10 @@ object MetaDB {
                 mMetaDb!!.execSQL(
                     "UPDATE languages SET language = ? WHERE did = ? AND ord = ? AND qa = ?;",
                     arrayOf<Any>(
-                        language, did, ord, qa.int
+                        language,
+                        did,
+                        ord,
+                        qa.int
                     )
                 )
                 Timber.v("Update language for deck %d", did)
@@ -341,6 +351,58 @@ object MetaDB {
             }
         } catch (e: Exception) {
             Timber.e(e, "Error storing whiteboard state in MetaDB ")
+        }
+    }
+
+    /**
+     * Returns the state of the whiteboard stylus mode for the given deck.
+     *
+     * @return true if the whiteboard stylus mode should be enabled, false otherwise
+     */
+    fun getWhiteboardStylusState(context: Context, did: DeckId): Boolean {
+        openDBIfClosed(context)
+        try {
+            mMetaDb!!.rawQuery(
+                "SELECT stylus FROM whiteboardState WHERE did = ?",
+                arrayOf(java.lang.Long.toString(did))
+            ).use { cur -> return DatabaseUtil.getScalarBoolean(cur) }
+        } catch (e: Exception) {
+            Timber.e(e, "Error retrieving whiteboard stylus mode state from MetaDB ")
+            return false
+        }
+    }
+
+    /**
+     * Stores the state of the whiteboard stylus mode for a given deck.
+     *
+     * @param did deck id to store whiteboard stylus mode state for
+     * @param whiteboardStylusState true if the whiteboard stylus mode should be enabled, false otherwise
+     */
+    fun storeWhiteboardStylusState(context: Context, did: DeckId, whiteboardStylusState: Boolean) {
+        val state = if (whiteboardStylusState) 1 else 0
+        openDBIfClosed(context)
+        try {
+            val metaDb = mMetaDb!!
+            metaDb.rawQuery(
+                "SELECT _id FROM whiteboardState WHERE did = ?",
+                arrayOf(java.lang.Long.toString(did))
+            ).use { cur ->
+                if (cur.moveToNext()) {
+                    metaDb.execSQL(
+                        "UPDATE whiteboardState SET did = ?, stylus=? WHERE _id=?;",
+                        arrayOf<Any>(did, state, cur.getString(0))
+                    )
+                    Timber.d("Store whiteboard stylus mode state (%d) for deck %d", state, did)
+                } else {
+                    metaDb.execSQL(
+                        "INSERT INTO whiteboardState (did, stylus) VALUES (?, ?)",
+                        arrayOf<Any>(did, state)
+                    )
+                    Timber.d("Store whiteboard stylus mode state (%d) for deck %d", state, did)
+                }
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error storing whiteboard stylus mode state in MetaDB ")
         }
     }
 
@@ -461,8 +523,13 @@ object MetaDB {
         var cursor: Cursor? = null
         try {
             cursor = mMetaDb!!.query(
-                "smallWidgetStatus", arrayOf("due", "eta"),
-                null, null, null, null, null
+                "smallWidgetStatus",
+                arrayOf("due", "eta"),
+                null,
+                null,
+                null,
+                null,
+                null
             )
             if (cursor.moveToNext()) {
                 return intArrayOf(cursor.getInt(0), cursor.getInt(1))

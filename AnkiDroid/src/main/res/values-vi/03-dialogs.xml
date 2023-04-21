@@ -88,6 +88,7 @@
     <string name="answering_error_title">Lỗi cơ sở dữ liệu</string>
     <string name="answering_error_message">Ghi vào bộ sưu tập không thành công. Cơ sở dữ liệu có thể bị hỏng hoặc có thể không có đủ dung lượng trống.\n\nNếu điều này xảy ra thường xuyên hơn, hãy thử kiểm tra cơ sở dữ liệu, sửa chữa bộ sưu tập hoặc khôi phục nó từ bản sao lưu. Chạm vào “tùy chọn” cho điều đó. \n\Hoặc nó cũng có thể là lỗi AnkiDroid; vui lòng thông báo lỗi để chúng tôi có thể kiểm tra điều này.</string>
     <string name="answering_error_report">Báo cáo lỗi</string>
+    <string name="storage_full_message">Không đủ không gian lưu trữ miễn phí để mở AnkiDroid. Giải phóng một số không gian để tiếp tục. </string>
     <string name="repair_deck_dialog">Bạn có thực sự muốn sửa chữa cơ sở dữ liệu? \n\nTrước khi bắt đầu, một bản sao sẽ được tạo trong thư mục con \"%s\".</string>
     <string name="intent_aedict_empty">Danh mục \"mặc định\" rỗng</string>
     <string name="intent_aedict_category">Để thêm thẻ vào AnkiDroid, hãy xoá toàn bộ danh mục Notepad hoặc thêm danh mục tên \"mặc định\"</string>
@@ -108,18 +109,20 @@
     <plurals name="import_complete_message">
         <item quantity="other">Thẻ đã được nhập: %2$d</item>
     </plurals>
-    <string name="sd_card_full_title">Thẻ SD đã đầy</string>
-    <string name="sd_card_almost_full_title">Thẻ SD gần đầy</string>
-    <string name="no_space_to_downgrade_title">Không có không gian</string>
-    <string name="no_space_to_downgrade_content">AnkiDroid needs %s free storage space to continue. Please clear some space</string>
+    <string name="storage_full_title">Bộ nhớ đầy</string>
+    <string name="storage_almost_full_title">Bộ nhớ gần đầy</string>
+    <string name="no_space_to_downgrade_title" tools:ignore="UnusedResources">Không có không gian</string>
+    <string name="no_space_to_downgrade_content" tools:ignore="UnusedResources">AnkiDroid needs %s free storage space to continue. Please clear some space</string>
     <string name="restore_backup_title">Khôi phục sao lưu?</string>
     <string name="restore_backup">Bộ sưu tập sẽ được thay bằng bản sao cũ hơn. Bất kỳ tiến trình nào chưa lưu sẽ bị mất.</string>
     <string name="restore_backup_choose_another">Chọn cái khác </string>
     <string name="dialog_cancel">Huỷ</string>
     <string name="dialog_ok">OK</string>
+    <string name="dialog_confirm" tools:ignore="UnusedResources">Xác nhận</string>
     <string name="dialog_no">Không</string>
+    <string name="dialog_yes">Đồng ý</string>
     <string name="dialog_continue">Tiếp tục</string>
-    <string name="dialog_processing">Processing...</string>
+    <string name="dialog_processing">Đang xử lý...</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Tạo</string>
     <string name="dialog_positive_delete">Xoá</string>
     <!-- Currently unsued, should be useful in the future -->
@@ -164,9 +167,6 @@
     <string name="multimedia_editor_failed">Không mở được Trình chỉnh sửa Đa phương tiện</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Quyền ghi âm bị từ chối</string>
-    <!-- Initial collection load -->
-    <string name="collection_load_welcome_request_permissions_title">Chào mừng bạn đến với AnkiDroid!</string>
-    <string name="collection_load_welcome_request_permissions_details">AnkiDroid yêu cầu quyền lưu trữ mà chúng tôi sử dụng riêng để lưu trữ bộ sưu tập AnkiDroid, file đa phương tiện flashcard và các bản sao lưu của bạn. Mã của chúng tôi là mã nguồn mở, được viết bởi các tình nguyện viên và được hàng triệu người tin cậy. \n\nNếu bạn có bất kỳ câu hỏi nào, vui lòng truy cập hướng dẫn sử dụng trong ứng dụng hoặc truy cập diễn đàn hỗ trợ của chúng tôi.\n\nCảm ơn bạn đã dùng thử AnkiDroid! \n— Nhóm phát triển AnkiDroid</string>
     <string name="mutimedia_editor_assertion_failed">Đã xảy ra lỗi không xác định khi hiển thị Trình chỉnh sửa nâng cao</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid đã cập nhật</string>
@@ -222,6 +222,7 @@
     <string name="help_item_support_develop_ankidroid">Phát triển</string>
     <string name="help_item_support_rate_ankidroid">Đánh giá</string>
     <string name="help_item_support_other_ankidroid">Khác</string>
+    <string name="multimedia_editor_trans_translate">Dịch</string>
     <string name="help_title_community">Cộng đồng</string>
     <string name="help_item_anki_forums">Diễn đàn Anki</string>
     <string name="help_item_discord">Discord</string>
@@ -237,7 +238,7 @@
     <plurals name="sync_automatic_sync_needs_more_time">
         <item quantity="other">Đồng bộ hóa tự động có thể được kích hoạt sau %d giây</item>
     </plurals>
-    <string name="metered_sync_warning">Your connection is metered. Data transfer may cost money</string>
+    <string name="metered_sync_warning">Kết nối của bạn được đo lường. Việc truyền dữ liệu có thể tốn tiền</string>
     <string name="deck_picker_new">Số thẻ mới trong bộ thẻ của ngày hôm nay</string>
     <string name="deck_picker_rev">Số thẻ đến hạn trong bộ thẻ của ngày hôm nay.</string>
     <string name="deck_picker_lrn">Số thẻ đang học trong bộ thẻ.</string>
@@ -247,7 +248,19 @@
     <string name="deck_picker_counts">Open the deck overview page containing the number of cards to see today.</string>
     <string name="import_deck_package">Deck package (.apkg)</string>
     <string name="import_collection_package">Collection package (.colpkg)</string>
-    <string name="import_csv">Text file (.txt, .csv)</string>
+    <string name="import_csv">Tệp văn bản (.txt, .csv)</string>
     <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">You cannot create a subdeck for all decks</string>
+    <string name="cannot_create_subdeck_for_all_decks">Bạn không thể tạo một bộ thẻ con cho tất cả các bộ thẻ</string>
+    <!-- scoped storage -->
+    <string name="backup_your_collection">Sao lưu bộ sưu tập của bạn</string>
+    <string name="backup_collection_message">Bạn đã không sao lưu bộ sưu tập của mình trong một thời gian. Bạn nên làm điều này ngay bây giờ để tránh mất dữ liệu</string>
+    <string name="button_backup">Sao lưu</string>
+    <string name="button_disable_reminder">Tắt lời nhắc</string>
+    <string name="button_backup_later" comment="dismiss the \'Backup\' dialog for around 2 weeks">Để sau</string>
+    <string name="button_do_not_show_again" comment="permanently dismisses a dialog">Không hiển thị lại</string>
+    <string name="dismiss_backup_warning_title">Cảnh báo mất dữ liệu</string>
+    <string name="dismiss_backup_warning_new_user">        Do những thay đổi về quyền riêng tư của Android, dữ liệu và các bản sao lưu tự động của bạn sẽ bị xoá khỏi điện thoại nếu ứng dụng bị gỡ cài đặt
+    </string>
+    <string name="dismiss_backup_warning_upgrade">        Do những thay đổi về quyền riêng tư của Android, dữ liệu và các bản sao lưu tự động của bạn sẽ không thể truy cập được nếu ứng dụng bị gỡ cài đặt
+    </string>
 </resources>

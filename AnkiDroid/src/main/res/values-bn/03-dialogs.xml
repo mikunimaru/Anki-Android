@@ -44,46 +44,47 @@
 ~ this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="check_db_title">Check database?</string>
-    <string name="check_db_warning">This may take a long time</string>
-    <string name="check_db_acknowledge">Database checked</string>
-    <string name="check_db_acknowledge_shrunk">Database checked and optimized.\nShrunk by %d MB.</string>
-    <string name="contextmenu_deckpicker_delete_deck">Delete deck</string>
-    <string name="delete_deck_default_deck">The default deck can’t be deleted</string>
-    <string name="delete_deck_title">Delete deck?</string>
+    <string name="check_db_title">ডাটাবেজ যাচাই করবো?</string>
+    <string name="check_db_warning">অনেক সময় লাগতে পারে</string>
+    <string name="check_db_acknowledge">ডাটাবেজ যাচাই করা হয়েছে</string>
+    <string name="check_db_acknowledge_shrunk">ডাটাবেজ যাচাই করা এবং সারানো হয়েছে। \n%d MB হ্রাস পেয়েছে।</string>
+    <string name="contextmenu_deckpicker_delete_deck">ডেক মুছে ফেলো</string>
+    <string name="delete_deck_default_deck">ডিফল্ট ডেক মুছে ফেলা যাবে না</string>
+    <string name="delete_deck_title">ডেক মুছে ফেলবেন?</string>
     <plurals name="delete_deck_message">
-        <item quantity="one">Delete all cards in %1$s? It contains %2$d card.</item>
-        <item quantity="other">Delete all cards in %1$s? It contains %2$d cards.</item>
+        <item quantity="one">%1$s এর সব কার্ড মুছে ফেলবেন? এটাতে %2$d কার্ড আছে।</item>
+        <item quantity="other">%1$s এর সব কার্ড মুছে ফেলবেন? এটাতে %2$d কার্ড আছে।</item>
     </plurals>
-    <string name="delete_cram_deck_message">Send all cards in %s back to their original decks?</string>
-    <string name="no_tts_available_message">No text-to-speech language available</string>
-    <string name="initializing_tts">Initializing TTS&#8230;</string>
-    <string name="tts_no_tts">Don’t speak</string>
-    <string name="unused_strings">\n\nUnused files:\n</string>
-    <string name="preview_title" comment="Title of the window allowing to preview card(s)">Preview</string>
-    <string name="reposition_card_dialog_title">Reposition new card</string>
-    <string name="reposition_card_dialog_message">Start position:</string>
-    <string name="reposition_card_not_new_error">Only new cards can be repositioned</string>
+    <string name="delete_cram_deck_message">%s এর সব কার্ড তাদের প্রকৃত ডেক এ ফেরত পাঠাবেন?</string>
+    <string name="no_tts_available_message">কোনও টেক্সট টু স্পিচ ভাষা উপলব্ধ নেই</string>
+    <string name="initializing_tts">টিটিএস শুরু করা হচ্ছে&#8230;</string>
+    <string name="tts_no_tts">নিশ্চুপ</string>
+    <string name="unused_strings">\n\nঅব্যবহৃত ফাইলসমূহ:\n</string>
+    <string name="preview_title" comment="Title of the window allowing to preview card(s)">আগাম প্রদর্শন</string>
+    <string name="reposition_card_dialog_title">নতুন কার্ড এর ক্রম পরিবর্তন</string>
+    <string name="reposition_card_dialog_message">শুরুর অবস্থান:</string>
+    <string name="reposition_card_not_new_error">শুধু মাত্র নতুন কার্ড এর ক্রম বদলানো যাবে</string>
     <plurals name="reposition_card_dialog_acknowledge">
-        <item quantity="one">%d card repositioned</item>
-        <item quantity="other">%d cards repositioned</item>
+        <item quantity="one">%d টি কার্ড পুনঃস্থাপিত</item>
+        <item quantity="other">%d টি কার্ড পুনঃস্থাপিত</item>
     </plurals>
-    <string name="reset_card_dialog_title">Reset card progress</string>
-    <string name="reset_card_dialog_message">This card will be placed at the end of the new card queue</string>
+    <string name="reset_card_dialog_title">অগ্ৰগতি মুছে ফেলুন</string>
+    <string name="reset_card_dialog_message">এ কার্ডটি কে নতুন কার্ডের সারির সর্বশেষে স্থাপন করা হবে</string>
     <plurals name="reset_cards_dialog_acknowledge">
-        <item quantity="one">%d card reset</item>
-        <item quantity="other">%d cards reset</item>
+        <item quantity="one">%d টি কার্ড রিসেট হয়েছে</item>
+        <item quantity="other">%d টি কার্ড রিসেট হয়েছে</item>
     </plurals>
     <!-- Reschedule Card Dialog -->
     <plurals name="reschedule_cards_dialog_title_new">
-        <item quantity="one">Reschedule %d card</item>
-        <item quantity="other">Reschedule %d cards</item>
+        <item quantity="one">%d টি কার্ডের সময় পুনঃনির্ধারণ করুন</item>
+        <item quantity="other">%d টি কার্ডের সময় পুনঃনির্ধারণ করুন</item>
     </plurals>
     <plurals name="reschedule_card_dialog_interval">
         <item quantity="one">Current interval: %d day</item>
         <item quantity="other">Current interval: %d days</item>
     </plurals>
-    <string name="reschedule_card_dialog_message">Reschedule for review in x days</string>
+    <string name="reschedule_card_dialog_message">কার্ডের পুনরাব্রিত্তির জন্য সময় নির্ধারণ করুন
+ </string>
     <plurals name="reschedule_cards_dialog_acknowledge">
         <item quantity="one">%d card rescheduled</item>
         <item quantity="other">%d cards rescheduled</item>
@@ -94,6 +95,7 @@
     <string name="answering_error_title">Database error</string>
     <string name="answering_error_message">Writing to the collection failed. The database could be corrupt or there may not to be enough empty space on disk.\n\nIf this happens more often, try checking the database, repairing the collection or restoring it from a backup. Touch “options” for that.\n\Or it could be an AnkiDroid bug as well; please report the error so that we can check this.</string>
     <string name="answering_error_report">Report error</string>
+    <string name="storage_full_message">There is not enough free storage space to open AnkiDroid. Free up some space to continue. </string>
     <string name="repair_deck_dialog">Do you really want to try to repair the database?\n\nBefore starting the attempt, a copy will be created in subfolder “%s”.</string>
     <string name="intent_aedict_empty">Category “default” is empty</string>
     <string name="intent_aedict_category">To add cards to AnkiDroid remove all Notepad categories or add one named “default”</string>
@@ -115,16 +117,18 @@
         <item quantity="one">Cards imported: %2$d</item>
         <item quantity="other">Files imported: %1$d\nTotal cards imported: %2$d</item>
     </plurals>
-    <string name="sd_card_full_title">SD card full</string>
-    <string name="sd_card_almost_full_title">SD card almost full</string>
-    <string name="no_space_to_downgrade_title">No space</string>
-    <string name="no_space_to_downgrade_content">AnkiDroid needs %s free storage space to continue. Please clear some space</string>
+    <string name="storage_full_title">Storage full</string>
+    <string name="storage_almost_full_title">Storage almost full</string>
+    <string name="no_space_to_downgrade_title" tools:ignore="UnusedResources">No space</string>
+    <string name="no_space_to_downgrade_content" tools:ignore="UnusedResources">AnkiDroid needs %s free storage space to continue. Please clear some space</string>
     <string name="restore_backup_title">Restore backup?</string>
     <string name="restore_backup">Your collection will be replaced with an older copy. Any unsaved progress will be lost.</string>
     <string name="restore_backup_choose_another">Choose another</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_ok">OK</string>
+    <string name="dialog_confirm" tools:ignore="UnusedResources">Confirm</string>
     <string name="dialog_no">No</string>
+    <string name="dialog_yes">জি</string>
     <string name="dialog_continue">Continue</string>
     <string name="dialog_processing">Processing...</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Create</string>
@@ -172,9 +176,6 @@
     <string name="multimedia_editor_failed">Failed to open Multimedia Editor</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Audio recording permission denied</string>
-    <!-- Initial collection load -->
-    <string name="collection_load_welcome_request_permissions_title">Welcome to AnkiDroid!</string>
-    <string name="collection_load_welcome_request_permissions_details">AnkiDroid requires storage permission, which we use exclusively to store your AnkiDroid collection, flashcard media and backups. Our code is open-source, written by volunteers, and trusted by millions.\n\nIf you have any questions, please access our in-app manual or visit our support forums.\n\nThank you for trying AnkiDroid!\n—AnkiDroid Development Team</string>
     <string name="mutimedia_editor_assertion_failed">Unknown error occurred displaying Advanced Editor</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid Upgraded</string>
@@ -230,6 +231,7 @@
     <string name="help_item_support_develop_ankidroid">Develop</string>
     <string name="help_item_support_rate_ankidroid">Rate</string>
     <string name="help_item_support_other_ankidroid">Other</string>
+    <string name="multimedia_editor_trans_translate">Translate</string>
     <string name="help_title_community">Community</string>
     <string name="help_item_anki_forums">Anki Forums</string>
     <string name="help_item_discord">Discord</string>
@@ -259,4 +261,16 @@
     <string name="import_csv">Text file (.txt, .csv)</string>
     <!-- Deck selection dialog -->
     <string name="cannot_create_subdeck_for_all_decks">You cannot create a subdeck for all decks</string>
+    <!-- scoped storage -->
+    <string name="backup_your_collection">Backup your collection</string>
+    <string name="backup_collection_message">You haven\'t backed up your collection in a while. You should do this now to prevent data loss</string>
+    <string name="button_backup">Backup</string>
+    <string name="button_disable_reminder">Disable reminder</string>
+    <string name="button_backup_later" comment="dismiss the \'Backup\' dialog for around 2 weeks">Later</string>
+    <string name="button_do_not_show_again" comment="permanently dismisses a dialog">Don\'t show again</string>
+    <string name="dismiss_backup_warning_title">Data loss warning</string>
+    <string name="dismiss_backup_warning_new_user">        Due to Android privacy changes, your data and automated backups will be deleted from your phone if the app is uninstalled
+    </string>
+    <string name="dismiss_backup_warning_upgrade">        Due to Android privacy changes, your data and automated backups will be inaccessible if the app is uninstalled
+    </string>
 </resources>

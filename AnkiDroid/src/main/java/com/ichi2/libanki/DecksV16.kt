@@ -29,13 +29,14 @@
     "MemberVisibilityCanBePrivate",
     "FunctionName",
     "ConvertToStringTemplate",
-    "LocalVariableName",
+    "LocalVariableName"
 )
 
 package com.ichi2.libanki
 
 import anki.collection.OpChangesWithCount
 import anki.collection.OpChangesWithId
+import anki.decks.FilteredDeckForUpdate
 import com.google.protobuf.ByteString
 import com.ichi2.libanki.Decks.Companion.ACTIVE_DECKS
 import com.ichi2.libanki.Utils.ids2str
@@ -43,13 +44,15 @@ import com.ichi2.libanki.backend.BackendUtils
 import com.ichi2.libanki.backend.exception.DeckRenameException
 import com.ichi2.libanki.utils.*
 import com.ichi2.libanki.utils.TimeManager.time
-import com.ichi2.utils.CollectionUtils
-import com.ichi2.utils.JSONArray
-import com.ichi2.utils.JSONObject
+import com.ichi2.utils.deepClone
+import com.ichi2.utils.jsonObjectIterable
+import com.ichi2.utils.longIterable
 import java8.util.Optional
 import net.ankiweb.rsdroid.RustCleanup
 import net.ankiweb.rsdroid.exceptions.BackendDeckIsFilteredException
 import net.ankiweb.rsdroid.exceptions.BackendNotFoundException
+import org.json.JSONArray
+import org.json.JSONObject
 import timber.log.Timber
 import java.util.*
 
@@ -384,7 +387,8 @@ class DecksV16(private val col: CollectionV16) :
     @Deprecated("decks.allNames() is deprecated, use .all_names_and_ids()")
     fun allNames(dyn: bool = true, force_default: bool = true): MutableList<str> {
         return this.all_names_and_ids(
-            skip_empty_default = !force_default, include_filtered = dyn
+            skip_empty_default = !force_default,
+            include_filtered = dyn
         ).map { x ->
             x.name
         }.toMutableList()
@@ -650,7 +654,7 @@ class DecksV16(private val col: CollectionV16) :
     override fun active(): LinkedList<DeckId> {
         val activeDecks: JSONArray = col.get_config_array(ACTIVE_DECKS)
         val result = LinkedList<Long>()
-        CollectionUtils.addAll(result, activeDecks.longIterable())
+        result.addAll(activeDecks.longIterable())
         return result
     }
 
@@ -901,7 +905,6 @@ class DecksV16(private val col: CollectionV16) :
         return DeckV16.Generic(this)
     }
 
-    val Deck.id: DeckId get() = this.getLong("id")
     val Deck.name: str get() = this.getString("name")
     val Deck.conf: Long get() = this.getLong("conf")
 }
@@ -909,4 +912,12 @@ class DecksV16(private val col: CollectionV16) :
 // These take and return bytes that the frontend TypeScript code will encode/decode.
 fun CollectionV16.getDeckNamesRaw(input: ByteArray): ByteArray {
     return backend.getDeckNamesRaw(input)
+}
+
+/**
+ * Gets the filtered deck with given [did]
+ * or creates a new one if [did] = 0
+ */
+fun CollectionV16.getOrCreateFilteredDeck(did: DeckId): FilteredDeckForUpdate {
+    return backend.getOrCreateFilteredDeck(did = did)
 }

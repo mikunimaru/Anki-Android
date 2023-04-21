@@ -24,7 +24,6 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.sqlite.SQLiteQueryBuilder
 import android.net.Uri
-import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import com.ichi2.anki.*
 import com.ichi2.anki.exception.ConfirmModSchemaException
@@ -41,10 +40,11 @@ import com.ichi2.libanki.sched.TreeNode
 import com.ichi2.libanki.sched.findInDeckTree
 import com.ichi2.libanki.utils.TimeManager
 import com.ichi2.utils.FileUtil.internalizeUri
-import com.ichi2.utils.JSONArray
-import com.ichi2.utils.JSONException
-import com.ichi2.utils.JSONObject
 import com.ichi2.utils.KotlinCleanup
+import com.ichi2.utils.Permissions.arePermissionsDefinedInManifest
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
@@ -205,13 +205,12 @@ class CardContentProvider : ContentProvider() {
                 col.db.query(sql, *(selectionArgs ?: arrayOf()))
             }
             NOTES -> {
-
                 /* Search for notes using the libanki browser syntax */
                 val proj = sanitizeNoteProjection(projection)
                 val query = selection ?: ""
                 val noteIds = col.findNotes(query)
                 if (noteIds.isNotEmpty()) {
-                    val sel = String.format("id in (%s)", TextUtils.join(",", noteIds))
+                    val sel = "id in (${noteIds.joinToString(",")})"
                     val sql = SQLiteQueryBuilder.buildQueryString(false, "notes", proj, sel, null, null, order, null)
                     col.db.database.query(sql)
                 } else {
@@ -219,7 +218,6 @@ class CardContentProvider : ContentProvider() {
                 }
             }
             NOTES_ID -> {
-
                 /* Direct access note with specific ID*/
                 val noteId = uri.pathSegments[1]
                 val proj = sanitizeNoteProjection(projection)
@@ -259,7 +257,6 @@ class CardContentProvider : ContentProvider() {
                 rv
             }
             MODELS_ID_TEMPLATES -> {
-
                 /* Direct access model templates */
                 val models = col.models
                 val currentModel = models.get(getModelIdFromUri(uri, col))
@@ -279,7 +276,6 @@ class CardContentProvider : ContentProvider() {
                 rv
             }
             MODELS_ID_TEMPLATES_ID -> {
-
                 /* Direct access model template with specific ID */
                 val models = col.models
                 val ord = uri.lastPathSegment!!.toInt()
@@ -411,7 +407,6 @@ class CardContentProvider : ContentProvider() {
         when (match) {
             NOTES_V2, NOTES -> throw IllegalArgumentException("Not possible to update notes directly (only through data URI)")
             NOTES_ID -> {
-
                 /* Direct access note details
                  */
                 val currentNote = getNoteFromUri(uri, col)
@@ -780,7 +775,6 @@ class CardContentProvider : ContentProvider() {
         // Find out what data the user is requesting
         return when (sUriMatcher.match(uri)) {
             NOTES -> {
-
                 /* Insert new note with specified fields and tags
                  */
                 val modelId = values!!.getAsLong(FlashCardsContract.Note.MID)
@@ -843,12 +837,12 @@ class CardContentProvider : ContentProvider() {
                     while (idx < numCards) {
                         val cardName = context!!.resources.getString(R.string.card_n_name, idx + 1)
                         val t = Models.newTemplate(cardName)
-                        t.put("qfmt", String.format("{{%s}}", allFields[0]))
+                        t.put("qfmt", "{{${allFields[0]}}}")
                         var answerField: String? = allFields[0]
                         if (allFields.size > 1) {
                             answerField = allFields[1]
                         }
-                        t.put("afmt", String.format("{{FrontSide}}\\n\\n<hr id=answer>\\n\\n{{%s}}", answerField))
+                        t.put("afmt", "{{FrontSide}}\\n\\n<hr id=answer>\\n\\n{{$answerField}}")
                         mm.addTemplateInNewModel(newModel, t)
                         idx++
                     }
@@ -1250,7 +1244,7 @@ class CardContentProvider : ContentProvider() {
     }
 
     private fun throwSecurityException(methodName: String, uri: Uri) {
-        val msg = String.format("Permission not granted for: %s", getLogMessage(methodName, uri))
+        val msg = "Permission not granted for: ${getLogMessage(methodName, uri)}"
         Timber.e("%s", msg)
         throw SecurityException(msg)
     }
@@ -1264,22 +1258,13 @@ class CardContentProvider : ContentProvider() {
     private fun hasReadWritePermission(): Boolean {
         return if (BuildConfig.DEBUG) { // Allow self-calling of the provider only in debug builds (e.g. for unit tests)
             context!!.checkCallingOrSelfPermission(FlashCardsContract.READ_WRITE_PERMISSION) == PackageManager.PERMISSION_GRANTED
-        } else context!!.checkCallingPermission(FlashCardsContract.READ_WRITE_PERMISSION) == PackageManager.PERMISSION_GRANTED
+        } else {
+            context!!.checkCallingPermission(FlashCardsContract.READ_WRITE_PERMISSION) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     /** Returns true if the calling package is known to be "rogue" and should be blocked.
-     * Calling package might be rogue if it has not declared #READ_WRITE_PERMISSION in its manifest, or if blacklisted  */
-    @Suppress("deprecation") // getPackageInfo
-    private fun knownRogueClient(): Boolean {
-        val pm = context!!.packageManager
-        return try {
-            val callingPi = pm.getPackageInfo(callingPackage!!, PackageManager.GET_PERMISSIONS)
-            if (callingPi?.requestedPermissions == null) {
-                false
-            } else !listOf(*callingPi.requestedPermissions).contains(FlashCardsContract.READ_WRITE_PERMISSION)
-        } catch (e: PackageManager.NameNotFoundException) {
-            Timber.w(e)
-            false
-        }
-    }
+     * Calling package might be rogue if it has not declared #READ_WRITE_PERMISSION in its manifest */
+    private fun knownRogueClient(): Boolean =
+        !context!!.arePermissionsDefinedInManifest(callingPackage!!, FlashCardsContract.READ_WRITE_PERMISSION)
 }

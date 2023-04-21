@@ -77,7 +77,7 @@
     <!-- Reschedule Card Dialog -->
     <plurals name="reschedule_cards_dialog_title_new">
         <item quantity="one">Herplannen %d kaart</item>
-        <item quantity="other">Reschedule %d cards</item>
+        <item quantity="other">Plannen %d kaarten</item>
     </plurals>
     <plurals name="reschedule_card_dialog_interval">
         <item quantity="one">Huidige interval: %d dag</item>
@@ -94,6 +94,7 @@
     <string name="answering_error_title">Fout in database</string>
     <string name="answering_error_message">Het schrijven naar de collectie is mislukt. De database kan corrupt zijn of er is onvoldoende opslagruimte op de schijf.\n\nAls dit vaker gebeurt, probeer de database te controleren, de collectie te herstellen of terug te zetten vanaf een back-up. Klik hiervoor op \'instellingen\'.\n\nHet kan ook een fout in AnkiDroid zijn. Gelieve de fout te melden zodat we dit kunnen controleren.</string>
     <string name="answering_error_report">Fout melden</string>
+    <string name="storage_full_message">There is not enough free storage space to open AnkiDroid. Free up some space to continue. </string>
     <string name="repair_deck_dialog">Weet u zeker dat wilt proberen de database te repareren?\n\nVoordat dit wordt geprobeerd, wordt een kopie gemaakt in de submap \'%s\'.</string>
     <string name="intent_aedict_empty">Categorie \'standaard\' is leeg</string>
     <string name="intent_aedict_category">Om kaarten aan AnkiDroid toe te voegen verwijder je alle Notepad categorieën of voeg een toe met de naam \'standaard\'</string>
@@ -112,19 +113,21 @@
     <string name="import_update_details">%1$d van de %2$d bestaande memo\'s bijgewerkt.</string>
     <string name="import_update_ignored">Sommige veranderingen zijn genegeerd omdat het memotype is veranderd</string>
     <plurals name="import_complete_message">
-        <item quantity="one">Cards imported: %2$d</item>
-        <item quantity="other">Files imported: %1$d\nTotal cards imported: %2$d</item>
+        <item quantity="one">Kaarten geïmporteerd: %2$d</item>
+        <item quantity="other">Geïmporteerde bestanden: %1$d\nTotaal kaarten: %2$d</item>
     </plurals>
-    <string name="sd_card_full_title">SD-kaart vol</string>
-    <string name="sd_card_almost_full_title">SD-kaart bijna vol</string>
-    <string name="no_space_to_downgrade_title">Geen ruimte</string>
-    <string name="no_space_to_downgrade_content">AnkiDroid vereist %s vrije ruimte om door te gaan.  Gelieve ruimte vrij maken</string>
+    <string name="storage_full_title">Opslag vol</string>
+    <string name="storage_almost_full_title">Storage almost full</string>
+    <string name="no_space_to_downgrade_title" tools:ignore="UnusedResources">Geen ruimte</string>
+    <string name="no_space_to_downgrade_content" tools:ignore="UnusedResources">AnkiDroid vereist %s vrije ruimte om door te gaan.  Gelieve ruimte vrij maken</string>
     <string name="restore_backup_title">Back-up herstellen?</string>
     <string name="restore_backup">Uw collectie zal worden vervangen door een oudere kopie. Alle niet-opgeslagen vooruitgang zal verloren gaan.</string>
     <string name="restore_backup_choose_another">Kies een ander</string>
     <string name="dialog_cancel">Annuleren</string>
     <string name="dialog_ok">OK</string>
+    <string name="dialog_confirm" tools:ignore="UnusedResources">Bevestigen</string>
     <string name="dialog_no">Nee</string>
+    <string name="dialog_yes">Ja</string>
     <string name="dialog_continue">Doorgaan</string>
     <string name="dialog_processing">Verwerking...</string>
     <string name="dialog_positive_create" comment="Create a new collection, probably erasing the previous one, may be necessary in case of error.">Maak</string>
@@ -172,9 +175,6 @@
     <string name="multimedia_editor_failed">Openen van de multimedia-editor is mislukt</string>
     <!-- Multimedia - Audio View -->
     <string name="multimedia_editor_audio_permission_denied">Toestemming voor audio-opname geweigerd</string>
-    <!-- Initial collection load -->
-    <string name="collection_load_welcome_request_permissions_title">Welkom bij AnkiDroid!</string>
-    <string name="collection_load_welcome_request_permissions_details">AnkiDroid vereist toestemming voor opslag, die uitsluitend wordt gebruikt voor het opslaan van uw AnkiDroid collectie, flashcardmedia en back-ups. Onze code is open-source, geschreven door vrijwilligers en wordt vertrouwd door miljoenen mensen.\n\nAls u vragen heeft, raadpleeg onze in-app handleiding of bezoek onze supportforums.\n\nBedankt dat u AnkiDroid heeft geprobeerd!\n—AnkiDroid ontwikkelteam</string>
     <string name="mutimedia_editor_assertion_failed">Onbekende fout opgetreden bij de weergave van de geavanceerde editor</string>
     <!-- Database Integrity Check -->
     <string name="integrity_check_startup_title">AnkiDroid geüpgraded</string>
@@ -230,6 +230,7 @@
     <string name="help_item_support_develop_ankidroid">Ontwikkelen</string>
     <string name="help_item_support_rate_ankidroid">Beoordelen</string>
     <string name="help_item_support_other_ankidroid">Overige</string>
+    <string name="multimedia_editor_trans_translate">Vertaal</string>
     <string name="help_title_community">Gemeenschap</string>
     <string name="help_item_anki_forums">Anki-forums</string>
     <string name="help_item_discord">Discord</string>
@@ -258,5 +259,17 @@
     <string name="import_collection_package">Verzamelingspakket (.colpkg)</string>
     <string name="import_csv">Tekstbestand (.txt, .csv)</string>
     <!-- Deck selection dialog -->
-    <string name="cannot_create_subdeck_for_all_decks">You cannot create a subdeck for all decks</string>
+    <string name="cannot_create_subdeck_for_all_decks">U kunt geen subset maken voor alle sets</string>
+    <!-- scoped storage -->
+    <string name="backup_your_collection">Backup your collection</string>
+    <string name="backup_collection_message">You haven\'t backed up your collection in a while. You should do this now to prevent data loss</string>
+    <string name="button_backup">Backup</string>
+    <string name="button_disable_reminder">Disable reminder</string>
+    <string name="button_backup_later" comment="dismiss the \'Backup\' dialog for around 2 weeks">Later</string>
+    <string name="button_do_not_show_again" comment="permanently dismisses a dialog">Don\'t show again</string>
+    <string name="dismiss_backup_warning_title">Data loss warning</string>
+    <string name="dismiss_backup_warning_new_user">        Due to Android privacy changes, your data and automated backups will be deleted from your phone if the app is uninstalled
+    </string>
+    <string name="dismiss_backup_warning_upgrade">        Due to Android privacy changes, your data and automated backups will be inaccessible if the app is uninstalled
+    </string>
 </resources>

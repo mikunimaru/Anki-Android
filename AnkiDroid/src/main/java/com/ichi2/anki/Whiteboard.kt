@@ -31,6 +31,7 @@ import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import com.ichi2.anki.dialogs.WhiteBoardWidthDialog
 import com.ichi2.compat.CompatHelper
 import com.ichi2.libanki.utils.Time
@@ -64,13 +65,9 @@ class Whiteboard(activity: AnkiActivity, handleMultiTouch: Boolean, inverted: Bo
     private var mSecondFingerY = 0f
     private var mSecondFingerPointerId = 0
     private var mSecondFingerWithinTapTolerance = false
-    var isCurrentlyDrawing = false
-        private set
 
-    /**
-     * @return true if the undo queue has had any strokes added to it since the last clear
-     */
-    var isUndoModeActive = false
+    var toggleStylus = false
+    var isCurrentlyDrawing = false
         private set
 
     @get:CheckResult
@@ -112,6 +109,9 @@ class Whiteboard(activity: AnkiActivity, handleMultiTouch: Boolean, inverted: Bo
     private fun handleDrawEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
+        if (event.getToolType(event.actionIndex) != MotionEvent.TOOL_TYPE_STYLUS && toggleStylus == true) {
+            return false
+        }
         return when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 drawStart(x, y)
@@ -171,14 +171,15 @@ class Whiteboard(activity: AnkiActivity, handleMultiTouch: Boolean, inverted: Bo
                 MotionEvent.ACTION_POINTER_UP -> trySecondFingerClick(event)
                 else -> false
             }
-        } else false
+        } else {
+            false
+        }
     }
 
     /**
      * Clear the whiteboard.
      */
     fun clear() {
-        isUndoModeActive = false
         mBitmap.eraseColor(0)
         mUndo.clear()
         invalidate()
@@ -253,7 +254,6 @@ class Whiteboard(activity: AnkiActivity, handleMultiTouch: Boolean, inverted: Bo
         val action = if (pm.length > 0) DrawPath(Path(mPath), paint) else DrawPoint(mX, mY, paint)
         action.apply(mCanvas)
         mUndo.add(action)
-        isUndoModeActive = true
         // kill the path so we don't double draw
         mPath.reset()
         if (mUndo.size() == 1) {
@@ -373,9 +373,9 @@ class Whiteboard(activity: AnkiActivity, handleMultiTouch: Boolean, inverted: Bo
 
     private fun saveStrokeWidth(wbStrokeWidth: Int) {
         mPaint.strokeWidth = wbStrokeWidth.toFloat()
-        val edit = AnkiDroidApp.getSharedPrefs(mAnkiActivity).edit()
-        edit.putInt("whiteBoardStrokeWidth", wbStrokeWidth)
-        edit.apply()
+        AnkiDroidApp.getSharedPrefs(mAnkiActivity).edit {
+            putInt("whiteBoardStrokeWidth", wbStrokeWidth)
+        }
     }
 
     @get:VisibleForTesting
@@ -505,8 +505,7 @@ class Whiteboard(activity: AnkiActivity, handleMultiTouch: Boolean, inverted: Bo
         }
         draw(canvas)
         val baseFileName = "Whiteboard" + TimeUtils.getTimestamp(time!!)
-        // TODO: Fix inconsistent CompressFormat 'JPEG' and file extension 'png'
-        return CompatHelper.compat.saveImage(context, bitmap, baseFileName, "png", Bitmap.CompressFormat.JPEG, 95)
+        return CompatHelper.compat.saveImage(context, bitmap, baseFileName, "jpg", Bitmap.CompressFormat.JPEG, 95)
     }
 
     @KotlinCleanup("fun interface & use SAM on callers")
@@ -521,7 +520,8 @@ class Whiteboard(activity: AnkiActivity, handleMultiTouch: Boolean, inverted: Bo
             val whiteboard = Whiteboard(context, handleMultiTouch, currentTheme.isNightMode)
             mWhiteboardMultiTouchMethods = whiteboardMultiTouchMethods
             val lp2 = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
             )
             whiteboard.layoutParams = lp2
             val fl = context.findViewById<FrameLayout>(R.id.whiteboard)

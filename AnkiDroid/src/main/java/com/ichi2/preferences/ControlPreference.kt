@@ -19,6 +19,7 @@ package com.ichi2.preferences
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import androidx.appcompat.app.AlertDialog
 import androidx.preference.ListPreference
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
@@ -36,6 +37,7 @@ import com.ichi2.anki.reviewer.MappableBinding
 import com.ichi2.anki.reviewer.MappableBinding.Companion.fromGesture
 import com.ichi2.anki.reviewer.MappableBinding.Companion.toPreferenceString
 import com.ichi2.ui.KeyPicker
+import com.ichi2.utils.*
 import java.util.*
 
 /**
@@ -49,10 +51,17 @@ import java.util.*
  * * Allow maps other than the reviewer
  */
 class ControlPreference : ListPreference {
-    @Suppress("unused") constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
-    @Suppress("unused") constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-    @Suppress("unused") constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    @Suppress("unused") constructor(context: Context) : super(context)
+    @Suppress("unused")
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+
+    @Suppress("unused")
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    @Suppress("unused")
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+    @Suppress("unused")
+    constructor(context: Context) : super(context)
 
     fun refreshEntries() {
         val entryTitles: MutableList<CharSequence> = ArrayList()
@@ -88,8 +97,9 @@ class ControlPreference : ListPreference {
     override fun callChangeListener(newValue: Any?): Boolean {
         when (val index: Int = (newValue as String).toInt()) {
             ADD_GESTURE_INDEX -> {
+                val actionName = title
                 MaterialDialog(context).show {
-                    title(R.string.binding_add_gesture)
+                    title(text = actionName.toString())
 
                     val gesturePicker = GestureSelectionDialogUtils.getGesturePicker(context)
 
@@ -114,10 +124,11 @@ class ControlPreference : ListPreference {
                 }
             }
             ADD_KEY_INDEX -> {
+                val actionName = title
                 MaterialDialog(context).show {
                     val keyPicker: KeyPicker = KeyPicker.inflate(context)
                     customView(view = keyPicker.rootLayout)
-                    title(R.string.binding_add_key)
+                    title(text = actionName.toString())
 
                     // When the user presses a key
                     keyPicker.setBindingChangedListener { binding ->
@@ -206,7 +217,7 @@ class ControlPreference : ListPreference {
     private fun showDialogToReplaceBinding(binding: MappableBinding, title: String, parentDialog: MaterialDialog) {
         val commandName = context.getString(getCommandWithBindingExceptThis(binding)!!.resourceId)
 
-        MaterialDialog(context).show {
+        AlertDialog.Builder(context).show {
             title(text = title)
             message(text = context.getString(R.string.bindings_already_bound, commandName))
             positiveButton(R.string.dialog_positive_replace) {

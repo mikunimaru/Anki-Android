@@ -19,16 +19,15 @@
 package com.ichi2.libanki
 
 import android.database.SQLException
-import android.text.TextUtils
-import android.util.Pair
 import androidx.annotation.CheckResult
 import com.ichi2.libanki.SortOrder.*
 import com.ichi2.libanki.stats.Stats
 import com.ichi2.libanki.utils.TimeManager.time
 import com.ichi2.utils.HashUtil.HashMapInit
-import com.ichi2.utils.JSONObject
 import com.ichi2.utils.KotlinCleanup
+import com.ichi2.utils.jsonObjectIterable
 import net.ankiweb.rsdroid.RustCleanup
+import org.json.JSONObject
 import timber.log.Timber
 import java.text.Normalizer
 import java.util.*
@@ -45,7 +44,7 @@ class Finder(private val col: Collection) {
     @CheckResult
     private fun _findCards(
         query: String,
-        _order: SortOrder,
+        _order: SortOrder
     ): List<Long> {
         val tokens = _tokenize(query)
         val res1 = _where(tokens)
@@ -61,7 +60,7 @@ class Finder(private val col: Collection) {
         val sql = _query(preds, order)
         Timber.v("Search query '%s' is compiled as '%s'.", query, sql)
         try {
-            col.db.database.query(sql, args).use { cur ->
+            col.db.database.query(sql, args ?: emptyArray()).use { cur ->
                 while (cur.moveToNext()) {
                     res.add(cur.getLong(0))
                 }
@@ -106,25 +105,22 @@ class Finder(private val col: Collection) {
     fun findNotes(query: String, returnCid: Boolean): List<Long> {
         val tokens = _tokenize(query)
         val res1 = _where(tokens)
-        var preds = res1.first
         val args = res1.second
         val res: MutableList<Long> = ArrayList()
-        if (preds == null) {
-            return res
-        }
-        preds = if ("" == preds) {
-            "1"
-        } else {
-            "($preds)"
-        }
-        val sql: String
-        sql = if (returnCid) {
+        val preds = res1.first?.let { first ->
+            if ("" == first) {
+                "1"
+            } else {
+                "($first)"
+            }
+        } ?: return res
+        val sql: String = if (returnCid) {
             "select min(c.id) from cards c, notes n where c.nid=n.id and $preds group by n.id"
         } else {
             "select distinct(n.id) from cards c, notes n where c.nid=n.id and $preds"
         }
         try {
-            col.db.database.query(sql, args).use { cur ->
+            col.db.database.query(sql, args ?: emptyArray()).use { cur ->
                 while (cur.moveToNext()) {
                     res.add(cur.getLong(0))
                 }
@@ -221,7 +217,7 @@ class Finder(private val col: Collection) {
             // failed command?
             @Suppress("NAME_SHADOWING")
             var txt = txt
-            if (TextUtils.isEmpty(txt)) {
+            if (txt.isNullOrEmpty()) {
                 // if it was to be negated then we can just ignore it
                 if (isnot) {
                     isnot = false
@@ -299,7 +295,9 @@ class Finder(private val col: Collection) {
         }
         return if (s.bad) {
             Pair(null, null)
-        } else Pair(s.q, args.toTypedArray())
+        } else {
+            Pair(s.q, args.toTypedArray())
+        }
     }
 
     /**
@@ -321,7 +319,7 @@ class Finder(private val col: Collection) {
         }
         if (order is AfterSqlOrderBy) {
             val query = order.customOrdering
-            return if (TextUtils.isEmpty(query)) {
+            return if (query.isEmpty()) {
                 _order(NoOrdering())
             } else {
                 // custom order string provided
@@ -447,7 +445,7 @@ class Finder(private val col: Collection) {
         // ease
         var ease = ""
         if (r.size > 1) {
-            if (!Arrays.asList("1", "2", "3", "4").contains(r[1])) {
+            if (!listOf("1", "2", "3", "4").contains(r[1])) {
                 return null
             }
             ease = "and ease=" + r[1]
@@ -491,7 +489,7 @@ class Finder(private val col: Collection) {
             return null
         }
         // is prop valid?
-        if (!Arrays.asList("due", "ivl", "reps", "lapses", "ease").contains(prop)) {
+        if (!listOf("due", "ivl", "reps", "lapses", "ease").contains(prop)) {
             return null
         }
         // query
@@ -521,19 +519,25 @@ class Finder(private val col: Collection) {
     private fun _findNids(`val`: String): String? {
         return if (fNidsPattern.matcher(`val`).find()) {
             null
-        } else "n.id in ($`val`)"
+        } else {
+            "n.id in ($`val`)"
+        }
     }
 
     private fun _findCids(`val`: String): String? {
         return if (fNidsPattern.matcher(`val`).find()) {
             null
-        } else "c.id in ($`val`)"
+        } else {
+            "c.id in ($`val`)"
+        }
     }
 
     private fun _findMid(`val`: String): String? {
         return if (fMidPattern.matcher(`val`).find()) {
             null
-        } else "n.mid = $`val`"
+        } else {
+            "n.mid = $`val`"
+        }
     }
 
     private fun _findModel(`val`: String): String {
@@ -636,7 +640,7 @@ class Finder(private val col: Collection) {
                 }
             }
         }
-        return TextUtils.join(" or ", lims.toTypedArray())
+        return lims.toTypedArray().joinToString(" or ")
     }
 
     private fun _findField(field: String, `val`: String): String? {
@@ -700,7 +704,9 @@ class Finder(private val col: Collection) {
         }
         return if (nids.isEmpty()) {
             "0"
-        } else "n.id in " + Utils.ids2str(nids)
+        } else {
+            "n.id in " + Utils.ids2str(nids)
+        }
     }
 
     private fun _findDupes(`val`: String): String? {
@@ -717,7 +723,8 @@ class Finder(private val col: Collection) {
         val nids: MutableList<Long> = ArrayList()
         col.db.query(
             "select id, flds from notes where mid=? and csum=?",
-            mid, csum
+            mid,
+            csum
         ).use { cur ->
             val nid = cur.getLong(0)
             val flds = cur.getString(1)
@@ -747,13 +754,13 @@ class Finder(private val col: Collection) {
                 "select c.id from cards c, notes n where c.nid=n.id and "
             }
             // combine with preds
-            sql += if (!TextUtils.isEmpty(preds)) {
+            sql += if (preds.isNotEmpty()) {
                 "($preds)"
             } else {
                 "1"
             }
             // order
-            if (!TextUtils.isEmpty(order)) {
+            if (order.isNotEmpty()) {
                 sql += " $order"
             }
             return sql
@@ -783,6 +790,7 @@ class Finder(private val col: Collection) {
         ): Int {
             @Suppress("NAME_SHADOWING")
             var src = src
+
             @Suppress("NAME_SHADOWING")
             var dst = dst
             val mmap: MutableMap<Long, Int> = HashMap()
@@ -924,7 +932,7 @@ class Finder(private val col: Collection) {
                     var `val` = flds[ord]
                     `val` = Utils.stripHTMLMedia(`val`)
                     // empty does not count as duplicate
-                    if (TextUtils.isEmpty(`val`)) {
+                    if (`val`.isEmpty()) {
                         continue
                     }
                     if (!vals.containsKey(`val`)) {
@@ -932,7 +940,7 @@ class Finder(private val col: Collection) {
                     }
                     vals[`val`]!!.add(nid)
                     if (vals[`val`]!!.size == 2) {
-                        dupes.add(Pair(`val`, vals[`val`]))
+                        dupes.add(Pair(`val`, vals[`val`]!!))
                     }
                 }
             }
