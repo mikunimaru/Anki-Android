@@ -321,6 +321,7 @@
     <!-- Deck Picker -->
     <string name="deck_picker_failed_deck_load">Carrigamentu de su matzu ‘%s’ fallidu</string>
     <string name="search_decks">Chirca matzos</string>
+    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">Show migration progress</string>
     <string name="ankidroid_init_failed_webview_title">Faddina fatale</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid si basat in subrade sa WebView de sistema chi no est a disponimentu. Custu podet acontèssere si su sistema est installende atualizatziones. Torra a proare a pustis de una paja de minutos.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
@@ -385,8 +386,6 @@
     <string name="scoped_storage_postpone">Postìtzipa</string>
     <string name="scoped_storage_migrate">Tràmuda</string>
     <string name="search_card_js_api_no_results">Sa chirca no at frunidu resurtados</string>
-    <string name="sync_impossible_during_migration">Sa sincronizatzione est inabilitada finas a sa fine de sa tràmuda.\n
-        %1$d documentos multimediales galu de tramudare.</string>
     <string name="migration_update_request_requires_media_sync" commnet="use HTML linebreaks in this string">AnkiDroid needs to migrate its storage to comply with Android 10 security policy.\n\nThis will improve media sync performance.&lt;br&gt;&lt;br&gt;During the migration you will be unable to sync and some settings will be disabled. A media sync will occur before the migration starts to keep your data safe.&lt;br&gt;&lt;br&gt;It is safe to use or close AnkiDroid during this process.</string>
     <string name="start_migration_progress_message">Incumintzende sa tràmuda de sa memòria. As a pòdere sighire a impreare AnkiDroid luego.</string>
     <string name="migration_part_1_done_resume">Podes sighire a impreare AnkiDroid.

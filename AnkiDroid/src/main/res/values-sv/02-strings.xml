@@ -315,6 +315,7 @@
     <!-- Deck Picker -->
     <string name="deck_picker_failed_deck_load">Det gick inte att läsa in kortleken ‘%s’</string>
     <string name="search_decks">Sök kortlekar</string>
+    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">Show migration progress</string>
     <string name="ankidroid_init_failed_webview_title">Kritiskt fel</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid använder sig av System WebView vilket inte är tillgängligt. Detta kan hända om systemet håller på att installera uppdateringar. Försök igen om några minuter.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
@@ -379,8 +380,6 @@
     <string name="scoped_storage_postpone">Senarelägg</string>
     <string name="scoped_storage_migrate">Migrera</string>
     <string name="search_card_js_api_no_results">Sökning gav inga resultat</string>
-    <string name="sync_impossible_during_migration">Sync is disabled until the migration is done.\n
-        %1$d media files left to migrate.</string>
     <string name="migration_update_request_requires_media_sync" commnet="use HTML linebreaks in this string">AnkiDroid needs to migrate its storage to comply with Android 10 security policy.\n\nThis will improve media sync performance.&lt;br&gt;&lt;br&gt;During the migration you will be unable to sync and some settings will be disabled. A media sync will occur before the migration starts to keep your data safe.&lt;br&gt;&lt;br&gt;It is safe to use or close AnkiDroid during this process.</string>
     <string name="start_migration_progress_message">Starting storage migration. You may resume using AnkiDroid shortly.</string>
     <string name="migration_part_1_done_resume">You may resume using AnkiDroid.

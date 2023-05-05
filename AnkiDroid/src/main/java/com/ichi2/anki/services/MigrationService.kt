@@ -19,6 +19,7 @@ package com.ichi2.anki.services
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.text.format.Formatter
 import androidx.core.app.NotificationCompat
@@ -36,6 +37,7 @@ import com.ichi2.anki.servicelayer.scopedstorage.MigrateEssentialFiles
 import com.ichi2.anki.servicelayer.scopedstorage.MoveConflictedFile
 import com.ichi2.anki.servicelayer.scopedstorage.migrateuserdata.MigrateUserData
 import com.ichi2.compat.CompatHelper
+import com.ichi2.preferences.getOrSetLong
 import com.ichi2.utils.FileUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,11 +45,34 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import java.io.File
+import kotlin.math.max
 import kotlin.properties.ReadOnlyProperty
 
 /**
  * A foreground service responsible for migrating the collection
  * from a public directory to an app-private directory.
+ *
+ * Notes on behavior:
+ *
+ *   * To show a progress bar, we first calculate the total size of the data to be transferred,
+ *     and then, as the files are transferred by recursing into the directories,
+ *     we add the size of each transferred file to a sum of transferred files.
+ *     As the number of files and file sizes can change after the initial calculation,
+ *     we can end up with the final ratio of transferred size to the estimate
+ *     being less or greater to 1. This, however, is very unlikely, so we simply
+ *     make sure than in the UI code transferred size never exceeds the estimate.
+ *
+ *   * As the app can be killed at any time, to make sure that the service shows consistent
+ *     progress after it is restarted, we save the initial size of data to be transferred.
+ *     When resuming migration, we can calculate transferred size
+ *     by subtracting the size of remaining data from the stored value.
+ *
+ *   * We are not rate-limiting publication of the notifications in the code,
+ *     as the files do not seem to be transferred so fast as to cause any problems.
+ *     The system performs its own rate-limiting, dropping updates if they are published too quickly.
+ *     An exception is is made for "completed progress notifications". See:
+ *     https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/notification/NotificationManagerService.java
+ *     https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/notification/RateEstimator.java
  *
  * TODO BEFORE-RELEASE Decide if this needs a wake lock.
  *   Copying files might take a long time.
@@ -57,6 +82,14 @@ import kotlin.properties.ReadOnlyProperty
  *   A wake lock might make things proceed faster, but it also means more battery drain.
  */
 class MigrationService : ServiceWithALifecycleScope(), ServiceWithASimpleBinder<MigrationService> {
+    companion object {
+        /**
+         * Preference listing the total number of bytes that [MigrationService] expects to transfer.
+         *
+         * @see [MigrationService.getOrSetTotalTransferSize]
+         */
+        private const val TOTAL_BYTES_TO_TRANSFER_KEY: String = "migrationServiceTotalBytes"
+    }
 
     sealed interface Progress {
         object CalculatingTransferSize : Progress
@@ -99,12 +132,18 @@ class MigrationService : ServiceWithALifecycleScope(), ServiceWithASimpleBinder<
                 migrateUserDataTask = MigrateUserData
                     .createInstance(AnkiDroidApp.getSharedPrefs(this@MigrationService))
 
-                val totalBytesToTransfer = getRemainingTransferSize(migrateUserDataTask)
-                var transferredBytes = 0L
+                val remainingTransferSize = getRemainingTransferSize(migrateUserDataTask)
+                val totalBytesToTransfer = getOrSetTotalTransferSize(valueToPersistIfNotCalculated = remainingTransferSize)
+                var transferredBytes = max(totalBytesToTransfer - remainingTransferSize, 0)
 
                 migrateUserDataTask.migrateFiles(progressListener = { deltaTransferredBytes ->
                     transferredBytes += deltaTransferredBytes
-                    flowOfProgress.tryEmit(Progress.Transferring(transferredBytes, totalBytesToTransfer))
+                    flowOfProgress.tryEmit(
+                        Progress.Transferring(
+                            transferredBytes = transferredBytes.coerceIn(0, totalBytesToTransfer),
+                            totalBytes = totalBytesToTransfer
+                        )
+                    )
                 })
 
                 // TODO BEFORE-RELEASE Consolidate setting/removing migration-related preferences.
@@ -116,6 +155,7 @@ class MigrationService : ServiceWithALifecycleScope(), ServiceWithASimpleBinder<
                 AnkiDroidApp.getSharedPrefs(this@MigrationService).edit {
                     remove(PREF_MIGRATION_DESTINATION)
                     remove(PREF_MIGRATION_SOURCE)
+                    remove(TOTAL_BYTES_TO_TRANSFER_KEY)
                 }
 
                 flowOfProgress.emit(Progress.Success)
@@ -129,13 +169,6 @@ class MigrationService : ServiceWithALifecycleScope(), ServiceWithASimpleBinder<
             flowOfProgress.collect { progress ->
                 startForeground(2, makeMigrationProgressNotification(progress))
 
-                // TODO BEFORE-RELEASE Replace the toast with a dialog that is shown either
-                //   * now, if deck picker is shown,
-                //   * whenever the deck picker is shown, if not, perhaps even after app death.
-                if (progress is Progress.Success) {
-                    UIUtils.showThemedToast(this@MigrationService, R.string.migration_successful_message, true)
-                }
-
                 if (progress is Progress.Done) {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                         @Suppress("DEPRECATION")
@@ -145,6 +178,15 @@ class MigrationService : ServiceWithALifecycleScope(), ServiceWithASimpleBinder<
                     }
 
                     stopSelf()
+
+                    when (progress) {
+                        is Progress.Success ->
+                            AnkiDroidApp.instance.activityAgnosticDialogs
+                                .showOrScheduleStorageMigrationSucceededDialog()
+                        is Progress.Failure ->
+                            AnkiDroidApp.instance.activityAgnosticDialogs
+                                .showOrScheduleStorageMigrationFailedDialog(progress.e)
+                    }
                 }
             }
         }
@@ -152,12 +194,6 @@ class MigrationService : ServiceWithALifecycleScope(), ServiceWithASimpleBinder<
         return START_STICKY
     }
 
-    // TODO BEFORE-RELEASE! This is inadequate, instead of calculating the remaining transfer size
-    //   every time migration is started,
-    //   we should be calculating this size only when starting migration for the first time,
-    //   and keeping track of the transferred and the remaining files.
-    // TODO BEFORE-RELEASE! Between this call and the subsequent migration
-    //   the contents of the folder can change. This can lead to inconsistent readings in the UI.
     private fun getRemainingTransferSize(task: MigrateUserData): Long {
         val ignoredFiles = MigrateEssentialFiles.iterateEssentialFiles(task.source) +
             File(task.source.directory, MoveConflictedFile.CONFLICT_DIRECTORY)
@@ -166,6 +202,17 @@ class MigrationService : ServiceWithALifecycleScope(), ServiceWithASimpleBinder<
         val remainingSpaceToMigrate = folderSize - ignoredSpace
         Timber.d("folder size: %d, safe: %d, remaining: %d", folderSize, ignoredSpace, remainingSpaceToMigrate)
         return remainingSpaceToMigrate
+    }
+
+    /**
+     * Returns the total number of bytes which the MigrationService expects to transfer
+     * @param valueToPersistIfNotCalculated The value to save to storage if the transfer size has not previously been calculated
+     */
+    private fun getOrSetTotalTransferSize(valueToPersistIfNotCalculated: Long): Long {
+        // The first time that this is accessed will be on the first run of the service, so calculate the remaining transfer size.
+        // On subsequent runs, return the value we stored in Shared Preferences
+        return AnkiDroidApp.getSharedPrefs(this)
+            .getOrSetLong(TOTAL_BYTES_TO_TRANSFER_KEY) { valueToPersistIfNotCalculated }
     }
 
     override fun onBind(intent: Intent) = SimpleBinder(this)
@@ -215,8 +262,10 @@ private fun Context.makeMigrationProgressNotification(progress: MigrationService
             builder.setContentText(getString(R.string.migration_successful_message))
         }
 
-        // TODO BEFORE-RELEASE Add a “Get help” button
         is MigrationService.Progress.Failure -> {
+            val url = getString(R.string.migration_failed_help_url)
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            val pendingIntent = CompatHelper.compat.getImmutableActivityIntent(this, 0, intent, 0)
             val copyDebugInfoIntent = IntentHandler
                 .copyStringToClipboardIntent(this, progress.e.stackTraceToString())
             val copyDebugInfoPendingIntent = CompatHelper.compat
@@ -224,6 +273,7 @@ private fun Context.makeMigrationProgressNotification(progress: MigrationService
 
             builder.addAction(R.drawable.ic_star_notify, getString(R.string.feedback_copy_debug), copyDebugInfoPendingIntent)
             builder.setContentText(getString(R.string.migration__failed, progress.e))
+            builder.addAction(0, getString(R.string.help), pendingIntent)
         }
     }
 
