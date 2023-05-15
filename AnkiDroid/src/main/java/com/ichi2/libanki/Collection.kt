@@ -85,6 +85,9 @@ open class Collection(
      * @return The context that created this Collection.
      */
     val context: Context,
+    /**
+     *  @param Path The path to the collection.anki2 database. Must be unicode and openable with [File].
+     */
     val path: String,
     var server: Boolean,
     private var debugLog: Boolean, // Not in libAnki.
@@ -419,15 +422,13 @@ open class Collection(
      * Disconnect from DB.
      */
     @Synchronized
-    @KotlinCleanup("remove/rename val db")
     fun close(save: Boolean = true, downgrade: Boolean = false, forFullSync: Boolean = false) {
         if (!dbClosed) {
             try {
-                val db = db.database
                 if (save) {
-                    this.db.executeInTransaction { this.save() }
+                    db.executeInTransaction { this.save() }
                 } else {
-                    DB.safeEndInTransaction(db)
+                    db.safeEndInTransaction()
                 }
             } catch (e: RuntimeException) {
                 Timber.w(e)

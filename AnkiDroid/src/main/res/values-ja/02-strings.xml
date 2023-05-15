@@ -70,7 +70,7 @@
     <string name="clear_whiteboard">ホワイトボードの内容を消去</string>
     <string name="replay_audio">音声・動画を再生</string>
     <string name="leech_suspend_notification">このカードに \"leech\"  (無駄、習得困難) というタグを付け、学習を休止しました</string>
-    <string name="leech_notification">このカードに \"leech\" （無駄、習得困難） というタグを付けました</string>
+    <string name="leech_notification">このカードに \"leech\" (無駄、習得困難) というタグを付けました</string>
     <string name="corrupt_font">使用できないフォントファイル %s</string>
     <string name="webview_crash_unknown">原因不明のエラー</string>
     <string name="webview_crash_unknwon_detailed">これはWebViewの内部エラーによって引き起こされました。</string>
@@ -117,9 +117,9 @@
     <string name="discard_unsaved_changes">閉じて現在の入力を破棄しますか？</string>
     <string name="note_editor_no_cards_created">カードが作成されていません。他のフィールドにも入力してください。</string>
     <string name="note_editor_no_first_field">最初のフィールドが空です</string>
-    <string name="note_editor_no_cloze_delations">このノートタイプには穴埋め問題が含まれている必要があります</string>
+    <string name="note_editor_no_cloze_delations">このノートタイプには穴埋め箇所が含まれている必要があります</string>
     <string name="note_editor_no_cards_created_all_fields">現在のノートタイプではカードを生成できませんでした。\n別のノートタイプを選択するか、「カード」をタップしてフィールドを挿入してください。</string>
-    <string name="note_editor_insert_cloze_no_cloze_note_type">穴埋め部分の挿入は、穴埋めタイプのノートで機能します</string>
+    <string name="note_editor_insert_cloze_no_cloze_note_type">穴埋め箇所を示す文字列は、Cloze (穴埋め問題) 型のノートタイプでのみ機能します</string>
     <string name="saving_facts">ノートを保存しています</string>
     <string name="saving_model">ノートタイプを保存しています</string>
     <string name="save">保存</string>
@@ -128,7 +128,7 @@
     <string name="reordering_cards">カードを並べ替えています...</string>
     <string name="field_remapping">%1$s (\'%2$s\'から)</string>
     <string name="confirm_map_cards_to_nothing">割り当て先のないカードは削除されます。カードがすべて削除されたノートは、そのノート自体が削除されます。続行してもよろしいですか？</string>
-    <string name="timebox_reached_title">目標時間の学習達成</string>
+    <string name="timebox_reached_title">タイムボックス時間経過</string>
     <plurals name="timebox_reached">
         <item quantity="other">%2$sで%1$d枚のカードを学習しました</item>
     </plurals>
@@ -138,7 +138,7 @@
     </plurals>
     <string name="fact_adder_intent_title" comment="Label of the \'Add Note\' window. This title can\'t be seen in AnkiDroid directly.">AnkiDroid カード</string>
     <string name="note_editor_copy_note">ノートをコピー</string>
-    <string name="card_editor_reposition_card">新規カードの表示順序を変更</string>
+    <string name="card_editor_reposition_card">導入順序を変更</string>
     <string name="card_editor_reset_card">学習履歴をリセット</string>
     <string name="card_editor_reschedule_card" comment="Action to reschedule a card">スケジュールを変更</string>
     <string name="card_editor_preview_card" comment="Button offering to preview some card(s)">プレビュー</string>
@@ -284,7 +284,7 @@
     <string name="white_board_image_save_failed">ホワイトボード画像の保存に失敗しました。 %s</string>
     <string name="white_board_image_saved">ホワイトボードの画像を \"%s\" に保存しました</string>
     <string name="title_whiteboard_pen_color">ホワイトボードペンの色を選択</string>
-    <string name="title_whiteboard_editor">ホワイトボードエディター</string>
+    <string name="title_whiteboard_editor">ホワイトボードエディタ</string>
     <string name="user_is_a_robot">自動テストが検出されました。人間による操作の場合は、AnkiDroidサポートにお問い合わせください。</string>
     <!-- JS api -->
     <string name="api_version_developer_contact">このカードはサポートされない機能を使用しています。開発者 %1$sに連絡するか、Wikiで確認してください。 %2$s</string>
@@ -315,7 +315,7 @@
     <string name="insert_heading">見出し</string>
     <string name="format_font_size">フォントサイズ変更</string>
     <string name="insert_mathjax">MathJax式を挿入</string>
-    <string name="insert_cloze">穴埋め部分の挿入</string>
+    <string name="insert_cloze">穴埋め箇所</string>
     <string name="note_editor_toolbar_icon">ボタンに表示する文字</string>
     <string name="before_text">選択部分の前のHTML</string>
     <string name="after_text">選択部分の後のHTML</string>
@@ -405,4 +405,5 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">タップしてストレージ移行を開始</string>
     <string name="media_sync_required_title">メディアの同期が必要です</string>
     <string name="media_sync_unavailable_message">メディアの同期が設定で無効になっています。続行する前に、まだ同期していないメディアを同期することによってバックアップをとってください</string>
+    <string name="remember_sync_metered_checkbox_msg">今後確認しない (この警告は「同期」の設定で再度有効にできます)</string>
 </resources>
