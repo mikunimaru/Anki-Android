@@ -51,6 +51,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.lang.ref.WeakReference
+import java.time.Instant
 import java.util.*
 
 @KotlinCleanup("IDE Lint")
@@ -1023,19 +1024,21 @@ open class SchedV2(col: Collection) : AbstractSched(col) {
     // sub-day learning
     // Overridden: a single kind of queue in V1
     protected open fun _fillLrn(): Boolean {
-        if (mHaveCounts && mLrnCount == 0) {
+        reset()
+
+        if (mLrnCount == 0) {
             return false
         }
-        if (!mLrnQueue.isEmpty) {
-            return true
-        }
+        // if (!mLrnQueue.isEmpty) {
+        //     return true
+        // }
         val cutoff = time.intTime() + col.get_config_long("collapseTime")
         mLrnQueue.clear()
         col
             .db
             .query(
-                "SELECT due, id FROM cards WHERE did IN " + _deckLimit() + " AND queue IN (" + Consts.QUEUE_TYPE_LRN + ", " + Consts.QUEUE_TYPE_PREVIEW + ") AND due < ?" +
-                    " AND id != ? LIMIT ?",
+                "SELECT due, id, mod FROM cards WHERE did IN " + _deckLimit() + " AND queue IN (" + Consts.QUEUE_TYPE_LRN + ", " + Consts.QUEUE_TYPE_PREVIEW + ") AND due < ?" +
+                    " AND id != ? ORDER BY " + "mod = (SELECT MAX(mod) FROM cards), " + Instant.now().toEpochMilli().toString() + " < " + "due" + "  ,due - mod, due LIMIT ?",
                 cutoff,
                 currentCardId(),
                 mReportLimit
@@ -1045,7 +1048,7 @@ open class SchedV2(col: Collection) : AbstractSched(col) {
                     mLrnQueue.add(cur.getLong(0), cur.getLong(1))
                 }
                 // as it arrives sorted by did first, we need to sort it
-                mLrnQueue.sort()
+                // mLrnQueue.sort()
                 return !mLrnQueue.isEmpty
             }
     }
@@ -1571,8 +1574,8 @@ open class SchedV2(col: Collection) : AbstractSched(col) {
             val idName = if (allowSibling) "id" else "nid"
             val id = if (allowSibling) currentCardId() else currentCardNid()
             col.db.query(
-                "SELECT id FROM cards WHERE did in " + _deckLimit() + " AND queue = " + Consts.QUEUE_TYPE_REV + " AND due <= ? AND " + idName + " != ?" +
-                    " ORDER BY due, random()  LIMIT ?",
+                "SELECT id, ivl, due FROM ( SELECT id, ivl, due FROM cards WHERE did in " + _deckLimit() + " AND queue = " + Consts.QUEUE_TYPE_REV + " AND due <= ? AND " + idName + " != ?" +
+                    " ORDER BY ivl, due DESC, random() LIMIT ? ) AS subQuery ORDER BY ivl DESC, due, random()",
                 mToday!!,
                 id,
                 lim
