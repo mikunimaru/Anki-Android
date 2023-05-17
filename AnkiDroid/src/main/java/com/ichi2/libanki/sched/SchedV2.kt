@@ -1024,7 +1024,9 @@ open class SchedV2(col: Collection) : AbstractSched(col) {
     // sub-day learning
     // Overridden: a single kind of queue in V1
     protected open fun _fillLrn(): Boolean {
-        if (mHaveCounts && mLrnCount == 0) {
+        resetCounts(false)
+
+        if (mLrnCount == 0) {
             return false
         }
         // if (!mLrnQueue.isEmpty) {
@@ -1053,7 +1055,7 @@ open class SchedV2(col: Collection) : AbstractSched(col) {
 
     // Overridden: no _maybeResetLrn in V1
     protected open fun _getLrnCard(collapse: Boolean): Card? {
-        _maybeResetLrn(mLrnCount == 0)
+        _maybeResetLrn(collapse && mLrnCount == 0)
         if (_fillLrn()) {
             var cutoff = time.intTime()
             if (collapse) {
@@ -1572,8 +1574,8 @@ open class SchedV2(col: Collection) : AbstractSched(col) {
             val idName = if (allowSibling) "id" else "nid"
             val id = if (allowSibling) currentCardId() else currentCardNid()
             col.db.query(
-                "SELECT id, ivl FROM cards WHERE did in " + _deckLimit() + " AND queue = " + Consts.QUEUE_TYPE_REV + " AND due <= ? AND " + idName + " != ?" +
-                    " ORDER BY ivl, due, random() LIMIT ?",
+                "SELECT id, ivl, due FROM ( SELECT id, ivl, due FROM cards WHERE did in " + _deckLimit() + " AND queue = " + Consts.QUEUE_TYPE_REV + " AND due <= ? AND " + idName + " != ?" +
+                    " ORDER BY ivl, due DESC, random() LIMIT ? ) AS subQuery ORDER BY ivl DESC, due, random()",
                 mToday!!,
                 id,
                 lim
