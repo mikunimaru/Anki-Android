@@ -1024,7 +1024,7 @@ open class SchedV2(col: Collection) : AbstractSched(col) {
     // sub-day learning
     // Overridden: a single kind of queue in V1
     protected open fun _fillLrn(): Boolean {
-        resetCounts(false)
+        reset()
 
         if (mLrnCount == 0) {
             return false
