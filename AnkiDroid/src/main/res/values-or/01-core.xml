@@ -81,8 +81,8 @@
     <string name="no_cards_placeholder_description">+ ଆଇକନ୍ ଵ୍ୟଵହାର କରି\nପତ୍ର ଯୋଡ଼ିବା ଆରମ୍ଭ କରନ୍ତୁ।</string>
     <!-- The deck picker via AnkiStatsTaskHandler.java -->
     <plurals name="studied_cards_today">
-        <item quantity="one">ଆଜି %2$s ରେ %1$dଟିଏ ପତ୍ର ଅଧ୍ୟୟନ କଲେ</item>
-        <item quantity="other">ଆଜି %2$s ରେ %1$dଟି ପତ୍ର ଅଧ୍ୟୟନ କଲେ</item>
+        <item quantity="one">ଆଜି %2$s‌ରେ %1$dଟିଏ ପତ୍ର ଅଧ୍ୟୟନ କଲେ</item>
+        <item quantity="other">ଆଜି %2$s‌ରେ %1$dଟି ପତ୍ର ଅଧ୍ୟୟନ କଲେ</item>
     </plurals>
     <!-- flashcard_portrait.xml -->
     <string name="type_answer_hint">ଉତ୍ତର ଟାଇପ୍ କରନ୍ତୁ</string>
@@ -101,7 +101,7 @@
     <string name="move_all_to_deck">ସବୁ ଏହି ତାସଖଣ୍ଡକୁ ନେଇ ଯାଆନ୍ତୁ</string>
     <string name="unbury">ସ୍ଥଗିତରୁ ଫେରାଇ ଆଣ</string>
     <string name="rename_deck">ତାସଖଣ୍ଡ ନାମ ବଦଳାନ୍ତୁ</string>
-    <string name="create_shortcut">ସର୍ଟକଟ୍‌ ସୃଷ୍ଟି କରନ୍ତୁ</string>
+    <string name="create_shortcut">ସର୍ଟ୍‌କଟ୍ ସୃଷ୍ଟି କରିବା</string>
     <string name="browse_cards">ପତ୍ରଗୁଡ଼ିକ ଖେଳାଇବା</string>
     <string name="menu_add" comment="A generic add button. Please inform us if you need more specific strings">ଯୋଡ଼ନ୍ତୁ</string>
     <string name="menu_add_note">ନୋଟ୍ ଯୋଡ଼ନ୍ତୁ</string>
@@ -223,7 +223,7 @@
     <string name="more_information">ଅଧିକ ସୂଚନା</string>
     <string name="no_field">\'{{%1$s}}\' ମିଳିଲା, କିନ୍ତୁ \'%1$s\' ନାମକ କୌଣସି କ୍ଷେତ୍ର ନାହିଁ।</string>
     <string name="closed_tag_not_open">\'{{/%1$s}}\' ମିଳିଲା, କିନ୍ତୁ \'{{#%1$s}}\' କିମ୍ବା \'{{^%1$s}}\' ନିଖୋଜ ଅଛି।</string>
-    <string name="missing_closing_bracket">\'%s\' ରେ \'}}\' ନିଖୋଜ ଅଛି।</string>
+    <string name="missing_closing_bracket">\'%s\'ରେ \'}}\' ନିଖୋଜ ଅଛି।</string>
     <string name="open_tag_not_closed">\'{{%s}}\' ନିଖୋଜ ଅଛି।</string>
     <string name="wrong_tag_closed">\'{{/%1$s}}\' ମିଳିଲା, କିନ୍ତୁ \'{{/%2$s}}\' ଆଶା କରାଯାଇଥିଲା</string>
     <string name="filter_error">ଶୋଧକ %s ରେ ତ୍ରୁଟି</string>

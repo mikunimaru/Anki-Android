@@ -66,7 +66,7 @@ class ActivityExportingDelegate(private val activity: AnkiActivity, private val 
     private lateinit var mExportFileName: String
 
     fun showExportDialog(params: ExportDialogParams) {
-        if (ScopedStorageService.userMigrationIsInProgress(activity)) {
+        if (ScopedStorageService.mediaMigrationIsInProgress(activity)) {
             activity.showSnackbar(R.string.functionality_disabled_during_storage_migration, Snackbar.LENGTH_SHORT)
             return
         }
@@ -180,9 +180,11 @@ class ActivityExportingDelegate(private val activity: AnkiActivity, private val 
             showThemedToast(activity, activity.resources.getString(R.string.apk_share_error), false)
             return
         }
+        val authority = "${activity.packageName}.apkgfileprovider"
+
         // Get a URI for the file to be shared via the FileProvider API
         val uri: Uri = try {
-            FileProvider.getUriForFile(activity, "com.ichi2.anki.apkgfileprovider", attachment)
+            FileProvider.getUriForFile(activity, authority, attachment)
         } catch (e: IllegalArgumentException) {
             Timber.e("Could not generate a valid URI for the apkg file")
             showThemedToast(activity, activity.resources.getString(R.string.apk_share_error), false)

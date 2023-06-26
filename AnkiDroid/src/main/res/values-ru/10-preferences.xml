@@ -142,7 +142,7 @@
     <string name="default_font" maxLength="41">Шрифт по умолчанию</string>
     <string name="override_font" maxLength="41">Когда применять шрифт по умолчанию</string>
     <string name="language" maxLength="41">Язык</string>
-    <string name="language_system">Системный</string>
+    <string name="language_system">Как в системе</string>
     <string name="notification_pref" maxLength="41">Уведомления</string>
     <string name="notification_pref_title" maxLength="41">Какие показывать</string>
     <string name="never_notify">Никакие</string>
@@ -186,8 +186,6 @@
     <string name="new_timezone" maxLength="41">Новая обработка часовых поясов</string>
     <string name="day_offset_with_description" maxLength="41">Начало нового дня</string>
     <string name="day_offset_summary">%s ч. после полуночи</string>
-    <string name="xlabel_dayoffset_seekbar" maxLength="41">Полночь</string>
-    <string name="ylabel_dayoffset_seekbar" maxLength="41">23:00</string>
     <string name="pref_keep_screen_on" maxLength="41">Не выключать экран</string>
     <string name="pref_keep_screen_on_summ">Отключает спящий режим экрана</string>
     <string name="convert_fen_text" maxLength="41">Поддержка шахматной нотации</string>

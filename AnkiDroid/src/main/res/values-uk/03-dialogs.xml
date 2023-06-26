@@ -181,8 +181,6 @@
     <string name="tags_dialog_option_due_cards" comment="Name of cards that are already been reviewed in the past, and that should be reviewed again">На черзі</string>
     <!-- Empty cards -->
     <string name="emtpy_cards_finding">Пошук порожніх карток&#8230;</string>
-    <string name="confirm_cancel">Ви справді хочете скасувати?</string>
-    <string name="empty_cards_none">Немає порожніх карток</string>
     <string name="empty_cards_count">Картки до видалення: %d</string>
     <string name="empty_cards_deleted">Карток видалено: %d</string>
     <!-- Multimedia - Edit Field Activity -->
@@ -198,7 +196,12 @@
     <string name="integrity_check_continue_anyway">Все одно продовжити</string>
     <string name="integrity_check_insufficient_space">Перевірка бази даних використовує багато тимчасового сховища.\n\nНаполегливо рекомендується мати принаймні %s вільного місця на пристрої перед продовженням.</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nЗараз %s вільного місця.</string>
-    <string name="integrity_check_fixed_no_home_deck">Відновлено %d карток з неправильними початковими колодами. Будь ласка, перегляньте посібник для отримання детальної інформації.</string>
+    <plurals name="integrity_check_fixed_no_home_deck_new">
+        <item quantity="one">%d card with incorrect home deck was recovered. Please see the manual for more information.</item>
+        <item quantity="few">%d cards with incorrect home decks were recovered. Please see the manual for more information.</item>
+        <item quantity="many">%d cards with incorrect home decks were recovered. Please see the manual for more information.</item>
+        <item quantity="other">%d cards with incorrect home decks were recovered. Please see the manual for more information.</item>
+    </plurals>
     <string name="video_creation_error">Не вдалося відтворити відео</string>
     <!-- Card Browser -->
     <string name="card_browser_deck_change_error">Не вдалося змінити колоду</string>
@@ -279,15 +282,15 @@
     <!-- Deck selection dialog -->
     <string name="cannot_create_subdeck_for_all_decks">Ви не можете створити підколоду для всіх колод</string>
     <!-- scoped storage -->
-    <string name="backup_your_collection">Backup your collection</string>
-    <string name="backup_collection_message">You haven\'t backed up your collection in a while. You should do this now to prevent data loss</string>
-    <string name="button_backup">Backup</string>
-    <string name="button_disable_reminder">Disable reminder</string>
-    <string name="button_backup_later" comment="dismiss the \'Backup\' dialog for around 2 weeks">Later</string>
-    <string name="button_do_not_show_again" comment="permanently dismisses a dialog">Don\'t show again</string>
-    <string name="dismiss_backup_warning_title">Data loss warning</string>
-    <string name="dismiss_backup_warning_new_user">        Due to Android privacy changes, your data and automated backups will be deleted from your phone if the app is uninstalled
+    <string name="backup_your_collection">Резервне копіювання колекції</string>
+    <string name="backup_collection_message">Ви давно не зберігали резервну копію своєї колекції. Зробіть це зараз, аби запобігти втраті даних</string>
+    <string name="button_backup">Резервна копія</string>
+    <string name="button_disable_reminder">Вимкнути нагадування</string>
+    <string name="button_backup_later" comment="dismiss the \'Backup\' dialog for around 2 weeks">Пізніше</string>
+    <string name="button_do_not_show_again" comment="permanently dismisses a dialog">Більше не показувати</string>
+    <string name="dismiss_backup_warning_title">Ризик втрати даних</string>
+    <string name="dismiss_backup_warning_new_user">        У зв\'язку зі зміною політики конфіденційності Android, ваші дані та автоматизовані резервні копії будуть видалені з вашого пристрою, якщо додаток буде видалено
     </string>
-    <string name="dismiss_backup_warning_upgrade">        Due to Android privacy changes, your data and automated backups will be inaccessible if the app is uninstalled
+    <string name="dismiss_backup_warning_upgrade">        У зв\'язку зі зміною політики конфіденційності Android, ваші дані та автоматизовані резервні копії стануть недоступними, якщо додаток буде видалено
     </string>
 </resources>

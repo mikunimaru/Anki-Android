@@ -61,8 +61,8 @@
     <string name="updated_version">버전 %s로 업데이트됨</string>
     <!-- Reviewer.kt -->
     <string name="save_whiteboard">칠판 저장</string>
-    <string name="enable_stylus">Enable stylus mode</string>
-    <string name="disable_stylus">Disable stylus mode</string>
+    <string name="enable_stylus">Enable stylus writing</string>
+    <string name="disable_stylus">Disable stylus writing</string>
     <string name="enable_whiteboard">화이트보드 활성화</string>
     <string name="disable_whiteboard">화이트보드 비활성화</string>
     <string name="show_whiteboard">화이트보드 보이기</string>
@@ -129,6 +129,7 @@
     <string name="reordering_cards">카드 순서 다시 정리중...</string>
     <string name="field_remapping">%1$s (\'%2$s\'에서)</string>
     <string name="confirm_map_cards_to_nothing">연결되지 않은 모든 카드는 삭제됩니다. 만약 노트에 남아있는 카드가 없다면 버려질 것입니다. 계속 진행할까요?</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">시간 상자에 도달했습니다</string>
     <plurals name="timebox_reached">
         <item quantity="other">%1$d 카드가 %2$s에 학습됨</item>

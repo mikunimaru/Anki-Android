@@ -38,8 +38,8 @@
 
     <!-- Reviewer.kt -->
     <string name="save_whiteboard">Save whiteboard</string>
-    <string name="enable_stylus">Enable stylus mode</string>
-    <string name="disable_stylus">Disable stylus mode</string>
+    <string name="enable_stylus">Enable stylus writing</string>
+    <string name="disable_stylus">Disable stylus writing</string>
     <string name="enable_whiteboard">Enable whiteboard</string>
     <string name="disable_whiteboard">Disable whiteboard</string>
     <string name="show_whiteboard">Show whiteboard</string>
@@ -110,11 +110,13 @@
     <string name="field_remapping">%1$s (from “%2$s”)</string>
     <string name="confirm_map_cards_to_nothing">Any cards mapped to nothing will be deleted. If a note has no remaining cards, it will be lost. Are you sure you want to continue?</string>
 
+    <!-- Timebox -->
     <string name="timebox_reached_title">Timebox reached</string>
     <plurals name="timebox_reached">
         <item quantity="one">%1$d card studied in %2$s</item>
         <item quantity="other">%1$d cards studied in %2$s</item>
     </plurals>
+
     <!-- minutes used in '[studied in] x minutes' context, causing inflexion in some languages -->
     <plurals name="in_minutes">
         <item quantity="one">%1$d minute</item>
