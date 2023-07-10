@@ -1,6 +1,6 @@
 plugins {
  // Gradle plugin portal
- id 'com.github.triplet.play' version '3.8.3'
+ id 'com.github.triplet.play' version '3.8.4'
 }
 
 apply plugin: 'com.android.application'
@@ -29,6 +29,11 @@ android {
     namespace "com.ichi2.anki"
 
     compileSdkVersion 33 // change api compileSdkVersion at the same time
+
+    buildFeatures {
+        buildConfig = true
+        aidl = true
+    }
 
     defaultConfig {
         applicationId "com.ichi2.anki"
@@ -61,8 +66,8 @@ android {
         //
         // This ensures the correct ordering between the various types of releases (dev < alpha < beta < release) which is
         // needed for upgrades to be offered correctly.
-        versionCode=21600203
-        versionName="2.16.0beta3"
+        versionCode=21600205
+        versionName="2.16.0beta5"
         minSdkVersion 21
         //noinspection OldTargetApi - also performed in api/build.fradle
         targetSdkVersion 31 // change .tests_emulator.yml
@@ -213,12 +218,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
         coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_11
     }
     ndkVersion "22.0.7026061"
 }
@@ -358,13 +363,13 @@ dependencies {
     // Cannot use debugImplementation since classes need to be imported in AnkiDroidApp
     // and there's no no-op version for release build. Usage has been disabled for release
     // build via AnkiDroidApp.
-    implementation 'com.squareup.leakcanary:leakcanary-android:2.11'
+    implementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 
     api project(":api")
 
     testImplementation "org.junit.vintage:junit-vintage-engine:$junit_version"
     testImplementation 'org.mockito:mockito-inline:5.2.0'
-    testImplementation "org.mockito.kotlin:mockito-kotlin:4.1.0"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:5.0.0"
     testImplementation "org.hamcrest:hamcrest:$hamcrest_version"
     testImplementation 'net.lachlanmckee:timber-junit-rule:1.0.1'
     // robolectricDownloader.gradle *may* need a new SDK jar entry if they release one or if we change targetSdk. Instructions in that gradle file.

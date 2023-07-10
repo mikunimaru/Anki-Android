@@ -55,7 +55,6 @@ import com.ichi2.libanki.Collection
 import com.ichi2.libanki.CollectionGetter
 import com.ichi2.themes.Themes
 import com.ichi2.utils.AdaptionUtil
-import com.ichi2.utils.AndroidUiUtils
 import com.ichi2.utils.KotlinCleanup
 import com.ichi2.utils.SyncStatus
 import timber.log.Timber
@@ -79,7 +78,6 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
 
     @Suppress("deprecation") // #9332: UI Visibility -> Insets
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.i("AnkiActivity::onCreate - %s", mActivityName)
         // The hardware buttons should control the music volume
         volumeControlStream = AudioManager.STREAM_MUSIC
         // Set the theme
@@ -99,24 +97,16 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
     }
 
     override fun onStart() {
-        Timber.i("AnkiActivity::onStart - %s", mActivityName)
         super.onStart()
         customTabActivityHelper.bindCustomTabsService(this)
     }
 
     override fun onStop() {
-        Timber.i("AnkiActivity::onStop - %s", mActivityName)
         super.onStop()
         customTabActivityHelper.unbindCustomTabsService(this)
     }
 
-    override fun onPause() {
-        Timber.i("AnkiActivity::onPause - %s", mActivityName)
-        super.onPause()
-    }
-
     override fun onResume() {
-        Timber.i("AnkiActivity::onResume - %s", mActivityName)
         super.onResume()
         UsageAnalytics.sendAnalyticsScreenView(this)
         (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(
@@ -124,11 +114,6 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
         )
         // Show any pending dialogs which were stored persistently
         dialogHandler.executeMessage()
-    }
-
-    override fun onDestroy() {
-        Timber.i("AnkiActivity::onDestroy - %s", mActivityName)
-        super.onDestroy()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -184,16 +169,6 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
             view.clearAnimation()
         }
         super.setContentView(view)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // We can't access the icons yet on a TV, so show them all in the menu
-        if (AndroidUiUtils.isRunningOnTv(this)) {
-            for (i in 0 until menu.size()) {
-                menu.getItem(i).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            }
-        }
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun setContentView(view: View, params: ViewGroup.LayoutParams) {
@@ -407,7 +382,7 @@ open class AnkiActivity : AppCompatActivity, SimpleMessageDialogListener, Collec
             )
             return
         }
-        val toolbarColor = Themes.getColorFromAttr(this, R.attr.colorPrimary)
+        val toolbarColor = Themes.getColorFromAttr(this, android.R.attr.colorPrimary)
         val navBarColor = Themes.getColorFromAttr(this, R.attr.customTabNavBarColor)
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
             .setToolbarColor(toolbarColor)

@@ -218,7 +218,6 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
         if (showedActivityFailedScreen(savedInstanceState)) {
             return
         }
-        Timber.d("onCreate()")
         mTagsDialogFactory = TagsDialogFactory(this).attachToActivity<TagsDialogFactory>(this)
         mMediaRegistration = MediaRegistration(this)
         super.onCreate(savedInstanceState)
@@ -764,6 +763,11 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
                 // then set the card ID to the new deck
                 mCurrentEditedCard!!.did = deckId
                 modified = true
+            }
+            // Check if the front of the card is not empty
+            if (getCurrentFieldText(0).isEmpty()) {
+                displayErrorSavingNote()
+                return
             }
             // now load any changes to the fields from the form
             for (f in mEditFields!!) {
