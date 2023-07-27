@@ -68,19 +68,19 @@ class DevOptionsFragment : SettingsFragment() {
                 showSnackbar("Done! Enable Analytics in 'General' settings to use.")
             }
             UsageAnalytics.setDevMode()
-            true
+            false
         }
         // Lock database
         requirePreference<Preference>(R.string.pref_lock_database_key).setOnPreferenceClickListener {
             val c = CollectionHelper.instance.getCol(requireContext())!!
             Timber.w("Toggling database lock")
             c.db.database.beginTransaction()
-            true
+            false
         }
         // Reset onboarding
         requirePreference<Preference>(R.string.pref_reset_onboarding_key).setOnPreferenceClickListener {
             OnboardingUtils.reset(requireContext())
-            true
+            false
         }
 
         val sizePreference = requirePreference<IncrementerNumberRangePreferenceCompat>(getString(R.string.pref_fill_collection_size_file_key))
@@ -100,7 +100,7 @@ class DevOptionsFragment : SettingsFragment() {
                 }
                 setNegativeButton(R.string.dialog_cancel) { _, _ -> }
             }
-            true
+            false
         }
     }
 
@@ -155,7 +155,7 @@ class DevOptionsFragment : SettingsFragment() {
          * or if the user has enabled it with the secret on [com.ichi2.anki.preferences.AboutFragment]
          */
         fun isEnabled(context: Context): Boolean {
-            return BuildConfig.DEBUG || AnkiDroidApp.getSharedPrefs(context)
+            return BuildConfig.DEBUG || context.sharedPrefs()
                 .getBoolean(context.getString(R.string.dev_options_enabled_by_user_key), false)
         }
     }

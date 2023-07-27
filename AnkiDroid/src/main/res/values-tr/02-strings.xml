@@ -199,8 +199,8 @@
         <item quantity="one">Seçili not apkg dosyası olarak dışarı aktarılsın mı?</item>
         <item quantity="other">Seçili %d notlar apkg dosyası olarak dışarı aktarılsın mı?</item>
     </plurals>
-    <string name="export_preparation_in_progress">Preparing export&#8230;</string>
-    <string name="export_ready_title">Export ready</string>
+    <string name="export_preparation_in_progress">Dışa aktarım hazırlanıyor&#8230;</string>
+    <string name="export_ready_title">Dışa aktarım hazır</string>
     <string name="export_send_no_handlers">Apkg işleyecek uygulama yok. Kaydediliyor...</string>
     <string name="export_save_apkg_successful">Anki paketi başarıyla kaydedildi</string>
     <string name="export_save_apkg_unsuccessful">Anki paketi kaydı başarısız oldu</string>
@@ -213,8 +213,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_choice_share">Share</string>
-    <string name="export_choice_save_to">Save to</string>
+    <string name="export_choice_share">Paylaş</string>
+    <string name="export_choice_save_to">Kaydet</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Seçenekler</string>
     <string name="menu__deck_options">Deste seçenekleri</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Çalışma seçenekleri</string>
@@ -419,5 +419,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">Depolama taşımayı başlatmak için dokunun</string>
     <string name="media_sync_required_title">Medya Senkronizasyonu Gerekiyor</string>
     <string name="media_sync_unavailable_message">Medya senkronizasyonu ayarlardan kapalı. Lütfen devam etmeden önce senkronize edilmemiş medyayı senkronize edin ve yedekleyin.</string>
-    <string name="remember_sync_metered_checkbox_msg">Tekrar sorma (Bu uyarıyı Senkronizasyon Ayarları\'nda tekrar etkinleştirebilirsin)</string>
 </resources>

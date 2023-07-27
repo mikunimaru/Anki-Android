@@ -60,6 +60,7 @@ import com.ichi2.anki.dialogs.RescheduleDialog.Companion.rescheduleSingleCard
 import com.ichi2.anki.multimediacard.AudioView
 import com.ichi2.anki.multimediacard.AudioView.Companion.createRecorderInstance
 import com.ichi2.anki.multimediacard.AudioView.Companion.generateTempAudioFile
+import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.reviewer.*
 import com.ichi2.anki.reviewer.AnswerButtons.Companion.getBackgroundColors
 import com.ichi2.anki.reviewer.AnswerButtons.Companion.getTextColors
@@ -1006,7 +1007,7 @@ open class Reviewer :
     }
 
     private fun updateWhiteboardEditorPosition() {
-        mAnswerButtonsPosition = AnkiDroidApp.getSharedPrefs(this)
+        mAnswerButtonsPosition = this.sharedPrefs()
             .getString("answerButtonPosition", "bottom")
         val layoutParams: RelativeLayout.LayoutParams
         when (mAnswerButtonsPosition) {
@@ -1016,6 +1017,7 @@ open class Reviewer :
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
                 mColorPalette.layoutParams = layoutParams
             }
+
             "bottom" -> {
                 layoutParams = mColorPalette.layoutParams as RelativeLayout.LayoutParams
                 layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
@@ -1255,7 +1257,7 @@ open class Reviewer :
                 or View.SYSTEM_UI_FLAG_IMMERSIVE
             )
         // Show / hide the Action bar together with the status bar
-        val prefs = AnkiDroidApp.getSharedPrefs(a)
+        val prefs = a.sharedPrefs()
         val fullscreenMode = fromPreference(prefs)
         a.window.statusBarColor = getColorFromAttr(a, android.R.attr.colorPrimary)
         val decorView = a.window.decorView

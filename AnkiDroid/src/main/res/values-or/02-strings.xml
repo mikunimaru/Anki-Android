@@ -161,7 +161,7 @@
     <string name="unknown_type_field_warning">ଉତ୍ତର ଟାଇପ୍ କରନ୍ତୁ: ଅଜ୍ଞାତ କ୍ଷେତ୍ର %s</string>
     <string name="delete_deck">ତାସଖଣ୍ଡ ଵିଲୋପ ହେଉଛି&#8230;</string>
     <string name="info_rate">AnkiDroid କୁ ମୂଲ୍ୟାଙ୍କନ କରନ୍ତୁ</string>
-    <string name="import_title">ଆମଦାନି କରୁଛି</string>
+    <string name="import_title">ଆମଦାନି ଚାଲିଛି</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">ଯୋଡ଼ନ୍ତୁ</string>
     <string name="import_message_replace_confirm">ଏହା ଆପଣଙ୍କର ଵିଦ୍ୟମାନ ସଂଗ୍ରହକୁ ଵିଲୋପ କରିଦେଇ ଏହାକୁ %s ଫାଇଲର ତଥ୍ୟ ସହିତ ପ୍ରତିସ୍ଥାପିତ କରିବ</string>
     <plurals name="import_files_message_add_confirm">
@@ -199,7 +199,7 @@
         <item quantity="one">ମନୋନୀତ ନୋଟ୍‌କୁ apkg ଫାଇଲ୍ ଭାଵରେ ରପ୍ତାନି କରିବେ ତ?</item>
         <item quantity="other">ମନୋନୀତ ନୋଟ୍‌ଗୁଡ଼ିକୁ apkg ଫାଇଲ୍ ଭାଵରେ ରପ୍ତାନି କରିବେ ତ?</item>
     </plurals>
-    <string name="export_preparation_in_progress">Preparing export&#8230;</string>
+    <string name="export_preparation_in_progress">ରପ୍ତାନି ପ୍ରସ୍ତୁତି ଚାଲିଛି&#8230;</string>
     <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">apkg ପରିଚାଳନା ପାଇଁ କୌଣସି ଆପ୍ ଉପଲବ୍ଧ ନାହିଁ। ସଞ୍ଚୟ ହେଉଛି...</string>
     <string name="export_save_apkg_successful">ସଫଳତାର ସହିତ Anki package ସଂରକ୍ଷିତ ହେଲା</string>
@@ -419,5 +419,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">ଷ୍ଟୋରେଜ୍ ସ୍ଥାନାନ୍ତରଣ ଆରମ୍ଭ କରିବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ</string>
     <string name="media_sync_required_title">ମିଡ଼ିଆ ସୀଙ୍କ୍ ଆଵଶ୍ୟକ</string>
     <string name="media_sync_unavailable_message">Media sync is disabled in the settings. Please sync and backup any media which hasn\'t been synced before continuing</string>
-    <string name="remember_sync_metered_checkbox_msg">ପୁନଃ ପଚାରନି (ଏହି ଚେତାଵନୀଟି ସୀଙ୍କ୍ ସେଟିଂରୁ ପୁନଃ-ସକ୍ଷମ କରିହେବ)</string>
 </resources>

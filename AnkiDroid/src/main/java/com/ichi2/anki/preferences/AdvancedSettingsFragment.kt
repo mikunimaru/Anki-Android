@@ -89,7 +89,7 @@ class AdvancedSettingsFragment : SettingsFragment() {
                 }
                 setNegativeButton(R.string.dialog_cancel) { _, _ -> }
             }
-            true
+            false
         }
 
         /*
@@ -113,7 +113,9 @@ class AdvancedSettingsFragment : SettingsFragment() {
                 isEnabled = false
             }
             setSummaryProvider {
-                if (AnkiDroidApp.getSharedPrefs(requireContext()).getBoolean("advanced_statistics_enabled", false)) {
+                if (requireContext().sharedPrefs()
+                    .getBoolean("advanced_statistics_enabled", false)
+                ) {
                     getString(R.string.enabled)
                 } else {
                     getString(R.string.disabled)
@@ -128,7 +130,7 @@ class AdvancedSettingsFragment : SettingsFragment() {
         // Third party apps
         requirePreference<Preference>(R.string.thirdparty_apps_key).setOnPreferenceClickListener {
             (requireActivity() as AnkiActivity).openUrl(R.string.link_third_party_api_apps)
-            true
+            false
         }
 
         // Enable API
