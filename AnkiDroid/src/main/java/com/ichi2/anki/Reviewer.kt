@@ -935,7 +935,7 @@ open class Reviewer :
         easeButton1!!.setColor(background[0])
         easeButton4!!.setColor(background[3])
 
-        val alwaysShowOnlyTwoAnswerButtons = AnkiDroidApp.getSharedPrefs(this.baseContext)
+        val alwaysShowOnlyTwoAnswerButtons = super.restorePreferences()
             .getBoolean("alwaysShowOnlyTwoAnswerButtons", false)
 
         when (buttonCount) {
