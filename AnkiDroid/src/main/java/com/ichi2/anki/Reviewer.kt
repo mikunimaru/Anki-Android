@@ -25,8 +25,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -35,7 +33,6 @@ import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.*
 import android.webkit.JavascriptInterface
-import android.webkit.WebView
 import android.widget.*
 import androidx.annotation.*
 import androidx.appcompat.view.menu.MenuBuilder
@@ -63,6 +60,7 @@ import com.ichi2.anki.dialogs.RescheduleDialog.Companion.rescheduleSingleCard
 import com.ichi2.anki.multimediacard.AudioView
 import com.ichi2.anki.multimediacard.AudioView.Companion.createRecorderInstance
 import com.ichi2.anki.multimediacard.AudioView.Companion.generateTempAudioFile
+import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.reviewer.*
 import com.ichi2.anki.reviewer.AnswerButtons.Companion.getBackgroundColors
 import com.ichi2.anki.reviewer.AnswerButtons.Companion.getTextColors
@@ -84,7 +82,6 @@ import com.ichi2.themes.Themes
 import com.ichi2.themes.Themes.currentTheme
 import com.ichi2.themes.Themes.getColorFromAttr
 import com.ichi2.utils.*
-import com.ichi2.utils.AndroidUiUtils.isRunningOnTv
 import com.ichi2.utils.HandlerUtils.getDefaultLooper
 import com.ichi2.utils.Permissions.canRecordAudio
 import com.ichi2.utils.ViewGroupUtils.setRenderWorkaround
@@ -162,16 +159,11 @@ open class Reviewer :
         if (showedActivityFailedScreen(savedInstanceState)) {
             return
         }
-        Timber.d("onCreate()")
         super.onCreate(savedInstanceState)
         if (handledLaunchFromWebBrowser(intent, this)) {
             this.setResult(RESULT_CANCELED)
             finishWithAnimation(ActivityTransitionAnimation.Direction.END)
             return
-        }
-        if (Intent.ACTION_VIEW == intent.action) {
-            Timber.d("onCreate() :: received Intent with action = %s", intent.action)
-            selectDeckFromExtra()
         }
         mColorPalette = findViewById(R.id.whiteboard_editor)
         answerTimer = AnswerTimer(findViewById(R.id.card_time))
@@ -190,6 +182,9 @@ open class Reviewer :
     override fun onResume() {
         answerTimer.resume()
         super.onResume()
+        if (answerField != null) {
+            answerField!!.focusWithKeyboard()
+        }
     }
 
     @NeedsTest("is hidden if flag is on app bar")
@@ -208,14 +203,6 @@ open class Reviewer :
                 actualValue
             }
         }
-
-    override fun createWebView(): WebView {
-        val ret = super.createWebView()
-        if (isRunningOnTv(this)) {
-            ret.isFocusable = false
-        }
-        return ret
-    }
 
     override fun recreateWebView() {
         super.recreateWebView()
@@ -316,18 +303,6 @@ open class Reviewer :
         col.sched.deferReset()
     }
 
-    override fun setTitle() {
-        val title: String = if (colIsOpen()) {
-            Decks.basename(col.decks.current().getString("name"))
-        } else {
-            Timber.e("Could not set title in reviewer because collection closed")
-            ""
-        }
-        supportActionBar!!.title = title
-        super.setTitle(title)
-        supportActionBar!!.subtitle = ""
-    }
-
     override fun getContentViewAttr(fullscreenMode: FullScreenMode): Int {
         return when (fullscreenMode) {
             FullScreenMode.BUTTONS_ONLY -> R.layout.reviewer_fullscreen
@@ -342,6 +317,10 @@ open class Reviewer :
 
     override fun onCollectionLoaded(col: Collection) {
         super.onCollectionLoaded(col)
+        if (Intent.ACTION_VIEW == intent.action) {
+            Timber.d("onCreate() :: received Intent with action = %s", intent.action)
+            selectDeckFromExtra()
+        }
         // Load the first card and start reviewing. Uses the answer card
         // task to load a card, but since we send null
         // as the card to answer, no card will be answered.
@@ -436,12 +415,7 @@ open class Reviewer :
             }
             R.id.action_change_whiteboard_pen_color -> {
                 Timber.i("Reviewer:: Pen Color button pressed")
-                if (mColorPalette.visibility == View.GONE) {
-                    mColorPalette.visibility = View.VISIBLE
-                } else {
-                    mColorPalette.visibility = View.GONE
-                }
-                updateWhiteboardEditorPosition()
+                changeWhiteboardPenColor()
             }
             R.id.action_save_whiteboard -> {
                 Timber.i("Reviewer:: Save whiteboard button pressed")
@@ -457,9 +431,7 @@ open class Reviewer :
             }
             R.id.action_clear_whiteboard -> {
                 Timber.i("Reviewer:: Clear whiteboard button pressed")
-                if (whiteboard != null) {
-                    whiteboard!!.clear()
-                }
+                clearWhiteboard()
             }
             R.id.action_hide_whiteboard -> { // toggle whiteboard visibility
                 Timber.i("Reviewer:: Whiteboard visibility set to %b", !mShowWhiteboard)
@@ -546,6 +518,21 @@ open class Reviewer :
             mColorPalette.visibility = View.GONE
         }
         refreshActionBar()
+    }
+
+    public override fun clearWhiteboard() {
+        if (whiteboard != null) {
+            whiteboard!!.clear()
+        }
+    }
+
+    public override fun changeWhiteboardPenColor() {
+        if (mColorPalette.visibility == View.GONE) {
+            mColorPalette.visibility = View.VISIBLE
+        } else {
+            mColorPalette.visibility = View.GONE
+        }
+        updateWhiteboardEditorPosition()
     }
 
     override fun replayVoice() {
@@ -724,7 +711,6 @@ open class Reviewer :
         Timber.d("onCreateOptionsMenu()")
         // NOTE: This is called every time a new question is shown via invalidate options menu
         menuInflater.inflate(R.menu.reviewer, menu)
-        displayIconsOnTv(menu)
         displayIcons(menu)
         mActionButtons.setCustomButtonsStatus(menu)
         var alpha = if (super.controlBlocked !== ReviewerUi.ControlBlock.SLOW) Themes.ALPHA_ICON_ENABLED_LIGHT else Themes.ALPHA_ICON_DISABLED_LIGHT
@@ -736,7 +722,6 @@ open class Reviewer :
         }
         markCardIcon.iconAlpha = alpha
 
-        // 1643 - currently null on a TV
         val flagIcon = menu.findItem(R.id.action_flag)
         if (flagIcon != null) {
             if (currentCard != null) {
@@ -893,32 +878,6 @@ open class Reviewer :
         }
     }
 
-    @SuppressLint("RestrictedApi") // setOptionalIconsVisible
-    private fun displayIconsOnTv(menu: Menu) {
-        if (!isRunningOnTv(this)) {
-            return
-        }
-        try {
-            if (menu is MenuBuilder) {
-                menu.setOptionalIconsVisible(true)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                for (i in 0 until menu.size()) {
-                    val m = menu.getItem(i)
-                    if (m == null || isFlagResource(m.itemId)) {
-                        continue
-                    }
-                    val color = getColorFromAttr(this, R.attr.navDrawerItemColor)
-                    MenuItemCompat.setIconTintList(m, ColorStateList.valueOf(color))
-                }
-            }
-        } catch (e: Exception) {
-            Timber.w(e, "Failed to display icons")
-        } catch (e: Error) {
-            Timber.w(e, "Failed to display icons")
-        }
-    }
-
     private fun isFlagResource(itemId: Int): Boolean {
         return itemId == R.id.action_flag_seven || itemId == R.id.action_flag_six || itemId == R.id.action_flag_five || itemId == R.id.action_flag_four || itemId == R.id.action_flag_three || itemId == R.id.action_flag_two || itemId == R.id.action_flag_one
     }
@@ -930,25 +889,7 @@ open class Reviewer :
         if (mProcessor.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)) {
             return true
         }
-        if (!isRunningOnTv(this)) {
-            return false
-        }
-
-        // Process DPAD Up/Down to focus the TV Controls
-        if (keyCode != KeyEvent.KEYCODE_DPAD_DOWN && keyCode != KeyEvent.KEYCODE_DPAD_UP) {
-            return false
-        }
-
-        // HACK: This shouldn't be required, as the navigation should handle this.
-        if (isDrawerOpen) {
-            return false
-        }
-        val view = (if (keyCode == KeyEvent.KEYCODE_DPAD_UP) findViewById(R.id.tv_nav_view) else findViewById<View>(R.id.answer_options_layout))
-            ?: return false
-        // HACK: We should be performing this in the base class, or allowing the view to be focused by the keyboard.
-        // I couldn't get either to work
-        view.requestFocus()
-        return true
+        return false
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
@@ -960,25 +901,8 @@ open class Reviewer :
     }
 
     private fun <T> setupSubMenu(menu: Menu, @IdRes parentMenu: Int, subMenuProvider: T) where T : ActionProvider?, T : SubMenuProvider? {
-        if (!isRunningOnTv(this)) {
-            MenuItemCompat.setActionProvider(menu.findItem(parentMenu), subMenuProvider)
-            return
-        }
-
-        // Don't do anything if the menu is hidden (bury for example)
-        if (!subMenuProvider!!.hasSubMenu()) {
-            return
-        }
-
-        // 7227 - If we're running on a TV, then we can't show submenus until AOSP is fixed
-        menu.removeItem(parentMenu)
-        val count = menu.size()
-        // move the menu to the bottom of the page
-        menuInflater.inflate(subMenuProvider.subMenu, menu)
-        for (i in 0 until menu.size() - count) {
-            val item = menu.getItem(count + i)
-            item.setOnMenuItemClickListener(subMenuProvider)
-        }
+        MenuItemCompat.setActionProvider(menu.findItem(parentMenu), subMenuProvider)
+        return
     }
 
     override fun canAccessScheduler(): Boolean {
@@ -1083,7 +1007,7 @@ open class Reviewer :
     }
 
     private fun updateWhiteboardEditorPosition() {
-        mAnswerButtonsPosition = AnkiDroidApp.getSharedPrefs(this)
+        mAnswerButtonsPosition = this.sharedPrefs()
             .getString("answerButtonPosition", "bottom")
         val layoutParams: RelativeLayout.LayoutParams
         when (mAnswerButtonsPosition) {
@@ -1093,6 +1017,7 @@ open class Reviewer :
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
                 mColorPalette.layoutParams = layoutParams
             }
+
             "bottom" -> {
                 layoutParams = mColorPalette.layoutParams as RelativeLayout.LayoutParams
                 layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
@@ -1332,9 +1257,9 @@ open class Reviewer :
                 or View.SYSTEM_UI_FLAG_IMMERSIVE
             )
         // Show / hide the Action bar together with the status bar
-        val prefs = AnkiDroidApp.getSharedPrefs(a)
+        val prefs = a.sharedPrefs()
         val fullscreenMode = fromPreference(prefs)
-        a.window.statusBarColor = getColorFromAttr(a, R.attr.colorPrimary)
+        a.window.statusBarColor = getColorFromAttr(a, android.R.attr.colorPrimary)
         val decorView = a.window.decorView
         decorView.setOnSystemUiVisibilityChangeListener { flags: Int ->
             val toolbar = a.findViewById<View>(R.id.toolbar)
@@ -1569,7 +1494,7 @@ open class Reviewer :
         @MenuRes subMenuRes: Int,
         onMenuItemSelection: (MenuItem) -> Boolean,
         showsSubMenu: () -> Boolean
-    ): View = ImageButton(context, null, R.attr.actionButtonStyle).apply {
+    ): View = ImageButton(context, null, android.R.attr.actionButtonStyle).apply {
         TooltipCompat.setTooltipText(this, menuItem.title)
         menuItem.icon?.isAutoMirrored = true
         setImageDrawable(menuItem.icon)

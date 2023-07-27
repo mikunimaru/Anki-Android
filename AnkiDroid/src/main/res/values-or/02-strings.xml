@@ -128,10 +128,11 @@
     <string name="reordering_cards">ପତ୍ର ପୁନଃବ୍ୟବସ୍ଥିତ ହଉଛି&#8230;</string>
     <string name="field_remapping">%1$s (“%2$s” ରୁ)</string>
     <string name="confirm_map_cards_to_nothing">କୌଣସି ଜିନିଷକୁ ମ୍ୟାପ୍ ନହୋଇ ଥିବା ପତ୍ରସବୁ ବିଲୋପ ହେବ। ଯଦି କୌଣସି ନୋଟ୍ ର ଅବଶିଷ୍ଟ ପତ୍ର ନଥାଏ, ତେବେ ଏହା ନଷ୍ଟ ହୋଇଯିବ। ଆପଣ ଜାରି ରଖିବାକୁ ଚାହୁଁଛନ୍ତି କି?</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">ସମୟବାକ୍ସ ପହଞ୍ଚିଛି</string>
     <plurals name="timebox_reached">
-        <item quantity="one">%1$dଟିଏ ପତ୍ର %2$s ରେ ଅଧ୍ୟୟନ କଲେ</item>
-        <item quantity="other">%1$dଟି ପତ୍ର %2$s ରେ ଅଧ୍ୟୟନ କଲେ</item>
+        <item quantity="one">%1$dଟିଏ ପତ୍ର %2$s‌ରେ ଅଧ୍ୟୟନ କଲେ</item>
+        <item quantity="other">%1$dଟି ପତ୍ର %2$s‌ରେ ଅଧ୍ୟୟନ କଲେ</item>
     </plurals>
     <!-- minutes used in \'[studied in] x minutes\' context, causing inflexion in some languages -->
     <plurals name="in_minutes">
@@ -160,7 +161,7 @@
     <string name="unknown_type_field_warning">ଉତ୍ତର ଟାଇପ୍ କରନ୍ତୁ: ଅଜ୍ଞାତ କ୍ଷେତ୍ର %s</string>
     <string name="delete_deck">ତାସଖଣ୍ଡ ଵିଲୋପ ହେଉଛି&#8230;</string>
     <string name="info_rate">AnkiDroid କୁ ମୂଲ୍ୟାଙ୍କନ କରନ୍ତୁ</string>
-    <string name="import_title">ଆମଦାନି କରୁଛି</string>
+    <string name="import_title">ଆମଦାନି ଚାଲିଛି</string>
     <string name="import_message_add" comment="Adding a new deck to the collection (import)">ଯୋଡ଼ନ୍ତୁ</string>
     <string name="import_message_replace_confirm">ଏହା ଆପଣଙ୍କର ଵିଦ୍ୟମାନ ସଂଗ୍ରହକୁ ଵିଲୋପ କରିଦେଇ ଏହାକୁ %s ଫାଇଲର ତଥ୍ୟ ସହିତ ପ୍ରତିସ୍ଥାପିତ କରିବ</string>
     <plurals name="import_files_message_add_confirm">
@@ -173,14 +174,14 @@
     <string name="import_log_failed_copy_to">%s କୁ apkg ନକଲ କରିବାରେ ବିଫଳ</string>
     <string name="import_log_failed_validate">ଏ.ପି.କେ.ଜି ର ବିଫଳ ବୈଧତା</string>
     <string name="import_log_insufficient_space_error">ପ୍ୟାକେଜ୍ ଆମଦାନୀ କରିବାକୁ ପର୍ଯ୍ୟାପ୍ତ ସ୍ଥାନ ନାହିଁ।\nଆବଶ୍ୟକ - %1$s \nଉପଲବ୍ଧ - %2$s.\n\nଅସୁବିଧା ହେଉଛି କି? ଯଦି ସମ୍ଭବ ଆପଣଙ୍କ ଫୋନରେ ସ୍ପେସ୍ ମୁକ୍ତ କରିବାକୁ ଚେଷ୍ଟା କରନ୍ତୁ। ବୈକଳ୍ପିକ ଭାବରେ, ସିଙ୍କ୍ ଆମଦାନୀ ଅପେକ୍ଷା କମ୍ ସ୍ଥାନ ବ୍ୟବହାର କରେ। ଆପଣ ଅଧିକ ସ୍ପେସ୍ ଥିବା ଏକ ଡିଵାଇସ୍ (ଉଦାହରଣ ସ୍ୱରୂପ Anki Desktop) ସହ ପ୍ୟାକେଜ୍ ଆମଦାନୀ କରିବାକୁ ଚେଷ୍ଟା କରିପାରନ୍ତି ଏବଂ ତାପରେ ଏହାକୁ ଏହି ଡିଵାଇସରେ ସିଙ୍କ୍ କରିପାରିବେ।</string>
-    <string name="import_log_file_cache_cleared">ଫାଇଲ୍ ଆମଦାନି କରିବାରେ ତ୍ରୁଟି, ପ୍ରକ୍ରିୟାକରଣ ସମୟରେ ସମ୍ଭବତଃ ଏକ କ୍ୟାଚ୍ ଖାଲି ହେଇଥାଇପାରେ।\nଦୟାକରି ପୁନଃଚେଷ୍ଟା କରନ୍ତୁ</string>
+    <string name="import_log_file_cache_cleared">ଫାଇଲ୍ ଆମଦାନି କରିବାରେ ତ୍ରୁଟି, ପ୍ରକ୍ରିୟାକରଣ ସମୟରେ ସମ୍ଭବତଃ ଏକ ଦ୍ରୁତିକା ସଫେଇ ଘଟିଥାଇପାରେ।\nଦୟାକରି ପୁଣିଥରେ ଚେଷ୍ଟା କରନ୍ତୁ</string>
     <string name="import_succeeded_but_check_database">ଡାଟା ଆମଦାନୀ ସଫଳ ହେଲା କିନ୍ତୁ ଆମଦାନୀ ପରଵର୍ତ୍ତୀ ସଫେଇ ବିଫଳ ହେଲା। ପରେ ଡାଟାବେସ୍ ଯାଞ୍ଚ ଚଲାନ୍ତୁ। ମୂଳ କାରଣ: %s</string>
     <string name="import_error_corrupt_zip">apkg ଫାଇଲଟି ତ୍ରୁଟିଗ୍ରସ୍ତ ଅଟେ। ଦୟାକରି ଏହାକୁ ବିଲୋପ କରନ୍ତୁ ଏବଂ ପୁନଃ ଡାଉନଲୋଡ୍ କରନ୍ତୁ।\n\nମୂଳ କାରଣ: %s</string>
     <string name="import_error_handle_exception">ଫାଇଲ୍ ଆମଦାନି କରିବାରେ ବିଫଳ\n\n%s</string>
     <string name="import_error_not_apkg_extension">ଫାଇଲ୍ ନାମ “%s” ପାଖରେ .apkg କିମ୍ବା .colpkg extension ନାହିଁ</string>
     <string name="import_error_load_imported_database">Anki ଡାଟାବେସ୍ (.anki2) ପ୍ରତିସ୍ଥାପନ ଗୁଡ଼ିକ ଏପର୍ଯ୍ୟନ୍ତ ସମର୍ଥିତ ନୁହେଁ। ପ୍ରତିସ୍ଥାପନ ନିର୍ଦ୍ଦେଶାବଳୀ ପାଇଁ ଦୟାକରି ମାନୁଆଲ୍ ଦେଖନ୍ତୁ।</string>
     <string name="import_error_content_provider">ମନୋନୀତ ଫାଇଲ୍ AnkiDroid ଦ୍ୱାରା ସ୍ୱଚାଳିତ ଭାଵେ ଆମଦାନୀ ହୋଇପାରିବ ନାହିଁ। Anki ଫାଇଲଗୁଡ଼ିକୁ କିପରି ହସ୍ତକୃତ ଭାଵେ ଆମଦାନୀ କରିବେ ଜାଣିବା ପାଇଁ ଦୟାକରି ଉପଭୋକ୍ତା ମାନୁଆଲ୍ ଦେଖନ୍ତୁ: \n%s</string>
-    <string name="import_error_copy_to_cache">Failed to cache file (possibly out of storage space)</string>
+    <string name="import_error_copy_to_cache">ଫାଇଲ୍ ଦ୍ରୁତିକା କରି ସାଇତିବାରେ ବିଫଳ (ସମ୍ଭବତଃ ଆଉ ଷ୍ଟୋରେଜ୍ ନାହିଁ)</string>
     <string name="import_error_multiple_colpkg">ଏକାଧିକ colpkg ଫାଇଲ୍ ଚୟନ କରାଯାଇଥିଲା।</string>
     <string name="import_error_colpkg_apkg">ଉଭୟ apkg ଏବଂ colpkg ଫାଇଲଗୁଡ଼ିକ ଏକାସାଙ୍ଗରେ ଚୟନ କରାଯାଇଥିଲା।</string>
     <string name="import_stats_error">ନିମ୍ନଲିଖିତ ଫାଇଲଗୁଡ଼ିକ ଆମଦାନୀ କଲାବେଳେ କିଛି ତ୍ରୁଟି ଘଟିଛି:\n%s</string>
@@ -191,19 +192,18 @@
     <string name="confirm_apkg_export">ସଂଗ୍ରହକୁ Anki package ଭାଵରେ ରପ୍ତାନି କରିବେ ତ?</string>
     <string name="confirm_apkg_export_deck">“%s” କୁ apkg ଫାଇଲ ଭାବରେ ରପ୍ତାନି କରିବେ କି?</string>
     <plurals name="confirm_apkg_export_selected_cards">
-        <item quantity="one">Export selected card as apkg file?</item>
-        <item quantity="other">Export %d selected cards as apkg file?</item>
+        <item quantity="one">ମନୋନୀତ ପତ୍ରକୁ apkg ଫାଇଲ୍ ଭାଵରେ ରପ୍ତାନି କରିବେ ତ?</item>
+        <item quantity="other">ମନୋନୀତ ପତ୍ରଗୁଡ଼ିକୁ apkg ଫାଇଲ୍ ଭାଵରେ ରପ୍ତାନି କରିବେ ତ?</item>
     </plurals>
     <plurals name="confirm_apkg_export_selected_notes">
         <item quantity="one">ମନୋନୀତ ନୋଟ୍‌କୁ apkg ଫାଇଲ୍ ଭାଵରେ ରପ୍ତାନି କରିବେ ତ?</item>
         <item quantity="other">ମନୋନୀତ ନୋଟ୍‌ଗୁଡ଼ିକୁ apkg ଫାଇଲ୍ ଭାଵରେ ରପ୍ତାନି କରିବେ ତ?</item>
     </plurals>
-    <string name="export_in_progress">Anki package ଫାଇଲ୍ ରପ୍ତାନି କରୁଛି&#8230;</string>
-    <string name="export_success_title">ସଂଗ୍ରହ ସଫଳତାର ସହିତ ରପ୍ତାନି ହେଲା</string>
+    <string name="export_preparation_in_progress">ରପ୍ତାନି ପ୍ରସ୍ତୁତି ଚାଲିଛି&#8230;</string>
+    <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">apkg ପରିଚାଳନା ପାଇଁ କୌଣସି ଆପ୍ ଉପଲବ୍ଧ ନାହିଁ। ସଞ୍ଚୟ ହେଉଛି...</string>
     <string name="export_save_apkg_successful">ସଫଳତାର ସହିତ Anki package ସଂରକ୍ଷିତ ହେଲା</string>
     <string name="export_save_apkg_unsuccessful">Anki package ସଂରକ୍ଷିତ ହେବାରେ ବିଫଳ ହେଲା</string>
-    <string name="export_success_message">You may choose a file location to save it, or share it with another application.</string>
     <string name="export_share_title">ଏହାର ଉପଯୋଗ କରି Anki package ପଠାଇବା</string>
     <string name="export_email_subject">AnkiDroid ଫ୍ଲାସକାର୍ଡ ରପ୍ତାନି କଲା: %s</string>
     <string name="export_email_text"><![CDATA[        ନମସ୍କାର!
@@ -213,8 +213,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_select_save_app">ଫାଇଲ୍ କେଉଁଠାରେ ସଞ୍ଚୟ କରାଯିବ ଚୟନ କରିବା</string>
-    <string name="export_select_share_app">ଅଂଶୀଦାର ନିମନ୍ତେ ଆପ୍ ଚୟନ କରିବା</string>
+    <string name="export_choice_share">Share</string>
+    <string name="export_choice_save_to">Save to</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">ଵିକଳ୍ପ</string>
     <string name="menu__deck_options">ତାସଖଣ୍ଡ ଵିକଳ୍ପ</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">ଅଧ୍ୟୟନ ଵିକଳ୍ପ</string>
@@ -338,9 +338,9 @@
     <string name="remove_toolbar_item">ଉପକରଣ-ଦଣ୍ଡିକାର ଆଇଟମ୍ ହଟାଇବେ?</string>
     <string name="note_editor_paste_too_large">ପେଷ୍ଟ କରିବାକୁ ପ୍ରତିଛବି ଅତ୍ୟଧିକ ବଡ଼ ଅଟେ, ଦୟାକରି ହସ୍ତକୃତ ଭାବେ ପ୍ରତିଛବିଟିକୁ ସନ୍ନିବେଶ କରନ୍ତୁ</string>
     <string name="ankidroid_cannot_open_after_backup_try_again" comment="After an Android backup is restored, AnkiDroid opens and shows this message.         Opening AnkiDroid again will work correctly">        ଆଣ୍ଡ୍ରଏଡ୍ ବ୍ୟାକଅପ୍ ଚାଲିଛି। ଦୟାକରି ପୁଣିଥରେ ଚେଷ୍ଟା କରନ୍ତୁ</string>
-    <string name="create_shortcut_error_vivo" comment="iManager is an app on Vivo phones">AnkiDroid କୁ ସର୍ଟକଟ୍ ଯୋଡ଼ିବା ଅନୁମତି ଦେବା ପାଇଁ ଆପଣଙ୍କୁ iManager ବ୍ୟବହାର କରିବାକୁ ପଡ଼ିପାରେ</string>
-    <string name="create_shortcut_failed" comment="home screen == launcher">ଆପଣଙ୍କ ଗୃହସ୍କ୍ରୀନ୍ AnkiDroidକୁ ସର୍ଟକଟ୍ ଯୋଡ଼ିବାର ଅନୁମତି ଦିଏ ନାହିଁ</string>
-    <string name="create_shortcut_error">ସର୍ଟକଟ୍ ଯୋଡ଼ିବାରେ ତ୍ରୁଟି: %s</string>
+    <string name="create_shortcut_error_vivo" comment="iManager is an app on Vivo phones">AnkiDroid କୁ ସର୍ଟ୍‌କଟ୍ ଯୋଡ଼ିବା ଅନୁମତି ଦେବା ପାଇଁ ଆପଣଙ୍କୁ iManager ଵ୍ୟଵହାର କରିବାକୁ ପଡ଼ିପାରେ</string>
+    <string name="create_shortcut_failed" comment="home screen == launcher">ଆପଣଙ୍କ ଗୃହସ୍କ୍ରୀନ୍ AnkiDroidକୁ ସର୍ଟ୍‌କଟ୍ ଯୋଡ଼ିବାର ଅନୁମତି ଦିଏ ନାହିଁ</string>
+    <string name="create_shortcut_error">ସର୍ଟ୍‌କଟ୍ ଯୋଡ଼ିବାରେ ତ୍ରୁଟି: %s</string>
     <string name="note_editor_capitalize" comment="This is for a switch with a checkbox - on: enabled">ବାକ୍ୟଗୁଡ଼ିକରେ ବଡ଼ ଅକ୍ଷର କରିବା</string>
     <string name="menu_scroll_toolbar" comment="Checkbox stating whether note editor toolbar is scrollable or stacked. Checked: Scroll">ସ୍କ୍ରୋଲ୍ ହେଉଥିବା ଉପକରଣ-ଦଣ୍ଡିକା</string>
     <!-- Symbols used as Button text in IncrementNumberRangePreference -->
@@ -406,7 +406,7 @@
     <string name="deck_created">ତାସଖଣ୍ଡ ସୃଷ୍ଟି କରାଗଲା</string>
     <string name="deck_renamed">ତାସଖଣ୍ଡ ନାମ ବଦଳାଗଲା</string>
     <!-- Deck Deletion -->
-    <string name="deck_shortcut_doesnt_exist">Deck deleted. Please remove the shortcut</string>
+    <string name="deck_shortcut_doesnt_exist">ତାସଖଣ୍ଡ ଵିଲୋପ ହୋଇଛି। ଦୟାକରି ସର୍ଟ୍‌କଟ୍‌ଟି ଅପସାରଣ କରନ୍ତୁ</string>
     <!-- Browser Options Dialog -->
     <string name="show_cards" comment="Label for toggle cards button in BrowserOptionsDialog">ପତ୍ର</string>
     <string name="show_notes" comment="Label for toggle notes button in BrowserOptionsDialog">ନୋଟ୍</string>
@@ -419,5 +419,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">ଷ୍ଟୋରେଜ୍ ସ୍ଥାନାନ୍ତରଣ ଆରମ୍ଭ କରିବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ</string>
     <string name="media_sync_required_title">ମିଡ଼ିଆ ସୀଙ୍କ୍ ଆଵଶ୍ୟକ</string>
     <string name="media_sync_unavailable_message">Media sync is disabled in the settings. Please sync and backup any media which hasn\'t been synced before continuing</string>
-    <string name="remember_sync_metered_checkbox_msg">ପୁନଃ ପଚାରନି (ଏହି ଚେତାଵନୀଟି ସୀଙ୍କ୍ ସେଟିଂରୁ ପୁନଃ-ସକ୍ଷମ କରିହେବ)</string>
 </resources>

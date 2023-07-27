@@ -89,7 +89,7 @@
     <string name="answering_error_message">コレクションへの書き込み中にエラーが発生しました。データベースの破損しているか、ストレージの空き容量が不足している可能性があります。\n\n繰り返しエラーが発生する場合には、「データベースをチェック」、コレクションの修復、「バックアップから復元」を試してみてください。\nまた、AnkiDroidのバグである可能性が考えられる場合は、開発者にご報告ください。</string>
     <string name="answering_error_report">エラーを報告</string>
     <string name="storage_full_message">AnkiDroidアプリを開くための十分な空き容量がストレージにありません。続行するには空き容量を確保してください。 </string>
-    <string name="repair_deck_dialog">データベースの修復を試みて本当によろしいですか？　\n\n試行の開始前に、サブフォルダー \"%s\" にコピーを作成します。</string>
+    <string name="repair_deck_dialog">データベースの修復を試みて本当によろしいですか？\n\n試行の開始前に、サブフォルダ \"%s\" にコピーを作成します。</string>
     <string name="intent_aedict_empty">カテゴリー \"default\" が空です</string>
     <string name="intent_aedict_category">AnkiDroidにカードを登録するため、すべてのNotepadカテゴリを削除するか、\"default\" という名前のカテゴリを追加してください</string>
     <string name="custom_study_new_total_new">デッキ内の新規カード: %d枚</string>
@@ -157,8 +157,6 @@
     <string name="tags_dialog_option_due_cards" comment="Name of cards that are already been reviewed in the past, and that should be reviewed again">期日到来済</string>
     <!-- Empty cards -->
     <string name="emtpy_cards_finding">白紙カード（表側に何も表示されないカード）がないか確認しています&#8230;</string>
-    <string name="confirm_cancel">キャンセルしますか？</string>
-    <string name="empty_cards_none">白紙カードはありません</string>
     <string name="empty_cards_count">白紙カードが%d枚見つかりました。削除しますか？</string>
     <string name="empty_cards_deleted">%d枚のカードを削除しました</string>
     <!-- Multimedia - Edit Field Activity -->
@@ -174,7 +172,9 @@
     <string name="integrity_check_continue_anyway">続ける</string>
     <string name="integrity_check_insufficient_space">データベースのチェックには一時ファイル用のデータ領域が必要です。\n\n続行する前に、お使いのデバイスに少なくとも %s の空き領域を確保してください。</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\n現在の空き容量は %s です。</string>
-    <string name="integrity_check_fixed_no_home_deck">%d 枚のカードが復元されました。詳細はマニュアルをご覧ください。</string>
+    <plurals name="integrity_check_fixed_no_home_deck_new">
+        <item quantity="other">所属するデッキが正しくない%d枚のカードを回収しました。詳細はマニュアルを参照してください。</item>
+    </plurals>
     <string name="video_creation_error">動画を再生できませんでした</string>
     <!-- Card Browser -->
     <string name="card_browser_deck_change_error">デッキを変更できませんでした</string>

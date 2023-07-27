@@ -36,10 +36,7 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.annotation.CheckResult
-import androidx.annotation.RequiresApi
-import androidx.annotation.StringRes
-import androidx.annotation.VisibleForTesting
+import androidx.annotation.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.AppCompatButton
@@ -71,6 +68,7 @@ import com.ichi2.anki.noteeditor.FieldState.FieldChangeType
 import com.ichi2.anki.noteeditor.Toolbar
 import com.ichi2.anki.noteeditor.Toolbar.TextFormatListener
 import com.ichi2.anki.noteeditor.Toolbar.TextWrapper
+import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.receiver.SdCardReceiver
 import com.ichi2.anki.servicelayer.LanguageHintService
 import com.ichi2.anki.servicelayer.NoteService
@@ -221,7 +219,6 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
         if (showedActivityFailedScreen(savedInstanceState)) {
             return
         }
-        Timber.d("onCreate()")
         mTagsDialogFactory = TagsDialogFactory(this).attachToActivity<TagsDialogFactory>(this)
         mMediaRegistration = MediaRegistration(this)
         super.onCreate(savedInstanceState)
@@ -768,6 +765,11 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
                 mCurrentEditedCard!!.did = deckId
                 modified = true
             }
+            // Check if the front of the card is not empty
+            if (getCurrentFieldText(0).isEmpty()) {
+                displayErrorSavingNote()
+                return
+            }
             // now load any changes to the fields from the form
             for (f in mEditFields!!) {
                 modified = modified or updateField(f)
@@ -865,9 +867,9 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
         menu.findItem(R.id.action_show_toolbar).isChecked =
             !shouldHideToolbar()
         menu.findItem(R.id.action_capitalize).isChecked =
-            AnkiDroidApp.getSharedPrefs(this).getBoolean(PREF_NOTE_EDITOR_CAPITALIZE, true)
+            this.sharedPrefs().getBoolean(PREF_NOTE_EDITOR_CAPITALIZE, true)
         menu.findItem(R.id.action_scroll_toolbar).isChecked =
-            AnkiDroidApp.getSharedPrefs(this).getBoolean(PREF_NOTE_EDITOR_SCROLL_TOOLBAR, true)
+            this.sharedPrefs().getBoolean(PREF_NOTE_EDITOR_SCROLL_TOOLBAR, true)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -908,7 +910,7 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
             }
             R.id.action_show_toolbar -> {
                 item.isChecked = !item.isChecked
-                AnkiDroidApp.getSharedPrefs(this).edit {
+                this.sharedPrefs().edit {
                     putBoolean(PREF_NOTE_EDITOR_SHOW_TOOLBAR, item.isChecked)
                 }
                 updateToolbar()
@@ -921,7 +923,7 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
             }
             R.id.action_scroll_toolbar -> {
                 item.isChecked = !item.isChecked
-                AnkiDroidApp.getSharedPrefs(this).edit {
+                this.sharedPrefs().edit {
                     putBoolean(PREF_NOTE_EDITOR_SCROLL_TOOLBAR, item.isChecked)
                 }
                 updateToolbar()
@@ -931,7 +933,7 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
     }
 
     private fun toggleCapitalize(value: Boolean) {
-        AnkiDroidApp.getSharedPrefs(this).edit {
+        this.sharedPrefs().edit {
             putBoolean(PREF_NOTE_EDITOR_CAPITALIZE, value)
         }
         for (f in mEditFields!!) {
@@ -944,7 +946,7 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
             return
         }
         Timber.i("Setting font size to %d", fontSizeSp)
-        AnkiDroidApp.getSharedPrefs(this).edit { putInt(PREF_NOTE_EDITOR_FONT_SIZE, fontSizeSp) }
+        this.sharedPrefs().edit { putInt(PREF_NOTE_EDITOR_FONT_SIZE, fontSizeSp) }
         for (f in mEditFields!!) {
             f!!.textSize = fontSizeSp.toFloat()
         }
@@ -1255,7 +1257,7 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
 
         // Use custom font if selected from preferences
         var customTypeface: Typeface? = null
-        val preferences = AnkiDroidApp.getSharedPrefs(baseContext)
+        val preferences = baseContext.sharedPrefs()
         val customFont = preferences.getString("browserEditorFont", "")
         if ("" != customFont) {
             customTypeface = AnkiFont.getTypeface(this, customFont!!)
@@ -1292,7 +1294,7 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
             editLineView.setHintLocale(getHintLocaleForField(editLineView.name))
             initFieldEditText(newEditText, i, !editModelMode)
             mEditFields!!.add(newEditText)
-            val prefs = AnkiDroidApp.getSharedPrefs(this)
+            val prefs = this.sharedPrefs()
             if (prefs.getInt(PREF_NOTE_EDITOR_FONT_SIZE, -1) > 0) {
                 newEditText.textSize = prefs.getInt(PREF_NOTE_EDITOR_FONT_SIZE, -1).toFloat()
             }
@@ -1746,13 +1748,13 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
 
     private val toolbarButtons: ArrayList<CustomToolbarButton>
         get() {
-            val set = AnkiDroidApp.getSharedPrefs(this)
+            val set = this.sharedPrefs()
                 .getStringSet(PREF_NOTE_EDITOR_CUSTOM_BUTTONS, HashUtil.HashSetInit(0))
             return CustomToolbarButton.fromStringSet(set!!)
         }
 
     private fun saveToolbarButtons(buttons: ArrayList<CustomToolbarButton>) {
-        AnkiDroidApp.getSharedPrefs(this).edit {
+        this.sharedPrefs().edit {
             putStringSet(PREF_NOTE_EDITOR_CUSTOM_BUTTONS, CustomToolbarButton.toStringSet(buttons))
         }
     }
@@ -2220,12 +2222,12 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
         private const val PREF_NOTE_EDITOR_CUSTOM_BUTTONS = "note_editor_custom_buttons"
 
         private fun shouldReplaceNewlines(): Boolean {
-            return AnkiDroidApp.getSharedPrefs(AnkiDroidApp.instance)
+            return AnkiDroidApp.instance.sharedPrefs()
                 .getBoolean(PREF_NOTE_EDITOR_NEWLINE_REPLACE, true)
         }
 
         private fun shouldHideToolbar(): Boolean {
-            return !AnkiDroidApp.getSharedPrefs(AnkiDroidApp.instance)
+            return !AnkiDroidApp.instance.sharedPrefs()
                 .getBoolean(PREF_NOTE_EDITOR_SHOW_TOOLBAR, true)
         }
     }

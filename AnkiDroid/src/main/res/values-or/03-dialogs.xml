@@ -107,8 +107,8 @@
     <string name="custom_study_random">ତାସଖଣ୍ଡରୁ ଅନିୟମିତ ଭାବରେ x ଟି ପତ୍ର ଚୟନ କରନ୍ତୁ:</string>
     <string name="custom_study_preview">ଗତ x ଦିନରେ ଯୋଡ଼ାଯାଇଥିବା ନୂଆ ପତ୍ରଗୁଡ଼ିକର ପୂର୍ଵାଵଲୋକନ କରିବା:</string>
     <string name="custom_study_rebuild_deck_corrupt">କଷ୍ଟମ୍ ଅଧ୍ୟୟନ ତାସଖଣ୍ଡ ପୁନଃନିର୍ମାଣ କରିହେଲା ନାହିଁ </string>
-    <string name="importing_collection">ସଂଗ୍ରହ ଆମଦାନି କରୁଛି&#8230;</string>
-    <string name="import_media_count">ମିଡ଼ିଆ ଫାଇଲଗୁଡ଼ିକ ଆମଦାନୀ କରୁଛି %1$d%%&#8230;</string>
+    <string name="importing_collection">ସଂଗ୍ରହ ଆମଦାନି ଚାଲିଛି&#8230;</string>
+    <string name="import_media_count">ମିଡ଼ିଆ ଫାଇଲ୍ ଆମଦାନୀ ଚାଲିଛି %1$d%%&#8230;</string>
     <string name="import_progress">• ନୋଟ୍ ଆମଦାନି: %1$d%%\n• ପତ୍ର ଆମଦାନି: %2$d%%\n• ପରଵର୍ତ୍ତୀ ପ୍ରକ୍ରିୟାକରଣ: %3$d%%</string>
     <string name="import_update_details">%2$dଟି ଵିଦ୍ୟମାନ ନୋଟ୍ ମଧ୍ୟରୁ %1$dଟି ଅଦ୍ୟତନ କରାଗଲା।</string>
     <string name="import_update_ignored">ନୋଟ୍ ପ୍ରକାର ବଦଳିଥିବାରୁ କିଛିଟା ଅଦ୍ୟତନ ଅଣଦେଖା ହୋଇଛି</string>
@@ -144,7 +144,7 @@
     <!-- Media checking -->
     <string name="check_media_title">ମିଡ଼ିଆ ଯାଞ୍ଚ କରିବେ କି?</string>
     <string name="check_media_warning">ବଡ଼ ମିଡ଼ିଆ ସଂଗ୍ରହ ସହିତ ଏହା ଏକ ଦୀର୍ଘ ସମୟ ନେଇପାରେ</string>
-    <string name="check_media_message">ମିଡ଼ିଆ ଯାଞ୍ଚ କରୁଛି&#8230;</string>
+    <string name="check_media_message">ମିଡ଼ିଆ ଯାଞ୍ଚ ଚାଲିଛି&#8230;</string>
     <string name="check_media_acknowledge">ମିଡ଼ିଆ ଯାଞ୍ଚ କରାଗଲା</string>
     <string name="check_media_failed">ମିଡ଼ିଆ ଯାଞ୍ଚ ଵିଫଳ ହେଲା</string>
     <string name="check_media_invalid">ଅବୈଧ ଏନକୋଡିଂ ସହିତ ଫାଇଲଗୁଡିକ: %d</string>
@@ -165,8 +165,6 @@
     <string name="tags_dialog_option_due_cards" comment="Name of cards that are already been reviewed in the past, and that should be reviewed again">ବାକି</string>
     <!-- Empty cards -->
     <string name="emtpy_cards_finding">ଖାଲି ପତ୍ର ଖୋଜାହେଉଛି&#8230;</string>
-    <string name="confirm_cancel">ଆପଣ ବାତିଲ କରିବାକୁ ଚାହୁଁଛନ୍ତି କି?</string>
-    <string name="empty_cards_none">କୌଣସି ଖାଲି ପତ୍ର ନାହିଁ</string>
     <string name="empty_cards_count">ବିଲୋପ କରିବାକୁ ପତ୍ର : %d</string>
     <string name="empty_cards_deleted">ବିଲୋପିତ ପତ୍ର: %d</string>
     <!-- Multimedia - Edit Field Activity -->
@@ -182,7 +180,10 @@
     <string name="integrity_check_continue_anyway">ଯେକୌଣସି ପ୍ରକାରେ ଜାରି ରଖନ୍ତୁ</string>
     <string name="integrity_check_insufficient_space">ଡାଟାବେସ୍ ଯାଞ୍ଚ ବହୁ ପରିମାଣର ଅସ୍ଥାୟୀ ଷ୍ଟୋରେଜ୍ ବ୍ୟବହାର କରେ।\n\nଏହା ଜାରି ରଖିବା ପୂର୍ବରୁ ଆପଣଙ୍କ ଡିଵାଇସରେ ଅତି କମରେ %s ଖାଲି ସ୍ଥାନ ଥିବା ଦୃଢ଼ ଭାବରେ ପରାମର୍ଶ ଦିଆଯାଇଛି।</string>
     <string name="integrity_check_insufficient_space_extra_content">\n\nଆପଣଙ୍କ ପାଖରେ ବର୍ତ୍ତମାନ %s ଖାଲି ଅଛି।</string>
-    <string name="integrity_check_fixed_no_home_deck">ଭୁଲ ଘରୋଇ ତାସଖଣ୍ଡ ସହିତ %dଟି ପତ୍ର ଉଦ୍ଧାର କରାଯାଇଛି। ଅଧିକ ସୂଚନା ପାଇଁ ଦୟାକରି ମାନୁଆଲ୍ ଦେଖନ୍ତୁ।</string>
+    <plurals name="integrity_check_fixed_no_home_deck_new">
+        <item quantity="one">%d card with incorrect home deck was recovered. Please see the manual for more information.</item>
+        <item quantity="other">%d cards with incorrect home decks were recovered. Please see the manual for more information.</item>
+    </plurals>
     <string name="video_creation_error">ଵିଡ଼ିଓ ଚାଳନ କରିହେଲା ନାହିଁ</string>
     <!-- Card Browser -->
     <string name="card_browser_deck_change_error">ତାସଖଣ୍ଡ ପରିଵର୍ତ୍ତନ କରିହେଲା ନାହିଁ</string>

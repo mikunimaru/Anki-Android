@@ -128,6 +128,7 @@
     <string name="reordering_cards">Pagsasaayos muli ng mga kard&#8230;</string>
     <string name="field_remapping">%1$s (mula sa \"%2$s\")</string>
     <string name="confirm_map_cards_to_nothing">Ang anumang mga kard na nakabalangkas sa wala ay matatanggal. Kung ang isang tala ay walang natitirang mga kard, ito ay mawawala. Sigurado ka bang gusto mong magpatuloy?</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">Naabot ang Timebox</string>
     <plurals name="timebox_reached">
         <item quantity="one">%1$d ang kard na sinuri sa %2$s</item>
@@ -198,12 +199,11 @@
         <item quantity="one">Iluwas ang napiling tala bilang apkg na file?</item>
         <item quantity="other">Iluwas ang %d na mga napiling tala bilang apkg na file?</item>
     </plurals>
-    <string name="export_in_progress">Niluluwas ang Anki package file&#8230;</string>
-    <string name="export_success_title">Matagumpay na nailuwas ang koleksyon</string>
+    <string name="export_preparation_in_progress">Preparing export&#8230;</string>
+    <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">Walang magagamit na mga aplikasyon upang pangasiwaan ang apkg. Sini-save</string>
     <string name="export_save_apkg_successful">Matagumpay na na-isave ang Anki package</string>
     <string name="export_save_apkg_unsuccessful">Bigo sa pag-save ng Anki package</string>
-    <string name="export_success_message">Maari kang pumili ng lokasyon para i-save ang file, o ibahagi ito sa ibang aplikasyon.</string>
     <string name="export_share_title">Ipadala ng Anki package gamit ang</string>
     <string name="export_email_subject">Na-export ang AnkiDroid flashcards:%s</string>
     <string name="export_email_text"><![CDATA[        Kumusta!
@@ -213,8 +213,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_select_save_app">Piliin kung saan i-save ang file</string>
-    <string name="export_select_share_app">Piliin ang aplikasyon sa pagbahagi</string>
+    <string name="export_choice_share">Share</string>
+    <string name="export_choice_save_to">Save to</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Mga Opsiyon</string>
     <string name="menu__deck_options">Mga Opsiyon ng Deck</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Mga Opsiyon sa Pag-aaral</string>
@@ -418,5 +418,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">I-tap nang masimulang ang paglipat ng storage</string>
     <string name="media_sync_required_title">Kinakailangan ang Media Sync</string>
     <string name="media_sync_unavailable_message">Naka-disable ang media sync sa mga setting. Mangyaring i-sync at i-backup ang anumang midya na hindi ba nasi-sync bago magpatuloy.</string>
-    <string name="remember_sync_metered_checkbox_msg">Don\'t ask again (this warning can be re-enabled from Sync Settings)</string>
 </resources>

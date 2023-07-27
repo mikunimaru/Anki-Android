@@ -56,7 +56,6 @@ class Previewer : AbstractFlashcardViewer() {
         if (showedActivityFailedScreen(savedInstanceState)) {
             return
         }
-        Timber.d("onCreate()")
         super.onCreate(savedInstanceState)
         mCardList = intent.getLongArrayExtra("cardList")!!
         mIndex = intent.getIntExtra("index", -1)
@@ -142,10 +141,6 @@ class Previewer : AbstractFlashcardViewer() {
             }
         }
         throw IllegalStateException("newCardList was empty")
-    }
-
-    override fun setTitle() {
-        supportActionBar!!.setTitle(R.string.preview_title)
     }
 
     override fun initLayout() {

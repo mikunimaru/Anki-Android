@@ -187,12 +187,8 @@
     <string name="new_timezone" maxLength="41">Обробка нового часового поясу</string>
     <string name="day_offset_with_description" maxLength="41">Початок наступного дня (0 – опівніч, 23 – 23:00)</string>
     <string name="day_offset_summary">%s годин після опівночі</string>
-    <string name="xlabel_dayoffset_seekbar" maxLength="41">Північ</string>
-    <string name="ylabel_dayoffset_seekbar" maxLength="41">23:00</string>
     <string name="pref_keep_screen_on" maxLength="41">Не вимикати екран</string>
     <string name="pref_keep_screen_on_summ">Відключити таймаут екрану</string>
-    <string name="convert_fen_text" maxLength="41">Підтримка шахової нотації</string>
-    <string name="convert_fen_text_summ">Намалювати шахову дошку з Нотації Форсайта — Едвардса. Нотацію потрібно укласти в [fen][/fen] теґи.</string>
     <string name="enable_api_title" maxLength="41">Увімкнути AnkiDroid API</string>
     <string name="enable_api_summary">Дозволяє іншим додаткам підключатися до AnkiDroid і читати / записувати дані без вашого втручання</string>
     <string name="custom_buttons" maxLength="41">Панель кнопок додатку</string>
@@ -201,8 +197,8 @@
     <string name="custom_buttons_setting_if_room">Показувати якщо є місце</string>
     <string name="custom_buttons_setting_menu_only">Тільки меню</string>
     <string name="reset_custom_buttons" maxLength="41">Скидання за замовчуванням</string>
-    <string name="reset_settings_to_default">Reset settings to default</string>
-    <string name="reset">Reset</string>
+    <string name="reset_settings_to_default">Скидання налаштувань до стандартних</string>
+    <string name="reset">Скинути</string>
     <string name="thirdparty_apps_title" maxLength="41">API додатки сторонніх виробників</string>
     <string name="thirdparty_apps_summary">Переглянути список програм, які використовують API AnkiDroid, наприклад словники, утиліти</string>
     <string name="html_javascript_debugging" maxLength="41">HTML / Javascript налагодження</string>

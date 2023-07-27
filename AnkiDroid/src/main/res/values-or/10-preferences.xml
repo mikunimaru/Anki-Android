@@ -172,7 +172,7 @@
     <string name="show_estimates" maxLength="41">ବଟନ୍ ସମୟ ଦେଖାଇବା</string>
     <string name="show_estimates_summ">ଉତ୍ତର ବଟନ୍‌ଗୁଡ଼ିକରେ ପରଵର୍ତ୍ତୀ ସମୀକ୍ଷା ସମୟ ଦର୍ଶାଇବା</string>
     <string name="show_large_answer_buttons" maxLength="41">ବଡ଼ ଉତ୍ତର ବଟନ୍ ଦେଖାଇବା</string>
-    <string name="show_large_answer_buttons_summ">୨ଟି ଧାଡ଼ିରେ ଉତ୍ତର ବଟନ୍ ଦେଖାଇବା</string>
+    <string name="show_large_answer_buttons_summ">୨ ଧାଡ଼ିଆ ଉତ୍ତର ବଟନ୍ ଦେଖାଇବା</string>
     <string name="show_top_bar" maxLength="41">ଶୀର୍ଷ ଦଣ୍ଡିକା ଦେଖାଇବା</string>
     <string name="show_top_bar_summ">ଶୀର୍ଷ ଦଣ୍ଡିକାରେ ପତ୍ର ଗଣନା, ପତାକା ଏଵଂ ଚିହ୍ନ ଦେଖାଇବା</string>
     <string name="show_progress" maxLength="41">ବାକିତକ ଦେଖାଇବା</string>
@@ -186,12 +186,8 @@
     <string name="new_timezone" maxLength="41">ନୂତନ ସମୟମଣ୍ଡଳ ପରିଚାଳନା</string>
     <string name="day_offset_with_description" maxLength="41">ପରଵର୍ତ୍ତୀ ଦିନର ଆରମ୍ଭ</string>
     <string name="day_offset_summary">ମଧ୍ୟରାତ୍ରିରୁ %s ଘଣ୍ଟା ପରେ</string>
-    <string name="xlabel_dayoffset_seekbar" maxLength="41">ମଧ୍ୟରାତ୍ରି</string>
-    <string name="ylabel_dayoffset_seekbar" maxLength="41">11PM</string>
     <string name="pref_keep_screen_on" maxLength="41">ସ୍କ୍ରୀନ୍ ସଚଳ ରଖିବା</string>
     <string name="pref_keep_screen_on_summ">ସ୍କ୍ରୀନ୍ ସମୟ-ସମାପ୍ତି ଅକ୍ଷମ କରନ୍ତୁ</string>
-    <string name="convert_fen_text" maxLength="41">ଚେସ୍ ଅଙ୍କନ ସମର୍ଥନ</string>
-    <string name="convert_fen_text_summ">Forsyth–Edwards ଅଙ୍କନରୁ ଚେସବୋର୍ଡ ଅଙ୍କନ କର। ଅଙ୍କନ ନିଶ୍ଚିତ ଭାବରେ [fen][/fen] ଟ୍ୟାଗରେ ଆବଦ୍ଧ ହେବା ଆବଶ୍ୟକ।</string>
     <string name="enable_api_title" maxLength="41">AnkiDroid API ସକ୍ଷମ କରନ୍ତୁ</string>
     <string name="enable_api_summary">ଅନ୍ୟ ଆପସ୍ କୁ AnkiDroid ସହିତ ସଂଯୋଗ କରି ଆପଣଙ୍କ ହସ୍ତକ୍ଷେପ ବିନା ତଥ୍ୟ ପଢ଼ିବା/ଲେଖିବାକୁ ଦିଅନ୍ତୁ</string>
     <string name="custom_buttons" maxLength="41">ଆପ୍ ଦଣ୍ଡିକା ବଟନ୍</string>
@@ -325,8 +321,8 @@
     <!-- About -->
     <string name="open_changelog">ପରିବର୍ତ୍ତନ ଲଗ୍ ଖୋଲନ୍ତୁ</string>
     <string name="pref_cat_about_title" maxLength="41">ଵିଷୟରେ</string>
-    <string name="contributors_title">Contributors</string>
-    <string name="about_contributors_description"><![CDATA[These are our awesome <a href=\"%1$s\">contributors</a>. You can help AnkiDroid too by programming, translating, donating and <a href=\"%2$s\">more</a>!]]></string>
+    <string name="contributors_title">ଯୋଗଦାତା</string>
+    <string name="about_contributors_description"><![CDATA[ଏମାନେ ହେଉଛନ୍ତି ଆମର ଅଦ୍ଭୁତ <a href=\"%1$s\">ଯୋଗଦାତା</a>। ପ୍ରୋଗ୍ରାମିଂ, ଅନୁଵାଦ, ଦାନ ଓ <a href=\"%2$s\">ଆହୁରି ଅନେକ କିଛି</a> ଦ୍ୱାରା ଆପଣ ମଧ୍ୟ AnkiDroidକୁ ସାହାଯ୍ୟ କରିପାରିବେ!]]></string>
     <string name="license">ଲାଇସେନ୍ସ</string>
     <string name="license_description"><![CDATA[AnkiDroidକୁ <a href=\"%1$s\">GPL-3.0</a> ଏବଂ <a href=\"%2$s\">AGPL-3.0</a> ଲାଇସେନ୍ସ ଅଧୀନରେ ପ୍ରକାଶିତ କରାଯାଏ, ତାହା ସହ ସୋର୍ସ କୋଡ୍ କୁ <a href=\"%3$s\">GitHubରେ</a> ଉପଲବ୍ଧ କରାଇ ଦିଆଯାଇଥାଏ]]></string>
     <string name="donate_description"><![CDATA[ଆପଣ <a href=\"%1$s\">ଦାନ</a> କରି AnkiDroidର ବିକାଶକୁ ସମର୍ଥନ କରିପାରିବେ। ଯେକୌଣସି ରାଶି ଅତ୍ୟନ୍ତ ପ୍ରଶଂସନୀୟ ଅଟେ।]]></string>
@@ -346,7 +342,7 @@
     <string name="display_binding_card_side_both" comment="When displaying a key bind on a preference this formatter is used if the bind only applies to both the question and the answer">%s</string>
     <!-- Binding Preference -->
     <string name="binding_remove_binding" comment="The parameter is the name of the key/gesture.     Keys cannot be translated yet.">‘%s’ ଅପସାରଣ କରନ୍ତୁ</string>
-    <string name="bindings_already_bound">ଆଗରୁ %s କୁ ବନ୍ଧା</string>
+    <string name="bindings_already_bound">ଆଗରୁ ‘%s’କୁ ବନ୍ଧା</string>
     <!-- Advanced -->
     <string name="pref_cat_experimental" maxLength="41">ପ୍ରାୟୋଗିକ</string>
     <string name="experimental_pref_confirmation" maxLength="41">‘%s’ ସକ୍ଷମ କରିବା</string>

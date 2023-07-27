@@ -128,6 +128,7 @@
     <string name="reordering_cards">Tri des cartes...</string>
     <string name="field_remapping">%1$s (de « %2$s »)</string>
     <string name="confirm_map_cards_to_nothing">Toute carte sans connexion sera effacée. Si une note n’a aucune carte restante, elle sera perdue. Êtes-vous sûr de vouloir continuer ?</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">Le temps imparti est écoulé</string>
     <plurals name="timebox_reached">
         <item quantity="one">%1$d carte étudiée en %2$s</item>
@@ -198,12 +199,11 @@
         <item quantity="one">Exporter les notes sélectionnées au format .apkg ?</item>
         <item quantity="other">Exporter les %d notes sélectionnées au format .apkg ?</item>
     </plurals>
-    <string name="export_in_progress">Exportation du fichier Anki&#8230;</string>
-    <string name="export_success_title">Collection exportée avec succès</string>
+    <string name="export_preparation_in_progress">Preparing export&#8230;</string>
+    <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">Aucune application disponible pour ouvrir le fichier APKG. Sauvegarde...</string>
     <string name="export_save_apkg_successful">Paquet Anki sauvegardé avec succès</string>
     <string name="export_save_apkg_unsuccessful">Échec de la sauvegarde du paquet Anki</string>
-    <string name="export_success_message">Vous devez choisir un emplacement de fichier pour le sauvegarder, ou le partager avec une autre application.</string>
     <string name="export_share_title">Envoyer le paquet Anki ?</string>
     <string name="export_email_subject">AnkiDroid a exporté %s cartes</string>
     <string name="export_email_text"><![CDATA[        Bonjour !
@@ -213,8 +213,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_select_save_app">Sélectionner où sauvegarder le fichier</string>
-    <string name="export_select_share_app">Sélectionner l\'application pour le partage</string>
+    <string name="export_choice_share">Share</string>
+    <string name="export_choice_save_to">Save to</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Options</string>
     <string name="menu__deck_options">Options du deck</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Options de révision</string>
@@ -315,7 +315,7 @@
     <!-- Deck Picker -->
     <string name="deck_picker_failed_deck_load">Impossible de charger le paquet « %s »</string>
     <string name="search_decks">Rechercher dans les paquets</string>
-    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">Show migration progress</string>
+    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">Afficher la progression de la migration</string>
     <string name="ankidroid_init_failed_webview_title">Erreur fatale</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid s\'appuie sur la WebView du système qui n\'est pas disponible. Ceci peut se produire si le système installe des mises à jour. Veuillez réessayer dans quelques minutes.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
@@ -418,5 +418,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">Appuyez pour démarrer la migration de stockage</string>
     <string name="media_sync_required_title">Synchronisation des médias requise</string>
     <string name="media_sync_unavailable_message">La synchronisation des médias est désactivée dans les paramètres. Veuillez synchroniser et sauvegarder tout média qui n\'a pas encore été synchronisé avant de continuer.</string>
-    <string name="remember_sync_metered_checkbox_msg">Don\'t ask again (this warning can be re-enabled from Sync Settings)</string>
 </resources>

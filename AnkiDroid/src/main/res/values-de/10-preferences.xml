@@ -186,12 +186,8 @@
     <string name="new_timezone" maxLength="41">Umgang mit neuer Zeitzone</string>
     <string name="day_offset_with_description" maxLength="41">Start des nächsten Tages (0 ist Mitternacht, 23 ist 23 Uhr)</string>
     <string name="day_offset_summary">%s Stunden nach Mitternacht</string>
-    <string name="xlabel_dayoffset_seekbar" maxLength="41">Mitternacht</string>
-    <string name="ylabel_dayoffset_seekbar" maxLength="41">23 Uhr</string>
     <string name="pref_keep_screen_on" maxLength="41">Bildschirm eingeschaltet lassen</string>
     <string name="pref_keep_screen_on_summ">Bildschirm-Timeout deaktivieren</string>
-    <string name="convert_fen_text" maxLength="41">Unterstützung für Schach-Notation</string>
-    <string name="convert_fen_text_summ">Schachbrett aus Forsyth–Edwards-Notation erstellen. Die Position muss in  [fen][/fen]-Tags eingefasst sein.</string>
     <string name="enable_api_title" maxLength="41">AnkiDroid-API aktivieren</string>
     <string name="enable_api_summary">Verbindungen anderer Apps mit AnkiDroid zulassen und sie ohne weitere Eingriffe Daten lesen und schreiben lassen</string>
     <string name="custom_buttons" maxLength="41">Leistenschaltflächen</string>

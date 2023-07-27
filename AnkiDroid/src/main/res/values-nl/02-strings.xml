@@ -61,8 +61,8 @@
     <string name="updated_version">Geüpdatet naar versie %s</string>
     <!-- Reviewer.kt -->
     <string name="save_whiteboard">Schrijfbord opslaan</string>
-    <string name="enable_stylus">Enable stylus mode</string>
-    <string name="disable_stylus">Disable stylus mode</string>
+    <string name="enable_stylus">Enable stylus writing</string>
+    <string name="disable_stylus">Disable stylus writing</string>
     <string name="enable_whiteboard">Whiteboard inschakelen</string>
     <string name="disable_whiteboard">Whiteboard uitschakelen</string>
     <string name="show_whiteboard">Toon het schrijfbord</string>
@@ -128,6 +128,7 @@
     <string name="reordering_cards">Kaarten herschikken...</string>
     <string name="field_remapping">%1$s (van “%2$s”)</string>
     <string name="confirm_map_cards_to_nothing">De kaarten toegewezen aan niets zullen worden verwijderd. Als een memo resterende kaarten heeft, zullen zij verloren gaan. Weet u zeker dat u wilt doorgaan?</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">Timebox bereikt</string>
     <plurals name="timebox_reached">
         <item quantity="one">%1$d kaart geoefend in %2$s</item>
@@ -198,12 +199,11 @@
         <item quantity="one">Geselecteerde notitie als apkg-bestand exporteren?</item>
         <item quantity="other">Exporteer %d geselecteerde notities als apkg-bestand?</item>
     </plurals>
-    <string name="export_in_progress">Anki-pakketbestand exporteren&#8230;</string>
-    <string name="export_success_title">Collectie succesvol geëxporteerd</string>
+    <string name="export_preparation_in_progress">Export voorbereiden&#8230;</string>
+    <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">Geen applicaties beschikbaar om apkg te verwerken. Opslaan...</string>
     <string name="export_save_apkg_successful">Anki-pakket succesvol opgeslagen</string>
     <string name="export_save_apkg_unsuccessful">Opslaan Anki-pakket mislukt</string>
-    <string name="export_success_message">U kunt een bestandslocatie kiezen om op te slaan of u kunt het delen met een andere toepassing.</string>
     <string name="export_share_title">Stuur Anki-pakket met</string>
     <string name="export_email_subject">AnkiDroid geëxporteerde flashcards: %s</string>
     <string name="export_email_text"><![CDATA[        Hallo!
@@ -213,8 +213,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_select_save_app">Kies waar het bestand wordt opgeslagen</string>
-    <string name="export_select_share_app">Selecteer applicatie voor delen</string>
+    <string name="export_choice_share">Delen</string>
+    <string name="export_choice_save_to">Save to</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Opties</string>
     <string name="menu__deck_options">Setopties</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Studieopties</string>
@@ -307,7 +307,7 @@
     <string name="reviewer_invalid_api_version_visit_documentation">Weergave</string>
     <string name="anki_js_error_code">(Foutcode: %d)</string>
     <!-- About AnkiDroid screen -->
-    <string name="about_ankidroid_successfully_copied_debug_info">Copied to clipboard</string>
+    <string name="about_ankidroid_successfully_copied_debug_info">Naar klembord gekopieerd</string>
     <string name="about_ankidroid_error_copy_debug_info">Fout bij kopiëren van debuginformatie naar het klembord</string>
     <!-- Card Viewer -->
     <string name="card_viewer_could_not_find_image">Fout met de kaartinhoud: Laden van ‘%s ’ is mislukt</string>
@@ -367,7 +367,7 @@
     <string name="home">Startpagina</string>
     <!-- Reviewer actions 
     Each of these strings ends with a period, following the notation of Anki Desktop -->
-    <string name="card_buried">Card buried.</string>
+    <string name="card_buried">Kaart begraven.</string>
     <plurals name="note_suspended">
         <item quantity="one">%d card suspended.</item>
         <item quantity="other">%d cards suspended.</item>
@@ -417,7 +417,6 @@
     <string name="functionality_disabled_during_storage_migration" comment="Displayed when trying to access functionality which cannot be run while storage is being moved to a new location">        This functionality is unavailable during a storage migration
     </string>
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">Tap to start storage migration</string>
-    <string name="media_sync_required_title">Media Sync Required</string>
+    <string name="media_sync_required_title">Media-synchronisatie vereist</string>
     <string name="media_sync_unavailable_message">Media sync is disabled in the settings. Please sync and backup any media which hasn\'t been synced before continuing</string>
-    <string name="remember_sync_metered_checkbox_msg">Don\'t ask again (this warning can be re-enabled from Sync Settings)</string>
 </resources>

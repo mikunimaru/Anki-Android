@@ -128,6 +128,7 @@
     <string name="reordering_cards">מסדר מחדש את הכרטיסים&#8230;</string>
     <string name="field_remapping">%1$s (מתוך \"%2$s\")</string>
     <string name="confirm_map_cards_to_nothing">קלף שממופה לכלום ימחק. אם לרשימה אין קלפים נותרים, היא תימחק. להמשיך?</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">קופסת הזמן הגיעה</string>
     <plurals name="timebox_reached">
         <item quantity="one">%1$d כרטסיה נלמדו ב%2$s</item>
@@ -212,12 +213,11 @@
         <item quantity="many">לייצא את %d הכרטיסים הנבחרים כקובץ apkg?</item>
         <item quantity="other">לייצא את %d הכרטיסים הנבחרים כקובץ apkg?</item>
     </plurals>
-    <string name="export_in_progress">קובץ חבילה של Anki מיוצא&#8230;</string>
-    <string name="export_success_title">הכרטיסים יוצאו בהצלחה</string>
+    <string name="export_preparation_in_progress">Preparing export&#8230;</string>
+    <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">לא נמצא יישום התומך ב- apkg. שומר...</string>
     <string name="export_save_apkg_successful">חבילת ה־Anki נשמרה בהצלחה</string>
     <string name="export_save_apkg_unsuccessful">שמירת חבילת Anki נכשלה</string>
-    <string name="export_success_message">ביכולתך לבחור מיקום קובץ כדי לשמור אותו, או לשתף אותו עם יישום אחר.</string>
     <string name="export_share_title">שלח חבילת אנקי באמצעות</string>
     <string name="export_email_subject">קלפי AnkiDroid שיוצאו: %s</string>
     <string name="export_email_text"><![CDATA[         היי!
@@ -227,8 +227,8 @@
          [1] %1$s<br/>
          [2] %2$s
          ]]></string>
-    <string name="export_select_save_app">בחר מיקום שמירת הקובץ</string>
-    <string name="export_select_share_app">בחר תוכנה לשיתוף</string>
+    <string name="export_choice_share">Share</string>
+    <string name="export_choice_save_to">Save to</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">אפשרויות</string>
     <string name="menu__deck_options">אפשרויות חפיסה</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">אפשרויות למידה</string>
@@ -343,7 +343,7 @@
     <!-- Deck Picker -->
     <string name="deck_picker_failed_deck_load">טעינת החפיסה %s נכשלה</string>
     <string name="search_decks">חיפוש בחפיסות</string>
-    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">Show migration progress</string>
+    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">הצג התקדמות ההמרה</string>
     <string name="ankidroid_init_failed_webview_title">שגיאה מכרעת</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid משתמש בדפדפן המערכת שאינו זמין. זה קורה לפעמים אם המערכת מתקינה עדכונים. נא נסה שנית בעוד כמה דקות. \n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
@@ -448,5 +448,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">הקש כדי להתחיל העברת אחסון</string>
     <string name="media_sync_required_title">דרוש סנכרון מדיה</string>
     <string name="media_sync_unavailable_message">סנכרון מדיה מושבת בהגדרות. אנא סנכרן וגבה כל מדיה שלא סונכרנה לפני שתמשיך</string>
-    <string name="remember_sync_metered_checkbox_msg">Don\'t ask again (this warning can be re-enabled from Sync Settings)</string>
 </resources>

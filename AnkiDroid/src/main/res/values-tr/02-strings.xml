@@ -128,6 +128,7 @@
     <string name="reordering_cards">Kartların sırası değiştiriliyor...</string>
     <string name="field_remapping">%1$s (\'%2$s\' içinden)</string>
     <string name="confirm_map_cards_to_nothing">Hiçbir şeyle eşlemeyen tüm kartlar silinecektir. Eğer bir notun kalan kartları yoksa, kaybolacaktır. Devam etmek istediğinizden emin misiniz?</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">Zaman sınırına ulaşıldı</string>
     <plurals name="timebox_reached">
         <item quantity="one">%2$s dakikada %1$d kart çalışıldı</item>
@@ -183,7 +184,7 @@
     <string name="import_error_copy_to_cache">Dosya belleğe alınamadı (depolama alanı bitmiş olabilir)</string>
     <string name="import_error_multiple_colpkg">Birden fazla colpkg dosyası seçilmiş.</string>
     <string name="import_error_colpkg_apkg">Aynı zamanda hem apkg hem colpkg dosyaları seçilmiş.</string>
-    <string name="import_stats_error">Aşağıdaki dosyalar içeri aktarılırken bazı hatalar meydana geldi:\n%s</string>
+    <string name="import_stats_error">Aşağıdaki dosyalar içeri aktarılırken bazı hatalar oluştu:\n%s</string>
     <string name="import_replacing">Koleksiyon değiştiriliyor&#8230;</string>
     <string name="import_interrupted">Aktarım yarıda kesildi: AnkiDroid kapatıldı</string>
     <string name="export_include_schedule">Zamanlamayı dahil et</string>
@@ -198,12 +199,11 @@
         <item quantity="one">Seçili not apkg dosyası olarak dışarı aktarılsın mı?</item>
         <item quantity="other">Seçili %d notlar apkg dosyası olarak dışarı aktarılsın mı?</item>
     </plurals>
-    <string name="export_in_progress">Anki paketi dosyası dışarı aktarılıyor&#8230;</string>
-    <string name="export_success_title">Koleksiyon başarıyla dışarı aktarıldı</string>
+    <string name="export_preparation_in_progress">Dışa aktarım hazırlanıyor&#8230;</string>
+    <string name="export_ready_title">Dışa aktarım hazır</string>
     <string name="export_send_no_handlers">Apkg işleyecek uygulama yok. Kaydediliyor...</string>
     <string name="export_save_apkg_successful">Anki paketi başarıyla kaydedildi</string>
     <string name="export_save_apkg_unsuccessful">Anki paketi kaydı başarısız oldu</string>
-    <string name="export_success_message">Kaydetmek için bir dosya konumu seçebilir, veya başka bir uygulamayla paylaşabilirsiniz.</string>
     <string name="export_share_title">Anki paketini göndermek için kullan</string>
     <string name="export_email_subject">AnkiDroid\'den dışa aktarılan bilgi kartları: %s</string>
     <string name="export_email_text"><![CDATA[        Selam!
@@ -213,8 +213,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_select_save_app">Dosyanın nereye kaydedileceğini seçin</string>
-    <string name="export_select_share_app">Paylaşılacak uygulamayı seçin</string>
+    <string name="export_choice_share">Paylaş</string>
+    <string name="export_choice_save_to">Kaydet</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Seçenekler</string>
     <string name="menu__deck_options">Deste seçenekleri</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Çalışma seçenekleri</string>
@@ -315,7 +315,7 @@
     <!-- Deck Picker -->
     <string name="deck_picker_failed_deck_load">\'%s\' destesinin yüklenmesi başarısız</string>
     <string name="search_decks">Deste ara</string>
-    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">Show migration progress</string>
+    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">Taşıma ilerlemesini göster</string>
     <string name="ankidroid_init_failed_webview_title">Kritik Hata</string>
     <string name="ankidroid_init_failed_webview">AnkiDroid şu an ulaşılamayan System WebView\'a dayanır. Bu sistem güncelleme yüklerken olabilir. Lütfen birkaç dakika sonra tekrar deneyin.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
@@ -419,5 +419,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">Depolama taşımayı başlatmak için dokunun</string>
     <string name="media_sync_required_title">Medya Senkronizasyonu Gerekiyor</string>
     <string name="media_sync_unavailable_message">Medya senkronizasyonu ayarlardan kapalı. Lütfen devam etmeden önce senkronize edilmemiş medyayı senkronize edin ve yedekleyin.</string>
-    <string name="remember_sync_metered_checkbox_msg">Don\'t ask again (this warning can be re-enabled from Sync Settings)</string>
 </resources>

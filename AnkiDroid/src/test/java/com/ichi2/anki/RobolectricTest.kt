@@ -36,6 +36,7 @@ import com.afollestad.materialdialogs.actions.getActionButton
 import com.ichi2.anki.dialogs.DialogHandler
 import com.ichi2.anki.dialogs.utils.FragmentTestActivity
 import com.ichi2.anki.exception.ConfirmModSchemaException
+import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.async.*
 import com.ichi2.compat.customtabs.CustomTabActivityHelper
 import com.ichi2.libanki.*
@@ -68,6 +69,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.time.Duration.Companion.milliseconds
 
 open class RobolectricTest : CollectionGetter, AndroidTest {
 
@@ -228,7 +230,7 @@ open class RobolectricTest : CollectionGetter, AndroidTest {
             Timber.e("The latest dialog has already been dismissed.")
             return null
         }
-        return dialog.view.contentLayout.findViewById<TextView>(R.id.md_text_message).text.toString()
+        return dialog.view.contentLayout.findViewById<TextView>(com.afollestad.materialdialogs.R.id.md_text_message).text.toString()
     }
 
     /**
@@ -336,7 +338,7 @@ open class RobolectricTest : CollectionGetter, AndroidTest {
      * @see [editPreferences] for editing
      */
     fun getPreferences(): SharedPreferences {
-        return AnkiDroidApp.getSharedPrefs(targetContext)
+        return targetContext.sharedPrefs()
     }
 
     protected fun getResourceString(res: Int): String {
@@ -641,7 +643,7 @@ open class RobolectricTest : CollectionGetter, AndroidTest {
         dispatchTimeoutMs: Long = 60_000L,
         testBody: suspend TestScope.() -> Unit
     ) {
-        kotlinx.coroutines.test.runTest(context, dispatchTimeoutMs) {
+        runTest(context, dispatchTimeoutMs.milliseconds) {
             CollectionManager.setTestDispatcher(UnconfinedTestDispatcher(testScheduler))
             testBody()
         }

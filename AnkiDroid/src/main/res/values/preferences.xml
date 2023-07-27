@@ -104,7 +104,6 @@
     <string name="enable_api_key">providerEnabled</string>
     <string name="thirdparty_apps_key">thirdpartyapps_link</string>
     <string name="tts_key">tts</string>
-    <string name="convert_fen_text_key">convertFenText</string>
     <string name="more_scrolling_buttons_key">scrolling_buttons</string>
     <string name="double_scrolling_gap_key">double_scrolling</string>
     <string name="stats_default_deck_key">stats_default_deck</string>
@@ -134,6 +133,10 @@
     <string name="pref_reset_onboarding_key">resetOnboarding</string>
     <string name="pref_rust_backend_key">useRustBackend</string>
     <string name="dev_options_enabled_by_user_key">devOptionsEnabledByUser</string>
+    <!-- Developer options > Create fake media -->
+    <string name="pref_fill_collection_key">fillCollection</string>
+    <string name="pref_fill_collection_number_file_key">fillCollectionNumberFile</string>
+    <string name="pref_fill_collection_size_file_key">fillCollectionSizeFile</string>
     <!-- Messages displayed after the user enabled developer options, and warned remaining messages will be in English -->
     <string name="dev_options_enabled_msg">Enabled developer options</string>
     <!-- About -->

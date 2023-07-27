@@ -89,7 +89,7 @@ class AdvancedSettingsFragment : SettingsFragment() {
                 }
                 setNegativeButton(R.string.dialog_cancel) { _, _ -> }
             }
-            true
+            false
         }
 
         /*
@@ -113,7 +113,9 @@ class AdvancedSettingsFragment : SettingsFragment() {
                 isEnabled = false
             }
             setSummaryProvider {
-                if (AnkiDroidApp.getSharedPrefs(requireContext()).getBoolean("advanced_statistics_enabled", false)) {
+                if (requireContext().sharedPrefs()
+                    .getBoolean("advanced_statistics_enabled", false)
+                ) {
                     getString(R.string.enabled)
                 } else {
                     getString(R.string.disabled)
@@ -128,11 +130,11 @@ class AdvancedSettingsFragment : SettingsFragment() {
         // Third party apps
         requirePreference<Preference>(R.string.thirdparty_apps_key).setOnPreferenceClickListener {
             (requireActivity() as AnkiActivity).openUrl(R.string.link_third_party_api_apps)
-            true
+            false
         }
 
         // Enable API
-        requirePreference<SwitchPreference>(R.string.enable_api_key).setOnPreferenceChangeListener { newValue ->
+        requirePreference<SwitchPreferenceCompat>(R.string.enable_api_key).setOnPreferenceChangeListener { newValue ->
             val providerName = ComponentName(requireContext(), CardContentProvider::class.java.name)
             val state = if (newValue == true) {
                 Timber.i("AnkiDroid ContentProvider enabled by user")
@@ -149,10 +151,10 @@ class AdvancedSettingsFragment : SettingsFragment() {
          */
 
         @RustCleanup("move this to Reviewing > Scheduling once the new backend is the default")
-        val v3schedPref = requirePreference<SwitchPreference>(R.string.enable_v3_sched_key)
+        val v3schedPref = requirePreference<SwitchPreferenceCompat>(R.string.enable_v3_sched_key)
 
         // Use V16 backend
-        requirePreference<SwitchPreference>(R.string.pref_rust_backend_key).apply {
+        requirePreference<SwitchPreferenceCompat>(R.string.pref_rust_backend_key).apply {
             if (!BuildConfig.LEGACY_SCHEMA) {
                 title = "New schema already enabled on local.properties"
                 isEnabled = false
@@ -214,14 +216,14 @@ class AdvancedSettingsFragment : SettingsFragment() {
          * on this same condition at [Preferences.configureSearchBar] */
         // Disable the emoji/kana buttons to scroll preference if those keys don't exist
         if (!CompatHelper.hasKanaAndEmojiKeys()) {
-            val emojiScrolling = findPreference<SwitchPreference>("scrolling_buttons")
+            val emojiScrolling = findPreference<SwitchPreferenceCompat>("scrolling_buttons")
             if (emojiScrolling != null) {
                 preferenceScreen.removePreference(emojiScrolling)
             }
         }
         // Disable the double scroll preference if no scrolling keys
         if (!CompatHelper.hasScrollKeys() && !CompatHelper.hasKanaAndEmojiKeys()) {
-            val doubleScrolling = findPreference<SwitchPreference>("double_scrolling")
+            val doubleScrolling = findPreference<SwitchPreferenceCompat>("double_scrolling")
             if (doubleScrolling != null) {
                 preferenceScreen.removePreference(doubleScrolling)
             }
@@ -230,7 +232,7 @@ class AdvancedSettingsFragment : SettingsFragment() {
 
     private fun Preference.disableIfStorageMigrationInProgress() {
         try {
-            if (ScopedStorageService.userMigrationIsInProgress(requireContext())) {
+            if (ScopedStorageService.mediaMigrationIsInProgress(requireContext())) {
                 isEnabled = false
                 summaryProvider = null // needs to be disabled to set .summary
                 summary = getString(R.string.functionality_disabled_during_storage_migration)

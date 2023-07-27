@@ -128,6 +128,7 @@
     <string name="reordering_cards">Карточки перемешиваются&#8230;</string>
     <string name="field_remapping">%1$s (из «%2$s»)</string>
     <string name="confirm_map_cards_to_nothing">Несопоставленные карты будут удалены. Записи, оставшиеся без карт, будут утеряны. Продолжить?</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">Достигнут лимит учебного блока</string>
     <plurals name="timebox_reached">
         <item quantity="one">%1$d карточка изучена за %2$s</item>
@@ -210,12 +211,11 @@
         <item quantity="many">Экспортировать %d выбранных записей как apkg-файл?</item>
         <item quantity="other">Экспортировать %d выбранных записей как apkg-файл?</item>
     </plurals>
-    <string name="export_in_progress">Пакет Anki экспортируется&#8230;</string>
-    <string name="export_success_title">Коллекция успешно экспортирована</string>
+    <string name="export_preparation_in_progress">Preparing export&#8230;</string>
+    <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">Нет приложений для чтения файлов apkg. Сохраняется...</string>
     <string name="export_save_apkg_successful">Пакет Anki успешно сохранён</string>
     <string name="export_save_apkg_unsuccessful">Не удалось сохранить пакет Anki</string>
-    <string name="export_success_message">Вы можете выбрать папку для сохранения или поделиться через другое приложение.</string>
     <string name="export_share_title">Отправить пакет Anki с помощью</string>
     <string name="export_email_subject">AnkiDroid экспортировал колоды карточек: %s</string>
     <string name="export_email_text"><![CDATA[        Привет!
@@ -225,8 +225,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_select_save_app">Выберите место сохранения</string>
-    <string name="export_select_share_app">Выберите, как поделиться</string>
+    <string name="export_choice_share">Share</string>
+    <string name="export_choice_save_to">Save to</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Параметры</string>
     <string name="menu__deck_options">Параметры колоды</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Параметры учёбы</string>
@@ -309,7 +309,7 @@
     <string name="check_integrity_recovered_deck_name">Восстановленные карточки</string>
     <!-- Deckpicker Background -->
     <string name="background_image_title">Фон</string>
-    <string name="choose_an_image">Выберите изображение</string>
+    <string name="choose_an_image">Выбрать изображение</string>
     <!-- Card Template Browser Appearance -->
     <string name="restore_default">Сбросить настройки</string>
     <string name="cloze_sample_text">Это {{%1$s::пример}} задания с пропусками</string>
@@ -333,7 +333,7 @@
     <string name="reviewer_invalid_api_version_visit_documentation">Вид</string>
     <string name="anki_js_error_code">(Код ошибки: %d)</string>
     <!-- About AnkiDroid screen -->
-    <string name="about_ankidroid_successfully_copied_debug_info">Скопировано в буфер обмена</string>
+    <string name="about_ankidroid_successfully_copied_debug_info">Скопировано в буфер</string>
     <string name="about_ankidroid_error_copy_debug_info">Ошибка при копировании отладочной информации в буфер обмена</string>
     <!-- Card Viewer -->
     <string name="card_viewer_could_not_find_image">Не удалось загрузить «%s»</string>
@@ -421,7 +421,7 @@
     <!--  Hierarchical Tags  -->
     <string name="expand_tag">Развернуть метку «%s»</string>
     <!-- Manage note types -->
-    <string name="field_editor_model_not_available">Не удалось получить доступ к коллекции. Попробуйте еще раз!</string>
+    <string name="field_editor_model_not_available">Не удалось получить доступ к коллекции. Попробуйте еще раз.</string>
     <!-- App Intro -->
     <string name="intro_ankidroid_tagline_one">Учиться эффективнее</string>
     <string name="intro_ankidroid_tagline_two">Запоминать больше</string>
@@ -441,11 +441,10 @@
     <string name="toggle_cards_notes">Переключить карточки/заметки</string>
     <string name="toggle_browser_mode_help">Показывать карточки или записи в списке</string>
     <string name="truncate_content_help">Показывать в списке только первые 3 строки</string>
-    <string name="browser_options_dialog_heading">Настройки браузера</string>
+    <string name="browser_options_dialog_heading">Параметры списка карточек</string>
     <string name="functionality_disabled_during_storage_migration" comment="Displayed when trying to access functionality which cannot be run while storage is being moved to a new location">        Эта функция недоступна во время переноса хранилища
     </string>
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">Нажмите, чтобы начать перенос хранилища</string>
     <string name="media_sync_required_title">Требуется синхронизация медиафайлов</string>
     <string name="media_sync_unavailable_message">Синхронизация медиафайлов отключена в настройках. Пожалуйста, перед продолжением синхронизируйте и сделайте резервную копию всех медиафайлов, которые не были синхронизированы</string>
-    <string name="remember_sync_metered_checkbox_msg">Don\'t ask again (this warning can be re-enabled from Sync Settings)</string>
 </resources>

@@ -33,6 +33,7 @@ import com.ichi2.anki.CollectionManager.TR
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.dialogs.DialogHandlerMessage
 import com.ichi2.anki.dialogs.SyncErrorDialog
+import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.servicelayer.ScopedStorageService
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.web.HostNumFactory
@@ -71,7 +72,7 @@ interface SyncCompletionListener {
 }
 
 fun DeckPicker.syncAuth(): SyncAuth? {
-    val preferences = AnkiDroidApp.getSharedPrefs(this)
+    val preferences = this.sharedPrefs()
     val hkey = preferences.getString(SyncPreferences.HKEY, null)
     val resolvedEndpoint = getEndpoint(this)
     return hkey?.let {
@@ -85,7 +86,7 @@ fun DeckPicker.syncAuth(): SyncAuth? {
 }
 
 fun getEndpoint(context: Context): String? {
-    val preferences = AnkiDroidApp.getSharedPrefs(context)
+    val preferences = context.sharedPrefs()
     val currentEndpoint = preferences.getString(SyncPreferences.CURRENT_SYNC_URI, null)
     val customEndpoint = if (preferences.getBoolean(SyncPreferences.CUSTOM_SYNC_ENABLED, false)) {
         preferences.getString(SyncPreferences.CUSTOM_SYNC_URI, null)
@@ -109,7 +110,7 @@ fun customSyncBase(preferences: SharedPreferences): String? {
 }
 
 suspend fun syncLogout(context: Context) {
-    val preferences = AnkiDroidApp.getSharedPrefs(context)
+    val preferences = context.sharedPrefs()
     preferences.edit {
         remove(SyncPreferences.HKEY)
         remove(SyncPreferences.USERNAME)
@@ -126,11 +127,12 @@ suspend fun syncLogout(context: Context) {
  * Returning true does not guarantee that the user actually synced recently,
  * or even that the ankiweb account is still valid.
  */
-fun isLoggedIn() = AnkiDroidApp.getSharedPrefs(AnkiDroidApp.instance).getString(SyncPreferences.HKEY, "")!!.isNotEmpty()
+fun isLoggedIn() =
+    AnkiDroidApp.instance.sharedPrefs().getString(SyncPreferences.HKEY, "")!!.isNotEmpty()
 
 fun millisecondsSinceLastSync(preferences: SharedPreferences) = TimeManager.time.intTimeMS() - preferences.getLong("lastSyncTime", 0)
 
-fun canSync(context: Context) = !ScopedStorageService.userMigrationIsInProgress(context)
+fun canSync(context: Context) = !ScopedStorageService.mediaMigrationIsInProgress(context)
 
 fun DeckPicker.handleNewSync(
     conflict: Connection.ConflictResolution?,
@@ -191,7 +193,7 @@ fun MyAccount.handleNewLogin(username: String, password: String) {
 }
 
 private fun updateLogin(context: Context, username: String, hkey: String?) {
-    val preferences = AnkiDroidApp.getSharedPrefs(context)
+    val preferences = context.sharedPrefs()
     preferences.edit {
         putString(SyncPreferences.USERNAME, username)
         putString(SyncPreferences.HKEY, hkey)
@@ -220,7 +222,7 @@ private suspend fun handleNormalSync(
     }
 
     if (output.hasNewEndpoint()) {
-        AnkiDroidApp.getSharedPrefs(deckPicker).edit {
+        deckPicker.sharedPrefs().edit {
             putString(SyncPreferences.CURRENT_SYNC_URI, output.newEndpoint)
         }
     }
@@ -433,7 +435,8 @@ fun DeckPicker.createSyncListener(isFetchingMedia: Boolean) = object : Connectio
                     resources.getString(R.string.sync_title),
                     """
                                 ${resources.getString(R.string.sync_title)}
-                                ${resources.getString(R.string.sync_up_down_size, mCountUp, mCountDown)}
+                                ${resources.getString(R.string.sync_up_down_size, mCountUp, mCountDown)
+                    }
                     """.trimIndent(),
                     false
                 )
@@ -481,7 +484,7 @@ fun DeckPicker.createSyncListener(isFetchingMedia: Boolean) = object : Connectio
 
         // Store the current time so that we don't bother the user with a sync prompt for another 10 minutes
         // Note: getLs() in Libanki doesn't take into account the case when no changes were found, or sync cancelled
-        AnkiDroidApp.getSharedPrefs(baseContext).edit { putLong("lastSyncTime", syncStartTime) }
+        baseContext.sharedPrefs().edit { putLong("lastSyncTime", syncStartTime) }
     }
 
     override fun onProgressUpdate(vararg values: Any?) {
@@ -537,7 +540,7 @@ fun DeckPicker.createSyncListener(isFetchingMedia: Boolean) = object : Connectio
                 when (resultType) {
                     Syncer.ConnectionResultType.BAD_AUTH -> {
                         // delete old auth information
-                        AnkiDroidApp.getSharedPrefs(baseContext).edit {
+                        baseContext.sharedPrefs().edit {
                             putString("username", "")
                             putString("hkey", "")
                         }
@@ -554,8 +557,9 @@ fun DeckPicker.createSyncListener(isFetchingMedia: Boolean) = object : Connectio
                         dialogMessage = when {
                             diff >= 86100 -> {
                                 // The difference if more than a day minus 5 minutes acceptable by ankiweb error
-                                res.getString(
-                                    R.string.sync_log_clocks_unsynchronized,
+                                res.getQuantityString(
+                                    R.plurals.sync_log_clocks_unsynchronized_new,
+                                    diff.toInt(),
                                     diff,
                                     res.getString(R.string.sync_log_clocks_unsynchronized_date)
                                 )
@@ -563,14 +567,15 @@ fun DeckPicker.createSyncListener(isFetchingMedia: Boolean) = object : Connectio
                             abs(diff % 3600.0 - 1800.0) >= 1500.0 -> {
                                 // The difference would be within limit if we adjusted the time by few hours
                                 // It doesn't work for all timezones, but it covers most and it's a guess anyway
-                                res.getString(
-                                    R.string.sync_log_clocks_unsynchronized,
+                                res.getQuantityString(
+                                    R.plurals.sync_log_clocks_unsynchronized_new,
+                                    diff.toInt(),
                                     diff,
                                     res.getString(R.string.sync_log_clocks_unsynchronized_tz)
                                 )
                             }
                             else -> {
-                                res.getString(R.string.sync_log_clocks_unsynchronized, diff, "")
+                                res.getQuantityString(R.plurals.sync_log_clocks_unsynchronized_new, diff.toInt(), diff, "")
                             }
                         }
                         showSyncErrorMessage(
@@ -626,6 +631,15 @@ fun DeckPicker.createSyncListener(isFetchingMedia: Boolean) = object : Connectio
                     }
                     Syncer.ConnectionResultType.FINISH_ERROR -> {
                         dialogMessage = res.getString(R.string.sync_log_finish_error)
+                        showSyncErrorMessage(
+                            joinSyncMessages(
+                                dialogMessage,
+                                syncMessage
+                            )
+                        )
+                    }
+                    Syncer.ConnectionResultType.SOCKET_ERROR -> {
+                        dialogMessage = res.getString(R.string.sync_connection_error)
                         showSyncErrorMessage(
                             joinSyncMessages(
                                 dialogMessage,

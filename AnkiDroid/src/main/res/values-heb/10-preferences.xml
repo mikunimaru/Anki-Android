@@ -187,12 +187,8 @@
     <string name="new_timezone" maxLength="41">טיפול באזור זמן חדש</string>
     <string name="day_offset_with_description" maxLength="41">התחל את היום הבא</string>
     <string name="day_offset_summary">%s שעות אחרי חצות</string>
-    <string name="xlabel_dayoffset_seekbar" maxLength="41">חצות</string>
-    <string name="ylabel_dayoffset_seekbar" maxLength="41">11 בלילה</string>
     <string name="pref_keep_screen_on" maxLength="41">להשאיר את המסך דולק</string>
     <string name="pref_keep_screen_on_summ">השבת כיבוי מסך</string>
-    <string name="convert_fen_text" maxLength="41">תמיכה בסימון שחמט</string>
-    <string name="convert_fen_text_summ">צייר לוח שחמט מ-Forsyth–Edwards Notation. הסימון חייב להיות מוקף בתגיות [fen][/fen].</string>
     <string name="enable_api_title" maxLength="41">הפעלת ה־API של AnkiDroid</string>
     <string name="enable_api_summary">אפשר לאפליקציות אחרות להתחבר ל-AnkiDroid ולקרוא / לכתוב נתונים ללא התערבותך</string>
     <string name="custom_buttons" maxLength="41">כפתורי סרגל האפליקציה</string>

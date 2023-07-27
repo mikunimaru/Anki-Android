@@ -22,7 +22,8 @@ import androidx.test.core.app.ActivityScenario
 import com.ichi2.anki.AbstractFlashcardViewer.Companion.RESULT_DEFAULT
 import com.ichi2.anki.cardviewer.ViewerCommand
 import com.ichi2.anki.exception.ConfirmModSchemaException
-import com.ichi2.anki.preferences.PreferenceUtils
+import com.ichi2.anki.preferences.PreferenceTestUtils
+import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.anki.reviewer.ActionButtonStatus
 import com.ichi2.libanki.Card
 import com.ichi2.libanki.Consts
@@ -269,9 +270,9 @@ class ReviewerTest : RobolectricTest() {
     }
 
     private fun disableAllReviewerAppBarButtons() {
-        val keys = PreferenceUtils.getAllCustomButtonKeys(targetContext)
+        val keys = PreferenceTestUtils.getAllCustomButtonKeys(targetContext)
 
-        val preferences = AnkiDroidApp.getSharedPrefs(targetContext)
+        val preferences = targetContext.sharedPrefs()
 
         preferences.edit {
             for (k in keys) {

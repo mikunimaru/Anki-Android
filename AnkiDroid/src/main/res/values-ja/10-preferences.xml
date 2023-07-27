@@ -59,7 +59,7 @@
     <string name="pref_cat_sync" comment="title of the sync preferences category" maxLength="41">同期</string>
     <string name="pref_cat_scheduling" maxLength="41">スケジュール</string>
     <string name="pref_cat_whiteboard" maxLength="41">ホワイトボード機能</string>
-    <string name="pref_cat_appearance" maxLength="41">デザインと表示</string>
+    <string name="pref_cat_appearance" maxLength="41">外観</string>
     <string name="pref_cat_themes" maxLength="41">テーマ</string>
     <string name="pref_cat_fonts" maxLength="41">フォント</string>
     <string name="pref_cat_gestures" maxLength="41">ジェスチャー</string>
@@ -79,8 +79,8 @@
     <string name="image_zoom" maxLength="41">画像の拡大・縮小</string>
     <string name="button_size" maxLength="41">解答表示・回答ボタンのサイズ</string>
     <string name="card_browser_font_size" maxLength="41">カードブラウザのフォントサイズ</string>
-    <string name="card_browser_hide_media" maxLength="41">カードブラウザでファイル名も表示</string>
-    <string name="card_browser_hide_media_summary">カードブラウザのリスト画面の質問フィールド欄と解答フィールド欄に、メディア（画像・音声・動画）ファイル名も表示する</string>
+    <string name="card_browser_hide_media" maxLength="41">リストにファイル名も表示</string>
+    <string name="card_browser_hide_media_summary">カードブラウザのリスト画面の質問フィールド欄と解答フィールド欄に、メディア（画像・音声・動画）ファイル名も表示します</string>
     <string name="col_path" maxLength="41">AnkiDroidディレクトリ</string>
     <string name="fullscreen_review" maxLength="41">フルスクリーンモード</string>
     <string name="full_screen_off">オフ</string>
@@ -181,17 +181,13 @@
     <string name="show_eta_summ">学習画面のデッキ名の下に、そのデッキの学習終了までの推定所要時間を表示します</string>
     <string name="use_current" maxLength="41">新規カードの既定の追加先デッキ</string>
     <string name="new_spread" maxLength="41">新規カードの位置</string>
-    <string name="learn_cutoff" maxLength="41">習得学習の前倒し可能時間</string>
-    <string name="time_limit" maxLength="41">タイムボックス（時間の目標・区切り）</string>
+    <string name="learn_cutoff" maxLength="41">習得学習の前倒し許容時間</string>
+    <string name="time_limit" maxLength="41">タイムボックス（学習時間の目標・区切り）</string>
     <string name="new_timezone" maxLength="41">新しいタイムゾーン処理</string>
     <string name="day_offset_with_description" maxLength="41">日付更新時刻</string>
     <string name="day_offset_summary">%s時</string>
-    <string name="xlabel_dayoffset_seekbar" maxLength="41">午前 0 時</string>
-    <string name="ylabel_dayoffset_seekbar" maxLength="41">午後11時</string>
     <string name="pref_keep_screen_on" maxLength="41">スクリーンをオンのままにする</string>
     <string name="pref_keep_screen_on_summ">画面の自動オフを無効にします</string>
-    <string name="convert_fen_text" maxLength="41">チェス表記のサポート</string>
-    <string name="convert_fen_text_summ">FEN (Forsyth-Edwards Notation) を使いチェス盤を描画します。この表記は [fen] と [/fen] との両タグで囲む必要があります</string>
     <string name="enable_api_title" maxLength="41">AnkiDroid API を有効にする</string>
     <string name="enable_api_summary">他のアプリがAnkiDroidに接続しデータを読み書きすることを許可します</string>
     <string name="custom_buttons" maxLength="41">アプリバーボタン</string>
@@ -263,9 +259,9 @@
     <string name="deck_conf_easy_ivl" maxLength="41">簡単と回答してから復習までの間隔</string>
     <string name="deck_conf_start_ease" maxLength="41">「易しさ」(間隔の伸び率) の初期値</string>
     <string name="deck_conf_max_rev" maxLength="41">一日の復習カード出題上限枚数</string>
-    <string name="deck_conf_new_bury" maxLength="41">兄弟関係の新規カードをパス</string>
+    <string name="deck_conf_new_bury" maxLength="41">兄弟関係の新規カードを明日に延期</string>
     <string name="deck_conf_new_bury_summ">兄弟関係の (＝同じノートから作成された) 新規カードの学習を同じ日に行わず、翌日に延期します</string>
-    <string name="deck_conf_rev_bury" maxLength="41">兄弟関係のカードの復習をパス</string>
+    <string name="deck_conf_rev_bury" maxLength="41">兄弟関係の復習カードを明日に延期</string>
     <string name="deck_conf_rev_bury_summ">兄弟関係の (＝同じノートから作成された) カードの復習を同じ日に行わず、翌日に延期します</string>
     <string name="deck_conf_use_general_timeout_settings" maxLength="41">一般設定を使用する</string>
     <string name="deck_conf_use_general_timeout_settings_summ">このグループ独自の設定は行わず、ドロワーメニューの [設定]→[カードの学習]→[解答の自動表示] での一般的な設定をそのまま使用します</string>
@@ -350,7 +346,7 @@
     <string name="experimental_pref_confirmation" maxLength="41">「%s」を有効にする</string>
     <string name="use_rust_backend_title" maxLength="41">新しいバックエンドを使用する</string>
     <string name="use_rust_backend_summary">V3スケジューラーなど、Ankiの新しい機能を有効にします。\n注意：試験運用中です。バックアップを確保していないコレクションでは使用しないでください。アプリを終了しても元に戻りません</string>
-    <string name="use_rust_backend_warning">この機能はまだ十分な検証を終えていないため、これを有効にすることによって、あなたのAnkiDroidのデータに深刻な破損を与えてしまう可能性も否定できません。 AnkiDroidアプリのアンインストールとAnkiDroidフォルダの削除が必要となる可能性や、AnkiWebとの同期によってAnkiWebや他の端末のデータにも破損を波及させてしまう可能性もあります。\n\nこの機能を試していただくことは歓迎いたしますが、万一に備え、AnkiWeb以外にもコレクションのバックアップを確保しておくことを強くおすすめします。</string>
+    <string name="use_rust_backend_warning">この機能はまだ十分な検証を終えていないため、これを有効にすることによって、あなたのAnkiDroidのデータに深刻な損害を与えてしまう可能性も否定できません。 AnkiDroidアプリのアンインストールとAnkiDroidフォルダの削除が必要となる可能性や、AnkiWebとの同期によってAnkiWebや他の端末のデータにも損害を波及させてしまう可能性もあります。\n\nこの機能を試していただくことは歓迎いたしますが、万一に備え、AnkiWeb以外にもコレクションのバックアップを確保しておくことを強くおすすめします。</string>
     <string name="enable_v3_sched_title" maxLength="41">V3スケジューラーを使用する</string>
     <!-- Developer options -->
     <string name="pref_cat_dev_options" maxLength="41">開発者向けオプション</string>

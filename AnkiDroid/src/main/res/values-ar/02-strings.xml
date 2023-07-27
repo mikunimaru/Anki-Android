@@ -128,6 +128,7 @@
     <string name="reordering_cards">إعادة ترتيب البطاقات&#8230;</string>
     <string name="field_remapping">%1$s (من “%2$s”)</string>
     <string name="confirm_map_cards_to_nothing">البطاقات غير المُوزعة ستُحذف. إذا لم يتبقَّ لملحوظة أي بطاقة، ستُحذف. هل أنت متأكد من الاستمرار؟</string>
+    <!-- Timebox -->
     <string name="timebox_reached_title">انتهت مهلة تقسيم المهام</string>
     <plurals name="timebox_reached">
         <item quantity="zero">درست %1$d بطاقة خلال %2$s</item>
@@ -222,12 +223,11 @@
         <item quantity="many">هل تريد تصدير %d ملحوظة محددة كملف apkg؟</item>
         <item quantity="other">هل تريد تصدير %d ملحوظة محددة كملف apkg؟</item>
     </plurals>
-    <string name="export_in_progress">يجري تصدير ملف حزمة أنكي&#8230;</string>
-    <string name="export_success_title">تم تصدير المجموعة بنجاح</string>
+    <string name="export_preparation_in_progress">يجري تجهيز التصدير&#8230;</string>
+    <string name="export_ready_title">جهز التصدير</string>
     <string name="export_send_no_handlers">لا توجد تطبيقات متاحة للتعامل مع apkg. يجري الحفظ...</string>
     <string name="export_save_apkg_successful">تم حفظ حزمة أنكي بنجاح</string>
     <string name="export_save_apkg_unsuccessful">فشل حفظ حزمة أنكي</string>
-    <string name="export_success_message">تستطيع اختيار ملف للحفظ فيه، أو المشاركة مع تطبيق آخر</string>
     <string name="export_share_title">إرسال حزمة أنكي باستخدام</string>
     <string name="export_email_subject">بطاقات مصدّرة من قبل أنكيدرويد: %s</string>
     <string name="export_email_text"><![CDATA[        مرحبًا
@@ -237,8 +237,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_select_save_app">حدد مكان حفظ الملف</string>
-    <string name="export_select_share_app">اختر تطبيقًا للمشاركة</string>
+    <string name="export_choice_share">مشاركة</string>
+    <string name="export_choice_save_to">حفظ في</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">الخيارات</string>
     <string name="menu__deck_options">خيارات الرزمة</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">خيارات الدراسة</string>
@@ -367,7 +367,7 @@
     <!-- Deck Picker -->
     <string name="deck_picker_failed_deck_load">فشل تحميل رزمة ‘%s’</string>
     <string name="search_decks">بحث في الرزم</string>
-    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">Show migration progress</string>
+    <string name="show_migration_progress" comment="Title for a button in deck picker\'s toolbar that shows ongoing migration progress.         Usually shown as a tooltip. The button opens a dialog with a more detailed progress information.">إظهار تقدم النقل</string>
     <string name="ankidroid_init_failed_webview_title">خطأٌ فادح</string>
     <string name="ankidroid_init_failed_webview">يعتمد أنكيدرويد على عارض الويب الخاص بالنظام وهو غير متوفر. يمكن أن يحدث هذا إذا كان النظام ينصب تحديثات. الرجاء المحاولة مجددًا بعد بضع دقائق.\n\n%s</string>
     <!-- A Menu item to change the Font Size (currently in the Note Editor) -->
@@ -474,5 +474,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">انقر لبدء نقل التخزين</string>
     <string name="media_sync_required_title">مزامنة الوسائط مطلوبة</string>
     <string name="media_sync_unavailable_message">مزامنة الوسائط معطلة في الإعدادات. الرجاء مزامنة النسخ الاحتياطي لأي وسائط لم تتم مزامنتها قبل المتابعة</string>
-    <string name="remember_sync_metered_checkbox_msg">Don\'t ask again (this warning can be re-enabled from Sync Settings)</string>
 </resources>

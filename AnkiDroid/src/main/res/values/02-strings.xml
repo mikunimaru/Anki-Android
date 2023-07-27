@@ -38,8 +38,8 @@
 
     <!-- Reviewer.kt -->
     <string name="save_whiteboard">Save whiteboard</string>
-    <string name="enable_stylus">Enable stylus mode</string>
-    <string name="disable_stylus">Disable stylus mode</string>
+    <string name="enable_stylus">Enable stylus writing</string>
+    <string name="disable_stylus">Disable stylus writing</string>
     <string name="enable_whiteboard">Enable whiteboard</string>
     <string name="disable_whiteboard">Disable whiteboard</string>
     <string name="show_whiteboard">Show whiteboard</string>
@@ -110,11 +110,13 @@
     <string name="field_remapping">%1$s (from “%2$s”)</string>
     <string name="confirm_map_cards_to_nothing">Any cards mapped to nothing will be deleted. If a note has no remaining cards, it will be lost. Are you sure you want to continue?</string>
 
+    <!-- Timebox -->
     <string name="timebox_reached_title">Timebox reached</string>
     <plurals name="timebox_reached">
         <item quantity="one">%1$d card studied in %2$s</item>
         <item quantity="other">%1$d cards studied in %2$s</item>
     </plurals>
+
     <!-- minutes used in '[studied in] x minutes' context, causing inflexion in some languages -->
     <plurals name="in_minutes">
         <item quantity="one">%1$d minute</item>
@@ -184,12 +186,11 @@
         <item quantity="one">Export selected note as apkg file?</item>
         <item quantity="other">Export %d selected notes as apkg file?</item>
     </plurals>
-    <string name="export_in_progress">Exporting Anki package file…</string>
-    <string name="export_success_title">Collection exported successfully</string>
+    <string name="export_preparation_in_progress">Preparing export…</string>
+    <string name="export_ready_title">Export ready</string>
     <string name="export_send_no_handlers">No applications available to handle apkg. Saving...</string>
     <string name="export_save_apkg_successful">Successfully saved Anki package</string>
     <string name="export_save_apkg_unsuccessful">Save Anki package failed</string>
-    <string name="export_success_message">You may choose a file location to save it, or share it with another application.</string>
     <string name="export_share_title">Send Anki package using</string>
     <string name="export_email_subject">AnkiDroid exported flashcards: %s</string>
     <string name="export_email_text">
@@ -202,8 +203,8 @@
         [2] %2$s
         ]]>
     </string>
-    <string name="export_select_save_app">Select where to save file</string>
-    <string name="export_select_share_app">Select application for sharing</string>
+    <string name="export_choice_share">Share</string>
+    <string name="export_choice_save_to">Save to</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">Options</string>
     <string name="menu__deck_options">Deck options</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">Study options</string>
@@ -461,6 +462,5 @@
 
     <string name="media_sync_required_title">Media Sync Required</string>
     <string name="media_sync_unavailable_message">Media sync is disabled in the settings. Please sync and backup any media which hasn\'t been synced before continuing</string>
-    <string name="remember_sync_metered_checkbox_msg">Don\'t ask again (this warning can be re-enabled from Sync Settings)</string>
 
 </resources>

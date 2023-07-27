@@ -51,7 +51,7 @@
     <string name="CardEditorNoteDeck">デッキ:</string>
     <string name="CardEditorModel">ノートタイプ:</string>
     <string name="CardEditorTags">タグ: %1$s</string>
-    <string name="CardEditorCards">カード:%1$s</string>
+    <string name="CardEditorCards">カード: %1$s</string>
     <string name="tag_name">タグ名</string>
     <string name="add_new_filter_tags">タグフィルター / 新規タグ追加</string>
     <string name="add_tag">タグを追加</string>
@@ -119,7 +119,7 @@
     <string name="note_editor_no_first_field">最初のフィールドが空です</string>
     <string name="note_editor_no_cloze_delations">このノートタイプには穴埋め箇所が含まれている必要があります</string>
     <string name="note_editor_no_cards_created_all_fields">現在のノートタイプではカードを生成できませんでした。\n別のノートタイプを選択するか、「カード」をタップしてフィールドを挿入してください。</string>
-    <string name="note_editor_insert_cloze_no_cloze_note_type">穴埋め箇所を示す文字列は、Cloze (穴埋め問題) 型のノートタイプでのみ機能します</string>
+    <string name="note_editor_insert_cloze_no_cloze_note_type">穴埋め箇所を示す文字列は、穴埋め型のノートタイプでのみ機能します</string>
     <string name="saving_facts">ノートを保存しています</string>
     <string name="saving_model">ノートタイプを保存しています</string>
     <string name="save">保存</string>
@@ -128,7 +128,8 @@
     <string name="reordering_cards">カードを並べ替えています...</string>
     <string name="field_remapping">%1$s (\'%2$s\'から)</string>
     <string name="confirm_map_cards_to_nothing">割り当て先のないカードは削除されます。カードがすべて削除されたノートは、そのノート自体が削除されます。続行してもよろしいですか？</string>
-    <string name="timebox_reached_title">タイムボックス時間経過</string>
+    <!-- Timebox -->
+    <string name="timebox_reached_title">タイムボックスの時間です</string>
     <plurals name="timebox_reached">
         <item quantity="other">%2$sで%1$d枚のカードを学習しました</item>
     </plurals>
@@ -173,11 +174,11 @@
     <string name="import_succeeded_but_check_database">データのインポートに成功しましたが、インポート後のクリーンアップに失敗しました。後で「データベースをチェック」を実行してください。\n\n原因: %s</string>
     <string name="import_error_corrupt_zip">apkgファイルが壊れています。削除して再ダウンロードしてください。\n\n原因: %s</string>
     <string name="import_error_handle_exception">ファイル\n\n%s\n\nのインポートに失敗しました</string>
-    <string name="import_error_not_apkg_extension">ファイル名 \"%s\" は拡張子が .apkg か .colpkgではありません。</string>
+    <string name="import_error_not_apkg_extension">ファイル名 \"%s\" は拡張子が .apkg か .colpkg ではありません。</string>
     <string name="import_error_load_imported_database">Anki Database (.anki2) の置換はまだサポートされていません。マニュアルを参照してください。</string>
     <string name="import_error_content_provider">選択されたファイルをAnkiDroidによって自動的にインポートできませんでした。Ankiファイルを手動でインポートする方法については、マニュアルをご覧ください: \n %s</string>
     <string name="import_error_copy_to_cache">一時ファイルの作成に失敗しました（ストレージ容量が不足している可能性があります）</string>
-    <string name="import_error_multiple_colpkg">複数の colpkg ファイルが選択されました。</string>
+    <string name="import_error_multiple_colpkg">複数の colpkgファイルが選択されました。</string>
     <string name="import_error_colpkg_apkg">apkgファイルとcolpkgファイルが選択されました。それらを一度にインポートすることはできません。</string>
     <string name="import_stats_error">下記のファイルをインポートする際にエラーが発生しました:\n%s</string>
     <string name="import_replacing">コレクションを上書きしています...</string>
@@ -192,12 +193,11 @@
     <plurals name="confirm_apkg_export_selected_notes">
         <item quantity="other">選択した%d枚のノートを apkgファイルとしてエクスポートしますか？</item>
     </plurals>
-    <string name="export_in_progress">Ankiパッケージを作成しています...</string>
-    <string name="export_success_title">コレクションのエクスポートに成功しました</string>
+    <string name="export_preparation_in_progress">エクスポートの準備中...</string>
+    <string name="export_ready_title">エクスポートの準備完了</string>
     <string name="export_send_no_handlers">Ankiパッケージに対応する他のアプリがありません。ファイルを保存します...</string>
     <string name="export_save_apkg_successful">Ankiパッケージを保存しました</string>
     <string name="export_save_apkg_unsuccessful">Ankiパッケージの保存に失敗しました</string>
-    <string name="export_success_message">ファイルの保存先を選択するか、ファイルを別のアプリと共有することができます。</string>
     <string name="export_share_title">Ankiパッケージを送信:</string>
     <string name="export_email_subject">[AnkiDroid] %s</string>
     <string name="export_email_text"><![CDATA[        こんにちは！
@@ -207,8 +207,8 @@
         [1] %1$s<br/>
         [2] %2$s
         ]]></string>
-    <string name="export_select_save_app">ファイルの保存先を選択</string>
-    <string name="export_select_share_app">共有先のアプリを選択</string>
+    <string name="export_choice_share">共有</string>
+    <string name="export_choice_save_to">保存先を選択</string>
     <string name="study_options" comment="Name for a preference category in Filtered deck (aka Cram deck, aka Custom study) options">オプション</string>
     <string name="menu__deck_options">デッキオプション</string>
     <string name="menu__study_options" comment="Menu item that opens options for a Filtered deck (aka Cram deck, aka Custom study)">学習オプション</string>
@@ -219,8 +219,8 @@
     <string name="steps_error">習得ステップには1以上の数字を入力してください</string>
     <string name="steps_min_error">少なくとも 1 つの習得ステップが必要です</string>
     <string name="sched_end">（終了）</string>
-    <string name="sched_unbury_action">今それらを見る場合は、メニューの「パスを取り消す」をタップしてください</string>
-    <string name="sched_has_buried">関連カード、パスカードの学習は明日まで延期されます</string>
+    <string name="sched_unbury_action">今からそれらを学習したい場合は、メニューの「延期を取り消す」をタップしてください</string>
+    <string name="sched_has_buried">兄弟関係のカード、延期カードの学習は明日まで延期されます</string>
     <string name="tag_editor_add_feedback">「%1$s」の追加を確定するには「%2$s」をタップしてください</string>
     <string name="tag_editor_add_feedback_existing">既存のタグ「%1$s」が選択されました</string>
     <!-- Time spans -->
@@ -267,7 +267,7 @@
     <string name="web_page_error">ページの読み込みエラー: %s</string>
     <string name="no_outgoing_link_in_cardbrowser">カード内の外部ページリンクはサポートされていません。</string>
     <!-- The name of the deck which corrupt cards will be moved to -->
-    <string name="check_integrity_recovered_deck_name">回復されたカード</string>
+    <string name="check_integrity_recovered_deck_name">回収したカード</string>
     <!-- Deckpicker Background -->
     <string name="background_image_title">デッキリスト画面の背景</string>
     <string name="choose_an_image">画像を選択</string>
@@ -366,7 +366,7 @@
     <string name="scoped_storage_postpone">後で</string>
     <string name="scoped_storage_migrate">移行</string>
     <string name="search_card_js_api_no_results">検索対象が見つかりませんでした</string>
-    <string name="migration_update_request_requires_media_sync" commnet="use HTML linebreaks in this string">Android10のセキュリティポリシーに準拠するため、AnkiDroidのストレージを移行する必要があります。\n\n移行を行うと、メディアの同期が従来より短時間で行えるようになります。&lt;br&gt;&lt;br&gt;移行処理中は同期機能が使用できず、また、一部の設定の変更ができなくなります。移行処理を開始する前に、万一のデータ損失に備え、メディアを含めての同期を実行します。&lt;br&gt;&lt;br&gt;移行処理中もAnkiDroidを使用可能です。また、移行処理中にAnkiDroidを終了しても問題ありません。</string>
+    <string name="migration_update_request_requires_media_sync" commnet="use HTML linebreaks in this string">Android10のセキュリティポリシーに準拠するためには、AnkiDroidのストレージを移行（AnkiDroidのデータをアプリ専用の新しい保存場所へ移動）する必要があります。\n\n移行を行うと、メディアの同期が従来より短時間で行えるようになります。&lt;br&gt;&lt;br&gt;移行処理中は、同期機能の使用や、一部の設定の変更ができなくなります。移行処理を開始する前に、万一のデータ損失に備え、メディアを含めての同期を実行します。&lt;br&gt;&lt;br&gt;移行処理中もAnkiDroidを使用可能です。また、移行処理中にAnkiDroidの画面を閉じても問題ありません。</string>
     <string name="start_migration_progress_message">ストレージの移行を開始します。AnkiDroidの使用はまもなく再開できます。</string>
     <string name="migration_part_1_done_resume">AnkiDroidの使用を再開できます。
 \nストレージの移行はバックグラウンドで続行されます。</string>
@@ -405,5 +405,4 @@
     <string name="storage_migration_sync_notification" comment="Appears on a notification after the user has opted into a storage migration and provided consent to sync         and AnkiDroid was minimised when the sync completed">タップしてストレージ移行を開始</string>
     <string name="media_sync_required_title">メディアの同期が必要です</string>
     <string name="media_sync_unavailable_message">メディアの同期が設定で無効になっています。続行する前に、まだ同期していないメディアを同期することによってバックアップをとってください</string>
-    <string name="remember_sync_metered_checkbox_msg">今後確認しない (この警告は「同期」の設定で再度有効にできます)</string>
 </resources>
