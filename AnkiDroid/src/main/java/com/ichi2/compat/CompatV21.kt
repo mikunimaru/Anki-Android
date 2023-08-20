@@ -16,8 +16,6 @@
  */
 package com.ichi2.compat
 
-import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
@@ -33,11 +31,8 @@ import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.os.Parcel
-import android.os.Parcelable
 import android.os.Vibrator
 import android.provider.MediaStore
-import android.util.SparseArray
 import android.view.View
 import android.widget.TimePicker
 import androidx.appcompat.widget.TooltipCompat
@@ -75,14 +70,6 @@ open class CompatV21 : Compat {
         return MediaRecorder()
     }
 
-    override fun <T> readSparseArray(parcel: Parcel, loader: ClassLoader, clazz: Class<T>): SparseArray<T>? {
-        return parcel.readSparseArray(loader)
-    }
-
-    override fun <T : Parcelable> getParcelableArrayList(bundle: Bundle, key: String, clazz: Class<T>): ArrayList<T>? {
-        return bundle.getParcelableArrayList(key)
-    }
-
     override fun resolveActivity(
         packageManager: PackageManager,
         intent: Intent,
@@ -107,18 +94,6 @@ open class CompatV21 : Compat {
         return packageManager.queryIntentActivities(intent, flags.value.toInt())
     }
 
-    override fun <T> getParcelable(bundle: Bundle, key: String?, clazz: Class<T>): T? {
-        return bundle.getParcelable(key)
-    }
-
-    override fun <T : Parcelable> getSparseParcelableArray(
-        bundle: Bundle,
-        key: String,
-        clazz: Class<T>
-    ): SparseArray<T>? {
-        return bundle.getSparseParcelableArray(key)
-    }
-
     override fun <T : Serializable?> getSerializableExtra(
         intent: Intent,
         name: String,
@@ -132,14 +107,6 @@ open class CompatV21 : Compat {
         }
     }
 
-    override fun <T : Parcelable?> getParcelableExtra(
-        intent: Intent,
-        name: String,
-        clazz: Class<T>
-    ): T? {
-        return intent.getParcelableExtra<T>(name)
-    }
-
     override fun getPackageInfo(packageManager: PackageManager, packageName: String, flags: PackageInfoFlagsCompat): PackageInfo? =
         packageManager.getPackageInfo(packageName, flags.value.toInt())
 
@@ -149,11 +116,6 @@ open class CompatV21 : Compat {
         key: String,
         clazz: Class<T>
     ): T? = bundle.getSerializable(key) as? T?
-
-    override fun <T> readSerializable(parcel: Parcel, loader: ClassLoader?, clazz: Class<T>): T? {
-        @Suppress("UNCHECKED_CAST")
-        return parcel.readSerializable() as T
-    }
 
     // Until API 26 do the copy using streams
     @Throws(IOException::class)
@@ -266,16 +228,6 @@ open class CompatV21 : Compat {
         audioManager.abandonAudioFocus(audioFocusChangeListener)
     }
 
-    @SuppressLint("WrongConstant")
-    override fun getImmutableActivityIntent(context: Context, requestCode: Int, intent: Intent, flags: Int): PendingIntent {
-        return PendingIntent.getActivity(context, requestCode, intent, flags or FLAG_IMMUTABLE)
-    }
-
-    @SuppressLint("WrongConstant")
-    override fun getImmutableBroadcastIntent(context: Context, requestCode: Int, intent: Intent, flags: Int): PendingIntent {
-        return PendingIntent.getBroadcast(context, requestCode, intent, flags or FLAG_IMMUTABLE)
-    }
-
     @Throws(FileNotFoundException::class)
     override fun saveImage(context: Context, bitmap: Bitmap, baseFileName: String, extension: String, format: CompressFormat, quality: Int): Uri {
         val pictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
@@ -315,23 +267,5 @@ open class CompatV21 : Compat {
                 return paths[mOrd++]
             }
         }
-    }
-
-    override fun <T> readList(
-        parcel: Parcel,
-        outVal: MutableList<in T>,
-        classLoader: ClassLoader?,
-        clazz: Class<T>
-    ) {
-        parcel.readList(outVal, classLoader)
-    }
-
-    companion object {
-        // Update to PendingIntent.FLAG_MUTABLE once available (API 31)
-        @Suppress("unused")
-        const val FLAG_MUTABLE = 1 shl 25
-
-        // Update to PendingIntent.FLAG_IMMUTABLE once available (API 23)
-        const val FLAG_IMMUTABLE = 1 shl 26
     }
 }

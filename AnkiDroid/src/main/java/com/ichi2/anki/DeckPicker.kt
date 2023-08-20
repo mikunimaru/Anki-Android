@@ -42,6 +42,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -288,6 +289,7 @@ open class DeckPicker :
                 // Calling notifyDataSetChanged() will update the color of the selected deck.
                 // This interferes with the ripple effect, so we don't do it if lollipop and not tablet view
                 mDeckListAdapter.notifyDataSetChanged()
+                updateDeckList()
             }
         } catch (e: Exception) {
             // Maybe later don't report if collectionIsOpen is false?
@@ -1308,7 +1310,7 @@ open class DeckPicker :
                         integrityCheck()
                     }
                     negativeButton(R.string.close) {
-                        recreate()
+                        ActivityCompat.recreate(this@DeckPicker)
                     }
                     cancelable(false)
                 }
@@ -1318,7 +1320,7 @@ open class DeckPicker :
                 Timber.i("Updated preferences with no integrity check - restarting activity")
                 // If integrityCheck() doesn't occur, but we did update preferences we should restart DeckPicker to
                 // proceed
-                recreate()
+                ActivityCompat.recreate(this)
                 return
             }
 
@@ -1794,7 +1796,7 @@ open class DeckPicker :
                     if (intent.action == SdCardReceiver.MEDIA_EJECT) {
                         onSdCardNotMounted()
                     } else if (intent.action == SdCardReceiver.MEDIA_MOUNT) {
-                        recreate()
+                        ActivityCompat.recreate(this@DeckPicker)
                     }
                 }
             }

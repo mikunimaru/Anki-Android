@@ -25,6 +25,8 @@ import android.os.Parcelable
 import android.view.KeyEvent
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
@@ -36,7 +38,6 @@ import com.ichi2.anki.dialogs.DatabaseErrorDialog.DatabaseErrorDialogType.*
 import com.ichi2.anki.dialogs.ImportFileSelectionFragment.ImportOptions
 import com.ichi2.anki.servicelayer.ScopedStorageService
 import com.ichi2.async.Connection
-import com.ichi2.compat.CompatHelper.Companion.getParcelableCompat
 import com.ichi2.libanki.Consts
 import com.ichi2.libanki.utils.TimeManager
 import com.ichi2.utils.*
@@ -152,7 +153,7 @@ class DatabaseErrorDialog : AsyncDialogFragment() {
                     listItems(items = titles.toList().map { it as CharSequence }) { _: MaterialDialog, index: Int, _: CharSequence ->
                         when (mRepairValues[index]) {
                             0 -> {
-                                (activity as DeckPicker).recreate()
+                                ActivityCompat.recreate(activity as DeckPicker)
                                 return@listItems
                             }
                             1 -> {
@@ -256,7 +257,7 @@ class DatabaseErrorDialog : AsyncDialogFragment() {
                         ch.closeCollection(false, "DatabaseErrorDialog: Before Create New Collection")
                         val path1 = CollectionHelper.getCollectionPath(requireActivity())
                         if (BackupManager.moveDatabaseToBrokenDirectory(path1, false, time)) {
-                            (activity as DeckPicker).recreate()
+                            ActivityCompat.recreate(activity as DeckPicker)
                         } else {
                             (activity as DeckPicker).showDatabaseErrorDialog(DIALOG_LOAD_FAILED)
                         }
@@ -522,7 +523,7 @@ class DatabaseErrorDialog : AsyncDialogFragment() {
     override val dialogHandlerMessage
         get() = ShowDatabaseErrorDialog(requireDialogType())
 
-    private fun requireDialogType() = requireArguments().getParcelableCompat<DatabaseErrorDialogType>("dialog")!!
+    private fun requireDialogType() = BundleCompat.getParcelable(requireArguments(), "dialog", DatabaseErrorDialogType::class.java)!!
 
     fun dismissAllDialogFragments() {
         (activity as DeckPicker).dismissAllDialogFragments()
@@ -590,7 +591,7 @@ class DatabaseErrorDialog : AsyncDialogFragment() {
 
         companion object {
             fun fromMessage(message: Message): ShowDatabaseErrorDialog {
-                val dialogType = message.data.getParcelableCompat<DatabaseErrorDialogType>("dialog")!!
+                val dialogType = BundleCompat.getParcelable(message.data, "dialog", DatabaseErrorDialogType::class.java)!!
                 return ShowDatabaseErrorDialog(dialogType)
             }
         }

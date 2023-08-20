@@ -536,6 +536,11 @@ abstract class AbstractFlashcardViewer :
         restorePreferences()
         mTagsDialogFactory = TagsDialogFactory(this).attachToActivity<TagsDialogFactory>(this)
         super.onCreate(savedInstanceState)
+
+        // Issue 14142: The reviewer had a focus highlight after answering using a keyboard.
+        // This theme removes the highlight, but there is likely a better way.
+        this.setTheme(R.style.ThemeOverlay_DisableKeyboardHighlight)
+
         setContentView(getContentViewAttr(fullscreenMode))
 
         // Make ACTION_PROCESS_TEXT for in-app searching possible on > Android 4.0
@@ -659,11 +664,20 @@ abstract class AbstractFlashcardViewer :
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return if (processCardFunction { cardWebView: WebView? -> processHardwareButtonScroll(keyCode, cardWebView) }) {
-            true
-        } else {
-            super.onKeyDown(keyCode, event)
+        if (processCardFunction { cardWebView: WebView? -> processHardwareButtonScroll(keyCode, cardWebView) }) {
+            return true
         }
+
+        // Subclasses other than 'Reviewer' have not been setup with Gestures/KeyPresses
+        // so hardcode this functionality for now.
+        // This is in onKeyDown to match the gesture processor in the Reviewer
+        if (!displayAnswer && !answerFieldIsFocused()) {
+            if (keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
+                displayCardAnswer()
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     public override val currentCardId: CardId? get() = currentCard?.id
@@ -698,19 +712,6 @@ abstract class AbstractFlashcardViewer :
             return true
         }
         return false
-    }
-
-    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        if (answerFieldIsFocused()) {
-            return super.onKeyUp(keyCode, event)
-        }
-        if (!displayAnswer) {
-            if (keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                displayCardAnswer()
-                return true
-            }
-        }
-        return super.onKeyUp(keyCode, event)
     }
 
     protected open fun answerFieldIsFocused(): Boolean {
@@ -1106,11 +1107,14 @@ abstract class AbstractFlashcardViewer :
         // enable dom storage so that sessionStorage & localStorage can be used in webview
         webView.settings.domStorageEnabled = true
 
+        // enable third party cookies so that cookies can be used in webview
+        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)
+
         return webView
     }
 
     /** If a card is displaying the question, flip it, otherwise answer it  */
-    private fun flipOrAnswerCard(cardOrdinal: Int) {
+    internal open fun flipOrAnswerCard(cardOrdinal: Int) {
         if (!displayAnswer) {
             displayCardAnswer()
             return

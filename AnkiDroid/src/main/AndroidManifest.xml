@@ -37,7 +37,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" android:maxSdkVersion="25" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -378,13 +377,6 @@
         <activity
             android:name=".multimediacard.activity.MultimediaEditFieldActivity"
             android:label="@string/title_activity_edit_text"
-            android:exported="false"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            >
-        </activity>
-        <activity
-            android:name="com.ichi2.anki.multimediacard.activity.LoadPronunciationActivity"
-            android:label="@string/multimedia_editor_text_field_editing_say"
             android:exported="false"
             android:configChanges="keyboardHidden|orientation|screenSize"
             >
