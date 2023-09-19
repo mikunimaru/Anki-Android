@@ -454,7 +454,6 @@ object UsageAnalytics {
         "anki_card_enable_external_context_menu", // ‘Anki Card’ Menu
         "card_browser_enable_external_context_menu", // ‘Card Browser’ Menu
         // Reviewing
-        "newSpread", // New card position
         "dayOffset", // Start of next day
         "learnCutoff", // Learn ahead limit
         "timeLimit", // Timebox time limit
@@ -497,8 +496,6 @@ object UsageAnalytics {
         "binding_FLIP_OR_ANSWER_EASE2",
         "binding_FLIP_OR_ANSWER_EASE3",
         "binding_FLIP_OR_ANSWER_EASE4",
-        "binding_FLIP_OR_ANSWER_RECOMMENDED",
-        "binding_FLIP_OR_ANSWER_BETTER_THAN_RECOMMENDED",
         "binding_UNDO",
         "binding_EDIT",
         "binding_MARK",
@@ -530,16 +527,17 @@ object UsageAnalytics {
         "binding_SHOW_HINT",
         "binding_SHOW_ALL_HINTS",
         "binding_ADD_NOTE",
+        "binding_RESCHEDULE_NOTE",
         // Accessibility
         "cardZoom",
         "imageZoom",
         "answerButtonSize",
         "showLargeAnswerButtons",
         "relativeCardBrowserFontSize",
+        "showCardAnswerButtonTime",
         // Advanced
         "deckPath", // AnkiDroid directory
         "backupMax", // Max number of backups
-        "scrolling_buttons", // eReader
         "double_scrolling", // Double scrolling
         "softwareRender", // Disable card hardware render
         "safeDisplay", // Safe display mode
@@ -550,7 +548,6 @@ object UsageAnalytics {
         "autoFocusTypeInAnswer", // Focus ‘type in answer’
         "mediaImportAllowAllFiles", // Allow all files in media imports
         "providerEnabled", // Enable AnkiDroid API
-        "v3sched", // v3 Scheduler
         // App bar buttons
         "reset_custom_buttons",
         "customButtonUndo",

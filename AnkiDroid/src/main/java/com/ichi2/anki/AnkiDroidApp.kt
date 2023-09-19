@@ -24,13 +24,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.system.Os
 import android.util.Log
+import android.view.View
 import android.webkit.CookieManager
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import com.ichi2.anki.CrashReportService.sendExceptionReport
 import com.ichi2.anki.UIUtils.showThemedToast
@@ -43,12 +48,10 @@ import com.ichi2.anki.services.BootService
 import com.ichi2.anki.services.NotificationService
 import com.ichi2.anki.ui.dialogs.ActivityAgnosticDialogs
 import com.ichi2.compat.CompatHelper
-import com.ichi2.libanki.Utils
 import com.ichi2.utils.*
-import net.ankiweb.rsdroid.BackendFactory
 import timber.log.Timber
 import timber.log.Timber.DebugTree
-import java.io.InputStream
+import java.util.Locale
 import java.util.regex.Pattern
 
 /**
@@ -68,9 +71,8 @@ open class AnkiDroidApp : Application() {
      * On application creation.
      */
     override fun onCreate() {
-        BackendFactory.defaultLegacySchema = BuildConfig.LEGACY_SCHEMA
         try {
-            Os.setenv("PLATFORM", Utils.syncPlatform(), false)
+            Os.setenv("PLATFORM", syncPlatform(), false)
             // enable debug logging of sync actions
             if (BuildConfig.DEBUG) {
                 Os.setenv("RUST_LOG", "info,anki::sync=debug,anki::media=debug", false)
@@ -96,15 +98,6 @@ open class AnkiDroidApp : Application() {
         // Get preferences
         val preferences = this.sharedPrefs()
 
-        // TODO remove the following if-block once AnkiDroid uses the new schema by default
-        if (BuildConfig.LEGACY_SCHEMA) {
-            val isNewSchemaEnabledByPref =
-                preferences.getBoolean(getString(R.string.pref_rust_backend_key), false)
-            if (isNewSchemaEnabledByPref) {
-                Timber.i("New schema enabled by preference")
-                BackendFactory.defaultLegacySchema = false
-            }
-        }
         CrashReportService.initialize(this)
         if (BuildConfig.DEBUG) {
             // Enable verbose error logging and do method tracing to put the Class name as log tag
@@ -156,6 +149,13 @@ open class AnkiDroidApp : Application() {
         )
         CompatHelper.compat.setupNotificationChannel(applicationContext)
 
+        if (Build.FINGERPRINT != "robolectric") {
+            // Prevent sqlite throwing error 6410 due to the lack of /tmp on Android
+            Os.setenv("TMPDIR", cacheDir.path, false)
+            // Load backend library
+            System.loadLibrary("rsdroid")
+        }
+
         // Configure WebView to allow file scheme pages to access cookies.
         if (!acceptFileSchemeCookies()) {
             return
@@ -188,6 +188,12 @@ open class AnkiDroidApp : Application() {
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 Timber.i("${activity::class.simpleName}::onCreate")
+                (activity as? FragmentActivity)
+                    ?.supportFragmentManager
+                    ?.registerFragmentLifecycleCallbacks(
+                        FragmentLifecycleLogger(activity),
+                        true
+                    )
             }
 
             override fun onActivityStarted(activity: Activity) {
@@ -216,6 +222,21 @@ open class AnkiDroidApp : Application() {
         })
 
         activityAgnosticDialogs = ActivityAgnosticDialogs.register(this)
+    }
+
+    /**
+     * @return the app version, OS version and device model, provided when syncing.
+     */
+    private fun syncPlatform(): String {
+        // AnkiWeb reads this string and uses , and : as delimiters, so we remove them.
+        val model = Build.MODEL.replace(',', ' ').replace(':', ' ')
+        return String.format(
+            Locale.US,
+            "android:%s:%s:%s",
+            BuildConfig.VERSION_NAME,
+            Build.VERSION.RELEASE,
+            model
+        )
     }
 
     fun scheduleNotification() {
@@ -328,9 +349,6 @@ open class AnkiDroidApp : Application() {
         /** HACK: Whether an exception report has been thrown - TODO: Rewrite an ACRA Listener to do this  */
         @VisibleForTesting
         var sentExceptionReportHack = false
-        fun getResourceAsStream(name: String): InputStream {
-            return instance.applicationContext.classLoader.getResourceAsStream(name)
-        }
 
         @get:JvmName("isInitialized")
         val isInitialized: Boolean
@@ -356,8 +374,6 @@ open class AnkiDroidApp : Application() {
             }
         }
 
-        val cacheStorageDirectory: String
-            get() = instance.cacheDir.absolutePath
         val appResources: Resources
             get() = instance.resources
         val isSdCardMounted: Boolean
@@ -420,6 +436,71 @@ open class AnkiDroidApp : Application() {
                 return
             }
             super.log(priority, tag, message, t)
+        }
+    }
+
+    private class FragmentLifecycleLogger(
+        private val activity: Activity
+    ) : FragmentManager.FragmentLifecycleCallbacks() {
+        override fun onFragmentAttached(
+            fm: FragmentManager,
+            f: Fragment,
+            context: Context
+        ) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onAttach")
+        }
+
+        override fun onFragmentCreated(
+            fm: FragmentManager,
+            f: Fragment,
+            savedInstanceState: Bundle?
+        ) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onCreate")
+        }
+
+        override fun onFragmentViewCreated(
+            fm: FragmentManager,
+            f: Fragment,
+            v: View,
+            savedInstanceState: Bundle?
+        ) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onViewCreated")
+        }
+
+        override fun onFragmentStarted(fm: FragmentManager, f: Fragment) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onStart")
+        }
+
+        override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onResume")
+        }
+
+        override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onPause")
+        }
+
+        override fun onFragmentStopped(fm: FragmentManager, f: Fragment) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onStop")
+        }
+
+        override fun onFragmentSaveInstanceState(
+            fm: FragmentManager,
+            f: Fragment,
+            outState: Bundle
+        ) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onSaveInstanceState")
+        }
+
+        override fun onFragmentViewDestroyed(fm: FragmentManager, f: Fragment) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onViewDestroyed")
+        }
+
+        override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onDestroy")
+        }
+
+        override fun onFragmentDetached(fm: FragmentManager, f: Fragment) {
+            Timber.i("${activity::class.simpleName}::${f::class.simpleName}::onDetach")
         }
     }
 }

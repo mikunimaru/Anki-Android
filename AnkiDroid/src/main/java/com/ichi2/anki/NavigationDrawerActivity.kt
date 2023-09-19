@@ -15,15 +15,10 @@
  ****************************************************************************************/
 package com.ichi2.anki
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.ShortcutInfo
-import android.content.pm.ShortcutManager
 import android.content.res.Configuration
-import android.graphics.drawable.Icon
-import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -31,11 +26,15 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.LayoutRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.app.TaskStackBuilder
-import androidx.core.content.ContextCompat
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.ClosableDrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout
@@ -50,7 +49,6 @@ import com.ichi2.libanki.CardId
 import com.ichi2.themes.Themes
 import com.ichi2.utils.HandlerUtils
 import com.ichi2.utils.KotlinCleanup
-import net.ankiweb.rsdroid.BackendFactory
 import timber.log.Timber
 
 @KotlinCleanup("IDE-lint")
@@ -116,7 +114,7 @@ abstract class NavigationDrawerActivity :
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
         // Force transparent status bar with primary dark color underlaid so that the drawer displays under status bar
-        window.statusBarColor = ContextCompat.getColor(this, R.color.transparent)
+        window.statusBarColor = getColor(R.color.transparent)
         mDrawerLayout.setStatusBarBackgroundColor(
             Themes.getColorFromAttr(
                 this,
@@ -251,9 +249,9 @@ abstract class NavigationDrawerActivity :
             if (this is Reviewer && preferences.getBoolean("tts", false)) {
                 // Workaround to kick user back to StudyOptions after opening settings from Reviewer
                 // because onDestroy() of old Activity interferes with TTS in new Activity
-                finishWithoutAnimation()
+                finish()
             } else {
-                recreate()
+                ActivityCompat.recreate(this)
             }
         }
 
@@ -308,11 +306,7 @@ abstract class NavigationDrawerActivity :
 
                 R.id.nav_stats -> {
                     Timber.i("Navigating to stats")
-                    val intent = if (BackendFactory.defaultLegacySchema) {
-                        Intent(this@NavigationDrawerActivity, Statistics::class.java)
-                    } else {
-                        com.ichi2.anki.pages.Statistics.getIntent(this)
-                    }
+                    val intent = com.ichi2.anki.pages.Statistics.getIntent(this)
                     startActivityWithAnimation(intent, START)
                 }
 
@@ -326,8 +320,6 @@ abstract class NavigationDrawerActivity :
                         mPreferencesLauncher,
                         FADE
                     )
-                    // #6192 - stop crash on changing collection path - cancel tasks if moving to settings
-                    (this as? Statistics)?.finishWithAnimation(FADE)
                 }
 
                 R.id.nav_help -> {
@@ -370,7 +362,8 @@ abstract class NavigationDrawerActivity :
         mNavButtonGoesBack = false
     }
 
-    val isDrawerOpen: Boolean
+    @VisibleForTesting
+    open val isDrawerOpen: Boolean
         get() = mDrawerLayout.isDrawerOpen(GravityCompat.START)
 
     /**
@@ -383,7 +376,7 @@ abstract class NavigationDrawerActivity :
         val stackBuilder = TaskStackBuilder.create(activity)
         stackBuilder.addNextIntentWithParentStack(intent)
         stackBuilder.startActivities(Bundle())
-        activity.finishWithoutAnimation()
+        activity.finish()
     }
 
     fun toggleDrawer() {
@@ -426,22 +419,16 @@ abstract class NavigationDrawerActivity :
 
         const val EXTRA_STARTED_WITH_SHORTCUT = "com.ichi2.anki.StartedWithShortcut"
 
-        @TargetApi(Build.VERSION_CODES.N_MR1)
         fun enablePostShortcut(context: Context) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-                return
-            }
-            val shortcutManager = context.getSystemService(ShortcutManager::class.java)
-
             // Review Cards Shortcut
             val intentReviewCards = Intent(context, Reviewer::class.java)
             intentReviewCards.action = Intent.ACTION_VIEW
             intentReviewCards.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             intentReviewCards.putExtra(EXTRA_STARTED_WITH_SHORTCUT, true)
-            val reviewCardsShortcut = ShortcutInfo.Builder(context, "reviewCardsShortcutId")
+            val reviewCardsShortcut = ShortcutInfoCompat.Builder(context, "reviewCardsShortcutId")
                 .setShortLabel(context.getString(R.string.studyoptions_start))
                 .setLongLabel(context.getString(R.string.studyoptions_start))
-                .setIcon(Icon.createWithResource(context, R.drawable.review_shortcut))
+                .setIcon(IconCompat.createWithResource(context, R.drawable.review_shortcut))
                 .setIntent(intentReviewCards)
                 .build()
 
@@ -450,10 +437,10 @@ abstract class NavigationDrawerActivity :
             intentAddNote.action = Intent.ACTION_VIEW
             intentAddNote.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             intentAddNote.putExtra(NoteEditor.EXTRA_CALLER, NoteEditor.CALLER_DECKPICKER)
-            val NoteEditorShortcut = ShortcutInfo.Builder(context, "noteEditorShortcutId")
+            val noteEditorShortcut = ShortcutInfoCompat.Builder(context, "noteEditorShortcutId")
                 .setShortLabel(context.getString(R.string.menu_add))
                 .setLongLabel(context.getString(R.string.menu_add))
-                .setIcon(Icon.createWithResource(context, R.drawable.add_shortcut))
+                .setIcon(IconCompat.createWithResource(context, R.drawable.add_shortcut))
                 .setIntent(intentAddNote)
                 .build()
 
@@ -461,16 +448,17 @@ abstract class NavigationDrawerActivity :
             val intentCardBrowser = Intent(context, CardBrowser::class.java)
             intentCardBrowser.action = Intent.ACTION_VIEW
             intentCardBrowser.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            val cardBrowserShortcut = ShortcutInfo.Builder(context, "cardBrowserShortcutId")
+            val cardBrowserShortcut = ShortcutInfoCompat.Builder(context, "cardBrowserShortcutId")
                 .setShortLabel(context.getString(R.string.card_browser))
                 .setLongLabel(context.getString(R.string.card_browser))
-                .setIcon(Icon.createWithResource(context, R.drawable.browse_shortcut))
+                .setIcon(IconCompat.createWithResource(context, R.drawable.browse_shortcut))
                 .setIntent(intentCardBrowser)
                 .build()
-            shortcutManager.addDynamicShortcuts(
+            ShortcutManagerCompat.addDynamicShortcuts(
+                context,
                 listOf(
                     reviewCardsShortcut,
-                    NoteEditorShortcut,
+                    noteEditorShortcut,
                     cardBrowserShortcut
                 )
             )

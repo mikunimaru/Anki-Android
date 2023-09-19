@@ -43,7 +43,6 @@ import com.ichi2.anki.R
 import com.ichi2.anki.UIUtils.convertDpToPixel
 import com.ichi2.anki.preferences.sharedPrefs
 import com.ichi2.compat.CompatHelper
-import com.ichi2.libanki.Utils
 import com.ichi2.utils.ViewGroupUtils
 import com.ichi2.utils.ViewGroupUtils.getAllChildrenRecursive
 import com.ichi2.utils.show
@@ -100,7 +99,7 @@ class Toolbar : FrameLayout {
             findViewById<View>(id).setOnClickListener { onFormat(TextWrapper(prefix, suffix)) }
 
         setupButtonWrappingText(R.id.note_editor_toolbar_button_bold, "<b>", "</b>")
-        setupButtonWrappingText(R.id.note_editor_toolbar_button_italic, "<em>", "</em>")
+        setupButtonWrappingText(R.id.note_editor_toolbar_button_italic, "<i>", "</i>")
         setupButtonWrappingText(R.id.note_editor_toolbar_button_underline, "<u>", "</u>")
         setupButtonWrappingText(R.id.note_editor_toolbar_button_insert_mathjax, "\\(", "\\)")
         setupButtonWrappingText(R.id.note_editor_toolbar_button_horizontal_rule, "<hr>", "")
@@ -134,7 +133,7 @@ class Toolbar : FrameLayout {
         }
         val expected = c.toString()
         for (v in getAllChildrenRecursive(this)) {
-            if (Utils.equals(expected, v.tag)) {
+            if (Objects.equals(expected, v.tag)) {
                 Timber.i("Handling Ctrl + %s", c)
                 v.performClick()
                 return true

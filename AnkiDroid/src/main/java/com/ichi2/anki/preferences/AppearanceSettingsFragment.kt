@@ -18,6 +18,7 @@ package com.ichi2.anki.preferences
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
@@ -102,20 +103,20 @@ class AppearanceSettingsFragment : SettingsFragment() {
                 updateCurrentTheme(requireContext())
 
                 if (previousThemeId != Themes.currentTheme.id) {
-                    requireActivity().recreate()
+                    ActivityCompat.recreate(requireActivity())
                 }
             }
         }
 
         dayThemePref.setOnPreferenceChangeListener { newValue ->
             if (newValue != dayThemePref.value && !systemIsInNightMode(requireContext()) && newValue != Themes.currentTheme.id) {
-                requireActivity().recreate()
+                ActivityCompat.recreate(requireActivity())
             }
         }
 
         nightThemePref.setOnPreferenceChangeListener { newValue ->
             if (newValue != nightThemePref.value && systemIsInNightMode(requireContext()) && newValue != Themes.currentTheme.id) {
-                requireActivity().recreate()
+                ActivityCompat.recreate(requireActivity())
             }
         }
 
@@ -134,18 +135,18 @@ class AppearanceSettingsFragment : SettingsFragment() {
         // Represents the collection pref "estTime": i.e.
         // whether the buttons should indicate the duration of the interval if we click on them.
         requirePreference<SwitchPreferenceCompat>(R.string.show_estimates_preference).apply {
-            launchCatchingTask { isChecked = withCol { get_config_boolean("estTimes") } }
+            launchCatchingTask { isChecked = withCol { config.get("estTimes") ?: true } }
             setOnPreferenceChangeListener { newETA ->
-                launchCatchingTask { withCol { set_config("estTimes", newETA) } }
+                launchCatchingTask { withCol { config.set("estTimes", newETA) } }
             }
         }
         // Show progress
         // Represents the collection pref "dueCounts": i.e.
         // whether the remaining number of cards should be shown.
         requirePreference<SwitchPreferenceCompat>(R.string.show_progress_preference).apply {
-            launchCatchingTask { isChecked = withCol { get_config_boolean("dueCounts") } }
+            launchCatchingTask { isChecked = withCol { config.get("dueCounts") ?: true } }
             setOnPreferenceChangeListener { newDueCountsValue ->
-                launchCatchingTask { withCol { set_config("dueCounts", newDueCountsValue) } }
+                launchCatchingTask { withCol { config.set("dueCounts", newDueCountsValue) } }
             }
         }
     }
